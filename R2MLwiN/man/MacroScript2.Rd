@@ -61,7 +61,7 @@ A data.frame object containing the data to be modelled.
   A character string (vector) of random part of random variable(s).
 }
   \item{D}{
-  A vector specifying the type of distribution to be modelled, which can include \code{"Normal"}, \code{"Binomial"} \code{"Poisson"}, \code{"Multinomial"}, \code{"Multivariate Normal"}, or \code{"Mixed"}.
+  A vector specifying the type of distribution to be modelled, which can include \code{"Normal"}, \code{"Binomial"} \code{"Poisson"}, \code{"Unordered Multinomial"},  \code{"Ordered Multinomial"}, \code{"Multivariate Normal"}, or \code{"Mixed"}.
 }
   \item{nonlinear}{
   LINEarise mode N order M. \code{N=0} specifies marginal quasi-likelihood linearization (MQL), whilst \code{N=1} specifies penalised quasi-likelihood linearization (PQL); \code{M=1} specifies first order approximation, whilst \code{M=2} specifies second order approximation. \code{nonlinear=c(N=0,M=1)} by default.

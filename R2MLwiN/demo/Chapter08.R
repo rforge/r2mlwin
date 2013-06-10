@@ -33,7 +33,8 @@ set.seed(1)
 pupil=1:108
 school=c( rep(1,18),rep(2,18),rep(3,18),rep(4,18),rep(5,18),rep(6,18))
 cons=rep(1,108)
-u=rnorm(108,0,sqrt(10))
+u_short = rnorm(6, 0, sqrt(10))
+u = rep(u_short, each = 18, len = 108)
 e=rnorm(108,0,sqrt(40))
 resp=30*cons+u+e
 indata=as.data.frame(cbind(pupil,school,cons,resp))
