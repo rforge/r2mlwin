@@ -46,7 +46,7 @@ Outputs an R list object, which is then used as the input for \code{\link{MacroS
 }
 
 \author{
-Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
+Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
 }
 \note{
 Note that some characters listed above have special meanings in the formula, so avoid using them when you name the random variable. Alphanumeric characters (i.e. `[:alnum:]') are recommended for naming the random variable. 

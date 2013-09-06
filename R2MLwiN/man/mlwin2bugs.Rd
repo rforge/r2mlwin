@@ -84,7 +84,7 @@ A list of objects to specify factor analysis, as used in the argument \code{fact
 }
 
 \author{
-Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
+Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
 }
 \note{
 This function is derived from \code{\link[rbugs]{rbugs}} (written by Jun Yan and Marcos Prates).
