@@ -2,7 +2,8 @@ predLines2 <-
 function(indata, chains, resi.chains, xname, lev=2, levID, selected=NULL, probs=c(.025,.975), Legend=T){
 
 ## This function is to draw predicted lines (medians, lower quantiles and upper quantiles) at higher levels (level>=2)
-
+    chains<-as.data.frame(chains)
+    resi.chains<-as.data.frame(resi.chains)
     categrv=indata[[rev(levID)[lev]]]
     if (is.null(selected)){
         selected =unique(categrv)
