@@ -1,6 +1,6 @@
 Package: R2MLwiN
-Version: 0.1-5
-Date: 2013-02-12
+Version: 0.1-6
+Date: 2013-09-06
 Title: Running MLwiN from within R
 Author: Zhengzheng Zhang,
     Chris Charlton,
@@ -13,11 +13,11 @@ Authors@R: c(person("Zhengzheng", "Zhang", role = c("aut", "cre"),email =
     person("Richard", "Parker", role = "aut"), person("George", "Leckie", role
     = "aut"), person("William", "Browne", role = "aut"))
 Depends:
-    R (>=  2.13.0),
+    R (>=  2.14.0),
     methods,
-    coda (>= 0.13-2),
-    foreign (>= 0.8-41),
-    rbugs (>= 0.5-5)
+    coda (>= 0.16-1),
+    foreign (>= 0.8-46),
+    rbugs (>= 0.5-7)
 Suggests:
     lme4 (>= 0.999999-0)
 OS_type: windows
