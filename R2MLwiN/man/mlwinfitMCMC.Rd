@@ -38,11 +38,11 @@ This S4 class object is used to save the outputs from the fitted multilevel mode
     \item{RP.cov}{Displays a covariance matrix of the random part estimates.}
     \item{elapsed.time}{Calculates the CPU time used for fitting the model.}
     \item{LIKE}{The deviance statistic (-2*log(like)).}
+    \item{MIdata}{If \code{dami} is not empty, then the complete response variable \code{y} are returned.}
     \item{BDIC}{Bayesian Deviance Information Criterion (DIC)}
     \item{fact.loadings}{If \code{fact} is not empty, then the factor loadings are returned.}
     \item{fact.cov}{If \code{fact} is not empty, then factor covariances are returned.}
     \item{fact.chains}{If \code{fact} is not empty, then the factor chains are returned.}
-    \item{esample}{If \code{dami} is not empty, then the complete response variable \code{y} are returned.}
     \item{residual}{If \code{resi.store} is \code{TRUE}, then the residual estimates at all levels are returned.}
     \item{resi.chains}{If \code{resi.store.levs} is not empty, then the residual chains at these levels are returned.}
   }

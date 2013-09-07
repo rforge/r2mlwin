@@ -50,7 +50,7 @@ Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012)
 }
 \note{
 Note that some characters listed above have special meanings in the formula, so avoid using them when you name the random variable. Alphanumeric characters (i.e. `[:alnum:]') are recommended for naming the random variable. 
-Note that use \code{[]} notation only in the fixed part when there is no categorical variable in the random effects. If there is one in the random part, the categorical variable has to be converted into a set of bianry variables (e.g., using \code{\link[R2MLwiN]{Untoggle}}) used in the \code{\link[R2MLwiN]{Formula}}.
+Note that use \code{[]} notation only in the fixed part when there is no categorical variable in the random effects. If there is one in the random part, the categorical variable has to be converted into a set of bianry variables (e.g., using \code{\link[R2MLwiN]{Untoggle}}) used in the \code{\link[R2MLwiN]{Formula.translate}}.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~

@@ -82,14 +82,9 @@ while (!file.access(winbugs,mode=0)==0||!file.access(winbugs,mode=1)==0||!file.a
 formula="log(obs,offs)~(0|perc_aff)+(3|cons)"
 levID=c('area','area','area')
 xclass=list("class"=3,"N1"=11,"weight"='wcar1',"id"='neigh1',"car"=TRUE)
-estoptions= list(xclass=xclass,EstM=1,notation="class",mcmcMeth=list(iterations=50000),resi.store=T, resi.store.levs=3)
+estoptions= list(xclass=xclass,EstM=1,notation="class",mcmcMeth=list(iterations=50000))
 (mymodel=runMLwiN(formula, levID, D='Poisson', indata, estoptions, BUGO=c(version=4,n.chains=1,bugs=winbugs, OpenBugs = FALSE), MLwiNPath=mlwin))
 
-##Closes WinBUGS manually
-mean(mymodel["resi.chains"][[1]])
-sd(mymodel["resi.chains"][[1]])
-
-summary(mymodel["chains.bugs"])
 
 # 17.7 Including exchangeable random effects . . . . . . . . . . . . . . 259
 

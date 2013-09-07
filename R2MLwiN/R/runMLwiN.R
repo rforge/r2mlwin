@@ -169,6 +169,23 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
 #         }
 #         starstr
 #     }
+    finalClean <- function(clean.files){
+      if (clean.files){
+        file.remove(dtafile)
+        file.remove(macrofile)
+        file.remove(IGLSfile)
+        if (EstM==1 && is.null(BUGO)) file.remove(MCMCfile)
+        if (EstM==1 && is.null(BUGO)) file.remove(chainfile)
+        #if (!is.null(BUGO))  file.remove(bugofile)
+        if (!is.null(BUGO))  file.remove(modelfile)
+        if (resi.store&& is.null(BUGO)) file.remove(resifile)
+        if (EstM==1 && is.null(BUGO)){
+          if (!is.null(resi.store.levs)) file.remove(resichains)
+          if (!is.null(fact)) file.remove(FACTchainfile)
+          if (!is.null(dami)) file.remove(MIfile)
+        }
+      } 
+    }
     if (EstM==0){
         MacroScript1(indata, dtafile,resp, levID, expl, rp, D, nonlinear, categ,notation, nonfp, clre,smat,Meth,
         BUGO,mem.init, weighting,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode)
@@ -575,7 +592,7 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
         if (D[1]=="Mixed"&&(!is.null(BUGO)))  warning("The Mixed response model is currently not implemented in WinBUGS/OpenBUGS.")
     }
     
-    if (resi.store){
+    if (resi.store&& is.null(BUGO)){
       resiraw=read.dta(resifile)
       residelpos=grep("^[c]?[[:digit:]]+$", names(resiraw))
       if(length(residelpos)==0){
@@ -589,23 +606,7 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
     if (EstM==1 && is.null(BUGO) && !is.null(resi.store.levs)){
       resiChains=mcmc(data=read.dta(resichains),thin = thinning)
     }
-    
-    if (clean.files){
-      file.remove(dtafile)
-      file.remove(macrofile)
-      file.remove(IGLSfile)
-      if (EstM==1 && is.null(BUGO)) file.remove(MCMCfile)
-      if (EstM==1 && is.null(BUGO)) file.remove(chainfile)
-      #if (!is.null(BUGO))  file.remove(bugofile)
-      if (!is.null(BUGO))  file.remove(modelfile)
-      if (resi.store) file.remove(resifile)
-      if (EstM==1 && is.null(BUGO)){
-        if (!is.null(resi.store.levs)) file.remove(resichains)
-        if (!is.null(fact)) file.remove(FACTchainfile)
-        if (!is.null(dami)) file.remove(MIfile)
-      }
-    }
-    
+        
     if (EstM==0){
         if (is.null(BUGO)){
         outIGLS=new("mlwinfitIGLS")
@@ -651,9 +652,11 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
 #             if (!is.null(dami)) file.remove(MIfile)
 #           }
 #         }
+        finalClean(clean.files)
         return(outIGLS)
         }
           else{
+            finalClean(clean.files)
             print(summary(chains.bugs.mcmc))
             return(chains.bugs.mcmc)
         }
@@ -729,12 +732,15 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
 #             if (!is.null(dami)) file.remove(MIfile)
 #           }
 #         }
+        finalClean(clean.files)
         return(outMCMC)
     }
       else{
+        finalClean(clean.files)
         print(summary(chains.bugs.mcmc))
         return(chains.bugs.mcmc)
       }
       
 }
+
 }

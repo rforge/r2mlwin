@@ -28,7 +28,7 @@ macrofile = macrofile,
 IGLSfile = IGLSfile,
 MCMCfile = MCMCfile,
 chainfile = chainfile,
-MIdata = MIdata,
+MIfile = MIfile,
 resifile = resifile,
 resi.store = resi.store,
 resioptions=resioptions,
@@ -175,7 +175,7 @@ A file name where the MCMC estimates will be saved. The default location is in t
   \item{chainfile}{
 A file name where the MCMC chains will be saved. The default location is in the temporary folder.
 }
-  \item{MIdata}{
+  \item{MIfile}{
 A file name where the missing values will be saved. The default location is in the temporary folder.
 }
   \item{resifile}{
