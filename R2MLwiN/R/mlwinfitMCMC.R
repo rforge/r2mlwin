@@ -1,5 +1,5 @@
         setClass(Class = "mlwinfitMCMC", representation = representation(Nobs="numeric",DataLength="numeric",burnin="numeric",iterations="numeric",
-        D="ANY", Formula="character", levID="character", merr="ANY", fact="ANY", xclass="ANY", estMCMC ="data.frame",
+        D="ANY", Formula="ANY", levID="character", merr="ANY", fact="ANY", xclass="ANY", estMCMC ="data.frame",
         FP="numeric", RP="numeric", RP.cov="matrix", FP.cov="matrix", chains="ANY",
         elapsed.time="numeric",BDIC="numeric",LIKE="ANY",fact.loadings="numeric",
         fact.cov="numeric",fact.chains="ANY",MIdata="data.frame",residual="data.frame",resi.chains="ANY"))
@@ -235,7 +235,7 @@
 
                 cat(paste(rep("-",50),collapse="-"),"\n")
                 cat("The model formula:\n")
-                cat(gsub("[[:space:]]","",object@Formula),"\n")
+                print(object@Formula)#cat(gsub("[[:space:]]","",object@Formula),"\n")
                 levID.display=""
                 if (is.na(levID0[length(levID0)])){
                     levID0=levID0[-length(levID0)]

@@ -2,7 +2,7 @@
       #' @slot a contains an R object
       #' @export
       setClass(Class = "mlwinfitIGLS", representation = representation(Nobs="numeric",DataLength="numeric",
-        D="ANY", Formula="character", levID="character", estIGLS ="data.frame",
+        D="ANY", Formula="ANY", levID="character", estIGLS ="data.frame",
         FP="numeric", RP="numeric", RP.cov="matrix", FP.cov="matrix", LIKE="ANY",
         elapsed.time="numeric",residual="data.frame"))
 
@@ -191,7 +191,7 @@
                 cat(paste("Deviance statistic: ", round(object@LIKE,1)),"\n")
                 cat(paste(rep("-",50),collapse="-"),"\n")
                 cat("The model formula:\n")
-                cat(gsub("[[:space:]]","",object@Formula),"\n")
+                print(object@Formula)#cat(gsub("[[:space:]]","",object@Formula),"\n")
                 levID0=object@levID
                 levID.display=""
                 if (is.na(levID0[length(levID0)])){
