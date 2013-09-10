@@ -276,7 +276,7 @@
                         printcol0=align2left("        ",loadx.names)
                         printcol1=align2right("Coef.",format(round(loadx[1,],digits),nsmall = digits))
                         printcol2=align2right("Std. Err.",format(round(loadx[2,],digits),nsmall = digits))
-                        printcol3=align2right("[95% Cred.",format(round(loadx[3,],digits),nsmall = digits))
+                        printcol3=align2right("[95% Conf.",format(round(loadx[3,],digits),nsmall = digits))
                         printcol4=align2right("Interval]",format(round(loadx[4,],digits),nsmall = digits))
                         for (i in 1:(ncol(loadx)+1)){
                             cat(printcol0[i]," ",printcol1[i]," ",printcol2[i]," ",printcol3[i]," ",printcol4[i],"\n")
@@ -306,7 +306,7 @@
                     printcol0=align2left("        ",fact.cov.names)
                     printcol1=align2right("Coef.",format(round(fcov[1,],digits),nsmall = digits))
                     printcol2=align2right("Std. Err.",format(round(fcov[2,],digits),nsmall = digits))
-                    printcol3=align2right("[95% Cred.",format(round(fcov[3,],digits),nsmall = digits))
+                    printcol3=align2right("[95% Conf.",format(round(fcov[3,],digits),nsmall = digits))
                     printcol4=align2right("Interval]",format(round(fcov[4,],digits),nsmall = digits))
                     for (i in 1:(ncol(fcov)+1)){
                         cat(printcol0[i]," ",printcol1[i]," ",printcol2[i]," ",printcol3[i]," ",printcol4[i],"\n")
