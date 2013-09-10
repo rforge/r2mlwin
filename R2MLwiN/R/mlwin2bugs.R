@@ -2,13 +2,6 @@ mlwin2bugs <-
 function(D,levID, datafile, initfile, modelfile, bugEst, fact, addmore, n.chains, n.iter, n.burnin, n.thin, debug=F, bugs,
     bugsWorkingDir=tempdir(), OpenBugs = F, cleanBugsWorkingDir = FALSE, seed = NULL){
 
-  
-    PACKages<-as.character(as.data.frame(installed.packages())$Package)
-    packs.req= "rbugs"
-    test<-( packs.req %in% PACKages)
-    if (!all(test))
-	       install.packages(packs.req[!test],repos="http://cran.r-project.org")
-    require(rbugs)
     rbugs2=function (data.file, inits.files, paramSet, model, bugEst, fact, n.chains = 1, n.iter = 2000,
         n.burnin = floor(n.iter/2), n.thin = max(1, floor(n.chains *
             (n.iter - n.burnin)/1000)), dic = FALSE, debug = FALSE,

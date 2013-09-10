@@ -1,12 +1,12 @@
 runMLwiN <-
 function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL, MLwiNPath="C:/Program Files (x86)/MLwiN v2.27/",workdir=tempdir()) {
 
-    PACKages<-as.character(as.data.frame(installed.packages())$Package)
-    packs.req= c("foreign","rbugs","coda")
-    test<-( packs.req %in% PACKages)
-    if (!all(test))
-	       install.packages(packs.req[!test],repos="http://cran.r-project.org")
-    require(foreign); require(rbugs); require(coda)
+#    PACKages<-as.character(as.data.frame(installed.packages())$Package)
+#    packs.req= c("foreign","rbugs","coda")
+#    test<-( packs.req %in% PACKages)
+#    if (!all(test))
+#	       install.packages(packs.req[!test],repos="http://cran.r-project.org")
+#    require(foreign); require(rbugs); require(coda)
 
     EstM=estoptions$EstM
     if (is.null(EstM)) EstM=0
@@ -118,57 +118,6 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
     fact =estoptions$fact
     xclass=estoptions$xclass
 
-#     align2right=function(titlename,ele){
-#         #for printing the table on the screen
-#         all.ele=c(titlename,ele)
-#         len.all.ele=nchar(all.ele)
-#         max.len.ele=max(len.all.ele)
-#         for (j in 1:length(all.ele)){
-#             if (len.all.ele[j]<max.len.ele){
-#                 len.diff=max.len.ele-len.all.ele[j]
-#                 all.ele[j]=paste(paste(rep(" ",len.diff),collapse=""),all.ele[j],sep="")
-#             }
-#         }
-# 
-#         all.ele
-#     }
-
-#     align2left=function(titlename,ele){
-#         #for printing the table on the screen
-#         all.ele=c(titlename,ele)
-#         len.all.ele=nchar(all.ele)
-#         max.len.ele=max(len.all.ele)
-#         for (j in 1:length(all.ele)){
-#             if (len.all.ele[j]<max.len.ele){
-#                 len.diff=max.len.ele-len.all.ele[j]
-#                 all.ele[j]=paste(all.ele[j],paste(rep(" ",len.diff),collapse=""),sep="")
-#             }
-#         }
-# 
-#         all.ele
-#     }
-
-#     signifstar = function(pval){
-#         starstr="Error"
-#         if (pval>=0&&pval<=1){
-#             if(pval<0.001){
-#                 starstr='***'
-#             }
-#             if(pval>=0.001&&pval<0.01){
-#                 starstr='** '
-#             }
-#             if(pval>=0.01&&pval<0.05){
-#                 starstr='*  '
-#             }
-#             if(pval>=0.05&&pval<0.1){
-#                 starstr='.  '
-#             }
-#             if(pval>=0.1){
-#                 starstr='   '
-#             }
-#         }
-#         starstr
-#     }
     finalClean <- function(clean.files){
       if (clean.files){
         file.remove(dtafile)
@@ -387,150 +336,112 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
         setwd(WD)
         nlev=length(levID)
         if (is.null(BUGO)){
-        estMCMC <-read.dta(MCMCfile)
-        chains <- read.dta(chainfile)
+          estMCMC <-read.dta(MCMCfile)
+          chains <- read.dta(chainfile)
 
-        chain.names=names(chains)
-        FP.names=chain.names[grep('FP',chain.names)]
-        RP.names=chain.names[grep('RP',chain.names)]
-        FP=as.vector(na.omit(estMCMC[,1]))
-        names(FP)=FP.names
-        RP=as.vector(na.omit(estMCMC[,3]))
-        levID0=levID
-        if (is.na(levID0[length(levID0)])){
-            tmp.RP.names=gsub("RP","",RP.names)
-            for (i in 1:length(RP.names)){
-                tmpstrlist=unlist(strsplit(tmp.RP.names[i],"\\_"))
-                tmpno=as.integer(tmpstrlist[1])-1
-                RP.names[i]=paste("RP",tmpno,"_",paste(tmpstrlist[-1],collapse="_"),sep="")
-            }
-            chain.names[grep('RP',chain.names)] =RP.names
-            names(chains)=chain.names
-        }
-        names(RP)=RP.names
-#        chains=mcmc(data=chains[,-c(1,2)], thin = thinning)
-        chains=mcmc(data=chains[,-1], thin = thinning)        
-        ESS=effectiveSize(chains)
+          chain.names=names(chains)
+          FP.names=chain.names[grep('FP',chain.names)]
+          RP.names=chain.names[grep('RP',chain.names)]
+          FP=as.vector(na.omit(estMCMC[,1]))
+          names(FP)=FP.names
+          RP=as.vector(na.omit(estMCMC[,3]))
+          levID0=levID
+          if (is.na(levID0[length(levID0)])){
+              tmp.RP.names=gsub("RP","",RP.names)
+              for (i in 1:length(RP.names)){
+                  tmpstrlist=unlist(strsplit(tmp.RP.names[i],"\\_"))
+                  tmpno=as.integer(tmpstrlist[1])-1
+                  RP.names[i]=paste("RP",tmpno,"_",paste(tmpstrlist[-1],collapse="_"),sep="")
+              }
+              chain.names[grep('RP',chain.names)] =RP.names
+              names(chains)=chain.names
+          }
+          names(RP)=RP.names
+          chains=mcmc(data=chains[,-1], thin = thinning)        
+          ESS=effectiveSize(chains)
 
-        if (!(D[1]=="Mixed")&&is.null(merr)&&is.null(fact)){
-            BDIC=estMCMC[,dim(estMCMC)[2]][c(5,6,4,3)]
-            BDIC.names=c("Dbar", "D(thetabar)",  "pD", "DIC")
-            names(BDIC)=BDIC.names
-        }else{
-            LIKE=estMCMC[,dim(estMCMC)[2]][3]
-            if(LIKE==1) LIKE=NA
-        }
-        Missing=estMCMC[,dim(estMCMC)[2]][9]
-        levID.display=""
-        if (is.na(levID0[length(levID0)])){
-            levID0=levID0[-length(levID0)]
-        }
-        for (i in 1:length(levID0)){
-            levID.display=paste(levID.display,"Level ",length(levID0)+1-i,": ",levID0[i],"     ",sep="")
-        }
-        if (!is.null(fact)){
-            loadings=na.omit(estMCMC[,5])
-            load.names=rep(NA,length(loadings))
-            k=1
-            for (i in 1:fact$nfact){
-                for (j in resp){
-                    load.names[k]=paste("load",i,"_",j,sep="")
-                    k=k+1
-                }
-            }
-            loadings.sd=na.omit(estMCMC[,6])
-            qt025=loadings-qnorm(.975)*loadings.sd
-            qt975=loadings+qnorm(.975)*loadings.sd
-            loads=rbind(loadings,loadings.sd,qt025,qt975)
-            colnames(loads)=load.names
+          if (!(D[1]=="Mixed")&&is.null(merr)&&is.null(fact)){
+              BDIC=estMCMC[,dim(estMCMC)[2]][c(5,6,4,3)]
+              BDIC.names=c("Dbar", "D(thetabar)",  "pD", "DIC")
+              names(BDIC)=BDIC.names
+          }else{
+              LIKE=estMCMC[,dim(estMCMC)[2]][3]
+              if(LIKE==1) LIKE=NA
+          }
+          Missing=estMCMC[,dim(estMCMC)[2]][9]
+          levID.display=""
+          if (is.na(levID0[length(levID0)])){
+              levID0=levID0[-length(levID0)]
+          }
+          for (i in 1:length(levID0)){
+              levID.display=paste(levID.display,"Level ",length(levID0)+1-i,": ",levID0[i],"     ",sep="")
+          }
+          if (!is.null(fact)){
+              loadings=na.omit(estMCMC[,5])
+              load.names=rep(NA,length(loadings))
+              k=1
+              for (i in 1:fact$nfact){
+                  for (j in resp){
+                      load.names[k]=paste("load",i,"_",j,sep="")
+                      k=k+1
+                  }
+              }
+              loadings.sd=na.omit(estMCMC[,6])
+              qt025=loadings-qnorm(.975)*loadings.sd
+              qt975=loadings+qnorm(.975)*loadings.sd
+              loads=rbind(loadings,loadings.sd,qt025,qt975)
+              colnames(loads)=load.names
 
-            fact.cov=fact.cov.names=na.omit(estMCMC[,7])
-            fact.cov.sd=na.omit(estMCMC[,8])
-            k=1
-            for (i in 1:fact$nfact){
-                for(j in 1:i){
-                    if(i==j){
-                        fact.cov.names[k]=paste("var_fact",i,sep="")
-                    }else{
-                        fact.cov.names[k]=paste("cov_fact",i,"_fact",j,sep="")
-                    }
-                    k=k+1
-                }
-            }
-         }
+              fact.cov=fact.cov.names=na.omit(estMCMC[,7])
+              fact.cov.sd=na.omit(estMCMC[,8])
+              k=1
+              for (i in 1:fact$nfact){
+                  for(j in 1:i){
+                      if(i==j){
+                          fact.cov.names[k]=paste("var_fact",i,sep="")
+                      }else{
+                          fact.cov.names[k]=paste("cov_fact",i,"_fact",j,sep="")
+                      }
+                      k=k+1
+                  }
+              }
+           }
 
 
-        estMCMC2=na.omit(estMCMC[,2])
-        FP.cov=matrix(NA,length(FP),length(FP))
-        k=1
-        for (i in 1:length(FP)){
-            for (j in 1:i){
-                FP.cov[i,j]=estMCMC2[k]
-                k=k+1
-            }
-        }
-        colnames(FP.cov)=rownames(FP.cov)=FP.names
-        estMCMC4=na.omit(estMCMC[,4])
-        RP.cov=matrix(NA,length(RP),length(RP))
-        k=1
-        for (i in 1:length(RP)){
-            for (j in 1:i){
-                RP.cov[i,j]=estMCMC4[k]
-                k=k+1
-            }
-        }
-        colnames(RP.cov)=rownames(RP.cov)=RP.names
+          estMCMC2=na.omit(estMCMC[,2])
+          FP.cov=matrix(NA,length(FP),length(FP))
+          k=1
+          for (i in 1:length(FP)){
+              for (j in 1:i){
+                  FP.cov[i,j]=estMCMC2[k]
+                  k=k+1
+              }
+          }
+          colnames(FP.cov)=rownames(FP.cov)=FP.names
+          estMCMC4=na.omit(estMCMC[,4])
+          RP.cov=matrix(NA,length(RP),length(RP))
+          k=1
+          for (i in 1:length(RP)){
+              for (j in 1:i){
+                  RP.cov[i,j]=estMCMC4[k]
+                  k=k+1
+              }
+          }
+          colnames(RP.cov)=rownames(RP.cov)=RP.names
 
-#        FP.print=rbind(FP,sqrt(diag(FP.cov)))
-        if (sum(grepl("bcons",colnames(chains)))>0){
-            bcons.pos=grep("bcons",colnames(chains))
-            chains[1,bcons.pos]=chains[1,bcons.pos]-0.001
-        }
-
-        
-        
-#         t.stats=apply(Chains,2,function(x) mean(x)/sd(x))
-#         
-#         p.values=2*pnorm(abs(t.stats),lower.tail =F)
-#         t.stat=NULL
-#         for (i in FP.names)  t.stat=c(t.stat, t.stats[[i]])
-#         p.value=NULL                
-#         for (i in FP.names)  p.value=c(p.value, p.values[[i]])
-#         onesided.p.value=NULL
-#         for (i in FP.names){
-#           x=Chains[,i]
-#           if(sign(mean(x))>0){
-#             onesided.p.values=sum(x<0)/length(x)
-#           }else{
-#             onesided.p.values=sum(x>0)/length(x)
-#           }
-#           onesided.p.value=c(onesided.p.value, onesided.p.values)
-#         }
-#         strstar=as.vector(sapply(p.value,signifstar))
-#         qt025=NULL
-#         for (i in FP.names)  qt025=c(qt025, quantile(Chains[,i],.025))
-#         qt975=NULL
-#         for (i in FP.names)  qt975=c(qt975, quantile(Chains[,i],.975))
-#         FP.print=rbind(FP.print,t.stat,p.value,onesided.p.value,qt025,qt975,ESS[FP.names])
-#         FP.names2=gsub("FP+\\_","",FP.names)
-        
-        if (is.na(levID[length(levID)])){
-          mlwinlev=(nlev-1):1
-          levID2=levID0
-        }else{
-          mlwinlev=nlev:1
-          levID2=levID
-        }
-        
-#         RP.print=rbind(RP,sqrt(diag(RP.cov)))
-#         qt025=NULL
-#         for (i in RP.names)  qt025=c(qt025, quantile(Chains[,i],.025))
-#         qt975=NULL
-#         for (i in RP.names)  qt975=c(qt975, quantile(Chains[,i],.975))
-#         RP.print=rbind(RP.print,qt025,qt975,ESS[RP.names])
-    }
-
-        
+          if (sum(grepl("bcons",colnames(chains)))>0){
+              bcons.pos=grep("bcons",colnames(chains))
+              chains[1,bcons.pos]=chains[1,bcons.pos]-0.001
+          }
+          
+          if (is.na(levID[length(levID)])){
+            mlwinlev=(nlev-1):1
+            levID2=levID0
+          }else{
+            mlwinlev=nlev:1
+            levID2=levID
+          }
+      }
     }
 
     if (show.file) file.show(macrofile)
@@ -596,10 +507,8 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
       resiraw=read.dta(resifile)
       residelpos=grep("^[c]?[[:digit:]]+$", names(resiraw))
       if(length(residelpos)==0){
-#        outIGLS["residual"]=resiraw
       }else{
         resisavename=names(resiraw)[-residelpos]
-#        outIGLS["residual"]=resiraw[resisavename]
       }
     }
     
@@ -622,36 +531,15 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
         outIGLS["RP.cov"]=RP.cov
         outIGLS["LIKE"]=LIKE
         outIGLS["elapsed.time"]=time2[3]
-#        if ((!is.null(BUGO))&&!(D[1]=="Mixed")){
-#          outIGLS["chains.bugs"]=chains.bugs.mcmc
-#        }
 
         if (resi.store){
-#             resiraw=read.dta(resifile)
-#             residelpos=grep("^[c]?[[:digit:]]+$", names(resiraw))
             if(length(residelpos)==0){
                 outIGLS["residual"]=resiraw
             }else{
-#                 resisavename=names(resiraw)[-residelpos]
                 outIGLS["residual"]=resiraw[resisavename]
             }
         }
                 
-#         if (clean.files){
-#           file.remove(dtafile)
-#           file.remove(macrofile)
-#           file.remove(IGLSfile)
-#           if (EstM==1) file.remove(MCMCfile)
-#           if (EstM==1) file.remove(chainfile)
-#           if (!is.null(BUGO))  file.remove(bugofile)
-#           if (!is.null(BUGO))  file.remove(modelfile)
-#           if (resi.store) file.remove(resifile)
-#           if (EstM==1){
-#             if (!is.null(resi.store.levs)) file.remove(resichains)
-#             if (!is.null(fact)) file.remove(FACTchainfile)
-#             if (!is.null(dami)) file.remove(MIfile)
-#           }
-#         }
         finalClean(clean.files)
         return(outIGLS)
         }
@@ -663,10 +551,7 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
         }
     if (EstM==1){
       if (is.null(BUGO)){
-
-
         outMCMC=new("mlwinfitMCMC")
-
         outMCMC["Nobs"]=nrow(indata)-Missing
         outMCMC["DataLength"]=nrow(indata)
         outMCMC["burnin"]=burnin
@@ -689,13 +574,9 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
         }else{
             outMCMC["LIKE"]=LIKE
         }
-#        if ((!is.null(BUGO))&&!(D[1]=="Mixed")){
-#            outMCMC["chains.bugs"]=chains.bugs.mcmc
-#        }
         if (!is.null(fact)){
             outMCMC["fact.loadings"]=loadings
             outMCMC["fact.cov"]=fact.cov
-#            outMCMC["fact.chains"]=read.dta(FACTchainfile)
             outMCMC["fact.chains"]=mcmc(data=read.dta(FACTchainfile),thin = thinning)
             
         }
@@ -707,40 +588,21 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
         }
 
         if (resi.store){
-#            resiraw=read.dta(resifile)
-#            residelpos=grep("^[c]?[[:digit:]]+$", names(resiraw))
             if(length(residelpos)==0){
                 outMCMC["residual"]=resiraw
             }else{
-#                resisavename=names(resiraw)[-residelpos]
                 outMCMC["residual"]=resiraw[resisavename]
             }
         }
-
-#         if (clean.files){
-#           file.remove(dtafile)
-#           file.remove(macrofile)
-#           file.remove(IGLSfile)
-#           if (EstM==1) file.remove(MCMCfile)
-#           if (EstM==1) file.remove(chainfile)
-#           if (!is.null(BUGO))  file.remove(bugofile)
-#           if (!is.null(BUGO))  file.remove(modelfile)
-#           if (resi.store) file.remove(resifile)
-#           if (EstM==1){
-#             if (!is.null(resi.store.levs)) file.remove(resichains)
-#             if (!is.null(fact)) file.remove(FACTchainfile)
-#             if (!is.null(dami)) file.remove(MIfile)
-#           }
-#         }
         finalClean(clean.files)
         return(outMCMC)
-    }
+      }
       else{
         finalClean(clean.files)
         print(summary(chains.bugs.mcmc))
         return(chains.bugs.mcmc)
       }
       
-}
+    }
 
 }
