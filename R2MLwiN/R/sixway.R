@@ -39,12 +39,12 @@ mcse=MCSE(chain, rho, ll=.5, ul=20)
 plot(mcse[,1],mcse[,2],type='l',xlab="updates",ylab="MCSE",tcl=-.1,cex.axis=.8)
 
 
-PACKages<-as.character(as.data.frame(installed.packages())$Package)
-packs.req= "coda"
-test<-( packs.req %in% PACKages)
-if (!all(test))
-    install.packages(packs.req[!test],repos="http://cran.r-project.org")
-require(coda)
+# PACKages<-as.character(as.data.frame(installed.packages())$Package)
+# packs.req= "coda"
+# test<-( packs.req %in% PACKages)
+# if (!all(test))
+#     install.packages(packs.req[!test],repos="http://cran.r-project.org")
+# require(coda)
 
 RL1=raftery.diag(chain, q=0.025, r=0.005, s=0.95, converge.eps=0.001)
 #N1=RL1$resmatrix[1,"N"]
