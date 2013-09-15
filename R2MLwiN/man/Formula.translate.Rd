@@ -5,7 +5,7 @@
 An internal function to translate an R formula from a character string into an R list object.
 }
 \description{
-A model formula, as a character string written in R-type syntax, is translated into an R list object.
+A model formula, as a formula object (or a character string) written in R-type syntax, is translated into an R list object.
 }
 \usage{
 Formula.translate(Formula, levID, D = "Normal", indata)
@@ -13,7 +13,7 @@ Formula.translate(Formula, levID, D = "Normal", indata)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{Formula}{
-A character string specifying a multilevel model. See \code{Value} for details. 
+A formula object (or a character string) specifying a multilevel model. See \code{Value} for details. 
 }
   \item{levID}{
 A character (vector) specifying the level ID(s).
@@ -27,6 +27,7 @@ A data.frame object containing the data to be modelled.
 }
 
 \value{
+If \code{Formula} is a character string, we have the following syntax
 \item{\code{~}}{ is used to separate response variable(s) and explanatory variable(s);}
 \item{\code{()}}{ are used to specify each random variable in the model together with its fixed/random part information;}
 \item{\code{|}}{ separates explanatory variable(s) (placed to the right of \code{|}) from the fixed/random part information (placed to the left of \code{|}) when placed within \code{()};}
@@ -40,6 +41,9 @@ A data.frame object containing the data to be modelled.
 \item{ }{ ...}
 \item{\code{\{\}}}{ gives a vector of binary indicators specifying a common coefficient. 1 is to include the component at the corresponding positions; zero otherwise. These digits are separated by commas; applies to multivariate normal, multinomial and mixed responses models only;}
 \item{\code{.}}{ is used for adding a separate coefficient for a particular component at a specific level; applies to multivariate normal, multinomial and mixed responses models only;}
+
+If \code{Formula} is a formula object, \code{0s/0c}, \code{2s/2c}, .... and \code{\{\}} have to be replaced by \code{`0s`/`0c`}, \code{`2s`/`2c`}, .... and \code{()} respectively. Other syntax remains the same.
+
 see examples in \code{\link{runMLwiN}} for details.
 
 Outputs an R list object, which is then used as the input for \code{\link{MacroScript1}} and/or \code{\link{MacroScript2}}.
