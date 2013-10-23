@@ -8,6 +8,7 @@
 \alias{[[<-,mlwinfitMCMC-method}
 \alias{print,mlwinfitMCMC-method}
 \alias{summary,mlwinfitMCMC-method}
+\alias{update,mlwinfitMCMC-method}
 \title{S4 class: mlwinfitMCMC}
 \description{
 This S4 class object is used to save the outputs from the fitted multilevel model using MCMC.

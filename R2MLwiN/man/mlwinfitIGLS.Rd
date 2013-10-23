@@ -8,6 +8,7 @@
 \alias{[[<-,mlwinfitIGLS-method}
 \alias{print,mlwinfitIGLS-method}
 \alias{summary,mlwinfitIGLS-method}
+\alias{update,mlwinfitIGLS-method}
 \title{S4 class: mlwinfitIGLS}
 \description{
 This S4 class object is used to save the outputs from the fitted multilevel model using IGLS.
