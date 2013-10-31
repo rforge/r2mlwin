@@ -72,7 +72,7 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
     if (resi.store) resifile=gsub("\\", "/", tempfile("resifile_",tmpdir =workdir,fileext=".dta"), fixed=TRUE)
     if (!is.null(resi.store.levs)) resichains=gsub("\\", "/", tempfile("resichains_",tmpdir =workdir,fileext=".dta"), fixed=TRUE)
 
-    write.dta(indata, dtafile)
+    write.dta(indata, dtafile, version = 10)
 
 
     invars=Formula.translate(Formula,levID, D,indata)
