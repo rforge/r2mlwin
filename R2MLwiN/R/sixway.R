@@ -1,15 +1,25 @@
 sixway <-
-function(chain,name=NULL,acf.maxlag=100,pacf.maxlag=10){
+function(chain,name=NULL,acf.maxlag=100,pacf.maxlag=10, ...){
 
-#if (thinning>1) {
-#    N=length(chain)*thinning
-#    chain=chain[thinning*(1:N)]
-#}
+args <- list(...)
+
+if(length(args) > 0 && "mar" %in% names(args)) {
+  mar <- args[["mar"]]
+}else{
+  mar <- c(4, 4, 2, 1)/2
+}
+
+if(length(args) > 0 && "mgp" %in% names(args)) {
+  mgp <- args[["mgp"]]
+}else{
+  mgp <- c(1,.25,0)
+}
+
+
 if (is.null(name)) name="x"
-#getOption( "device" )()
-#dev.new()
+
 windows()
-mypar <- par(mar = c(4, 4, 2, 1)/2,mgp=c(1,.25,0))
+mypar <- par(mar = mar, mgp=mgp, ...)
 on.exit(par(mypar))
 split.screen( figs = c( 4, 1 ) )
 split.screen( figs = c( 1, 2 ), screen = 1 )
