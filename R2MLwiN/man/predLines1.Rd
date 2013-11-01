@@ -19,7 +19,7 @@ A data.frame object containing the data modelled.
 A vector of the fixed part estimates.
 }
   \item{resi}{
-The name of the file where the estimates of residuals are saved.
+A data.frame object containing the residuals.
 }
   \item{xname}{
 A name of an explanatory variable.
