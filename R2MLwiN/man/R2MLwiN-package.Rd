@@ -44,7 +44,7 @@ MCMC estimation in MLwiN Version 2.25. Browne, W.J. (2012) Centre for Multilevel
 
 \seealso{
 \code{\link{Formula.translate}},\code{\link{ws2foreign}},\code{\link[foreign]{read.dta}},\code{\link{runMLwiN}},\code{\link{MacroScript1}},\code{\link{MacroScript2}},\cr
-\code{\link{caterpillar}},\code{\link{predLines1}},\code{\link{predLines2}},\code{\link{sixway}}
+\code{\link{caterpillar}},\code{\link{predLines}},\code{\link{predCurves}},\code{\link{sixway}}
 }
 \examples{
 \dontrun{

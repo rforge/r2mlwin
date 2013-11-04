@@ -15,6 +15,7 @@ Authors@R: c(person("Zhengzheng", "Zhang", role = c("aut", "cre"),email =
 Depends:
     R (>=  2.14.0),
     methods,
+    lattice,
     coda (>= 0.16-1),
     foreign (>= 0.8-46),
     rbugs (>= 0.5-7)
