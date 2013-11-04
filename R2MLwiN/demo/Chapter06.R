@@ -69,7 +69,7 @@ estoptions= list(EstM=1, mcmcMeth=list(iterations=5001),resi.store.levs=2)
 ## Fit the model
 (mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
 
-predLines(mymodel, indata, xname="standlrt", lev = 2, selected =NULL, probs=c(.025,.975),Legend=F)
+predLines(mymodel, indata, xname="standlrt", lev = 2, selected =NULL, probs=c(.025,.975), legend.space="right", legend.ncol=2)
 windows()
 predLines(mymodel, indata, xname="standlrt", lev = 2, selected =c(30,44,53,59), probs=c(.025,.975))
 
