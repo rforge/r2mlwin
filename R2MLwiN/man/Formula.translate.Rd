@@ -53,7 +53,7 @@ Outputs an R list object, which is then used as the input for \code{\link{MacroS
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
 }
 \note{
-Note that some characters listed above have special meanings in the formula, so avoid using them when you name the random variable. Alphanumeric characters (i.e. `[:alnum:]') are recommended for naming the random variable. 
+Note that some characters listed above have special meanings in the formula, so avoid using them when you name the random variable. Alphanumeric characters (i.e. `[:alnum:]') are recommended for naming the random variable. They are also recommended for naming a reference category, inside \code{[]}. 
 Note that use \code{[]} notation only in the fixed part when there is no categorical variable in the random effects. If there is one in the random part, the categorical variable has to be converted into a set of bianry variables (e.g., using \code{\link[R2MLwiN]{Untoggle}}) used in the \code{\link[R2MLwiN]{Formula.translate}}.
 }
 
