@@ -2,6 +2,7 @@ Thu Oct 31 2013
 1. Bug fixing
    * sixway now allows to supply some graphic parameter (see par()); This fixes the errors, e.g., "figure margins too large".
    * Corrected error when workdir path contains spaces in ws2foreign.r.
+   * fixed a bug in Formula.translate. The backward compatiblility was not working; this has been removed since we support R 2.14.0 onwards.
 Fri Sep 06 2013
 1. Bug fixing
    * When a model is run using MCMC, iterations (as set by the user in mcmcMeth) now refers to total chain run (post-burnin), rather than stored iterations only (relevant when thinning >1).
