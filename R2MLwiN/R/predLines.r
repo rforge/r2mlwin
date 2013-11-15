@@ -99,6 +99,7 @@ legend=TRUE, legend.space="top", legend.ncol=4, ...){
   ## This function is to draw predicted lines (medians, lower quantiles and upper quantiles) at higher levels (level>=2) 
     resi.chains <- as.data.frame(object["resi.chains"])
     chains <- as.data.frame(object["chains"])
+    levID <- object["levID"]
 
     categrv=indata[[rev(levID)[lev]]]
     if (is.null(selected)){
