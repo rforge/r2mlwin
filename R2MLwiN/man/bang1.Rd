@@ -44,8 +44,8 @@ bang1$use <- as.numeric(bang1$use) - 1
 bang1$urban <- as.numeric(bang1$urban) - 1
 
 # Fit 2-level random coefficient logistic model, using MCMC
-# cons (constant of ones) as denominator specifies Bernoulli distribution, since 0/1 response
-F1 = "logit(use, cons) ~ (0|cons + age + livch[0] + urban) + (2|cons + urban)"
+# cons (constant of ones) as denominator specifies Bernoulli distribution (0/1 response)
+F1 = "logit(use, cons) ~ (0|cons + age + lc[nokids] + urban) + (2|cons + urban)"
 ID = c("district", "woman")
 binomialMCMC <- runMLwiN(Formula = F1, levID = ID, D = "Binomial", indata = bang1, estoptions = list(EstM = 1), MLwiNPath = MLwiN)
 }
