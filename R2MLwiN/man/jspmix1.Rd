@@ -38,7 +38,8 @@ jspmix1$behaviour <- as.numeric(jspmix1$behaviour) - 1
 # fit multilevel mixed response model, modelling effect of sex and ravens on both responses, and fluent on english response only
 F1 = "c(english, probit(behaviour, cons)) ~ (0s|cons + sex + ravens) + (0c|fluent{1, 0}) + (2s|cons) + (1s|cons.english)"
 ID = c("school", "id")
-(MixedRespMCMC <- runMLwiN(Formula = F1, levID = ID, D = c("Mixed", "Normal", "Binomial"), indata = jspmix1, estoptions = list(EstM = 1, mcmcMeth = list(fixM = 1, residM = 1, Lev1VarM = 1)), MLwiNPath = MLwiN))
+(MixedRespMCMC <- runMLwiN(Formula = F1, levID = ID, D = c("Mixed", "Normal", "Binomial"), 
+indata = jspmix1, estoptions = list(EstM = 1, mcmcMeth = list(fixM = 1, residM = 1, Lev1VarM = 1)), MLwiNPath = MLwiN))
 }
 }
 \keyword{datasets}

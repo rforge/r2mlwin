@@ -47,7 +47,8 @@ data(wage1)
 F1 = "logearn ~ (0|cons + age_40 + numjobs) + (1|cons) + (2|cons)"
 ID = c("company", "id")
 OurMultiMemb <- list("class" = 2, "N1" = 4, "weight" = "weight1", "id" = NA)
-(MMembModel <- runMLwiN(Formula = F1, levID = ID, indata = wage1, estoptions = list(EstM = 1, xclass = OurMultiMemb, notation = "class"), MLwiNPath = MLwiN))
+(MMembModel <- runMLwiN(Formula = F1, levID = ID, indata = wage1, 
+estoptions = list(EstM = 1, xclass = OurMultiMemb, notation = "class"), MLwiNPath = MLwiN))
 }
 }
 \keyword{datasets}

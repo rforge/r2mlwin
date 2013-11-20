@@ -38,7 +38,8 @@ data(xc)
 F1 = "ATTAIN ~ (0|CONS) + (3|CONS) + (2|CONS) + (1|CONS)"
 ID = c("SID", "PID", "PUPIL")
 MyXC <- list("class" = c(3, 2),"N1" = c(1, 1))
-(XCModel <- runMLwiN(Formula = F1, levID = ID, indata = xc, estoptions = list(xclass = MyXC, EstM = 1), MLwiNPath = MLwiN))
+(XCModel <- runMLwiN(Formula = F1, levID = ID, indata = xc, 
+estoptions = list(xclass = MyXC, EstM = 1), MLwiNPath = MLwiN))
 }
 }
 \keyword{datasets}
