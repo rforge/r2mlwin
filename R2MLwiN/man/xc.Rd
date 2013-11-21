@@ -34,7 +34,8 @@ See \code{mlmRev} package for an alternative format of the same dataset.
 # NB: change path as appropriate
 MLwiN <- "C:/Program Files (x86)/MLwiN v2.27/"
 data(xc)
-# Fit cross-classified model, partitioning variance in ATTAIN across and within primary (PID) and secondary (SID) school
+# Fit cross-classified model, partitioning variance in ATTAIN across
+# and within primary (PID) and secondary (SID) school
 F1 = "ATTAIN ~ (0|CONS) + (3|CONS) + (2|CONS) + (1|CONS)"
 ID = c("SID", "PID", "PUPIL")
 MyXC <- list("class" = c(3, 2),"N1" = c(1, 1))

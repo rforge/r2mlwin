@@ -43,7 +43,8 @@ Rasbash, J., Browne, W. J., Healy, M., Cameron, B., Charlton, C. M. J. (2013) ML
 # NB: change path as appropriate
 MLwiN <- "C:/Program Files (x86)/MLwiN v2.27/"
 data(wage1)
-#fit age_40 and numjobs as fixed effects, with random effects for companies, in multiple membership model
+# fit age_40 and numjobs as fixed effects, with random effects for companies, 
+# in multiple membership model
 F1 = "logearn ~ (0|cons + age_40 + numjobs) + (1|cons) + (2|cons)"
 ID = c("company", "id")
 OurMultiMemb <- list("class" = 2, "N1" = 4, "weight" = "weight1", "id" = NA)

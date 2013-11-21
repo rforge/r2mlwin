@@ -41,12 +41,15 @@ F1 <- "normexam ~ (0|cons) + (2|cons) + (1|cons)"
 ID <- c("school", "student")
 (VarCompModel <- runMLwiN(Formula = F1, levID = ID, indata = tutorial, MLwiNPath = MLwiN))
 # print variance partition coefficient (VPC)
-print(VPC <- VarCompModel["RP"][["RP2_var_cons"]] / (VarCompModel["RP"][["RP1_var_cons"]] + VarCompModel["RP"][["RP2_var_cons"]]))
+print(VPC <- VarCompModel["RP"][["RP2_var_cons"]] / (VarCompModel["RP"][["RP1_var_cons"]] + 
+VarCompModel["RP"][["RP2_var_cons"]]))
 
 # Fit same model using MCMC
-(VarCompMCMC <- runMLwiN(Formula = F1, levID = ID, indata = tutorial, estoptions = list(EstM = 1), MLwiNPath = MLwiN))
+(VarCompMCMC <- runMLwiN(Formula = F1, levID = ID, indata = tutorial, 
+estoptions = list(EstM = 1), MLwiNPath = MLwiN))
 # return diagnostics for VPC
-VPC_MCMC <- VarCompMCMC["chains"][,"RP2_var_cons"] / (VarCompMCMC["chains"][,"RP1_var_cons"] + VarCompMCMC["chains"][,"RP2_var_cons"])
+VPC_MCMC <- VarCompMCMC["chains"][,"RP2_var_cons"] / (VarCompMCMC["chains"][,"RP1_var_cons"] + 
+VarCompMCMC["chains"][,"RP2_var_cons"])
 sixway(VPC_MCMC, name = "VPC")
 
 # Adding predictor, allowing its coefficient to vary across groups (i.e. random slopes)
@@ -60,7 +63,8 @@ F3 <- "normexam ~ (0|cons + standlrt) + (2|cons + standlrt) + (1|cons + standlrt
 standlrtC1V_MCMC <- runMLwiN (
 Formula = F3, levID = ID, indata = tutorial,
 estoptions = (list(EstM = 1,
-mcmcMeth = list(lclo = 1))), #fit log of precision at level 1 as a function of predictors
+#fit log of precision at level 1 as a function of predictors
+mcmcMeth = list(lclo = 1))), 
 MLwiNPath = MLwiN)
 }
 }
