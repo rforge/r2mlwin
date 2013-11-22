@@ -14,7 +14,7 @@ MLwiN uses both classical and Bayesian approaches to fitting multilevel models, 
 \tabular{ll}{
 Package: \tab R2MLwiN\cr
 Version: \tab 0.1-7\cr
-Date: \tab 2013-09-15\cr
+Date: \tab 2013-11-22\cr
 License: \tab  GPL (>= 2)\cr
 }
 To use the package, the following objects should be specified:
