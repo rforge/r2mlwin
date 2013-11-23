@@ -2,14 +2,8 @@ Package: R2MLwiN
 Version: 0.1-7
 Date: 2013-11-22
 Title: Running MLwiN from within R
-Author: Zhengzheng Zhang,
-    Chris Charlton,
-    Richard Parker,
-    George Leckie,
-    William Browne
-Maintainer: Zhengzheng Zhang <zhengzheng236@gmail.com>
 Authors@R: c(person("Zhengzheng", "Zhang", role = c("aut", "cre"),email =
-    "zhengzheng236@gmail.com"), person("Chris", "Charlton",  role = c("aut", "cre"),email ="c.charlton@bristol.ac.uk"),
+    "zhengzheng236@gmail.com"), person("Chris", "Charlton",  role = "aut"),
     person("Richard", "Parker", role = "aut"), person("George", "Leckie", role
     = "aut"), person("William", "Browne", role = "aut"))
 Depends:
