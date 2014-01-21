@@ -7,7 +7,7 @@ Untoggle = function(categrv,name=NULL){
         colnames(rvs)=levels(vars)
     }else{
         if (is.character(vars)){
-            colnames(rvs)=vars
+          colnames(rvs)=unique(as.character(categrv))
         }else{
             if(!is.null(name)&&is.numeric(vars)) colnames(rvs)=paste(name,vars,sep="_")
         }
