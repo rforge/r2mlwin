@@ -1,6 +1,8 @@
-Tue Jan 07 2014
+Fri Jan 24 2014
+1. Bug fixing
+   * Fixed bug in Untoggle which was mis-assigning names to categories
 2. Changes
-   * Testing the package running on MLwiN v2.27
+   * Tested the package running on MLwiN v2.29; now changed default MLwiNPath
    
 Thu Nov 21 2013
 1. Bug fixing
