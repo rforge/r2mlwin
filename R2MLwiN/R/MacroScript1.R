@@ -1,6 +1,7 @@
 MacroScript1 <-
 function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonlinear=c(0,1), categ=NULL,notation=NULL, nonfp=NA, clre,smat, Meth=1,
-BUGO=NULL,mem.init="default",weighting=NULL,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode){
+BUGO=NULL,mem.init="default", optimat=F, weighting=NULL,modelfile=modelfile,initfile=initfile,datafile=datafile,
+macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode){
 
     nlev=length(levID)
 
@@ -112,6 +113,13 @@ BUGO=NULL,mem.init="default",weighting=NULL,modelfile=modelfile,initfile=initfil
         wrt(paste("INIT    ",mem.init[1],mem.init[2],mem.init[3],mem.init[4],mem.init[5]))
     }
 
+    wrt("NOTE     Limit the maximum matrix size")
+    if (optimat){
+        wrt("OPTS   1")
+    }else{
+        wrt("OPTS   0")
+    }
+    
     wrt("MONI    0")
     wrt("NOTE    Import the R data into MLwiN")
     wrt(paste("RSTA    '",dtafile,"'",sep=""))

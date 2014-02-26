@@ -1,3 +1,6 @@
+Wed Feb 26 2014
+1. Changes
+   * Added 'optimat' option
 Fri Jan 24 2014
 1. Bug fixing
    * Fixed bug in Untoggle which was mis-assigning names to categories
