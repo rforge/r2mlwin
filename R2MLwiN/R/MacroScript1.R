@@ -1160,7 +1160,13 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
 
         tempcell = tempcell
         len.rpx = length(rpx)
-
+        if (level == 2 & D[[1]][1]=="Mixed"){
+            for (i in 2:length(D)){
+                if (D[[i]][1]=="Binomial" | D[[i]][1]=="Poisson"){
+                    len.rpx = len.rpx + 1
+                }
+            }
+        }
         residual_estimates=NULL
         for (k in 1:len.rpx){
             tr=paste("c",tempcell,sep="")

@@ -21,7 +21,14 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
     if (is.null(resi.store)) resi.store=F
 
     resioptions=estoptions$resioptions
-    if (is.null(resioptions)) resioptions = c("variance","sampling") #c("standardised","deletion","leverage","influnce","sampling")
+    if (is.null(resioptions)){
+        if (EstM==0){
+          resioptions = c("variance","sampling") #c("standardised","deletion","leverage","influnce","sampling")          
+        }
+        else{
+          resioptions = c("variance") #c("standardised","deletion","leverage","influnce","sampling")
+        }
+    }
     if ("variance"%in%resioptions&&("standardised"%in%resioptions||"deletion"%in%resioptions||"leverage"%in%resioptions)){
         stop("variance will not be calculated together with standardised or deletion or leverage. Please remove variance in resioptions, and then standard error will be calculated instead.")
     }
