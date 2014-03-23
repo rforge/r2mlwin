@@ -201,7 +201,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                 }
                 wrt(paste("ADDT    ",TT,sep=""))
             }
-
+            expl <- c(explx, exply)
         }
         wrt("")
     }
@@ -287,7 +287,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                     }
                     wrt(paste("ADDT    ",TT,sep=""))
                 }
-
+                sep.coeff <- c(explx, exply)
             }
             interpos2=grep("\\:",common.coeff)
             if (length(interpos2)==0){
@@ -406,7 +406,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                         }
                         wrt(paste("ADDT    ",TT,sep=""))
                     }
-
+                    expl <- c(explx, exply)
                 }
          }
          wrt("")
@@ -473,7 +473,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                     }
                     wrt(paste("ADDT    ",TT,sep=""))
                 }
-
+                sep.coeff <- c(explx, exply)
             }
             interpos2=grep("\\:",common.coeff)
             if (length(interpos2)==0){
@@ -592,7 +592,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                         }
                         wrt(paste("ADDT    ",TT,sep=""))
                     }
-
+                    expl <- c(explx, exply)
                 }
          }
          wrt("")
@@ -669,7 +669,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                     }
                     wrt(paste("ADDT    ",TT,sep=""))
                 }
-
+                sep.coeff <- c(explx, exply)
             }
             interpos2=grep("\\:",common.coeff)
             if (length(interpos2)==0){
@@ -788,7 +788,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                         }
                         wrt(paste("ADDT    ",TT,sep=""))
                     }
-
+                    expl <- c(explx, exply)
                 }
          }
          wrt("")
@@ -850,7 +850,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                 }
                 wrt(paste("ADDT    ",TT,sep=""))
             }
-
+            expl <- c(explx, exply)
         }
         wrt("")
     }
@@ -917,7 +917,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                 }
                 wrt(paste("ADDT    ",TT,sep=""))
             }
-
+            expl <- c(explx, exply)
         }
         wrt("")
     }
@@ -986,7 +986,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                 }
                 wrt(paste("ADDT    ",TT,sep=""))
             }
-
+            expl <- c(explx, exply)
         }
         wrt("")
     }

@@ -196,7 +196,7 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
                 }
                 wrt(paste("ADDT    ",TT,sep=""))
             }
-
+            expl <- c(explx, exply)
         }
         wrt("")
     }
@@ -282,7 +282,7 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
                     }
                     wrt(paste("ADDT    ",TT,sep=""))
                 }
-
+                sep.coeff <- c(explx, exply)
             }
             interpos2=grep("\\:",common.coeff)
             if (length(interpos2)==0){
@@ -401,7 +401,7 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
                         }
                         wrt(paste("ADDT    ",TT,sep=""))
                     }
-
+                    expl <- c(explx, exply)
                 }
          }
          wrt("")
@@ -468,7 +468,7 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
                     }
                     wrt(paste("ADDT    ",TT,sep=""))
                 }
-
+                sep.coeff <- c(explx, exply)
             }
             interpos2=grep("\\:",common.coeff)
             if (length(interpos2)==0){
@@ -587,7 +587,7 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
                         }
                         wrt(paste("ADDT    ",TT,sep=""))
                     }
-
+                    expl <- c(explx, exply)
                 }
          }
          wrt("")
@@ -664,7 +664,7 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
                     }
                     wrt(paste("ADDT    ",TT,sep=""))
                 }
-
+                sep.coeff <- c(explx, exply)
             }
             interpos2=grep("\\:",common.coeff)
             if (length(interpos2)==0){
@@ -783,7 +783,7 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
                         }
                         wrt(paste("ADDT    ",TT,sep=""))
                     }
-
+                    expl <- c(explx, exply)
                 }
          }
          wrt("")
@@ -845,7 +845,7 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
                 }
                 wrt(paste("ADDT    ",TT,sep=""))
             }
-
+            expl <- c(explx, exply)
         }
         wrt("")
     }
@@ -911,7 +911,7 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
                 }
                 wrt(paste("ADDT    ",TT,sep=""))
             }
-
+            expl <- c(explx, exply)
         }
         wrt("")
     }
@@ -980,7 +980,7 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
                 }
                 wrt(paste("ADDT    ",TT,sep=""))
             }
-
+            expl <- c(explx, exply)
         }
         wrt("")
     }
