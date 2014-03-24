@@ -1840,14 +1840,14 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
         cellnum
     }
 
-    if (D[1]=='Mixed'&& nrp>0){
-            if(sum(as.numeric(sub("rp","",rp.names))==2)>0){
-                rp[["rp2"]]=c("bcons",rp[["rp2"]])
-            }else{
-                rp.names=c(rp.names,"rp2")
-                rp=c(rp,rp2=c("bcons"))
-            }
-    }
+#     if (D[1]=='Mixed'&& nrp>0){
+#             if(sum(as.numeric(sub("rp","",rp.names))==2)>0){
+#                 rp[["rp2"]]=c("bcons",rp[["rp2"]])
+#             }else{
+#                 rp.names=c(rp.names,"rp2")
+#                 rp=c(rp,rp2=c("bcons"))
+#             }
+#     }
     if (nrp>0){
         for (ii in 1:nrp){
             if(!is.null(fact)){
@@ -1862,8 +1862,9 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
         }
     }
     # Add in extra parameters ect.
-    if (D[1]=='Binomial'||D[1]=='Poisson'||(D[1]=='Multinomial'&&as.numeric(D["mode"])==0)){
-        wrt(paste("NAME c",cellnum," 'RP1_bcons_1'",sep=""))
+    #if (D[1]=='Binomial'||D[1]=='Poisson'||(D[1]=='Multinomial'&&as.numeric(D["mode"])==0)){
+      if (D[1]=='Multinomial'&&as.numeric(D["mode"])==0){
+      wrt(paste("NAME c",cellnum," 'RP1_bcons_1'",sep=""))
         wrt(paste("DESC c",cellnum," 'RP1:bcons_1'",sep=""))
         cellnum=cellnum+1
     }

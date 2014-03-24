@@ -1732,17 +1732,17 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
 
 
     # Add in extra parameters ect.
-    if (D[1]=='Binomial'||D[1]=='Poisson'){
-        RP=c(RP, "RP1_bcons_1")
-    }
-    if (D[1]=='Multinomial'){
-        if (D["mode"]==0){
-            RP=c(RP, "RP2_-P/P","RP1_bcons_1")
-        }
-        if (D["mode"]==1){
-            RP=c(RP, "RP2_P*")
-        }
-    }
+#     if (D[1]=='Binomial'||D[1]=='Poisson'){
+#         RP=c(RP, "RP1_bcons_1")
+#     }
+#     if (D[1]=='Multinomial'){
+#         if (D["mode"]==0){
+#             RP=c(RP, "RP2_-P/P","RP1_bcons_1")
+#         }
+#         if (D["mode"]==1){
+#             RP=c(RP, "RP2_P*")
+#         }
+#     }
     assign("FP.names",FP,envir = parent.frame())#environment(runMLwiN))
     assign("RP.names",RP,envir = parent.frame())#environment(runMLwiN))
 

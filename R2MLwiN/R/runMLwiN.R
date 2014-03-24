@@ -82,7 +82,7 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
     write.dta(indata, dtafile, version = 10)
 
 
-    invars=Formula.translate(Formula,levID, D,indata)
+    invars=Formula.translate(Formula,levID, D, EstM, indata)
     resp=invars$resp
     expl=invars$expl
     D =invars$D
