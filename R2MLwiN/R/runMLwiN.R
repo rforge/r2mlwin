@@ -201,6 +201,12 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
                 RP.names[i]=paste("RP",tmpno,"_",paste(tmpstrlist[-1],collapse="_"),sep="")
             }
         }
+        namediff = length(RP)-length(RP.names)
+        if (namediff>0){
+        for (i in 1:namediff){
+            RP.names = c(RP.names, paste0("bcons.", i))
+}
+}
         names(RP)=RP.names
         LIKE=estIGLS[,dim(estIGLS)[2]][3]
         if(LIKE==1) LIKE=NA

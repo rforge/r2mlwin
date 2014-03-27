@@ -1260,13 +1260,13 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
             if (as.numeric(sub("rp","",rp.names[j]))!=1){
               rpx=rp[[j]]
               len.rpx = length(rpx)
-              if (as.numeric(sub("rp","",rp.names[j]))==2 & D[[1]][1]=="Mixed"){
-                for (i in 2:length(D)){
-                  if (D[[i]][1]=="Binomial" | D[[i]][1]=="Poisson"){
-                    len.rpx = len.rpx + 1
-                  }
-                }
-              }
+#               if (as.numeric(sub("rp","",rp.names[j]))==2 & D[[1]][1]=="Mixed"){
+#                 for (i in 2:length(D)){
+#                   if (D[[i]][1]=="Binomial" | D[[i]][1]=="Poisson"){
+#                     len.rpx = len.rpx + 1
+#                   }
+#                 }
+#               }
 #                 if (as.numeric(sub("rp","",rp.names[j]))==2){
 #                     rpx=rp[[j]]
 #                     len.rpx=length(rpx)

@@ -473,18 +473,27 @@ function(Formula,levID, D='Normal', mcmc=0, indata){
                   }
                 }
               }
-            if (D[1] == 'Ordered Multinomial'){
-              rp[["rp1"]] = c(rp[["rp1"]], "bcons.1")
-              
-            }
+#            if (D[1] == 'Ordered Multinomial'){
+#              rp[["rp1"]] = c(rp[["rp1"]], "bcons.1")
+#              
+#            }
             if (D[1] == 'Unordered Multinomial'){
               if (mcmc == 0){
-              rp[["rp1"]] = c(rp[["rp1"]], "bcons.1", "bcons.2")
+
+#                rp[["rp2"]] = c(rp[["rp2"]], "bcons.2")
               }
               else{
-                rp[["rp1"]] = c(rp[["rp1"]], "bcons.1")
+#                rp[["rp1"]] = c(rp[["rp1"]], "bcons.1")
               }
             }
+#             if (D[1] == 'Unordered Multinomial'){
+#               if (mcmc == 0){
+#               rp[["rp1"]] = c(rp[["rp1"]], "bcons.1", "bcons.2")
+#               }
+#               else{
+#                 rp[["rp1"]] = c(rp[["rp1"]], "bcons.1")
+#               }
+#             }
 
             for (i in 1:length(rands)){
               if (!is.na(rands[[i]][1])){
