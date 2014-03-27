@@ -21,6 +21,9 @@ A character (vector) specifying the level ID(s).
   \item{D}{
 A character string/vector specifying the distribution to be modelled.
 }
+  \item{mcmc}{
+A logical specifying whether MCMC method is used for parameter estimation. By default, \code{mcmc=0}, i.e., IGLS is used.  
+}
   \item{indata}{
 A data.frame object containing the data to be modelled.
 }
