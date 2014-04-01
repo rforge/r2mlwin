@@ -8,7 +8,7 @@ An internal function to translate an R formula from a character string into an R
 A model formula, as a formula object (or a character string) written in R-type syntax, is translated into an R list object.
 }
 \usage{
-Formula.translate(Formula, levID, D = "Normal", indata)
+Formula.translate(Formula, levID, D = "Normal", mcmc = 0, indata)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
