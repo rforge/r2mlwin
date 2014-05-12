@@ -1,3 +1,26 @@
+Mon May 12 2014
+1. Bug fixing
+   * Allow R formula object to be used when fitting factor models
+   * Set default value for indata to NULL and give error message if it isn't specified
+   * Call MLwiN via system2 instead of shell to improve cross-platform compatibility
+   * Fixed error in caterpillarR
+   * Use dev.new() instead of windows() function to allow graphs to be displayed on non-Windows systems
+2. Changes
+   * Set Y-axis for ACF/PACF graphs to range from zero to one
+   * Use column name for parameter if it isn't manually specified in sixway
+   * Allow full path to the MLwiN executable to be specified instead of just the root path
+   * Allow redirection of output from MLwiN when it is called
+   * Detect the version of MLwiN being used and block if it is too old
+   * Allow package to be installed on non-Windows systems
+   * Add MLwiN_path option to allow the location of MLwiN to be set once per session
+   * Factor chains are now reshaped to one column per parameter when returned
+   * Residual chains are now reshapred to one column per paramter when returned
+   * Updated demonstration code to use formula objects instead of strings
+   * Updated demonstration code to call OpenBUGS instead of WinBUGS to allow them to be run cross-platform
+   * Removed respecification of default options in demonstration code to make it more readable
+   * ECHO MLwiN output to the console while model fitting
+   * Automatically select 32/64-bit version of MLwiN based on running version of R
+
 Tue Apr 22 2014
 1. Bug fixing
    * Missing values are erroneously marked as 'infinite' when re-fitting non-Normal models in debugmode, thus resulting in errors
