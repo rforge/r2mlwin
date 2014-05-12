@@ -262,7 +262,7 @@ version:date:md5:filename:x64:trial
     Meth=estoptions$Meth
     if(is.null(Meth)) Meth=1
 
-    fact =estoptions$fact
+    fact=estoptions$fact
     xclass=estoptions$xclass
 
     finalClean <- function(clean.files){
@@ -519,6 +519,31 @@ version:date:md5:filename:x64:trial
                       k=k+1
                   }
               }
+
+              factchains=read.dta(FACTchainfile)
+              factscores=matrix(na.omit(factchains[,"_FACT_value_b"]), ncol=fact$nfact, byrow=FALSE)
+              factscores_v=matrix(na.omit(factchains[,"_FACT_value_v"]), ncol=fact$nfact, byrow=FALSE)
+              factloads=matrix(na.omit(factchains[,"_FACT_load_b_chain"]), nrow=iterations/thinning, byrow=TRUE)
+              factcovs=matrix(na.omit(factchains[,"_FACT_load_v_chain"]), nrow=iterations/thinning, byrow=TRUE)
+              nameloads=NULL
+              namefacts=NULL
+              namefacts_v=NULL
+              namecovs=NULL
+              for (i in 1:fact$nfact){
+                if (fact$lev.fact[i] > 1) {
+                  nunit <- nrow(unique(indata[rev(na.omit(levID))[fact$lev.fact[i]]]))
+                  if (length(factscores) > nunit) {
+                    factscores[(nunit+1):nrow(factscores),i] <- NA
+                  }
+                }
+                namefacts = c(namefacts, paste0("factorscores", i))
+                namefacts_v = c(namefacts_v, paste0("factorscores_var", i))
+              }
+              colnames(factscores) = namefacts
+              colnames(factscores_v) = namefacts_v
+              colnames(factloads) = load.names
+              colnames(factcovs) = fact.cov.names
+              factChains = list(scores=factscores, scores_v=factscores_v, loadings=mcmc(data=factloads, thin = thinning), cov=mcmc(data=factcovs, thin = thinning))
            }
 
 
@@ -691,10 +716,9 @@ version:date:md5:filename:x64:trial
             outMCMC["LIKE"]=LIKE
         }
         if (!is.null(fact)){
-            outMCMC["fact.loadings"]=loadings
-            outMCMC["fact.cov"]=fact.cov
-            outMCMC["fact.chains"]=mcmc(data=read.dta(FACTchainfile),thin = thinning)
-            
+          outMCMC["fact.loadings"]=loadings
+          outMCMC["fact.cov"]=fact.cov
+          outMCMC["fact.chains"]=factChains
         }
          if (!is.null(resi.store.levs)){
              outMCMC["resi.chains"]=resiChains

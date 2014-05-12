@@ -66,8 +66,8 @@ fact=list(nfact=nfact, lev.fact=lev.fact,nfactcor=nfactcor,factcor=factcor,loadi
 estoptions= list(EstM=1, fact=fact)
 (mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin))
 
-ranks=rank(na.omit(mymodel["fact.chains"][,"_FACT_value_b"]))
-plot(x=ranks,na.omit(mymodel["fact.chains"][,"_FACT_value_b"]),xlab="rank",ylab="factor scores",ylim=c(-2.35,1.2))
+ranks=rank(mymodel["fact.chains"]$scores)
+plot(x=ranks,mymodel["fact.chains"]$scores,xlab="rank",ylab="factor scores",ylim=c(-2.35,1.2))
 abline(h=0,lty="dotted")
 
 # 20.5 Adding a second factor to the model . . . . . . . . . . . . . . . .313
@@ -83,34 +83,24 @@ fact=list(nfact=nfact, lev.fact=lev.fact,nfactcor=nfactcor,factcor=factcor,loadi
 estoptions= list(EstM=1, fact=fact)
 (mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin))
 
-scores=na.omit(mymodel["fact.chains"][,"_FACT_value_b"])
-plot(scores[2440:4878],scores[1:2439],xlab="Factor 2",ylab="Factor 1")
+scores=mymodel["fact.chains"]$scores
+plot(scores[, 2],scores[,1],xlab="Factor 2",ylab="Factor 1")
 abline(h=0,lty="dotted")
 abline(v=0,lty="dotted")
 # 20.6 Examining the chains of the loading estimates . . . . . . . . . . 317
 
-loads =mymodel["fact.chains"][,"_FACT_load_b_chain"]
+loads = mymodel["fact.chains"]$loadings
 
-loadsM= matrix(loads,ncol=length(loads)/5000,byrow=T)
-namesloads=c(rep("load1",6),rep("load2",6))
-namesloads=gsub(" ","",paste(namesloads,seq=".",c(1:6,1:6)))
-colnames(loadsM)=namesloads
-
-sixway(loadsM[,"load1.2"],acf.maxlag=400,name="load1.2")
-sixway(loadsM[,"load2.3"],acf.maxlag=1500,name="load2.3")
+sixway(loads[, "load1_biol_core"],acf.maxlag=400,name="load1.2")
+sixway(loads[, "load2_biol_r3"],acf.maxlag=1500,name="load2.3")
 
 ##burn-in: 5000, iterations=10,000
 estoptions= list(EstM=1, fact=fact,mcmcMeth=list(burnin=5000,iterations=10000))
 (mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin))
 
-loads =mymodel["fact.chains"][,"_FACT_load_b_chain"]
+loads = mymodel["fact.chains"]$loadings
 
-loadsM= matrix(loads,ncol=length(loads)/10000,byrow=T)
-namesloads=c(rep("load1",6),rep("load2",6))
-namesloads=gsub(" ","",paste(namesloads,seq=".",c(1:6,1:6)))
-colnames(loadsM)=namesloads
-
-sixway(loadsM[,"load2.3"],acf.maxlag=500,name="load2.3")
+sixway(loads[, "load2_biol_r3"],acf.maxlag=500,name="load2.3")
 
 # 20.7 Correlated factor . . . . . . . . . . . . . . . . . . . . . . . .319
 
@@ -157,8 +147,9 @@ fact=list(nfact=nfact, lev.fact=lev.fact,nfactcor=nfactcor,factcor=factcor,loadi
 estoptions= list(EstM=1, fact=fact)
 (mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin))
 
-ranks=rank(mymodel["fact.chains"][2440:2538,"_FACT_value_b"])
-plot(x=ranks,y=mymodel["fact.chains"][2440:2538,"_FACT_value_b"],xlab="rank",ylab="factor scores",ylim=c(-1,1))
+
+ranks=rank(na.omit(mymodel["fact.chains"]$scores[,2]))
+plot(x=ranks,y=na.omit(mymodel["fact.chains"]$scores[,2]),xlab="rank",ylab="factor scores",ylim=c(-1,1))
 abline(h=0,lty="dotted")
 
 # 20.10 Extensions and some warnings . . . . . . . . . . . . . . . . . . 324
