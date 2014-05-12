@@ -67,7 +67,7 @@ formula=a-point ~ (0|cons+gcseav+gcse^2+gcse^3+gender)+(1|cons )
 levID='pupil'
 estoptions= list(EstM=1)
 ## Fit the model
-mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions, MLwiNPath=mlwin)
+mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions, MLwiNPath=mlwin)
 
 predCurves(mymodel, indata,xname="gcseav", group="gender")
 }

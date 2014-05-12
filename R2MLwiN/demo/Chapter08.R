@@ -20,12 +20,13 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.30/"
-while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
-    cat("Please specify the MLwiN folder including the MLwiN executable:\n")
-    mlwin=scan(what=character(0),sep ="\n")
-    mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
+mlwin <- getOption("MLwiN_path")
+while (!file.access(mlwin, mode=1)==0) {
+  cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
+  mlwin=scan(what=character(0),sep ="\n")
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
 }
+options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
@@ -51,9 +52,9 @@ for(i in 1:ns){
   e <- rnorm(108, 0, sqrt(Actual[3]))
   resp <- Actual[1] * cons + u + e
   indata = data.frame(cbind(pupil, school, cons, resp))
-  simModelIGLS <- runMLwiN(formula, levID, D = "Normal", indata, estoptions = list(EstM = 0), MLwiNPath=mlwin, workdir = tempdir())
+  simModelIGLS <- runMLwiN(formula, levID, indata=indata)
   IGLS_array[,,i] <- as.matrix(simModelIGLS["estIGLS"])
-  simModelMCMC <- runMLwiN(formula, levID, D = "Normal", indata, estoptions = list(EstM = 1), MLwiNPath=mlwin, workdir = tempdir())
+  simModelMCMC <- runMLwiN(formula, levID, indata=indata, estoptions = list(EstM = 1))
   MCMC_array[,,i] <- as.matrix(simModelMCMC["estMCMC"])
   MCMC_median[i, ] <- c(median(simModelMCMC["chains"][,"RP2_var_cons"]), median(simModelMCMC["chains"][,"RP1_var_cons"]))
   if (Actual[1] > quantile(simModelMCMC["chains"][,"FP_cons"], 0.025) & Actual[1] < quantile(simModelMCMC["chains"][,"FP_cons"], 0.975)) {

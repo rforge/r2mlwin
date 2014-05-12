@@ -18,12 +18,13 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.30/"
-while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
-    cat("Please specify the MLwiN folder including the MLwiN executable:\n")
-    mlwin=scan(what=character(0),sep ="\n")
-    mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
+mlwin <- getOption("MLwiN_path")
+while (!file.access(mlwin, mode=1)==0) {
+  cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
+  mlwin=scan(what=character(0),sep ="\n")
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
 }
+options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
@@ -35,7 +36,7 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 #wsfile=paste(mlwin,"/samples/tutorial.ws",sep="")
 ## the tutorial.dta will be save under the temporary folder
 #inputfile=paste(tempdir(),"/tutorial.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
+#ws2foreign(wsfile, foreignfile=inputfile)
 #library(foreign); indata =read.dta(inputfile)
 
 ## openbugs executable
@@ -59,7 +60,7 @@ levID=c('school','student')
 ## Uses the results from IGLS to create initial values for bugs
 estoptions= list(EstM=0, show.file=T)
 ## Fit the model by calling openbugs using the rbugs package
-mymodel1=runMLwiN(formula, levID, D="Normal", indata, estoptions,BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=openbugs, OpenBugs = T), MLwiNPath=mlwin, workdir = tempdir())
+mymodel1=runMLwiN(formula, levID, indata=indata, estoptions=estoptions,BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=openbugs, OpenBugs = T))
 summary(mymodel1[[1]][,"beta[2]"])
 sixway(mymodel1[[1]][,"beta[2]"])
 

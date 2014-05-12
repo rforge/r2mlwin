@@ -16,11 +16,13 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.30/"
-while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
-    mlwin=scan(what=character(0),sep ="\n")
-    mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
+mlwin <- getOption("MLwiN_path")
+while (!file.access(mlwin, mode=1)==0) {
+  cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
+  mlwin=scan(what=character(0),sep ="\n")
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
 }
+options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
@@ -29,7 +31,7 @@ while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.acces
 wsfile=paste(mlwin,"/samples/mmmec1.ws",sep="")
 # the tutorial.dta will be save under the temporary folder
 inputfile=paste(tempdir(),"/mmmec1.dta",sep="")
-ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
+ws2foreign(wsfile, foreignfile=inputfile)
 library(foreign); indata =read.dta(inputfile)
 indata[["logexp"]]=double2singlePrecision(log(indata[["exp"]]))
 levels(indata[["nation"]])=c("Belgium", "W_Germany", "Denmark", "France", "UK", "Italy", "Ireland", "Luxembourg", "Netherlands")
@@ -42,7 +44,7 @@ levID=c('nation','region','county')
 ## Choose option(s) for inference
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000))
 ## Fit the model
-(mymodel1=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin))
+(mymodel1=runMLwiN(formula, levID, D="Poisson", indata=indata, estoptions=estoptions))
 summary(mymodel1["chains"][,"FP_uvbi"])
 sixway(mymodel1["chains"][,"FP_uvbi"],"beta_1")
 
@@ -54,7 +56,7 @@ levID=c('region','county')
 ## Choose option(s) for inference
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000,seed=13))
 ## Fit the model
-(mymodel2=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin))
+(mymodel2=runMLwiN(formula, levID, D="Poisson", indata=indata, estoptions=estoptions))
 summary(mymodel2["chains"][,"FP_uvbi"])
 sixway(mymodel2["chains"][,"FP_uvbi"],"beta_1")
 
@@ -66,7 +68,7 @@ levID=c('nation','region','county')
 ## Choose option(s) for inference
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000,seed=13))
 ## Fit the model
-(mymodel3=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin))
+(mymodel3=runMLwiN(formula, levID, D="Poisson", indata=indata, estoptions=estoptions))
 
 ## Define the model
 formula=log(obs,logexp)~(0|uvbi+nation[])+(2|cons)
@@ -74,7 +76,7 @@ levID=c('nation','region','county')
 ## Choose option(s) for inference
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000))
 ## Fit the model
-(mymodel4=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin))
+(mymodel4=runMLwiN(formula, levID, D="Poisson", indata=indata, estoptions=estoptions))
 
 # 11.4 Interaction with UV exposure . . . . . . . . . . . . . . . . . . .161
 
@@ -84,7 +86,7 @@ levID=c('region','county')
 ## Choose option(s) for inference
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000))
 ## Fit the model
-(mymodel5=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin))
+(mymodel5=runMLwiN(formula, levID, D="Poisson", indata=indata, estoptions=estoptions))
 sixway(mymodel5["chains"][,"FP_Belgium"],acf.maxlag=5000,"beta_1")
 
 # 11.5 Problems with univariate updating Metropolis procedures . . . . . 163
@@ -92,7 +94,7 @@ sixway(mymodel5["chains"][,"FP_Belgium"],acf.maxlag=5000,"beta_1")
 ## NOTE THAT WE RUN 50,000 rather than 500,000 HERE
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000,thinning=10))
 ## Fit the model
-(mymodel6=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin))
+(mymodel6=runMLwiN(formula, levID, D="Poisson", indata=indata, estoptions=estoptions))
 sixway(mymodel6["chains"][,"FP_Belgium"],"beta_1")
 
 ## Half of million interations (could take a few hours to run)

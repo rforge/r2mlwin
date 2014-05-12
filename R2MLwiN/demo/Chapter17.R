@@ -18,12 +18,13 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.30/"
-while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
-    cat("Please specify the MLwiN folder including the MLwiN executable:\n")
-    mlwin=scan(what=character(0),sep ="\n")
-    mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
+mlwin <- getOption("MLwiN_path")
+while (!file.access(mlwin, mode=1)==0) {
+  cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
+  mlwin=scan(what=character(0),sep ="\n")
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
 }
+options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
@@ -31,7 +32,7 @@ while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.acces
 wsfile=paste(mlwin,"/samples/lips1.ws",sep="")
 # the tutorial.dta will be save under the temporary folder
 inputfile=paste(tempdir(),"/lips1.dta",sep="")
-ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
+ws2foreign(wsfile, foreignfile=inputfile)
 library(foreign); indata =read.dta(inputfile)
 summary(indata)
 
@@ -40,19 +41,19 @@ summary(indata)
 formula=log(obs,offs)~(0|cons)
 levID=c('neigh1','area','area')
 estoptions= list(EstM=1,notation="class")
-(mymodel=runMLwiN(formula, levID, D='Poisson', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D='Poisson', indata=indata, estoptions=estoptions))
 
 formula=log(obs,offs)~(0|cons+perc_aff)
 levID=c('neigh1','area','area')
 estoptions= list(EstM=1,notation="class")
-(mymodel=runMLwiN(formula, levID, D='Poisson', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D='Poisson', indata=indata, estoptions=estoptions))
 
 # 17.3 Random effects models . . . . . . . . . . . . . . . . . . . . . . 251
 
 formula=log(obs,offs)~(0|cons+perc_aff)+(2|cons)
 levID=c('neigh1','area','area')
 estoptions= list(EstM=1,notation="class",mcmcMeth=list(iterations=50000))
-(mymodel=runMLwiN(formula, levID, D='Poisson', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D='Poisson', indata=indata, estoptions=estoptions))
 
 # 17.4 A spatial multiple-membership (MM) model . . . . . . . . . . . . .252
 
@@ -60,7 +61,7 @@ formula=log(obs,offs)~(0|cons+perc_aff)+(2|cons)+(3|cons)
 levID=c('neigh1','area','area')
 xclass=list("class"=3,"N1"=11,"weight"='weight1',"id"=NA)
 estoptions= list(xclass=xclass,EstM=1,notation="class",mcmcMeth=list(iterations=50000))
-(mymodel=runMLwiN(formula, levID, D='Poisson', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D='Poisson', indata=indata, estoptions=estoptions))
 
 # 17.5 Other spatial models . . . . . . . . . . . . . . . . . . . . . . .255
 
@@ -83,7 +84,7 @@ formula=log(obs,offs)~(0|perc_aff)+(3|cons)
 levID=c('area','area','area')
 xclass=list("class"=3,"N1"=11,"weight"='wcar1',"id"='neigh1',"car"=TRUE)
 estoptions= list(xclass=xclass,EstM=1,notation="class",mcmcMeth=list(iterations=50000))
-(mymodel=runMLwiN(formula, levID, D='Poisson', indata, estoptions, BUGO=c(version=4,n.chains=1,bugs=openbugs, OpenBugs = TRUE), MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D='Poisson', indata=indata, estoptions=estoptions, BUGO=c(version=4,n.chains=1,bugs=openbugs, OpenBugs = T)))
 
 
 # 17.7 Including exchangeable random effects . . . . . . . . . . . . . . 259
@@ -92,7 +93,7 @@ formula=log(obs,offs)~(0|perc_aff)+(2|cons)+(3|cons)
 levID=c('area','area','area')
 xclass=list("class"=3,"N1"=11,"weight"='wcar1',"id"='neigh1',"car"=TRUE)
 estoptions= list(xclass=xclass,EstM=1,notation="class",mcmcMeth=list(iterations=50000))
-(mymodel=runMLwiN(formula, levID, D='Poisson', indata, estoptions, MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D='Poisson', indata=indata, estoptions=estoptions))
 
 # 17.8 Further reading on spatial modelling . . . . . . . . . . . . . . .260
 

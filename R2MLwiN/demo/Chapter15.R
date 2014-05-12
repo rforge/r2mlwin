@@ -22,12 +22,13 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.30/"
-while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
-    cat("Please specify the MLwiN folder including the MLwiN executable:\n")
-    mlwin=scan(what=character(0),sep ="\n")
-    mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
+mlwin <- getOption("MLwiN_path")
+while (!file.access(mlwin, mode=1)==0) {
+  cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
+  mlwin=scan(what=character(0),sep ="\n")
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
 }
+options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
@@ -35,13 +36,13 @@ while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.acces
 wsfile=paste(mlwin,"/samples/xc1.ws",sep="")
 # the tutorial.dta will be save under the temporary folder
 inputfile=paste(tempdir(),"/xc1.dta",sep="")
-ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
+ws2foreign(wsfile, foreignfile=inputfile)
 library(foreign); indata =read.dta(inputfile)
 
 formula=ATTAIN~(0|CONS)+(3|CONS)+(1|CONS)
 levID=c('SID','PID','PUPIL')
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 # 15.4 A Cross-classified model . . . . . . . . . . . . . . . . . . . . .220
 
@@ -49,7 +50,7 @@ formula=ATTAIN~(0|CONS)+(3|CONS)+(2|CONS)+(1|CONS)
 levID=c('SID','PID','PUPIL')
 xclass=list("classes"=c(2,3),"N1"=c(1,1))
 estoptions= list(xclass=xclass,EstM=1,notation='class',resi.store=T,resi.store.levs=c(2,3))
-(mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 # 15.5 Residuals . . . . . . . . . . . . . . . . . . . . . . . . . . . . 223
 
@@ -95,13 +96,13 @@ formula=ATTAIN~(0|CONS+VRQ)+(3|CONS)+(2|CONS)+(1|CONS)
 levID=c('SID','PID','PUPIL')
 xclass=list("classes"=c(2,3),"N1"=c(1,1))
 estoptions= list(xclass=xclass,EstM=1,notation='class',resi.store=T,resi.store.levs=c(2,3))
-(mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 formula=ATTAIN~(0|CONS+VRQ+SC+FED+MED+CHOICE)+(3|CONS)+(2|CONS)+(1|CONS)
 levID=c('SID','PID','PUPIL')
 xclass=list("classes"=c(2,3),"N1"=c(1,1))
 estoptions= list(xclass=xclass,EstM=1,notation='class',resi.store=T,resi.store.levs=c(2,3))
-(mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 lencateg = length(unique(indata[["SID"]]))
 resi.chain0=mymodel["resi.chains"]$resi_lev3
@@ -115,7 +116,7 @@ formula=ATTAIN~(0|CONS+VRQ+SC+FED+MED+CHOICE+school19)+(2|CONS)+(1|CONS)
 levID=c('SID','PID','PUPIL')
 xclass=list("classes"=c(2,3),"N1"=c(1,1))
 estoptions= list(xclass=xclass,EstM=1,notation='class')
-(mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 # 15.7 Current restrictions for cross-classified models . . . . . . . . .229
 

@@ -20,12 +20,13 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.30/"
-while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
-    cat("Please specify the MLwiN folder including the MLwiN executable:\n")
-    mlwin=scan(what=character(0),sep ="\n")
-    mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
+mlwin <- getOption("MLwiN_path")
+while (!file.access(mlwin, mode=1)==0) {
+  cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
+  mlwin=scan(what=character(0),sep ="\n")
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
 }
+options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
@@ -33,7 +34,7 @@ while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.acces
 wsfile=paste(mlwin,"/samples/jspmix1.ws",sep="")
 # the jspmix1.dta will be save under the temporary folder
 inputfile=paste(tempdir(),"/jspmix1.dta",sep="")
-ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
+ws2foreign(wsfile, foreignfile=inputfile)
 library(foreign); indata =read.dta(inputfile)
 
 tab1=matrix(,3,3)
@@ -56,14 +57,14 @@ round(cor(indata[,c("sex","fluent","ravens","english","behaviour")]),4)
 formula=c(english,probit(behaviour,denomb))~(`0s`|cons+sex+ravens)+(`0c`|fluent(1,0))+(`1s`|cons.english)
 levID= 'id'
 estoptions= list(EstM=1,mcmcMeth=list(fixM=1,residM=1,Lev1VarM=1))
-(mymodel=runMLwiN(formula, levID, D=c("Mixed","Normal","Binomial"), indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D=c("Mixed","Normal","Binomial"), indata=indata, estoptions=estoptions))
 
 # 19.4 Multilevel mixed response model . . . . . . . . . . . . . . . . . 294
 
 formula=c(english,probit(behaviour,denomb))~(`0s`|cons+sex+ravens)+(`0c`|fluent(1,0))+(`2s`|cons)+(`1s`|cons.english)
 levID=c('school', 'id')
 estoptions= list(EstM=1,mcmcMeth=list(fixM=1,residM=1,Lev1VarM=1))
-(mymodel=runMLwiN(formula, levID, D=c("Mixed","Normal","Binomial"), indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D=c("Mixed","Normal","Binomial"), indata=indata, estoptions=estoptions))
 
 
 # 19.5 Rats dataset . . . . . . . . . . . . . . . . . . . . . . . . . . .295
@@ -71,26 +72,27 @@ estoptions= list(EstM=1,mcmcMeth=list(fixM=1,residM=1,Lev1VarM=1))
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.26/"
-while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
-    cat("Please specify the MLwiN folder including the MLwiN executable:\n")
-    mlwin=scan(what=character(0),sep ="\n")
-    mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
+mlwin <- getOption("MLwiN_path")
+while (!file.access(mlwin, mode=1)==0) {
+  cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
+  mlwin=scan(what=character(0),sep ="\n")
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
 }
+options(MLwiN_path=mlwin)
 
 # User's input if necessary
 # MLwiN sample worksheet folder
 wsfile=paste(mlwin,"/samples/rats.ws",sep="")
 # the tutorial.dta will be save under the temporary folder
 inputfile=paste(tempdir(),"/rats.dta",sep="")
-ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
+ws2foreign(wsfile, foreignfile=inputfile)
 library(foreign); indata =read.dta(inputfile)
 
 
 formula=c(y8,y15,y22,y29,y36)~(0|cons)+(1|cons)
 levID=c('rat')
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata, estoptions=estoptions))
 
 sixway(mymodel["chains"][,"RP1_var_cons_y8"],"sigma2u0")
 
@@ -104,7 +106,7 @@ round(cov2cor(t(covM1)),3)
 # 19.6 Fitting an autoregressive structure to the variance matrix . . . .298
 
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000),mcmcOptions=list(mcco=4))
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata, estoptions=estoptions))
 
 covM2=matrix(,5,5)
 colnames(covM2)=rownames(covM2)=c("cons.y8","cons.y15","cons.y22","cons.y29","cons.y36")

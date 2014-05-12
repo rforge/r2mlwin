@@ -67,7 +67,7 @@ inputfile=paste(tempdir(),"/tutorial.dta",sep="")
 ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
 library(foreign);indata =read.dta(inputfile)
 estoptions= list(EstM=1,resi.store=TRUE,resi.store.levs=2,mcmcMeth=list(iterations=5001))
-(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions,MLwiNPath=mlwin))
 
 resi.chain2 = mymodel["resi.chains"]$resi_lev2
 

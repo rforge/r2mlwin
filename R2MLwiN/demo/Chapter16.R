@@ -20,12 +20,13 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.30/"
-while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
-    cat("Please specify the MLwiN folder including the MLwiN executable:\n")
-    mlwin=scan(what=character(0),sep ="\n")
-    mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
+mlwin <- getOption("MLwiN_path")
+while (!file.access(mlwin, mode=1)==0) {
+  cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
+  mlwin=scan(what=character(0),sep ="\n")
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
 }
+options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
@@ -37,7 +38,7 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 #wsfile=paste(mlwin,"/samples/wage1.ws",sep="")
 ## the tutorial.dta will be save under the temporary folder
 #inputfile=paste(tempdir(),"/wage1.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
+#ws2foreign(wsfile, foreignfile=inputfile)
 #library(foreign); indata =read.dta(inputfile)
 #names(indata)=gsub("-","_",names(indata))
 
@@ -48,12 +49,12 @@ hist(indata[["logearn"]],breaks=20)
 formula=logearn~(0|cons+age_40+numjobs)+(1|cons)
 levID='id'
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 formula=logearn~(0|cons+age_40+numjobs+sex+parttime)+(1|cons)
 levID='id'
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 round(cor(indata[,c("parttime","sex","numjobs")]),4)
 
 # 16.4 Fitting multiple membership models to the dataset . . . . . . . . 237
@@ -63,12 +64,12 @@ tabulate(indata[["numjobs"]])
 formula=logearn~(0|cons+age_40+sex+parttime)+(2|cons)+(1|cons)
 levID=c('company','id')
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 ##Multiple membership
 xclass=list("class"=2,"N1"=4,"weight"='weight1',"id"=NA)
 estoptions= list(EstM=1,xclass=xclass,notation='class',resi.store=T,resi.store.levs=2)
-(mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 # 16.5 Residuals in multiple membership models . . . . . . . . . . . . . 240
 
@@ -97,7 +98,7 @@ levID=c('company','id')
 ##Multiple membership
 xclass=list("class"=2,"N1"=4,"weight"='weight1',"id"=NA)
 estoptions= list(EstM=1,xclass=xclass,notation='class')
-(mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 #  16.6 Alternative weights for multiple membership models . . . . . . . .243
 
@@ -105,7 +106,7 @@ estoptions= list(EstM=1,xclass=xclass,notation='class')
 ## New weights
 xclass=list("class"=2,"N1"=4,"weight"='ew1',"id"=NA)
 estoptions= list(EstM=1,xclass=xclass,notation='class')
-(mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 # 16.7 Multiple membership multiple classification (MMMC) models . . . . 244
 

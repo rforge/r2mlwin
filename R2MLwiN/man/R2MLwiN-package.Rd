@@ -66,7 +66,7 @@ levID=c('school','student')
 ## Choose option(s) for inference
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions, MLwiNPath=mlwin))
 
 ## The R2MLwiN package includes scripts to replicate all the analyses in
 ## Browne, W.J. (2009) MCMC estimation in MLwiN Version 2.13.

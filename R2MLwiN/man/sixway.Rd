@@ -64,7 +64,7 @@ wsfile=paste(wspath,"tutorial.ws",sep="")
 inputfile=paste(tempdir(),"/tutorial.dta",sep="")
 ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
 library(foreign);indata =read.dta(inputfile)
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin)
+mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions,MLwiNPath=mlwin)
 
 chain=mymodel["chains"][,"FP_standlrt"]
 sixway(chain,"beta_1")

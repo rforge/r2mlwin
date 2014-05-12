@@ -20,12 +20,13 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.30/"
-while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
-    cat("Please specify the MLwiN folder including the MLwiN executable:\n")
-    mlwin=scan(what=character(0),sep ="\n")
-    mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
+mlwin <- getOption("MLwiN_path")
+while (!file.access(mlwin, mode=1)==0) {
+  cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
+  mlwin=scan(what=character(0),sep ="\n")
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
 }
+options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
@@ -37,7 +38,7 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 #wsfile=paste(mlwin,"/samples/tutorial.ws",sep="")
 ## the tutorial.dta will be save under the temporary folder
 #inputfile=paste(tempdir(),"/tutorial.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
+#ws2foreign(wsfile, foreignfile=inputfile)
 #library(foreign); indata =read.dta(inputfile)
 
 ## openbugs executable
@@ -59,7 +60,7 @@ levID=c('school','student')
 
 ## Hierarchical centring at level 2 (DO NOT USE VERSION 2.25; the bug has been fixed for VERSION 2.26)
 estoptions= list(EstM=1, mcmcOptions=list(hcen=2),show.file=T)
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=openbugs, OpenBugs = T),MLwiNPath=mlwin)
+mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions,BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=openbugs, OpenBugs = T))
 sixway(mymodel[[1]][,"beta[1]"],"beta[1]")
 
 # 25.3 Binomial hierarchical centering algorithm . . . . . . . . . . . . 408
@@ -74,7 +75,7 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 #wsfile=paste(mlwin,"/samples/bang1.ws",sep="")
 ## the tutorial.dta will be save under the temporary folder
 #inputfile=paste(tempdir(),"/bang1.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
+#ws2foreign(wsfile, foreignfile=inputfile)
 #library(foreign); indata =read.dta(inputfile)
 levels(indata[["lc"]])=c("nokids",     "onekid",     "twokids",    "threepluskids")
 
@@ -97,12 +98,12 @@ levID=c('district','woman')
 
 ## Hierarchical centring at level 2
 estoptions= list(EstM=1, mcmcOptions=list(hcen=2))
-(mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D="Binomial", indata=indata, estoptions=estoptions))
 trajectories(mymodel["chains"])
 
 ## Hierarchical centring at level 2 + Orthogonal updates
 estoptions= list(EstM=1, mcmcOptions=list(hcen=2,orth=1))
-(mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D="Binomial", indata=indata, estoptions=estoptions))
 trajectories(mymodel["chains"])
 
 # 25.5 The Melanoma example . . . . . . . . . . . . . . . . . . . . . . .414
@@ -110,7 +111,7 @@ trajectories(mymodel["chains"])
 wsfile=paste(mlwin,"/samples/mmmec1.ws",sep="")
 # the tutorial.dta will be save under the temporary folder
 inputfile=paste(tempdir(),"/mmmec1.dta",sep="")
-ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
+ws2foreign(wsfile, foreignfile=inputfile)
 library(foreign); indata =read.dta(inputfile)
 
 indata[["logexp"]]=double2singlePrecision(log(indata[["exp"]]))
@@ -122,12 +123,12 @@ levID=c('region','county')
 
 ## Hierarchical centring at level 2
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000), mcmcOptions=list(hcen=2))
-(mymodel=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D="Poisson", indata=indata, estoptions=estoptions))
 sixway(mymodel["chains"][,"FP_Belgium"],acf.maxlag=100,"beta_1")
 
 ## Hierarchical centring at level 2 + Orthogonal updates
 estoptions= list(EstM=1, mcmcMeth=list(iterations=50000), mcmcOptions=list(orth=1,hcen=2))
-(mymodel=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D="Poisson", indata=indata, estoptions=estoptions))
 sixway(mymodel["chains"][,"FP_Belgium"],acf.maxlag=100,"beta_1")
 
 # 25.6 Normal response models in MLwiN . . . . . . . . . . . . . . . . . 419
@@ -140,7 +141,7 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 #wsfile=paste(mlwin,"/samples/tutorial.ws",sep="")
 ## the tutorial.dta will be save under the temporary folder
 #inputfile=paste(tempdir(),"/tutorial.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
+#ws2foreign(wsfile, foreignfile=inputfile)
 #library(foreign); indata =read.dta(inputfile)
 
 ## Define the model
@@ -150,12 +151,12 @@ levID=c('school','student')
 ## Univariate MH
 ## Hierarchical centring at level 2
 estoptions= list(EstM=1, mcmcMeth=list(fixM=2,residM=2),mcmcOptions=list(hcen=2))
-(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 trajectories(mymodel["chains"],Range=c(4501,5000))
 ## Gibbs
 ## Hierarchical centring at level 2
 estoptions= list(EstM=1, mcmcOptions=list(hcen=2))
-(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 trajectories(mymodel["chains"],Range=c(4501,5000))
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .422

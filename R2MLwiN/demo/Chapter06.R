@@ -16,12 +16,13 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.30/"
-while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
-    cat("Please specify the MLwiN folder including the MLwiN executable:\n")
-    mlwin=scan(what=character(0),sep ="\n")
-    mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
+mlwin <- getOption("MLwiN_path")
+while (!file.access(mlwin, mode=1)==0) {
+  cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
+  mlwin=scan(what=character(0),sep ="\n")
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
 }
+options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
@@ -33,7 +34,7 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 #wsfile=paste(mlwin,"/samples/tutorial.ws",sep="")
 ## the tutorial.dta will be save under the temporary folder
 #inputfile=paste(tempdir(),"/tutorial.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
+#ws2foreign(wsfile, foreignfile=inputfile)
 #library(foreign); indata =read.dta(inputfile)
 
 indata=cbind(indata,Untoggle(indata[["school"]],"school"))
@@ -46,28 +47,27 @@ levID='student'
 ## Choose MCMC algoritm for estimation (IGLS will be used to obtain starting values for MCMC)
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 ## Define the model
 formula=normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)
 levID=c('school','student')
 
 ## Choose IGLS algoritm for estimation
-estoptions= list(EstM=0)
 ## Fit the model
-(mymodel0a=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
+(mymodel0a=runMLwiN(formula, levID, indata=indata))
 
 ## Choose MCMC algoritm for estimation (IGLS will be used to obtain starting values for MCMC)
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel0=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
+(mymodel0=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 # 6.1 Prediction intervals for a random slopes regression model . . . . . 75
 
 ## Save level 2 residual chains
 estoptions= list(EstM=1, mcmcMeth=list(iterations=5001),resi.store.levs=2)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 predLines(mymodel, indata, xname="standlrt", lev = 2, selected =NULL, probs=c(.025,.975), legend.space="right", legend.ncol=2)
 dev.new()
@@ -80,14 +80,14 @@ predLines(mymodel, indata, xname="standlrt", lev = 2, selected =c(30,44,53,59), 
 ## Change the starting values for Level 2 variance matrix to .1 on diagonal 0 otherwise.
 estoptions= list(EstM=1, mcmcMeth=list(startval=list(RP.b=c(.1,0,.1,.554))))
 ## Fit the model
-(mymodel1=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
+(mymodel1=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 # 6.4 Uniform prior . . . . . . . . . . . . . . . . . . . . . . . . . . . 79
 
 ## Diffuse priors (Uniform priors)
 estoptions= list(EstM=1,mcmcMeth=list(priorcode=0))
 ## Fit the model
-(mymodel2=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
+(mymodel2=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 # 6.5 Informative prior . . . . . . . . . . . . . . . . . . . . . . . . . 80
 
@@ -96,7 +96,7 @@ prior=list(rp2=list(estimate=matrix(c(.09,.018,.09,.015),2,2),size=65))
 prior=prior2macro(prior,formula,levID,D='Normal', indata)
 estoptions= list(EstM=1,mcmcMeth=list(priorParam=prior))
 ## Fit the model
-(mymodel3=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
+(mymodel3=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 # 6.6 Results . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 81
 

@@ -16,12 +16,13 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.30/"
-while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
-    cat("Please specify the MLwiN folder including the MLwiN executable:\n")
-    mlwin=scan(what=character(0),sep ="\n")
-    mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
+mlwin <- getOption("MLwiN_path")
+while (!file.access(mlwin, mode=1)==0) {
+  cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
+  mlwin=scan(what=character(0),sep ="\n")
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
 }
+options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
@@ -33,7 +34,7 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 #wsfile=paste(mlwin,"/samples/tutorial.ws",sep="")
 ## the tutorial.dta will be save under the temporary folder
 #inputfile=paste(tempdir(),"/tutorial.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
+#ws2foreign(wsfile, foreignfile=inputfile)
 #library(foreign); indata =read.dta(inputfile)
 
 boy.normexam=indata[["normexam"]][which(indata[["girl"]]==0)]
@@ -77,7 +78,7 @@ levID=c('student')
 ## Choose option(s) for inference
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel1=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
+(mymodel1=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 trajectories(mymodel1["chains"],Range=c(4501,5000))
 
 l1varfn= mymodel1["RP"]["RP1_var_cons"]+2*mymodel1["RP"]["RP1_cov_cons_standlrt"]*indata[["standlrt"]]+
@@ -93,7 +94,7 @@ levID=c('school','student')
 ## Choose option(s) for inference
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel2=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
+(mymodel2=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 l2varfn= mymodel2["RP"]["RP2_var_cons"]+2*mymodel2["RP"]["RP2_cov_cons_standlrt"]*indata[["standlrt"]]+
 mymodel2["RP"]["RP2_var_standlrt"]*indata[["standlrt"]]^2
@@ -106,13 +107,13 @@ formula=normexam~(0|cons+standlrt)+(1|cons+standlrt)+(2|cons+standlrt)
 levID=c('school','student')
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel3=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
+(mymodel3=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 ## Remove term standlrt/standlrt from the level 1 covariance matrix
 clre=matrix(,nrow=3,ncol=1)
 clre[1,1]=1; clre[2,1]='standlrt'; clre[3,1]='standlrt'
 estoptions= list(EstM=1,clre=clre)
 ## Fit the model
-(mymodel4=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
+(mymodel4=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 # 9.4 Relationship with gender . . . . . . . . . . . . . . . . . . . . . 123
 
@@ -124,7 +125,7 @@ clre[1,1]=1; clre[2,1]='standlrt'; clre[3,1]='standlrt'
 clre[1,2]=1; clre[2,2]='girl'; clre[3,2]='girl'
 estoptions= list(EstM=1,clre=clre)
 ## Fit the model
-(mymodel5=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin, workdir = tempdir()))
+(mymodel5=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 l2varfn= mymodel5["RP"]["RP2_var_cons"]+2*mymodel5["RP"]["RP2_cov_cons_standlrt"]*indata[["standlrt"]]+
 mymodel5["RP"]["RP2_var_standlrt"]*indata[["standlrt"]]^2
@@ -140,7 +141,7 @@ abline(v=0,lty="dotted")
 
 estoptions= list(EstM=1,clre=clre,mcmcMeth=list(lclo=1))
 ## Fit the model
-(mymodel6=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin, workdir = tempdir()))
+(mymodel6=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 l2varfn= mymodel6["RP"]["RP2_var_cons"]+2*mymodel6["RP"]["RP2_cov_cons_standlrt"]*indata[["standlrt"]]+
 mymodel6["RP"]["RP2_var_standlrt"]*indata[["standlrt"]]^2

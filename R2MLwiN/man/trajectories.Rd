@@ -48,7 +48,7 @@ wsfile=paste(wspath,"tutorial.ws",sep="")
 inputfile=paste(tempdir(),"/tutorial.dta",sep="")
 ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
 library(foreign);indata =read.dta(inputfile)
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions, MLwiNPath=mlwin)
 
 trajectories(mymodel["chains"],Range=c(4501,5000))
 }

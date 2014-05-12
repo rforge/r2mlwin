@@ -20,12 +20,13 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.30/"
-while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
-    cat("Please specify the MLwiN folder including the MLwiN executable:\n")
-    mlwin=scan(what=character(0),sep ="\n")
-    mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
+mlwin <- getOption("MLwiN_path")
+while (!file.access(mlwin, mode=1)==0) {
+  cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
+  mlwin=scan(what=character(0),sep ="\n")
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
 }
+options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
@@ -37,19 +38,19 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 #wsfile=paste(mlwin,"/samples/tutorial.ws",sep="")
 ## the tutorial.dta will be save under the temporary folder
 #inputfile=paste(tempdir(),"/tutorial.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
+#ws2foreign(wsfile, foreignfile=inputfile)
 #library(foreign); indata =read.dta(inputfile)
 
 ## Define the model
 formula=normexam~(0|cons)+(2|cons)+(1|cons)
 levID=c('school','student')
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 
 ## Structured MVN
 estoptions= list(EstM=1, mcmcOptions=list(smvn=1))
-(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 # 22.3 Model Comparison and structured MVN models . . . . . . . . . . . .349
 
@@ -59,15 +60,15 @@ levID=c('school','student')
 
 ## Gibbs
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 ## SMCMC
 estoptions= list(EstM=1, mcmcOptions=list(smcm=1))
-(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 ## Structured MVN
 estoptions= list(EstM=1, mcmcOptions=list(smvn=1))
-(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 # 22.4 Assessing the need for the level 2 variance . . . . . . . . . . . 350
 
@@ -81,16 +82,15 @@ formula=temp~(0|cons+standlrt)+(2|cons)+(1|cons)
 levID=c('school','student')
 
 ##IGLS
-estoptions= list(EstM=0)
-(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata))
 
 ## Gibbs
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 ## Structured MVN
 estoptions= list(EstM=1, mcmcOptions=list(smvn=1))
-(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 summary(mymodel["chains"][,"RP2_var_cons"])
 sixway(mymodel["chains"][,"RP2_var_cons"],"sigma2u0")

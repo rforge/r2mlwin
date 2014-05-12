@@ -16,12 +16,13 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.30/"
-while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
-    cat("Please specify the MLwiN folder including the MLwiN executable:\n")
-    mlwin=scan(what=character(0),sep ="\n")
-    mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
+mlwin <- getOption("MLwiN_path")
+while (!file.access(mlwin, mode=1)==0) {
+  cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
+  mlwin=scan(what=character(0),sep ="\n")
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
 }
+options(MLwiN_path=mlwin)
 
 ## Read tutorial data from runmlwin (Leckie&Charlton, 2011) data folder
 library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/tutorial.dta")
@@ -31,23 +32,22 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 #wsfile=paste(mlwin,"/samples/tutorial.ws",sep="")
 ## the tutorial.dta will be save under the temporary folder
 #inputfile=paste(tempdir(),"/tutorial.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
+#ws2foreign(wsfile, foreignfile=inputfile)
 #library(foreign); indata =read.dta(inputfile)
 
 ## Define the model
 formula=normexam~(0|cons+standlrt)+(1|cons)
 levID='student'
 ## Choose IGLS algoritm for estimation
-estoptions= list(EstM=0)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
+(mymodel=runMLwiN(formula, levID, indata=indata))
 
 # 2.1 Running the Gibbs Sampler . . . . . . . . . . . . . . . . . . . . . 26
 
 ## Choose MCMC algoritm for estimation
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 estimates=mymodel["chains"]
 par(mfrow=c(2,2))
@@ -71,14 +71,13 @@ indata[["girlsch"]]=as.integer(indata[["schgend"]]=="girlsch")
 formula=normexam~(0|cons+standlrt+girl+boysch+girlsch)+(1|cons)
 levID='student'
 ## Choose IGLS algoritm for estimation
-estoptions= list(EstM=0)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
+(mymodel=runMLwiN(formula, levID, indata=indata))
 
 ## Choose MCMC algoritm for estimation
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 # 2.4 Fitting school effects as fixed parameters . . . . . . . . . . . . .32
 
@@ -91,7 +90,7 @@ levID='student'
 ## Choose MCMC algoritm for estimation (IGLS will be used to obtain starting values for MCMC)
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . . 33
 

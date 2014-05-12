@@ -20,12 +20,13 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.30/"
-while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
-    cat("Please specify the MLwiN folder including the MLwiN executable:\n")
-    mlwin=scan(what=character(0),sep ="\n")
-    mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
+mlwin <- getOption("MLwiN_path")
+while (!file.access(mlwin, mode=1)==0) {
+  cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
+  mlwin=scan(what=character(0),sep ="\n")
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
 }
+options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
@@ -37,20 +38,20 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 #wsfile=paste(mlwin,"/samples/tutorial.ws",sep="")
 ## the tutorial.dta will be save under the temporary folder
 #inputfile=paste(tempdir(),"/tutorial.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
+#ws2foreign(wsfile, foreignfile=inputfile)
 #library(foreign); indata =read.dta(inputfile)
 
 ## Define the model
 formula=normexam~(0|cons)+(2|cons)+(1|cons)
 levID=c('school','student')
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 summary(mymodel["chains"][,"FP_cons"])
 sixway(mymodel["chains"][,"FP_cons"],"beta_0")
 
 ## Structured MCMC
 estoptions= list(EstM=1, mcmcOptions=list(smcm=1))
-(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 summary(mymodel["chains"][,"FP_cons"])
 sixway(mymodel["chains"][,"FP_cons"],"beta_0")
 
@@ -59,13 +60,13 @@ sixway(mymodel["chains"][,"FP_cons"],"beta_0")
 formula=normexam~(0|cons+standlrt)+(2|cons)+(1|cons)
 levID=c('school','student')
 estoptions= list(EstM=1, mcmcOptions=list(smcm=1))
-(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 trajectories(mymodel["chains"],Range=c(1,500))
 
 # 21.4 Examining the residual chains . . . . . . . . . . . . . . . . . . 335
 
 estoptions= list(EstM=1, resi.store=T, resi.store.levs=2,mcmcMeth=list(iterations=5001),mcmcOptions=list(smcm=1))
-(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 ## Each row represents each iteration
 sixway(mymodel["resi.chains"]$resi_lev2[,1], name="school1")
 
@@ -76,7 +77,7 @@ sixway(mymodel["resi.chains"]$resi_lev2[,1], name="school1")
 formula=normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)
 levID=c('school','student')
 estoptions= list(EstM=1, mcmcOptions=list(smcm=1))
-(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
 
 sixway(mymodel["chains"][,"FP_cons"],"beta_0")
 sixway(mymodel["chains"][,"FP_standlrt"],"beta_1")

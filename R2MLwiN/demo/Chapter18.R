@@ -18,12 +18,13 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.30/"
-while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
-    cat("Please specify the MLwiN folder including the MLwiN executable:\n")
-    mlwin=scan(what=character(0),sep ="\n")
-    mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
+mlwin <- getOption("MLwiN_path")
+while (!file.access(mlwin, mode=1)==0) {
+  cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
+  mlwin=scan(what=character(0),sep ="\n")
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
 }
+options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
@@ -35,7 +36,7 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 #wsfile=paste(mlwin,"/samples/gcsecomp1.ws",sep="")
 ## the tutorial.dta will be save under the temporary folder
 #inputfile=paste(tempdir(),"/gcsecomp1.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
+#ws2foreign(wsfile, foreignfile=inputfile)
 #library(foreign); indata =read.dta(inputfile)
 #summary(indata)
 #cor(indata[,c("written","csework")])
@@ -45,18 +46,17 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 formula=c(written,csework)~(0|cons)+(1|cons)
 levID='student'
 ##IGLS
-estoptions= list(EstM=0)
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata))
 ##MCMC
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata, estoptions=estoptions))
 
 # 18.3 Adding predictor variables . . . . . . . . . . . . . . . . . . . .270
 
 formula=c(written,csework)~(0|cons+female)+(1|cons)
 levID='student'
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata, estoptions=estoptions))
 
 # 18.4 A multilevel multivariate model . . . . . . . . . . . . . . . . . 271
 
@@ -64,7 +64,7 @@ formula=c(written,csework)~(0|cons+female)+(2|cons)+(1|cons)
 levID=c('school','student')
 ##Store residual chain at level 3: school
 estoptions= list(EstM=1,resi.store=T,resi.store.levs=3)
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata, estoptions=estoptions))
 
 resi=mymodel["resi.chains"]$resi_lev3
 label=1:ncol(resi)
@@ -119,18 +119,18 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 #wsfile=paste(mlwin,"/samples/gcsemv1.ws",sep="")
 ## the tutorial.dta will be save under the temporary folder
 #inputfile=paste(tempdir(),"/gcsemv1.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
+#ws2foreign(wsfile, foreignfile=inputfile)
 #library(foreign); indata =read.dta(inputfile)
 
 formula=c(written,csework)~(0|cons+female)+(1|cons)
 levID='student'
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata, estoptions=estoptions))
 
 formula=c(written,csework)~(0|cons+female)+(2|cons)+(1|cons)
 levID=c('school','student')
 estoptions= list(EstM=1,mcmcMeth=list(dami=2))
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata, estoptions=estoptions))
 
 
 # 18.6 Imputation methods for missing data . . . . . . . . . . . . . . . 280
@@ -140,29 +140,29 @@ estoptions= list(EstM=1,mcmcMeth=list(dami=2))
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.26/"
-while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
-    cat("Please specify the MLwiN folder including the MLwiN executable:\n")
-    mlwin=scan(what=character(0),sep ="\n")
-    mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
+mlwin <- getOption("MLwiN_path")
+while (!file.access(mlwin, mode=1)==0) {
+  cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
+  mlwin=scan(what=character(0),sep ="\n")
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
 }
+options(MLwiN_path=mlwin)
 
 # User's input if necessary
 # MLwiN sample worksheet folder
 wsfile=paste(mlwin,"/samples/hungary1.ws",sep="")
 # the tutorial.dta will be save under the temporary folder
 inputfile=paste(tempdir(),"/hungary1.dta",sep="")
-ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
+ws2foreign(wsfile, foreignfile=inputfile)
 library(foreign); indata =read.dta(inputfile)
 summary(indata)
 
 formula=c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2)~(0|cons+female)+(2|cons)+(1|cons)
 levID=c('school','student')
-estoptions= list(EstM=0)
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata))
 
 estoptions= list(EstM=1,mcmcMeth=list(dami=c(0,1000,2000,3000,4000,5000)))
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata, estoptions=estoptions))
 head(mymodel["MIdata"])
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .128

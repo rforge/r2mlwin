@@ -79,7 +79,7 @@ levID=c('school','student')
 ## Choose option(s) for inference
 estoptions= list(EstM=0)
 ## Fit the model
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions, MLwiNPath=mlwin)
 
 ##summary method
 summary(mymodel)

@@ -22,12 +22,13 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.30/"
-while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
-    cat("Please specify the MLwiN folder including the MLwiN executable:\n")
-    mlwin=scan(what=character(0),sep ="\n")
-    mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
+mlwin <- getOption("MLwiN_path")
+while (!file.access(mlwin, mode=1)==0) {
+  cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
+  mlwin=scan(what=character(0),sep ="\n")
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
 }
+options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
@@ -39,7 +40,7 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 #wsfile=paste(mlwin,"/samples/bang1.ws",sep="")
 ## the tutorial.dta will be save under the temporary folder
 #inputfile=paste(tempdir(),"/bang1.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
+#ws2foreign(wsfile, foreignfile=inputfile)
 #library(foreign); indata =read.dta(inputfile)
 
 levels(indata[["lc"]])=c("nokids",     "onekid",     "twokids",    "threepluskids")
@@ -61,12 +62,12 @@ while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file
 formula=logit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons+urban)
 levID=c('district','woman')
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D="Binomial", indata=indata, estoptions=estoptions))
 trajectories(mymodel["chains"])
 
 ##Orthogonal update
 estoptions= list(EstM=1, mcmcOptions=list(orth=1))
-(mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D="Binomial", indata=indata, estoptions=estoptions))
 trajectories(mymodel["chains"])
 
 # 23.4 A Poisson example . . . . . . . . . . . . . . . . . . . . . . . . 364
@@ -74,7 +75,7 @@ trajectories(mymodel["chains"])
 wsfile=paste(mlwin,"/samples/mmmec1.ws",sep="")
 # the tutorial.dta will be save under the temporary folder
 inputfile=paste(tempdir(),"/mmmec1.dta",sep="")
-ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
+ws2foreign(wsfile, foreignfile=inputfile)
 library(foreign); indata =read.dta(inputfile)
 indata[["logexp"]]=double2singlePrecision(log(indata[["exp"]]))
 levels(indata[["nation"]])=c("Belgium", "W_Germany", "Denmark", "France", "UK", "Italy", "Ireland", "Luxembourg", "Netherlands")
@@ -85,12 +86,12 @@ levID=c('region','county')
 ## Choose option(s) for inference
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000))
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D="Poisson", indata=indata, estoptions=estoptions))
 sixway(mymodel["chains"][,"FP_Belgium"],acf.maxlag=5000,"beta_1")
 
 ##Orthogonal update
 estoptions= list(EstM=1, mcmcMeth=list(iterations=50000), mcmcOptions=list(orth=1))
-(mymodel=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D="Poisson", indata=indata, estoptions=estoptions))
 sixway(mymodel["chains"][,"FP_Belgium"],acf.maxlag=100,"beta_1")
 
 # 23.5 An Ordered multinomial example . . . . . . . . . . . . . . . . . .368
@@ -103,7 +104,7 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 #wsfile=paste(mlwin,"/samples/alevchem.ws",sep="")
 ## the tutorial.dta will be save under the temporary folder
 #inputfile=paste(tempdir(),"/alevchem.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
+#ws2foreign(wsfile, foreignfile=inputfile)
 #library(foreign);indata =read.dta(inputfile)
 #names(indata)=gsub("-","_",names(indata))
 
@@ -116,13 +117,13 @@ levID=c('estab','pupil')
 ##MCMC
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata=indata, estoptions=estoptions))
 trajectories(mymodel["chains"])
 
 ##Orthogonal update
 estoptions= list(EstM=1, mcmcOptions=list(orth=1))
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata, estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata=indata, estoptions=estoptions))
 trajectories(mymodel["chains"])
 
 # 23.6 The WinBUGS interface . . . . . . . . . . . . . . . . . . . . . . 372
@@ -135,7 +136,7 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 #wsfile=paste(mlwin,"/samples/bang1.ws",sep="")
 ## the tutorial.dta will be save under the temporary folder
 #inputfile=paste(tempdir(),"/bang1.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
+#ws2foreign(wsfile, foreignfile=inputfile)
 #library(foreign); indata =read.dta(inputfile)
 
 levels(indata[["lc"]])=c("nokids",     "onekid",     "twokids",    "threepluskids")
@@ -160,7 +161,7 @@ levID=c('district','woman')
 
 ##Orthogonal update (WinBUGS)
 estoptions= list(EstM=1, mcmcOptions=list(orth=1),show.file=T)
-mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=openbugs, OpenBugs = T),MLwiNPath=mlwin)
+mymodel=runMLwiN(formula, levID, D="Binomial", indata=indata, estoptions=estoptions,BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=openbugs, OpenBugs = T))
 apply(mymodel[[1]],2,effectiveSize)
 sixway(mymodel[[1]][,"beta[1]"],"beta[1]")
 
