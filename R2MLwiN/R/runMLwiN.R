@@ -1,5 +1,5 @@
 runMLwiN <-
-function(Formula, levID, D="Normal", indata=NULL, estoptions=list(EstM=0), BUGO=NULL, MLwiNPath="C:/Program Files (x86)/MLwiN v2.29/",workdir=tempdir()) {
+function(Formula, levID, D="Normal", indata=NULL, estoptions=list(EstM=0), BUGO=NULL, MLwiNPath="C:/Program Files (x86)/MLwiN v2.30/",stdout="",stderr="",workdir=tempdir()) {
 
 #    PACKages<-as.character(as.data.frame(installed.packages())$Package)
 #    packs.req= c("foreign","rbugs","coda")
@@ -11,6 +11,63 @@ function(Formula, levID, D="Normal", indata=NULL, estoptions=list(EstM=0), BUGO=
   if (is.null(indata)) {
     stop("Using the currently attached data is not yet implemented")
   }
+  
+  # Check MLwiNPath is usable and set command/args
+  debugmode=estoptions$debugmode
+  if(is.null(debugmode)) debugmode=F
+  
+  x64=estoptions$x64
+  if(is.null(x64)) x64=F
+  
+
+  pathinfo <- file.info(MLwiNPath)
+  if (is.na(pathinfo$isdir)) {
+    stop(paste0(MLwiNPath, " does not exist"))
+  }
+  
+  if (pathinfo$isdir == FALSE) {
+    if (file.access(MLwiNPath, mode=1) == 0) {
+      cmd <- MLwiNPath
+    } else {
+      stop(paste0(MLwiNPath, " is not executable"))
+    }
+  }
+  
+  if (pathinfo$isdir == TRUE) {
+    if (debugmode) {
+      cmd <- paste0(MLwiNPath, "/i386/mlwin.exe")
+      if (file.access(cmd, mode=1) != 0) {
+        cmd <- paste0(MLwiNPath, "/mlwin.exe")
+      } else {
+        cmd <- paste0(MLwiNPath, "/i386/mlnscript.exe")
+        if (file.access(cmd, mode=1) != 0) {
+          stop("Cannot find valid MLwiN executable")
+        }
+      }
+    } else {
+      if (x64) {
+        cmd <- paste0(MLwiNPath, "/x64/mlnscript.exe")
+        if (file.access(cmd, mode=1) != 0) {
+          cmd <- paste0(MLwiNPath, "/i386/mlnscript.exe")
+          if (file.access(cmd, mode=1) != 0) {
+            cmd <- paste0(MLwiNPath, "/mlwin.exe")
+            if (file.access(cmd, mode=1) != 0) {
+              stop("Cannot find valid MLwiN executable")
+            }
+          }
+        }
+      } else {
+        cmd <- paste0(MLwiNPath, "/i386/mlnscript.exe")
+        if (file.access(cmd, mode=1) != 0) {
+          cmd <- paste0(MLwiNPath, "/mlwin.exe")
+          if (file.access(cmd, mode=1) != 0) {
+            stop("Cannot find valid MLwiN executable")
+          }
+        }
+      }
+    }
+  }  
+  
   
     # the current function call
     cl <- match.call()
@@ -58,12 +115,6 @@ function(Formula, levID, D="Normal", indata=NULL, estoptions=list(EstM=0), BUGO=
         }
     }
 
-    debugmode=estoptions$debugmode
-    if(is.null(debugmode)) debugmode=F
-
-    x64=estoptions$x64
-    if(is.null(x64)) x64=F
-
     clean.files=estoptions$clean.files
     if (is.null(clean.files)) clean.files=T
 
@@ -71,6 +122,12 @@ function(Formula, levID, D="Normal", indata=NULL, estoptions=list(EstM=0), BUGO=
 
     dtafile = gsub("\\", "/", tempfile("dtafile_",tmpdir =workdir, fileext=".dta"), fixed=TRUE)
     macrofile =gsub("\\", "/", tempfile("macrofile_",tmpdir =workdir, fileext=".txt"), fixed=TRUE)
+  
+    args <- paste0("/run ", "\"" , macrofile, "\"")
+    if (debugmode){
+      args <- paste0("/nogui ", args)
+    }
+    
     IGLSfile =gsub("\\", "/", tempfile("IGLSfile_",tmpdir =workdir, fileext=".dta"), fixed=TRUE)
     if (EstM==1) MCMCfile =gsub("\\", "/", tempfile("MCMCfile_",tmpdir =workdir, fileext=".dta"), fixed=TRUE)
     if (EstM==1) chainfile =gsub("\\", "/", tempfile("chainfile_",tmpdir =workdir, fileext=".dta"), fixed=TRUE)
@@ -164,33 +221,13 @@ function(Formula, levID, D="Normal", indata=NULL, estoptions=list(EstM=0), BUGO=
         if(is.null(burnin)) burnin=500
         thinning=estoptions$mcmcMeth$thinning
         if(is.null(thinning)) thinning=1
-        WD <- getwd()
-        if (x64){
-            MLwiNPath1=paste(MLwiNPath,'/x64/',sep='')
-        }else{
-            MLwiNPath1=paste(MLwiNPath,'/i386/',sep='')
-        }
-        if (file.access(MLwiNPath1)==0) setwd(MLwiNPath1) else setwd(MLwiNPath)
-        if (debugmode){
-            if (file.access("mlwin.exe", mode=1)==0){
-                cmd=paste("mlwin.exe /run \"", macrofile, "\"", sep="")
-            }else{
-                if (file.access("mlnscript.exe", mode=1)==0){
-                    cmd=paste("mlnscript.exe /run \"", macrofile, "\"", sep="")
-                }
-            }
-        }else{
-            if (file.access("mlnscript.exe", mode=1)==0){
-                cmd=paste("mlnscript.exe /run \"", macrofile, "\"", sep="")
-            }else{
-                cmd=paste("mlwin.exe /nogui /run \"", macrofile, "\"", sep="")
-            }
-        }
+        #WD <- getwd()
+        
         time1=proc.time()
-        shell(cmd)
+        system2(cmd, args = args, stdout=stdout, stderr=stderr)
         cat("\n")
         time2=proc.time()-time1
-        setwd(WD)
+        #setwd(WD)
         estIGLS <-read.dta(IGLSfile)
 
         FP=as.vector(na.omit(estIGLS[,1]))
@@ -332,34 +369,14 @@ function(Formula, levID, D="Normal", indata=NULL, estoptions=list(EstM=0), BUGO=
         nopause,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,MCMCfile=MCMCfile,
         chainfile=chainfile,MIfile=MIfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,
         resichains=resichains,FACTchainfile=FACTchainfile,resi.store.levs=resi.store.levs,debugmode=debugmode,startval=startval, dami=dami)
-        WD <- getwd()
-        if (x64){
-            MLwiNPath1=paste(MLwiNPath,'/x64/',sep='')
-        }else{
-            MLwiNPath1=paste(MLwiNPath,'/i386/',sep='')
-        }
-        if (file.access(MLwiNPath1)==0) setwd(MLwiNPath1) else setwd(MLwiNPath)
-        if (debugmode){
-            if (file.access("mlwin.exe", mode=1)==0){
-                cmd=paste("mlwin.exe /run", macrofile)
-            }else{
-                if (file.access("mlnscript.exe", mode=1)==0){
-                    cmd=paste("mlnscript.exe /run", macrofile)
-                }
-            }
-        }else{
-            if (file.access("mlnscript.exe", mode=1)==0){
-                cmd=paste("mlnscript.exe /run", macrofile)
-            }else{
-                cmd=paste("mlwin.exe /nogui /run", macrofile)
-            }
-        }
+        #WD <- getwd()
+
         cat("MLwiN is running, please wait......\n")
         time1=proc.time()
-        shell(cmd)
+        system2(cmd, args=args, stdout=stdout, stderr=stderr)
         cat("\n")
         time2=proc.time()-time1
-        setwd(WD)
+        #setwd(WD)
         nlev=length(levID)
         if (is.null(BUGO)){
           estMCMC <-read.dta(MCMCfile)
