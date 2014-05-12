@@ -35,11 +35,11 @@ dens=density(chain)
 plot(dens,xlab="parameter value",ylab="kernel density",main="",tcl=-.1,cex.axis=.8)
 
 screen(7)
-aa=acf(chain,acf.maxlag,main="",mgp=c(1,.25,0),tcl=-.1,cex.axis=.8)
+aa=acf(chain,acf.maxlag,main="",mgp=c(1,.25,0),tcl=-.1,cex.axis=.8, ylim=c(0,1))
 rho=aa$acf[2]
 
 screen(8)
-pacf(chain,pacf.maxlag,main="",mgp=c(1,.25,0),tcl=-.1,cex.axis=.8)
+pacf(chain,pacf.maxlag,main="",mgp=c(1,.25,0),tcl=-.1,cex.axis=.8, ylim=c(0,1))
 
 screen(9)
 #ymcse=rep(0,1001)
