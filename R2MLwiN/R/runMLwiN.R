@@ -1,5 +1,5 @@
 runMLwiN <-
-function(Formula, levID, D="Normal", indata=NULL, estoptions=list(EstM=0), BUGO=NULL, MLwiNPath="C:/Program Files (x86)/MLwiN v2.30/",stdout="",stderr="",workdir=tempdir(),checkversion=TRUE) {
+function(Formula, levID, D="Normal", indata=NULL, estoptions=list(EstM=0), BUGO=NULL, MLwiNPath=NULL,stdout="",stderr="",workdir=tempdir(),checkversion=TRUE) {
 
 #    PACKages<-as.character(as.data.frame(installed.packages())$Package)
 #    packs.req= c("foreign","rbugs","coda")
@@ -19,7 +19,10 @@ function(Formula, levID, D="Normal", indata=NULL, estoptions=list(EstM=0), BUGO=
   x64=estoptions$x64
   if(is.null(x64)) x64=F
   
-
+  if (is.null(MLwiNPath)) {
+    MLwiNPath <- getOption("MLwiN_path")
+  }
+  
   pathinfo <- file.info(MLwiNPath)
   if (is.na(pathinfo$isdir)) {
     stop(paste0(MLwiNPath, " does not exist"))
