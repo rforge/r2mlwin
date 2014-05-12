@@ -66,24 +66,24 @@ estoptions= list(xclass=xclass,EstM=1,notation="class",mcmcMeth=list(iterations=
 
 # 17.6 Fitting a CAR model in MLwiN . . . . . . . . . . . . . . . . . . .255
 
-## winbugs executable
-if(!exists("winbugs")) winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
-while (!file.access(winbugs,mode=0)==0||!file.access(winbugs,mode=1)==0||!file.access(winbugs,mode=4)==0){
-    cat("Please specify the path for the WinBUGS executable:\n")
-    winbugs=scan(what=character(0),sep ="\n")
-    winbugs=gsub("\\", "/",winbugs, fixed=TRUE)
+## openbugs executable
+if(!exists("openbugs")) openbugs="C:/Program Files (x86)/OpenBUGS321/OpenBUGS.exe"
+while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file.access(openbugs,mode=4)==0){
+  cat("Please specify the path for the OpenBUGS executable:\n")
+  openbugs=scan(what=character(0),sep ="\n")
+  openbugs=gsub("\\", "/",openbugs, fixed=TRUE)
 }
 
 # User's input if necessary
 
-## Openbugs executable
-#openbugs="C:/Program Files (x86)/OpenBUGS321/OpenBUGS.exe"
+## winbugs executable
+#winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
 
 formula=log(obs,offs)~(0|perc_aff)+(3|cons)
 levID=c('area','area','area')
 xclass=list("class"=3,"N1"=11,"weight"='wcar1',"id"='neigh1',"car"=TRUE)
 estoptions= list(xclass=xclass,EstM=1,notation="class",mcmcMeth=list(iterations=50000))
-(mymodel=runMLwiN(formula, levID, D='Poisson', indata, estoptions, BUGO=c(version=4,n.chains=1,bugs=winbugs, OpenBugs = FALSE), MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, D='Poisson', indata, estoptions, BUGO=c(version=4,n.chains=1,bugs=openbugs, OpenBugs = TRUE), MLwiNPath=mlwin))
 
 
 # 17.7 Including exchangeable random effects . . . . . . . . . . . . . . 259

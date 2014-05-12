@@ -40,18 +40,18 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 #ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
 #library(foreign); indata =read.dta(inputfile)
 
-## winbugs executable
-if(!exists("winbugs")) winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
-while (!file.access(winbugs,mode=0)==0||!file.access(winbugs,mode=1)==0||!file.access(winbugs,mode=4)==0){
-    cat("Please specify the path for the WinBUGS executable:\n")
-    winbugs=scan(what=character(0),sep ="\n")
-    winbugs=gsub("\\", "/",winbugs, fixed=TRUE)
+## openbugs executable
+if(!exists("openbugs")) openbugs="C:/Program Files (x86)/OpenBUGS321/OpenBUGS.exe"
+while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file.access(openbugs,mode=4)==0){
+    cat("Please specify the path for the OpenBUGS executable:\n")
+    openbugs=scan(what=character(0),sep ="\n")
+    openbugs=gsub("\\", "/",openbugs, fixed=TRUE)
 }
 
 # User's input if necessary
 
-## Openbugs executable
-#openbugs="C:/Program Files (x86)/OpenBUGS321/OpenBUGS.exe"
+## winbugs executable
+#winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
 
 ## Define the model
 formula=normexam~(0|cons+standlrt)+(2|cons)+(1|cons)
@@ -59,7 +59,7 @@ levID=c('school','student')
 
 ## Hierarchical centring at level 2 (DO NOT USE VERSION 2.25; the bug has been fixed for VERSION 2.26)
 estoptions= list(EstM=1, mcmcOptions=list(hcen=2),show.file=T)
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=winbugs, OpenBugs = F),MLwiNPath=mlwin)
+mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=openbugs, OpenBugs = T),MLwiNPath=mlwin)
 sixway(mymodel[[1]][,"beta[1]"],"beta[1]")
 
 # 25.3 Binomial hierarchical centering algorithm . . . . . . . . . . . . 408
@@ -78,15 +78,18 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 #library(foreign); indata =read.dta(inputfile)
 levels(indata[["lc"]])=c("nokids",     "onekid",     "twokids",    "threepluskids")
 
-## winbugs executable
-if(!exists("winbugs")) winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
-while (!file.access(winbugs,mode=0)==0||!file.access(winbugs,mode=1)==0||!file.access(winbugs,mode=4)==0){
-    cat("Please specify the path for the WinBUGS executable:\n")
-    winbugs=scan(what=character(0),sep ="\n")
-    winbugs=gsub("\\", "/",winbugs, fixed=TRUE)
+## openbugs executable
+if(!exists("openbugs")) openbugs="C:/Program Files (x86)/OpenBUGS321/OpenBUGS.exe"
+while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file.access(openbugs,mode=4)==0){
+  cat("Please specify the path for the OpenBUGS executable:\n")
+  openbugs=scan(what=character(0),sep ="\n")
+  openbugs=gsub("\\", "/",openbugs, fixed=TRUE)
 }
 
 # User's input if necessary
+
+## winbugs executable
+#winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
 
 ## Define the model
 formula=logit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons+urban)

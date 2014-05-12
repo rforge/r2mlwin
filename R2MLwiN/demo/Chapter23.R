@@ -43,18 +43,18 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 #library(foreign); indata =read.dta(inputfile)
 
 levels(indata[["lc"]])=c("nokids",     "onekid",     "twokids",    "threepluskids")
-## winbugs executable
-if(!exists("winbugs")) winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
-while (!file.access(winbugs,mode=0)==0||!file.access(winbugs,mode=1)==0||!file.access(winbugs,mode=4)==0){
-    cat("Please specify the path for the WinBUGS executable:\n")
-    winbugs=scan(what=character(0),sep ="\n")
-    winbugs=gsub("\\", "/",winbugs, fixed=TRUE)
+## openbugs executable
+if(!exists("openbugs")) openbugs="C:/Program Files (x86)/OpenBUGS321/OpenBUGS.exe"
+while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file.access(openbugs,mode=4)==0){
+  cat("Please specify the path for the OpenBUGS executable:\n")
+  openbugs=scan(what=character(0),sep ="\n")
+  openbugs=gsub("\\", "/",openbugs, fixed=TRUE)
 }
 
 # User's input if necessary
 
-## Openbugs executable
-#openbugs="C:/Program Files (x86)/OpenBUGS321/OpenBUGS.exe"
+## winbugs executable
+#winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
 
 
 ## Define the model
@@ -140,18 +140,18 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 
 levels(indata[["lc"]])=c("nokids",     "onekid",     "twokids",    "threepluskids")
 
-## winbugs executable
-if(!exists("winbugs")) winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
-while (!file.access(winbugs,mode=0)==0||!file.access(winbugs,mode=1)==0||!file.access(winbugs,mode=4)==0){
-    cat("Please specify the path for the WinBUGS executable:\n")
-    winbugs=scan(what=character(0),sep ="\n")
-    winbugs=gsub("\\", "/",winbugs, fixed=TRUE)
+## openbugs executable
+if(!exists("openbugs")) openbugs="C:/Program Files (x86)/OpenBUGS321/OpenBUGS.exe"
+while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file.access(openbugs,mode=4)==0){
+  cat("Please specify the path for the OpenBUGS executable:\n")
+  openbugs=scan(what=character(0),sep ="\n")
+  openbugs=gsub("\\", "/",openbugs, fixed=TRUE)
 }
 
 # User's input if necessary
 
-## Openbugs executable
-#openbugs="C:/Program Files (x86)/OpenBUGS321/OpenBUGS.exe"
+## winbugs executable
+#winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
 
 
 ## Define the model
@@ -160,7 +160,7 @@ levID=c('district','woman')
 
 ##Orthogonal update (WinBUGS)
 estoptions= list(EstM=1, mcmcOptions=list(orth=1),show.file=T)
-mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=winbugs, OpenBugs = F),MLwiNPath=mlwin)
+mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=openbugs, OpenBugs = T),MLwiNPath=mlwin)
 apply(mymodel[[1]],2,effectiveSize)
 sixway(mymodel[[1]][,"beta[1]"],"beta[1]")
 

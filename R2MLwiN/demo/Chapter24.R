@@ -86,17 +86,21 @@ sixway(mymodel["chains"][,"RP2_var_cons"],acf.maxlag=100,"sigma2u0")
 
 # 24.5 Parameter expansion and WinBUGS . . . . . . . . . . . . . . . . . 391
 
-## winbugs executable
-if(!exists("winbugs")) winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
-while (!file.access(winbugs,mode=0)==0||!file.access(winbugs,mode=1)==0||!file.access(winbugs,mode=4)==0){
-    cat("Please specify the path for the WinBUGS executable:\n")
-    winbugs=scan(what=character(0),sep ="\n")
-    winbugs=gsub("\\", "/",winbugs, fixed=TRUE)
+## openbugs executable
+if(!exists("openbugs")) openbugs="C:/Program Files (x86)/OpenBUGS321/OpenBUGS.exe"
+while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file.access(openbugs,mode=4)==0){
+  cat("Please specify the path for the OpenBUGS executable:\n")
+  openbugs=scan(what=character(0),sep ="\n")
+  openbugs=gsub("\\", "/",openbugs, fixed=TRUE)
 }
+
 # User's input if necessary
 
+## winbugs executable
+# winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
+
 estoptions= list(EstM=1,mcmcMeth=list(priorcode=0),mcmcOptions=list(paex=c(2,1)),show.file=T)
-mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=winbugs, OpenBugs = F),MLwiNPath=mlwin)
+mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=openbugs, OpenBugs = T),MLwiNPath=mlwin)
 apply(mymodel[[1]],2,effectiveSize)
 sixway(mymodel[[1]][,"sigma2.u2"],acf.maxlag=250,"sigma2.u2")
 sixway(mymodel[[1]][,"sigma2.v2"],acf.maxlag=100,"sigma2.v2")

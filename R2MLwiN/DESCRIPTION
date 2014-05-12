@@ -21,4 +21,4 @@ Description: R2MLwiN is an R command interface to the MLwiN multilevel
     MLwiN from within the R environment.
 License: GPL (>= 2)
 URL: https://r-forge.r-project.org/projects/r2mlwin/, http://www.bristol.ac.uk/cmm/software/mlwin/
-SystemRequirements: MLwiN, (WinBUGs, OpenBUGs optional)
+SystemRequirements: MLwiN, (OpenBUGs, WinBUGs optional)
