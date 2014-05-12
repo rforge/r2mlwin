@@ -10,5 +10,5 @@ Multinomial proportions - need manual calculation/reshaping
 Constraints (IGLS) - RCON/FCON commands
 Allow negative variances (IGLS) - RESE command
 Extra binomial/poisson/negative binomial/multinomial variation (IGLS) - EXTR command
-Allow user specified design matrix - SETD command
-Debugging option to extract internal model matrices - XSS/VMAT/ZMAT/YRES/YMAT/XMAT commands
+Allow user specified design matrix (IGLS) - SETD command
+Debugging option to extract internal model matrices (IGLS) - XSS/VMAT/ZMAT/YRES/YMAT/XMAT commands
