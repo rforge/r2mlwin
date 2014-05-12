@@ -15,6 +15,13 @@ if(length(args) > 0 && "mgp" %in% names(args)) {
   mgp <- c(1,.25,0)
 }
 
+if (is.null(name)) {
+  if (!is.null(colnames(chain))) {
+    name=colnames(chain)[1]
+  } else {
+    name="x"
+  }
+}
 
 if (is.null(name)) name="x"
 
