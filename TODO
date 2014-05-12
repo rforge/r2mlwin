@@ -1,0 +1,12 @@
+Allow omission of 0| for the fixed part in model formula
+Allow 1 to be used in place of cons in model formula
+Allow use of attach() -ed data
+
+Add data= as alias to indata=
+Automatic calculation of VPC?
+
+Not currently implemented:
+Multinomial proportions - need manual calculation/reshaping
+Constraints (IGLS) - RCON/FCON commands
+Allow negative variances (IGLS) - RESE command
+Extra binomial/poisson/negative binomial/multinomial variation (IGLS) - EXTR command
