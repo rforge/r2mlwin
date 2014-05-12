@@ -60,24 +60,19 @@ Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012)
 \examples{
 \dontrun{
 library(R2MLwiN)
-## Modify the following paths as appropriate.
-## MLwiN folder
-mlwin = "C:/Program Files (x86)/MLwiN v2.29/"
-## MLwiN sample worksheet folder
-wspath=paste(mlwin,"/samples/",sep="")
+#NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
+#...so please change relevant line if different
+#if using R2MLwiN via WINE, the path may look like 
+#options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/") 
 
-
-## Example: Normal
+## Example: tutorial
+data(tutorial)
 formula=normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)
 levID=c('school','student')
 estoptions= list(EstM=1,resi.store.levs=2)
-wsfile=paste(wspath,"tutorial.ws",sep="")
-inputfile=paste(tempdir(),"/tutorial.dta",sep="")
-ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
-library(foreign);indata =read.dta(inputfile)
-mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions,MLwiNPath=mlwin)
+mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions)
 
-predLines(mymodel, indata, xname="standlrt", lev = 2,
+predLines(mymodel, indata=tutorial, xname="standlrt", lev = 2,
 selected =c(30,44,53,59), probs=c(.025,.975))
 }
 }

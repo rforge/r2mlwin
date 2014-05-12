@@ -27,18 +27,16 @@ Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012)
 \examples{
 \dontrun{
 library(R2MLwiN)
-## Modify the following paths as appropriate.
-## MLwiN folder
-mlwin = "C:/Program Files (x86)/MLwiN v2.29/"
-## MLwiN sample worksheet folder 
-wspath=paste(mlwin,"/samples/",sep="")
-wsfile=paste(wspath,"tutorial.ws",sep="")
-inputfile=paste(tempdir(),"/tutorial.dta",sep="")
-ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
-library(foreign);indata =read.dta(inputfile)
-names(indata)
-indata=cbind(indata,Untoggle(indata[["school"]],"school"))
-names(indata)
+#NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
+#...so please change relevant line if different
+#if using R2MLwiN via WINE, the path may look like 
+#options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/") 
+
+## Example: tutorial
+data(tutorial)
+names(tutorial)
+tutorial=cbind(tutorial,Untoggle(tutorial[["school"]],"school"))
+names(tutorial)
 }
 }
 

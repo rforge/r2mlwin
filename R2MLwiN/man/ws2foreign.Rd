@@ -32,15 +32,13 @@ Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012)
 }
 \examples{
 \dontrun{
-## Modify the following paths as appropriate.
-## MLwiN folder
-mlwin = "C:/Program Files (x86)/MLwiN v2.29/"
-## MLwiN sample worksheet folder
-wsfile=paste(mlwin,"/samples/tutorial.ws",sep="")
+library(R2MLwiN)
+## Modify the following path as appropriate.
+wsfile="C:/Program Files (x86)/MLwiN v2.30/samples/tutorial.ws"
 ## the tutorial.dta will be save under the temporary folder
 inputfile=paste(tempdir(),"/tutorial.dta",sep="")
-ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
-library(foreign)
-indata =read.dta(inputfile)
+ws2foreign(wsfile, foreignfile=inputfile)
+indata=read.dta(inputfile)
+str(indata)
 }
 }

@@ -53,21 +53,17 @@ Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012)
 
 \dontrun{
 library(R2MLwiN)
-## Modify the following paths as appropriate.
-## MLwiN folder
-mlwin = "C:/Program Files (x86)/MLwiN v2.29/"
-## MLwiN sample worksheet folder
-wspath=paste(mlwin,"/samples/",sep="")
+#NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
+#...so please change relevant line if different
+#if using R2MLwiN via WINE, the path may look like 
+#options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/") 
 
 ## Example: tutorial
+data(tutorial)
 formula=normexam~(0|cons+standlrt)+(2|cons)+(1|cons)
 levID=c('school','student')
-wsfile=paste(wspath,"tutorial.ws",sep="")
-inputfile=paste(tempdir(),"/tutorial.dta",sep="")
-ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
-library(foreign);indata =read.dta(inputfile)
 estoptions= list(EstM=1,resi.store=TRUE,resi.store.levs=2,mcmcMeth=list(iterations=5001))
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions,MLwiNPath=mlwin))
+(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 resi.chain2 = mymodel["resi.chains"]$resi_lev2
 

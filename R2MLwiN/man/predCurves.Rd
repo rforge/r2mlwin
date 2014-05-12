@@ -49,15 +49,13 @@ Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012)
 
 \dontrun{
 library(R2MLwiN)
+
 ## Modify the following paths as appropriate.
-## MLwiN folder
-mlwin = "C:/Program Files (x86)/MLwiN v2.29/"
-## MLwiN sample worksheet folder
-wsfile=paste(mlwin,"/samples/alevchem.ws",sep="")
-## the tutorial.dta will be save under the temporary folder
+wsfile="C:/Program Files (x86)/MLwiN v2.30/samples/alevchem.ws"
+## the alevchem.dta will be save under the temporary folder
 inputfile=paste(tempdir(),"/alevchem.dta",sep="")
-ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
-library(foreign);indata =read.dta(inputfile)
+ws2foreign(wsfile, foreignfile=inputfile)
+indata =read.dta(inputfile)
 indata["gcseav"]=double2singlePrecision(indata["gcse-tot"]/indata["gcse-no"]-6)
 indata["gcse^2"]=double2singlePrecision(indata["gcseav"]^2)
 indata["gcse^3"]=double2singlePrecision(indata["gcseav"]^3)
@@ -67,7 +65,7 @@ formula=a-point ~ (0|cons+gcseav+gcse^2+gcse^3+gender)+(1|cons )
 levID='pupil'
 estoptions= list(EstM=1)
 ## Fit the model
-mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions, MLwiNPath=mlwin)
+mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions)
 
 predCurves(mymodel, indata,xname="gcseav", group="gender")
 }
