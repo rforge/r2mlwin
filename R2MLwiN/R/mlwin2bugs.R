@@ -36,7 +36,7 @@ function(D,levID, datafile, initfile, modelfile, bugEst, fact, addmore, n.chains
         }
         workingDir <- bugsWorkingDir
         #workingDir <- filePathAsAbsolute(workingDir)
-        if (!file.exists(model)) stop("Model file doesn't exits.")
+        if (!file.exists(model)) stop("Model file doesn't exist.")
         model.file <- file.path(workingDir, "model.txt")
         file.copy(model, model.file, overwrite = TRUE)
 
