@@ -17,7 +17,13 @@ function(Formula, levID, D="Normal", indata=NULL, estoptions=list(EstM=0), BUGO=
   if(is.null(debugmode)) debugmode=F
   
   x64=estoptions$x64
-  if(is.null(x64)) x64=F
+  if(is.null(x64)) {
+    if (.Machine$sizeof.pointer == 8) {
+      x64=TRUE
+    } else {
+      x64=FALSE
+    }
+  }
   
   if (is.null(MLwiNPath)) {
     MLwiNPath <- getOption("MLwiN_path")
