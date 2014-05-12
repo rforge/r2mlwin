@@ -12,7 +12,8 @@ Depends:
     lattice,
     coda (>= 0.16-1),
     foreign (>= 0.8-46),
-    rbugs (>= 0.5-7)
+    rbugs (>= 0.5-7),
+    digest
 Suggests:
     lme4 (>= 0.999999-0)
 OS_type: windows
