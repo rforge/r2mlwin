@@ -58,7 +58,7 @@ while (!file.access(winbugs,mode=0)==0||!file.access(winbugs,mode=1)==0||!file.a
 
 
 ## Define the model
-formula="logit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons+urban)"
+formula=logit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons+urban)
 levID=c('district','woman')
 estoptions= list(EstM=1)
 (mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
@@ -80,7 +80,7 @@ indata[["logexp"]]=double2singlePrecision(log(indata[["exp"]]))
 levels(indata[["nation"]])=c("Belgium", "W_Germany", "Denmark", "France", "UK", "Italy", "Ireland", "Luxembourg", "Netherlands")
 
 ## Define the model
-formula="log(obs,logexp)~(0|nation[]+Belgium:uvbi+W_Germany:uvbi+Denmark:uvbi+France:uvbi+UK:uvbi+Italy:uvbi+Ireland:uvbi+Luxembourg:uvbi+Netherlands:uvbi)+(2|cons)"
+formula=log(obs,logexp)~(0|nation[]+Belgium:uvbi+W_Germany:uvbi+Denmark:uvbi+France:uvbi+UK:uvbi+Italy:uvbi+Ireland:uvbi+Luxembourg:uvbi+Netherlands:uvbi)+(2|cons)
 levID=c('region','county')
 ## Choose option(s) for inference
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000))
@@ -111,7 +111,7 @@ indata["gcseav"]=double2singlePrecision(indata["gcse_tot"]/indata["gcse_no"]-6)
 indata["gcse2"]=double2singlePrecision(indata["gcseav"]^2)
 indata["gcse3"]=double2singlePrecision(indata["gcseav"]^3)
 
-formula="logit(a_point,cons,A) ~ (0s|cons)+(0c|gcseav+gcse2+gender) +( 2c | cons)"
+formula=logit(a_point,cons,A) ~ (`0s`|cons)+(`0c`|gcseav+gcse2+gender) +( `2c` | cons)
 levID=c('estab','pupil')
 ##MCMC
 estoptions= list(EstM=1)
@@ -155,7 +155,7 @@ while (!file.access(winbugs,mode=0)==0||!file.access(winbugs,mode=1)==0||!file.a
 
 
 ## Define the model
-formula="logit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons+urban)"
+formula=logit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons+urban)
 levID=c('district','woman')
 
 ##Orthogonal update (WinBUGS)

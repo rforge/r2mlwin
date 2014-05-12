@@ -42,18 +42,18 @@ error=double2singlePrecision(rnorm(length(indata[,"standlrt"]),0,sqrt(.2)))
 obslrt=double2singlePrecision(indata[,"standlrt"]+error)
 indata=cbind(indata,error,obslrt)
 
-formula="normexam~(0|cons+standlrt)+(1|cons)"
+formula=normexam~(0|cons+standlrt)+(1|cons)
 levID='student'
 estoptions= list(EstM=0)
 (mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin))
 
 
-formula="normexam~(0|cons+error)+(1|cons)"
+formula=normexam~(0|cons+error)+(1|cons)
 levID='student'
 estoptions= list(EstM=0)
 (mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin))
 
-formula="normexam~(0|cons+obslrt)+(1|cons)"
+formula=normexam~(0|cons+obslrt)+(1|cons)
 levID='student'
 estoptions= list(EstM=0)
 (mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin))
@@ -62,17 +62,17 @@ estoptions= list(EstM=1,merr=c(N=1,"obslrt",.2))
 
 # 14.2 Measurement error modelling in multilevel models . . . . . . . . .205
 
-formula="normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)"
+formula=normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)
 levID=c('school','student')
 estoptions= list(EstM=1)
 (mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin))
 
-formula="normexam~(0|cons+obslrt)+(2|cons+obslrt)+(1|cons)"
+formula=normexam~(0|cons+obslrt)+(2|cons+obslrt)+(1|cons)
 levID=c('school','student')
 estoptions= list(EstM=1)
 (mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin))
 
-formula="normexam~(0|cons+obslrt)+(2|cons+obslrt)+(1|cons)"
+formula=normexam~(0|cons+obslrt)+(2|cons+obslrt)+(1|cons)
 levID=c('school','student')
 estoptions= list(EstM=1,merr=c(N=1,"obslrt",.2))
 (mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin))
@@ -98,12 +98,12 @@ set.seed(1)
 obsage=double2singlePrecision(indata[["age"]]+rnorm(length(indata[["age"]]),0,5))
 indata=cbind(indata,obsage)
 
-formula="logit(use,denomb)~(0|cons+age)"
+formula=logit(use,denomb)~(0|cons+age)
 levID=c('district','woman')
 estoptions= list(EstM=1)
 (mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
 
-formula="logit(use,denomb)~(0|cons+obsage)"
+formula=logit(use,denomb)~(0|cons+obsage)
 levID=c('district','woman')
 estoptions= list(EstM=1)
 (mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))

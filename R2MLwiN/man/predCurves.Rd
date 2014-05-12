@@ -63,7 +63,7 @@ indata["gcse^2"]=double2singlePrecision(indata["gcseav"]^2)
 indata["gcse^3"]=double2singlePrecision(indata["gcseav"]^3)
 
 ## Example: A-level Chemistry
-formula="a-point ~ (0|cons+gcseav+gcse^2+gcse^3+gender)+(1|cons )"
+formula=a-point ~ (0|cons+gcseav+gcse^2+gcse^3+gender)+(1|cons )
 levID='pupil'
 estoptions= list(EstM=1)
 ## Fit the model

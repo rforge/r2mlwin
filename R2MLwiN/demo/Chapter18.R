@@ -42,7 +42,7 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 
 # 18.2 Fitting single level multivariate models . . . . . . . . . . . . .265
 
-formula="c(written,csework)~(0|cons)+(1|cons)"
+formula=c(written,csework)~(0|cons)+(1|cons)
 levID='student'
 ##IGLS
 estoptions= list(EstM=0)
@@ -53,14 +53,14 @@ estoptions= list(EstM=1)
 
 # 18.3 Adding predictor variables . . . . . . . . . . . . . . . . . . . .270
 
-formula="c(written,csework)~(0|cons+female)+(1|cons)"
+formula=c(written,csework)~(0|cons+female)+(1|cons)
 levID='student'
 estoptions= list(EstM=1)
 (mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin))
 
 # 18.4 A multilevel multivariate model . . . . . . . . . . . . . . . . . 271
 
-formula="c(written,csework)~(0|cons+female)+(2|cons)+(1|cons)"
+formula=c(written,csework)~(0|cons+female)+(2|cons)+(1|cons)
 levID=c('school','student')
 ##Store residual chain at level 3: school
 estoptions= list(EstM=1,resi.store=T,resi.store.levs=3)
@@ -122,12 +122,12 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 #ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
 #library(foreign); indata =read.dta(inputfile)
 
-formula="c(written,csework)~(0|cons+female)+(1|cons)"
+formula=c(written,csework)~(0|cons+female)+(1|cons)
 levID='student'
 estoptions= list(EstM=1)
 (mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin))
 
-formula="c(written,csework)~(0|cons+female)+(2|cons)+(1|cons)"
+formula=c(written,csework)~(0|cons+female)+(2|cons)+(1|cons)
 levID=c('school','student')
 estoptions= list(EstM=1,mcmcMeth=list(dami=2))
 (mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin))
@@ -156,7 +156,7 @@ ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
 library(foreign); indata =read.dta(inputfile)
 summary(indata)
 
-formula="c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2)~(0|cons+female)+(2|cons)+(1|cons)"
+formula=c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2)~(0|cons+female)+(2|cons)+(1|cons)
 levID=c('school','student')
 estoptions= list(EstM=0)
 (mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin))

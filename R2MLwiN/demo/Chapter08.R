@@ -38,7 +38,7 @@ pupil = 1:108
 school = c(rep(1, 18), rep(2, 18), rep(3, 18), rep(4, 18), rep(5, 18), rep(6, 18))
 cons = rep(1, 108)
 levID = c("school", "pupil")
-formula = "resp ~ (0|cons) + (2|cons) + (1|cons)"
+formula = resp ~ (0|cons) + (2|cons) + (1|cons)
 
 ns <- 100
 IGLS_array = MCMC_array = array(, c(9, 5, ns))

@@ -45,12 +45,12 @@ summary(indata)
 hist(indata[["earnings"]])
 hist(indata[["logearn"]],breaks=20)
 
-formula="logearn~(0|cons+age_40+numjobs)+(1|cons)"
+formula=logearn~(0|cons+age_40+numjobs)+(1|cons)
 levID='id'
 estoptions= list(EstM=1)
 (mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin))
 
-formula="logearn~(0|cons+age_40+numjobs+sex+parttime)+(1|cons)"
+formula=logearn~(0|cons+age_40+numjobs+sex+parttime)+(1|cons)
 levID='id'
 estoptions= list(EstM=1)
 (mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin))
@@ -60,7 +60,7 @@ round(cor(indata[,c("parttime","sex","numjobs")]),4)
 
 tabulate(indata[["numjobs"]])
 
-formula="logearn~(0|cons+age_40+sex+parttime)+(2|cons)+(1|cons)"
+formula=logearn~(0|cons+age_40+sex+parttime)+(2|cons)+(1|cons)
 levID=c('company','id')
 estoptions= list(EstM=1)
 (mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin))
@@ -91,7 +91,7 @@ indata[["companyno54"]]=(indata[["company"]]==54)+(indata[["company2"]]==54)+(in
 indata[["companyno67"]]=(indata[["company"]]==67)+(indata[["company2"]]==67)+(indata[["company3"]]==67)+(indata[["company4"]]==67)
 
 ##New model
-formula="logearn~(0|cons+age_40+sex+parttime+companyno54+companyno67)+(2|cons)+(1|cons)"
+formula=logearn~(0|cons+age_40+sex+parttime+companyno54+companyno67)+(2|cons)+(1|cons)
 levID=c('company','id')
 
 ##Multiple membership

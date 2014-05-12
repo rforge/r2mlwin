@@ -53,7 +53,7 @@ while (!file.access(winbugs,mode=0)==0||!file.access(winbugs,mode=1)==0||!file.a
 # 10.1 Simple logistic regression model . . . . . . . . . . . . . . . . .130
 
 ## Define the model
-formula="logit(use,denomb)~(0|cons+age)"
+formula=logit(use,denomb)~(0|cons+age)
 levID=c('district','woman')
 ## Choose option(s) for inference
 estoptions= list(EstM=1)
@@ -69,7 +69,7 @@ estoptions= list(EstM=1,mcmcMeth=list(iterations=15000))
 sixway(mymodel1["chains"][,"FP_age"],"beta_1")
 
 ## Define the model
-formula="logit(use,denomb)~(0|cons+age+lc[nokids])"
+formula=logit(use,denomb)~(0|cons+age+lc[nokids])
 levID=c('district','woman')
 ## Change to 5000 iterations by default
 estoptions= list(EstM=1)
@@ -78,7 +78,7 @@ estoptions= list(EstM=1)
 # 10.2 Random effects logistic regression model . . . . . . . . . . . . .136
 
 ## Define the model
-formula="logit(use,denomb)~(0|cons+age+lc[nokids])+(2|cons)"
+formula=logit(use,denomb)~(0|cons+age+lc[nokids])+(2|cons)
 levID=c('district','woman')
 estoptions= list(EstM=1)
 (mymodel4=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
@@ -87,12 +87,12 @@ sixway(mymodel4["chains"][,"RP2_var_cons"],"sigma2u0")
 
 # 10.3 Random coefficients for area type . . . . . . . . . . . . . . . . 139
 
-formula="logit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons)"
+formula=logit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons)
 levID=c('district','woman')
 estoptions= list(EstM=1)
 (mymodel5=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
 
-formula="logit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons+urban)"
+formula=logit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons+urban)
 levID=c('district','woman')
 estoptions= list(EstM=1)
 (mymodel6=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
@@ -101,7 +101,7 @@ estoptions= list(EstM=1)
 
 # 10.5 Running a probit regression in MLwiN . . . . . . . . . . . . . . .142
 
-formula="probit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons+urban)"
+formula=probit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons+urban)
 levID=c('district','woman')
 
 ## Gibbs
@@ -133,7 +133,7 @@ print(sdtable)
 # 10.6 Comparison with WinBUGS . . . . . . . . . . . . . . . . . . . . . 144
 
 ## Define the model
-formula="logit(use,denomb)~(0|cons+age)+(2|cons)"
+formula=logit(use,denomb)~(0|cons+age)+(2|cons)
 levID=c('district','woman')
 estoptions= list(EstM=0)
 mymodel9=runMLwiN(formula, levID, D="Binomial", indata, estoptions,BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=winbugs, OpenBugs = F),MLwiNPath=mlwin)

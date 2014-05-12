@@ -37,7 +37,7 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 #library(foreign); indata =read.dta(inputfile)
 
 ## Define the model
-formula="normexam~(0|cons+standlrt)+(2|cons)+(1|cons)"
+formula=normexam~(0|cons+standlrt)+(2|cons)+(1|cons)
 levID=c('school','student')
 
 ## IGLS

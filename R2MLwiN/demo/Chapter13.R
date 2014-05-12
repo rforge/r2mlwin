@@ -48,14 +48,14 @@ hist(indata[["gcseav"]],breaks=20)
 # 13.2 Normal response models . . . . . . . . . . . . . . . . . . . . . .184
 
 ## Define the model
-formula="a_point ~ (0|cons)+(1|cons )"
+formula=a_point ~ (0|cons)+(1|cons )
 levID='pupil'
 estoptions= list(EstM=1)
 ## Fit the model
 (mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin))
 
 ## Define the model
-formula="a_point ~ (0|cons+gcseav+gcse2+gcse3+gender)+(1|cons )"
+formula=a_point ~ (0|cons+gcseav+gcse2+gcse3+gender)+(1|cons )
 levID='pupil'
 estoptions= list(EstM=1, resi.store=T)
 ## Fit the model
@@ -68,7 +68,7 @@ predCurves(mymodel, indata, xname="gcseav", group="gender")
 # 13.3 Ordered multinomial modelling . . . . . . . . . . . . . . . . . . 186
 
 ##Define the model
-formula="logit(a_point,cons,A) ~ (0s|cons)"
+formula=logit(a_point,cons,A) ~ (`0s`|cons)
 levID=c('pupil')
 ##IGLS
 estoptions= list(EstM=0)
@@ -81,7 +81,7 @@ estoptions= list(EstM=1)
 (mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata, estoptions,MLwiNPath=mlwin))
 
 # 13.4 Adding predictor variables . . . . . . . . . . . . . . . . . . . .191
-formula="logit(a_point,cons,A) ~ (0s|cons)+(0c|gcseav+gcse2+gcse3+gender)"
+formula=logit(a_point,cons,A) ~ (`0s`|cons)+(`0c`|gcseav+gcse2+gcse3+gender)
 levID=c('pupil')
 ##MCMC
 estoptions= list(EstM=1)
@@ -89,7 +89,7 @@ estoptions= list(EstM=1)
 (mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata, estoptions,MLwiNPath=mlwin))
 
 # 13.5 Multilevel ordered response modelling . . . . . . . . . . . . . . 192
-formula="logit(a_point,cons,A) ~ (0s|cons)+(0c|gcseav+gcse2+gender) +( 2c | cons)"
+formula=logit(a_point,cons,A) ~ (`0s`|cons)+(`0c`|gcseav+gcse2+gender) +( `2c` | cons)
 levID=c('estab','pupil')
 ##MCMC
 estoptions= list(EstM=1)
@@ -97,7 +97,7 @@ estoptions= list(EstM=1)
 (mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata, estoptions,MLwiNPath=mlwin))
 
 
-formula="logit(a_point,cons,A) ~ (0s|cons)+(0c|gcseav+gcse2+gender) +( 2c | cons+gcseav )"
+formula=logit(a_point,cons,A) ~ (`0s`|cons)+(`0c`|gcseav+gcse2+gender) +( `2c` | cons+gcseav )
 levID=c('estab','pupil')
 ##MCMC
 estoptions= list(EstM=1)

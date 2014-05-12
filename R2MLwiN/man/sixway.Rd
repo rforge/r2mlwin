@@ -57,7 +57,7 @@ mlwin = "C:/Program Files (x86)/MLwiN v2.29/"
 wspath=paste(mlwin,"/samples/",sep="")
 
 ## Example: Normal
-formula="normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)"
+formula=normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)
 levID=c('school','student')
 estoptions= list(EstM=1,resi.store.levs=2)
 wsfile=paste(wspath,"tutorial.ws",sep="")

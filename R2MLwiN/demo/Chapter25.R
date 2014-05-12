@@ -54,7 +54,7 @@ while (!file.access(winbugs,mode=0)==0||!file.access(winbugs,mode=1)==0||!file.a
 #openbugs="C:/Program Files (x86)/OpenBUGS321/OpenBUGS.exe"
 
 ## Define the model
-formula="normexam~(0|cons+standlrt)+(2|cons)+(1|cons)"
+formula=normexam~(0|cons+standlrt)+(2|cons)+(1|cons)
 levID=c('school','student')
 
 ## Hierarchical centring at level 2 (DO NOT USE VERSION 2.25; the bug has been fixed for VERSION 2.26)
@@ -89,7 +89,7 @@ while (!file.access(winbugs,mode=0)==0||!file.access(winbugs,mode=1)==0||!file.a
 # User's input if necessary
 
 ## Define the model
-formula="logit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons+urban)"
+formula=logit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons+urban)
 levID=c('district','woman')
 
 ## Hierarchical centring at level 2
@@ -114,7 +114,7 @@ indata[["logexp"]]=double2singlePrecision(log(indata[["exp"]]))
 levels(indata[["nation"]])=c("Belgium", "W_Germany", "Denmark", "France", "UK", "Italy", "Ireland", "Luxembourg", "Netherlands")
 
 ## Define the model
-formula="log(obs,logexp)~(0|nation[]+Belgium:uvbi+W_Germany:uvbi+Denmark:uvbi+France:uvbi+UK:uvbi+Italy:uvbi+Ireland:uvbi+Luxembourg:uvbi+Netherlands:uvbi)+(2|cons)"
+formula=log(obs,logexp)~(0|nation[]+Belgium:uvbi+W_Germany:uvbi+Denmark:uvbi+France:uvbi+UK:uvbi+Italy:uvbi+Ireland:uvbi+Luxembourg:uvbi+Netherlands:uvbi)+(2|cons)
 levID=c('region','county')
 
 ## Hierarchical centring at level 2
@@ -141,7 +141,7 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 #library(foreign); indata =read.dta(inputfile)
 
 ## Define the model
-formula="normexam~(0|cons+standlrt)+(2|cons)+(1|cons)"
+formula=normexam~(0|cons+standlrt)+(2|cons)+(1|cons)
 levID=c('school','student')
 
 ## Univariate MH

@@ -61,7 +61,7 @@ ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
 library(foreign);indata =read.dta(inputfile)
 
 ## Define the model
-formula="normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)"
+formula=normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)
 levID=c('school','student')
 ## Choose option(s) for inference
 estoptions= list(EstM=1)

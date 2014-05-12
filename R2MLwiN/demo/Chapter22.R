@@ -41,7 +41,7 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 #library(foreign); indata =read.dta(inputfile)
 
 ## Define the model
-formula="normexam~(0|cons)+(2|cons)+(1|cons)"
+formula=normexam~(0|cons)+(2|cons)+(1|cons)
 levID=c('school','student')
 estoptions= list(EstM=1)
 (mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
@@ -54,7 +54,7 @@ estoptions= list(EstM=1, mcmcOptions=list(smvn=1))
 # 22.3 Model Comparison and structured MVN models . . . . . . . . . . . .349
 
 ## Define the model
-formula="normexam~(0|cons+standlrt)+(2|cons)+(1|cons)"
+formula=normexam~(0|cons+standlrt)+(2|cons)+(1|cons)
 levID=c('school','student')
 
 ## Gibbs
@@ -77,7 +77,7 @@ set.seed(1)
 indata[["temp"]]=double2singlePrecision(rnorm(4059))
 
 ## Define the model
-formula="temp~(0|cons+standlrt)+(2|cons)+(1|cons)"
+formula=temp~(0|cons+standlrt)+(2|cons)+(1|cons)
 levID=c('school','student')
 
 ##IGLS

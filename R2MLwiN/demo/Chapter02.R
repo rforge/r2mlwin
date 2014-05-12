@@ -35,7 +35,7 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 #library(foreign); indata =read.dta(inputfile)
 
 ## Define the model
-formula="normexam~(0|cons+standlrt)+(1|cons)"
+formula=normexam~(0|cons+standlrt)+(1|cons)
 levID='student'
 ## Choose IGLS algoritm for estimation
 estoptions= list(EstM=0)
@@ -68,7 +68,7 @@ indata[["boysch"]]=as.integer(indata[["schgend"]]=="boysch")
 indata[["girlsch"]]=as.integer(indata[["schgend"]]=="girlsch")
 
 ## Define the model
-formula="normexam~(0|cons+standlrt+girl+boysch+girlsch)+(1|cons)"
+formula=normexam~(0|cons+standlrt+girl+boysch+girlsch)+(1|cons)
 levID='student'
 ## Choose IGLS algoritm for estimation
 estoptions= list(EstM=0)

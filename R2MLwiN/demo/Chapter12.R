@@ -40,7 +40,7 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 # 12.1 Fitting a first single-level multinomial model . . . . . . . . . .169
 
 ## Define the model
-formula="log(use4,cons,use4_4)~ (0|cons)"
+formula=log(use4,cons,use4_4)~ (0|cons)
 levID=c('woman')
 estoptions= list(EstM=1)
 ## Fit the model
@@ -53,7 +53,7 @@ cat(paste("Pr(y = 3) =", round(exp(mymodel["FP"]["FP_cons_use4_3"])/(1+exp(mymod
 # 12.2 Adding predictor variables . . . . . . . . . . . . . . . . . . . .173
 
 ## Define the model
-formula="log(use4,cons,use4_4)~ (0|cons+lc[lc0])"
+formula=log(use4,cons,use4_4)~ (0|cons+lc[lc0])
 levID=c('woman')
 estoptions= list(EstM=1)
 ## Fit the model
@@ -78,7 +78,7 @@ sixway(pred2,"prob1")
 # 12.4 Adding district level random effects . . . . . . . . . . . . . . .177
 
 ## Define the model
-formula="log(use4,cons,use4_4)~(0|cons+lc[lc0])+(2|cons)"
+formula=log(use4,cons,use4_4)~(0|cons+lc[lc0])+(2|cons)
 levID=c('district','woman')
 
 #Uses IGLS

@@ -71,7 +71,7 @@ formatC(round(tab2,6))
 # 9.2 Setting up the model in MLwiN . . . . . . . . . . . . . . . . . . .115
 
 ## Define the model
-formula="normexam~(0|cons+standlrt)+(1|cons+standlrt)"
+formula=normexam~(0|cons+standlrt)+(1|cons+standlrt)
 ## The highest level comes first, then the second highest and so on
 levID=c('student')
 ## Choose option(s) for inference
@@ -87,7 +87,7 @@ abline(v=0,lty="dotted")
 
 # 9.3 Complex variance functions in multilevel models . . . . . . . . . .119
 
-formula="normexam~(0|cons+standlrt)+(1|cons)+(2|cons+standlrt)"
+formula=normexam~(0|cons+standlrt)+(1|cons)+(2|cons+standlrt)
 ## The highest level comes first, then the second highest and so on
 levID=c('school','student')
 ## Choose option(s) for inference
@@ -102,7 +102,7 @@ plot(sort(indata[["standlrt"]]),l2varfn[order(indata[["standlrt"]])],xlab="stand
 abline(h=l1varfn)
 abline(v=0,lty="dotted")
 
-formula="normexam~(0|cons+standlrt)+(1|cons+standlrt)+(2|cons+standlrt)"
+formula=normexam~(0|cons+standlrt)+(1|cons+standlrt)+(2|cons+standlrt)
 levID=c('school','student')
 estoptions= list(EstM=1)
 ## Fit the model
@@ -116,7 +116,7 @@ estoptions= list(EstM=1,clre=clre)
 
 # 9.4 Relationship with gender . . . . . . . . . . . . . . . . . . . . . 123
 
-formula="normexam~(0|cons+standlrt+girl)+(2|cons+standlrt)+(1|cons+standlrt+girl)"
+formula=normexam~(0|cons+standlrt+girl)+(2|cons+standlrt)+(1|cons+standlrt+girl)
 levID=c('school','student')
 ## Remove term standlrt/standlrt and girl/girl from the level 1 covariance matrix
 clre=matrix(,nrow=3,ncol=2)

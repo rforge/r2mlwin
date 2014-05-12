@@ -42,7 +42,7 @@ round(colMeans(indata[,c("es_core","biol_core","phys_core")]),4)
 round(apply(indata[,c("es_core","biol_core","phys_core")],2,sd),4)
 round(cor(indata[,c("es_core","biol_core","phys_core")]),4)
 
-formula="c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2)~(0|cons)+(1|cons)"
+formula=c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2)~(0|cons)+(1|cons)
 levID='student'
 estoptions= list(EstM=0)
 (mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin))
@@ -117,7 +117,7 @@ estoptions= list(EstM=1, fact=fact,mcmcMeth=list(burnin=5000,iterations=10000))
 
 # 20.8 Multilevel factor analysis . . . . . . . . . . . . . . . . . . . 320
 
-formula="c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2)~(0|cons)+(2|cons)+(1|cons)"
+formula=c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2)~(0|cons)+(2|cons)+(1|cons)
 levID=c('school','student')
 estoptions= list(EstM=0)
 (mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin))

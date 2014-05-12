@@ -60,7 +60,7 @@ mlwin = "C:/Program Files (x86)/MLwiN v2.29/"
 wspath=paste(mlwin,"/samples/",sep="")
 
 ## Example: tutorial
-formula="normexam~(0|cons+standlrt)+(2|cons)+(1|cons)"
+formula=normexam~(0|cons+standlrt)+(2|cons)+(1|cons)
 levID=c('school','student')
 wsfile=paste(wspath,"tutorial.ws",sep="")
 inputfile=paste(tempdir(),"/tutorial.dta",sep="")

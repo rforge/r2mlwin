@@ -38,14 +38,14 @@ inputfile=paste(tempdir(),"/xc1.dta",sep="")
 ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
 library(foreign); indata =read.dta(inputfile)
 
-formula="ATTAIN~(0|CONS)+(3|CONS)+(1|CONS)"
+formula=ATTAIN~(0|CONS)+(3|CONS)+(1|CONS)
 levID=c('SID','PID','PUPIL')
 estoptions= list(EstM=1)
 (mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin))
 
 # 15.4 A Cross-classified model . . . . . . . . . . . . . . . . . . . . .220
 
-formula="ATTAIN~(0|CONS)+(3|CONS)+(2|CONS)+(1|CONS)"
+formula=ATTAIN~(0|CONS)+(3|CONS)+(2|CONS)+(1|CONS)
 levID=c('SID','PID','PUPIL')
 xclass=list("classes"=c(2,3),"N1"=c(1,1))
 estoptions= list(xclass=xclass,EstM=1,notation='class',resi.store=T,resi.store.levs=c(2,3))
@@ -91,13 +91,13 @@ abline(h=0,lty="dotted")
 
 # 15.6 Adding predictors to the model . . . . . . . . . . . . . . . . . .225
 
-formula="ATTAIN~(0|CONS+VRQ)+(3|CONS)+(2|CONS)+(1|CONS)"
+formula=ATTAIN~(0|CONS+VRQ)+(3|CONS)+(2|CONS)+(1|CONS)
 levID=c('SID','PID','PUPIL')
 xclass=list("classes"=c(2,3),"N1"=c(1,1))
 estoptions= list(xclass=xclass,EstM=1,notation='class',resi.store=T,resi.store.levs=c(2,3))
 (mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin))
 
-formula="ATTAIN~(0|CONS+VRQ+SC+FED+MED+CHOICE)+(3|CONS)+(2|CONS)+(1|CONS)"
+formula=ATTAIN~(0|CONS+VRQ+SC+FED+MED+CHOICE)+(3|CONS)+(2|CONS)+(1|CONS)
 levID=c('SID','PID','PUPIL')
 xclass=list("classes"=c(2,3),"N1"=c(1,1))
 estoptions= list(xclass=xclass,EstM=1,notation='class',resi.store=T,resi.store.levs=c(2,3))
@@ -111,7 +111,7 @@ plot(x=1:lencateg,y=residual0[rankno],pch=24,bg="black",xlab="rank",ylab="cons")
 abline(h=0,lty="dotted")
 
 indata[["school19"]]=as.integer(indata[["SID"]]==19)
-formula="ATTAIN~(0|CONS+VRQ+SC+FED+MED+CHOICE+school19)+(2|CONS)+(1|CONS)"
+formula=ATTAIN~(0|CONS+VRQ+SC+FED+MED+CHOICE+school19)+(2|CONS)+(1|CONS)
 levID=c('SID','PID','PUPIL')
 xclass=list("classes"=c(2,3),"N1"=c(1,1))
 estoptions= list(xclass=xclass,EstM=1,notation='class')

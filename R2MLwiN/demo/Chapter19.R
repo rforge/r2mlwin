@@ -53,14 +53,14 @@ round(cor(indata[,c("sex","fluent","ravens","english","behaviour")]),4)
 
 # 19.3 Setting up a single level mixed response model . . . . . . . . . .291
 
-formula="c(english,probit(behaviour,denomb))~(0s|cons+sex+ravens)+(0c|fluent{1,0})+(1s|cons.english)"
+formula=c(english,probit(behaviour,denomb))~(`0s`|cons+sex+ravens)+(`0c`|fluent(1,0))+(`1s`|cons.english)
 levID= 'id'
 estoptions= list(EstM=1,mcmcMeth=list(fixM=1,residM=1,Lev1VarM=1))
 (mymodel=runMLwiN(formula, levID, D=c("Mixed","Normal","Binomial"), indata, estoptions,MLwiNPath=mlwin))
 
 # 19.4 Multilevel mixed response model . . . . . . . . . . . . . . . . . 294
 
-formula="c(english,probit(behaviour,denomb))~(0s|cons+sex+ravens)+(0c|fluent{1,0})+(2s|cons)+(1s|cons.english)"
+formula=c(english,probit(behaviour,denomb))~(`0s`|cons+sex+ravens)+(`0c`|fluent(1,0))+(`2s`|cons)+(`1s`|cons.english)
 levID=c('school', 'id')
 estoptions= list(EstM=1,mcmcMeth=list(fixM=1,residM=1,Lev1VarM=1))
 (mymodel=runMLwiN(formula, levID, D=c("Mixed","Normal","Binomial"), indata, estoptions,MLwiNPath=mlwin))
@@ -87,7 +87,7 @@ ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
 library(foreign); indata =read.dta(inputfile)
 
 
-formula="c(y8,y15,y22,y29,y36)~(0|cons)+(1|cons)"
+formula=c(y8,y15,y22,y29,y36)~(0|cons)+(1|cons)
 levID=c('rat')
 estoptions= list(EstM=1)
 (mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin))

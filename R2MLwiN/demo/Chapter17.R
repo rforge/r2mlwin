@@ -37,26 +37,26 @@ summary(indata)
 
 # 17.2 Fixed effects models . . . . . . . . . . . . . . . . . . . . . . .248
 
-formula="log(obs,offs)~(0|cons)"
+formula=log(obs,offs)~(0|cons)
 levID=c('neigh1','area','area')
 estoptions= list(EstM=1,notation="class")
 (mymodel=runMLwiN(formula, levID, D='Poisson', indata, estoptions,MLwiNPath=mlwin))
 
-formula="log(obs,offs)~(0|cons+perc_aff)"
+formula=log(obs,offs)~(0|cons+perc_aff)
 levID=c('neigh1','area','area')
 estoptions= list(EstM=1,notation="class")
 (mymodel=runMLwiN(formula, levID, D='Poisson', indata, estoptions,MLwiNPath=mlwin))
 
 # 17.3 Random effects models . . . . . . . . . . . . . . . . . . . . . . 251
 
-formula="log(obs,offs)~(0|cons+perc_aff)+(2|cons)"
+formula=log(obs,offs)~(0|cons+perc_aff)+(2|cons)
 levID=c('neigh1','area','area')
 estoptions= list(EstM=1,notation="class",mcmcMeth=list(iterations=50000))
 (mymodel=runMLwiN(formula, levID, D='Poisson', indata, estoptions,MLwiNPath=mlwin))
 
 # 17.4 A spatial multiple-membership (MM) model . . . . . . . . . . . . .252
 
-formula="log(obs,offs)~(0|cons+perc_aff)+(2|cons)+(3|cons)"
+formula=log(obs,offs)~(0|cons+perc_aff)+(2|cons)+(3|cons)
 levID=c('neigh1','area','area')
 xclass=list("class"=3,"N1"=11,"weight"='weight1',"id"=NA)
 estoptions= list(xclass=xclass,EstM=1,notation="class",mcmcMeth=list(iterations=50000))
@@ -79,7 +79,7 @@ while (!file.access(winbugs,mode=0)==0||!file.access(winbugs,mode=1)==0||!file.a
 ## Openbugs executable
 #openbugs="C:/Program Files (x86)/OpenBUGS321/OpenBUGS.exe"
 
-formula="log(obs,offs)~(0|perc_aff)+(3|cons)"
+formula=log(obs,offs)~(0|perc_aff)+(3|cons)
 levID=c('area','area','area')
 xclass=list("class"=3,"N1"=11,"weight"='wcar1',"id"='neigh1',"car"=TRUE)
 estoptions= list(xclass=xclass,EstM=1,notation="class",mcmcMeth=list(iterations=50000))
@@ -88,7 +88,7 @@ estoptions= list(xclass=xclass,EstM=1,notation="class",mcmcMeth=list(iterations=
 
 # 17.7 Including exchangeable random effects . . . . . . . . . . . . . . 259
 
-formula="log(obs,offs)~(0|perc_aff)+(2|cons)+(3|cons)"
+formula=log(obs,offs)~(0|perc_aff)+(2|cons)+(3|cons)
 levID=c('area','area','area')
 xclass=list("class"=3,"N1"=11,"weight"='wcar1',"id"='neigh1',"car"=TRUE)
 estoptions= list(xclass=xclass,EstM=1,notation="class",mcmcMeth=list(iterations=50000))

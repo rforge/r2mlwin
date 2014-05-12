@@ -37,7 +37,7 @@ levels(indata[["nation"]])=c("Belgium", "W_Germany", "Denmark", "France", "UK", 
 # 11.1 Simple Poisson regression model . . . . . . . . . . . . . . . . . 155
 
 ## Define the model
-formula="log(obs,logexp)~(0|cons+uvbi)"
+formula=log(obs,logexp)~(0|cons+uvbi)
 levID=c('nation','region','county')
 ## Choose option(s) for inference
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000))
@@ -49,7 +49,7 @@ sixway(mymodel1["chains"][,"FP_uvbi"],"beta_1")
 # 11.2 Adding in region level random effects . . . . . . . . . . . . . . 157
 
 ## Define the model
-formula="log(obs,logexp)~(0|cons+uvbi)+(2|cons)"
+formula=log(obs,logexp)~(0|cons+uvbi)+(2|cons)
 levID=c('region','county')
 ## Choose option(s) for inference
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000,seed=13))
@@ -61,7 +61,7 @@ sixway(mymodel2["chains"][,"FP_uvbi"],"beta_1")
 # 11.3 Including nation effects in the model . . . . . . . . . . . . . . 159
 
 ## Define the model
-formula="log(obs,logexp)~(0|cons+uvbi)+(2|cons)+(3|cons)"
+formula=log(obs,logexp)~(0|cons+uvbi)+(2|cons)+(3|cons)
 levID=c('nation','region','county')
 ## Choose option(s) for inference
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000,seed=13))
@@ -69,7 +69,7 @@ estoptions= list(EstM=1,mcmcMeth=list(iterations=50000,seed=13))
 (mymodel3=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin))
 
 ## Define the model
-formula="log(obs,logexp)~(0|uvbi+nation[])+(2|cons)"
+formula=log(obs,logexp)~(0|uvbi+nation[])+(2|cons)
 levID=c('nation','region','county')
 ## Choose option(s) for inference
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000))
@@ -79,7 +79,7 @@ estoptions= list(EstM=1,mcmcMeth=list(iterations=50000))
 # 11.4 Interaction with UV exposure . . . . . . . . . . . . . . . . . . .161
 
 ## Define the model
-formula="log(obs,logexp)~(0|nation[]+Belgium:uvbi+W_Germany:uvbi+Denmark:uvbi+France:uvbi+UK:uvbi+Italy:uvbi+Ireland:uvbi+Luxembourg:uvbi+Netherlands:uvbi)+(2|cons)"
+formula=log(obs,logexp)~(0|nation[]+Belgium:uvbi+W_Germany:uvbi+Denmark:uvbi+France:uvbi+UK:uvbi+Italy:uvbi+Ireland:uvbi+Luxembourg:uvbi+Netherlands:uvbi)+(2|cons)
 levID=c('region','county')
 ## Choose option(s) for inference
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000))

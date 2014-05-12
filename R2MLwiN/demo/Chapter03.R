@@ -39,7 +39,7 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 #library(foreign); indata =read.dta(inputfile)
 
 ## Define the model
-formula="normexam~(0|cons+standlrt)+(2|cons)+(1|cons)"
+formula=normexam~(0|cons+standlrt)+(2|cons)+(1|cons)
 ## The highest level comes first, then the second highest and so on
 levID=c('school','student')
 ## Choose option(s) for inference
@@ -68,7 +68,7 @@ sixway(mymodel["chains"][,"RP2_var_cons"],"sigma2u0")
 # 3.3 Comparison between fixed and random school effects . . . . . . . . .41
 
 ## Define the model
-formula="normexam~(0|cons+standlrt+girl)+(2|cons)+(1|cons)"
+formula=normexam~(0|cons+standlrt+girl)+(2|cons)+(1|cons)
 levID=c('school','student')
 ## Choose option(s) for inference
 estoptions= list(EstM=1)

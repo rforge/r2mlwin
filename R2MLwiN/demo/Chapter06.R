@@ -49,7 +49,7 @@ estoptions= list(EstM=1)
 (mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
 
 ## Define the model
-formula="normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)"
+formula=normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)
 levID=c('school','student')
 
 ## Choose IGLS algoritm for estimation
