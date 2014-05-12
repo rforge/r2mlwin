@@ -1,5 +1,5 @@
 runMLwiN <-
-function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL, MLwiNPath="C:/Program Files (x86)/MLwiN v2.29/",workdir=tempdir()) {
+function(Formula, levID, D="Normal", indata=NULL, estoptions=list(EstM=0), BUGO=NULL, MLwiNPath="C:/Program Files (x86)/MLwiN v2.29/",workdir=tempdir()) {
 
 #    PACKages<-as.character(as.data.frame(installed.packages())$Package)
 #    packs.req= c("foreign","rbugs","coda")
@@ -7,7 +7,11 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
 #    if (!all(test))
 #	       install.packages(packs.req[!test],repos="http://cran.r-project.org")
 #    require(foreign); require(rbugs); require(coda)
-    
+
+  if (is.null(indata)) {
+    stop("Using the currently attached data is not yet implemented")
+  }
+  
     # the current function call
     cl <- match.call()
     
