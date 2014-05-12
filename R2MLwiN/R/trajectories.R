@@ -29,7 +29,7 @@ trajectories = function(chains,Range=c(1,5000),selected=NULL){
         plot(interval,chains[interval,cname[i]],xlab="iteration",
         ylab=cname[i],type="l")
         nwindows=nwindows+1
-        if ((nwindows%%9)==0) {windows(); opar=par(mfrow=c(3,3))}
+        if ((nwindows%%9)==0) {dev.new(); opar=par(mfrow=c(3,3))}
     }
     on.exit(par(opar))
 

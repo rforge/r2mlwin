@@ -23,9 +23,7 @@ if (is.null(name)) {
   }
 }
 
-if (is.null(name)) name="x"
-
-windows()
+dev.new()
 mypar <- par(mar = mar, mgp=mgp, ...)
 on.exit(par(mypar))
 split.screen( figs = c( 4, 1 ) )
