@@ -254,8 +254,14 @@
                     loadings=na.omit(object@estMCMC[,5])
                     load.names=rep(NA,length(loadings))
 
-                    Formula1=strsplit(object@Formula,"~")[[1]]
-                    resp=Formula1[1]
+                    if (is.character(object@Formula)){
+                      Formula1=strsplit(object@Formula,"~")[[1]]
+                      resp=Formula1[1]
+                    }else{
+                       tterms <- terms(object@Formula)
+                       resp=rownames(attr(tterms,"factors"))[attr(tterms,"response")]
+                    }
+                    
                     resp=sub("c\\(","",resp)
                     resp=sub("\\)","",resp)
                     resp=strsplit(resp,",")[[1]]
