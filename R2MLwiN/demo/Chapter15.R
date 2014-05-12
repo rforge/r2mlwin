@@ -54,18 +54,16 @@ estoptions= list(xclass=xclass,EstM=1,notation='class',resi.store=T,resi.store.l
 # 15.5 Residuals . . . . . . . . . . . . . . . . . . . . . . . . . . . . 223
 
 lencateg = length(unique(indata[["SID"]]))
-resi.chain0=na.omit(mymodel["resi.chains"][,"resi_lev3"])
-resi.chain0=matrix(resi.chain0, nrow =lencateg)
-residual0 = apply(resi.chain0,1,mean)
+resi.chain0=mymodel["resi.chains"]$resi_lev3
+residual0 = apply(resi.chain0,2,mean)
 rankno=order(residual0)
 plot(x=1:lencateg,y=residual0[rankno],pch=24,bg="black",xlab="rank",ylab="cons")
 abline(h=0,lty="dotted")
 
 ## Common caterpillar
 #lencateg = length(unique(indata[["SID"]]))
-#resi.chain0=na.omit(mymodel["resi.chains"][,"resi_lev3"])
-#resi.chain0=matrix(resi.chain0, nrow =lencateg)
-#u0rank = apply(resi.chain0,2,rank)
+#resi.chain0=mymodel["resi.chains"]$resi_lev3
+#u0rank = apply(resi.chain0,1,rank)
 #u0rankmn = apply(u0rank, 1,mean)
 #u0ranklo = apply(u0rank, 1, function(x) quantile(x,.025))
 #u0rankmd = apply(u0rank, 1,median)
@@ -74,18 +72,16 @@ abline(h=0,lty="dotted")
 #caterpillar(y=u0rankmn[rankno],x=1:lencateg,qtlow=u0ranklo[rankno],qtup=u0rankhi[rankno]],ylim=c(0,20))
 
 lencateg = length(unique(indata[["PID"]]))
-resi.chain1=na.omit(mymodel["resi.chains"][,"resi_lev2"])
-resi.chain1=matrix(resi.chain1, nrow =lencateg)
-residual1 = apply(resi.chain1,1,mean)
+resi.chain1=mymodel["resi.chains"]$resi_lev2
+residual1 = apply(resi.chain1,2,mean)
 rankno=order(residual1)
 plot(x=1:length(residual1),y=residual1[rankno],pch=24,bg="black",xlab="rank",ylab="cons")
 abline(h=0,lty="dotted")
 
 ## Common caterpillar
 #lencateg = length(unique(indata[["PID"]]))
-#resi.chain1=na.omit(mymodel["resi.chains"][,"resi_lev2"])
-#resi.chain1=matrix(resi.chain1, nrow =lencateg)
-#u0rank = apply(resi.chain1,2,rank)
+#resi.chain1=mymodel["resi.chains"]$resi_lev2
+#u0rank = apply(resi.chain1,1,rank)
 #u0rankmn = apply(u0rank, 1,mean)
 #u0ranklo = apply(u0rank, 1, function(x) quantile(x,.025))
 #u0rankmd = apply(u0rank, 1,median)
@@ -108,9 +104,8 @@ estoptions= list(xclass=xclass,EstM=1,notation='class',resi.store=T,resi.store.l
 (mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin))
 
 lencateg = length(unique(indata[["SID"]]))
-resi.chain0=na.omit(mymodel["resi.chains"][,"resi_lev3"])
-resi.chain0=matrix(resi.chain0, nrow =lencateg)
-residual0 = apply(resi.chain0,1,mean)
+resi.chain0=mymodel["resi.chains"]$resi_lev3
+residual0 = apply(resi.chain0,2,mean)
 rankno=order(residual0)
 plot(x=1:lencateg,y=residual0[rankno],pch=24,bg="black",xlab="rank",ylab="cons")
 abline(h=0,lty="dotted")

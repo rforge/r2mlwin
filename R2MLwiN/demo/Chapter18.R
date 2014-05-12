@@ -66,11 +66,8 @@ levID=c('school','student')
 estoptions= list(EstM=1,resi.store=T,resi.store.levs=3)
 (mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin))
 
-lencateg = length(unique(indata[["school"]]))
-resi=na.omit(mymodel["resi.chains"][,"resi_lev3"])
-##u0 and u1 alternates for each iteration (each column)
-resi=matrix(resi,nrow =lencateg*2)
-label=1:nrow(resi)
+resi=mymodel["resi.chains"]$resi_lev3
+label=1:ncol(resi)
 
 ##highlight
 hipos=rep(0,6)
@@ -83,9 +80,9 @@ hipos[6]=which(levels(as.factor(indata[["school"]]))==67105)
 
 par(mfrow=c(2,1))
 ##Select u0
-resi0=resi[label[which(label%%2==1)],]
-resi0mean = apply(resi0,1,mean)
-resi0sd = apply(resi0,1,sd)
+resi0=resi[, label[which(label%%2==1)]]
+resi0mean = apply(resi0,2,mean)
+resi0sd = apply(resi0,2,sd)
 rankno0=order(resi0mean)
 resi0.lo=resi0mean-1.4*resi0sd
 resi0.hi=resi0mean+1.4*resi0sd
@@ -94,9 +91,9 @@ abline(h=0,lty="dotted")
 for(i in 1:6) points(x=which(rankno0==hipos[i]),y=resi0mean[rankno0[which(rankno0==hipos[i])]],pch=22,bg=i+1)
 
 ##Select u1
-resi1=resi[label[which(label%%2==0)],]
-resi1mean = apply(resi1,1,mean)
-resi1sd = apply(resi1,1,sd)
+resi1=resi[, label[which(label%%2==0)]]
+resi1mean = apply(resi1,2,mean)
+resi1sd = apply(resi1,2,sd)
 rankno1=order(resi1mean)
 resi1.lo=resi1mean-1.4*resi1sd
 resi1.hi=resi1mean+1.4*resi1sd

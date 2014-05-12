@@ -67,8 +67,7 @@ trajectories(mymodel["chains"],Range=c(1,500))
 estoptions= list(EstM=1, resi.store=T, resi.store.levs=2,mcmcMeth=list(iterations=5001),mcmcOptions=list(smcm=1))
 (mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 ## Each row represents each iteration
-resi=matrix(mymodel["resi.chains"][,1],ncol=65,byrow=T)
-sixway(resi[,1],"school1")
+sixway(mymodel["resi.chains"]$resi_lev2[,1], name="school1")
 
 # 21.5 Random slopes model theory . . . . . . . . . . . . . . . . . . . .336
 

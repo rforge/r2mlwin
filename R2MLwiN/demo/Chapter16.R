@@ -73,10 +73,9 @@ estoptions= list(EstM=1,xclass=xclass,notation='class',resi.store=T,resi.store.l
 # 16.5 Residuals in multiple membership models . . . . . . . . . . . . . 240
 
 lencateg = length(unique(indata[["company"]]))
-resi0=na.omit(mymodel["resi.chains"][,"resi_lev2"])
-resi0=matrix(resi0, nrow =lencateg)
-resi0mean = apply(resi0,1,mean)
-resi0sd = apply(resi0,1,sd)
+resi0=mymodel["resi.chains"]$resi_lev2
+resi0mean = apply(resi0,2,mean)
+resi0sd = apply(resi0,2,sd)
 
 rankno=order(resi0mean)
 resi0.lo=resi0mean-1.4*resi0sd

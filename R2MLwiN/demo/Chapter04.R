@@ -100,21 +100,19 @@ rm(mymodel5)
 estoptions= list(EstM=1,resi.store=TRUE,resi.store.levs=2,mcmcMeth=list(iterations=5001))
 (mymodel6=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 
-lencateg = length(unique(indata[["school"]]))
-resi.chain2 = mymodel6["resi.chains"][,1]
-resi.chain2 = matrix(resi.chain2, nrow =lencateg)
-sixway(resi.chain2[1,],name="u0_1")
+resi.chain2 <- mymodel6["resi.chains"]$resi_lev2
+sixway(resi.chain2[,1], name="u0_1")
 
 # 4.7 Comparing two schools . . . . . . . . . . . . . . . . . . . . . . . 54
 
-dif=resi.chain2[1,]-resi.chain2[2,]
+dif=resi.chain2[,1]-resi.chain2[,2]
 sixway(dif,name="dif")
 prop = (dif>0)
 mean(prop)
 
 # 4.8 Calculating ranks of schools . . . . . . . . . . . . . . . . . . . .55
 
-u0rank = apply(resi.chain2,2,rank)
+u0rank = apply(resi.chain2,1,rank)
 u0rankmn = apply(u0rank, 1,mean)
 u0ranklo = apply(u0rank, 1, function(x) quantile(x,.025))
 u0rankmd = apply(u0rank, 1,median)

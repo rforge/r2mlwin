@@ -10,7 +10,7 @@ legend=TRUE, legend.space="top", legend.ncol=4, ...){
   
   if (cls=="mlwinfitIGLS"){
     FP <- object["FP"]
-    resi <- object["residual"]
+    myresi <- object["residual"]
     levID <- object["levID"]
     
     categrv <- as.factor(indata[[rev(levID)[lev]]])
@@ -20,11 +20,11 @@ legend=TRUE, legend.space="top", legend.ncol=4, ...){
       selected <- unique(categrv)
     }
 
-    if (is.character(resi)){
-      myresi <- read.dta(resi)
-    }else{
-      myresi <- resi
-    }
+    #if (is.character(resi)){
+    #  myresi <- read.dta(resi)
+    #}else{
+    #  myresi <- resi
+    #}
 
     est.names <- names(myresi)[grep(paste("lev_",lev,"_resi_est",sep=""),names(myresi))]
     if (length(est.names)==1){
@@ -97,8 +97,10 @@ legend=TRUE, legend.space="top", legend.ncol=4, ...){
   if (cls=="mlwinfitMCMC"){
 
   ## This function is to draw predicted lines (medians, lower quantiles and upper quantiles) at higher levels (level>=2) 
-    resi.chains <- as.data.frame(object["resi.chains"])
-    chains <- as.data.frame(object["chains"])
+    #resi.chains <- as.data.frame(object["resi.chains"])
+    #chains <- as.data.frame(object["chains"])
+    resi.chains <- object["resi.chains"][[paste0("resi_lev", lev)]]
+    chains <- object["chains"]
     levID <- object["levID"]
 
     categrv=indata[[rev(levID)[lev]]]
@@ -106,39 +108,35 @@ legend=TRUE, legend.space="top", legend.ncol=4, ...){
         selected =unique(categrv)
     }
 
-    if (is.character(resi.chains)){
-        resi.chains=read.dta(resi.chains)
-    }
+    #if (is.character(resi.chains)){
+    #    resi.chains=read.dta(resi.chains)
+    #}
 
     rpx.names=sub(paste("RP",lev,"_var_",sep=""),"",colnames(chains)[grep(paste("RP",lev,"_var_",sep=""),colnames(chains))])
     lenrpx=length(rpx.names)
     lencateg=length(unique(categrv))
 
-    resi.chains=matrix(resi.chains[[grep(paste("resi_lev",lev,sep=""),names(resi.chains))]],nrow=lenrpx*lencateg)
-    FP.pos=grep("FP_",names(chains))
-    fp.names=sub("FP_","",names(chains)[FP.pos])
-    tval=0
+    #resi.chains=matrix(resi.chains[[grep(paste("resi_lev",lev,sep=""),names(resi.chains))]],nrow=lenrpx*lencateg)
+    FP.pos=grep("FP_",colnames(chains))
+    fp.names=sub("FP_","",colnames(chains)[FP.pos])
+    tval=matrix(0, nrow(indata), nrow(chains))
     for (i in 1:length(fp.names)){
-        if (is.factor(indata[[fp.names[i]]])){
-            indata[[fp.names[i]]]=as.integer(indata[[fp.names[i]]])-1
-        }
-        tval=tval+indata[[fp.names[i]]]%o%chains[[FP.pos[i]]]
+      fpxdata = indata[[fp.names[i]]]
+      if (is.factor(fpxdata)) {
+        fpxdata = as.integer(fpxdata) - 1
+      }
+      tval=tval+fpxdata%o%chains[,FP.pos[i]]
     }
 
-
-  	t2val=matrix(0,nrow(tval),ncol(tval))
-  	for (j in 1:ncol(resi.chains)){
-          for (i in 1:length(rpx.names)){
-              loc=(1:lencateg)*lenrpx-(lenrpx-i)
-              resix=resi.chains[loc,j]
-              if (is.factor(indata[[rpx.names[i]]])){
-                indata[[rpx.names[i]]]=as.integer(indata[[rpx.names[i]]])-1
-              }
-  	    	  t2val[,j]=t2val[,j]+indata[[rpx.names[i]]]*resix[categrv]
-
-  	    }
-  	}
-  	tval=tval+t2val
+    for (i in 1:length(rpx.names)){  
+      for (j in 1:lencateg) {
+        rpxdata = indata[[rpx.names[i]]][categrv==j]
+        if (is.factor(rpxdata)) {
+          rpxdata = as.integer(rpxdata) - 1
+        }
+        tval[categrv==j,] = tval[categrv==j,]+(rpxdata%o%resi.chains[,((i-1)*lencateg)+j])
+      }
+    }
 
     tval.med=apply(tval,1, median)
     tval.low=apply(tval,1,function(x) quantile(x,probs[1]))

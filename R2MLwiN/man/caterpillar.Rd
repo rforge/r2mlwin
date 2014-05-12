@@ -69,12 +69,10 @@ library(foreign);indata =read.dta(inputfile)
 estoptions= list(EstM=1,resi.store=TRUE,resi.store.levs=2,mcmcMeth=list(iterations=5001))
 (mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin))
 
-lencateg = length(unique(indata[["school"]]))
-resi.chain2 = mymodel["resi.chains"][,1]
-resi.chain2 = matrix(resi.chain2, nrow =lencateg)
+resi.chain2 = mymodel["resi.chains"]$resi_lev2
 
 ## For each iteration, rank the schools
-u0rank = apply(resi.chain2,2,rank)
+u0rank = apply(resi.chain2,1,rank)
 ## For each school, calculate the mean rank...
 u0rankmn = apply(u0rank, 1,mean)
 u0ranklo = apply(u0rank, 1, function(x) quantile(x,.025))

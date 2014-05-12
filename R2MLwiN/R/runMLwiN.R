@@ -652,7 +652,19 @@ version:date:md5:filename:x64:trial
     }
     
     if (EstM==1 && is.null(BUGO) && !is.null(resi.store.levs)){
-      resiChains=mcmc(data=read.dta(resichains),thin = thinning)
+      residata <- read.dta(resichains)
+      resiChains <- list()
+      for (name in colnames(residata)) {
+        lev <- as.integer(gsub("resi_lev", "", name))
+        nunit <- nrow(unique(indata[rev(levID)[lev]]))
+        pnames <- NULL
+        ucount = 0
+        for (varname in rp[[paste0("rp", lev)]]) {
+          pnames <- c(pnames, paste("u", ucount, seq(1:nunit), sep="_"))
+          ucount = ucount +1
+        }
+        resiChains[[name]] <- mcmc(data=matrix(na.omit(residata[, name]), nrow=iterations/thinning, byrow=TRUE, dimnames=list(1:(iterations/thinning), pnames)), thin = thinning)
+      }
     }
         
     if (EstM==0){
