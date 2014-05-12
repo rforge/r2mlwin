@@ -1092,9 +1092,11 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
     }
 
     wrt("NOTE   Fit the model")
+    wrt("ECHO 1")
     wrt("STAR")
     wrt("BATC 1")
     wrt("NEXT")
+    wrt("ECHO 0")
     wrt("MONI 1")
     wrt("ITNU 0 b21")
     wrt("CONV b22")
@@ -1359,6 +1361,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
     wrt("NOTE   fit the model in MCMC")
     wrt(paste("MTOT   ",iterations,sep=""))
     wrt(paste("LCLO   ",lclo,sep=""))
+    wrt("ECHO 1")
     if (!is.null(xclass)&&length(xclass)>=4){
         wrt(paste("MCMC   0 ", burnin," ",adaption," ",scale," ",rate," ", tol," ",fixM," ",residM," ", Lev1VarM, " ", OtherVarM," ",priorcode," ",DD,sep=""))
     }else{
@@ -1415,7 +1418,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
             wrt("AVER c1091 b99 b100")
         }
     }
-
+    wrt("ECHO 0")
 
     wrt("NOTE    *****************************************************************")
     wrt("NOTE       Export the model results to R")

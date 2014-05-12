@@ -1113,9 +1113,11 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
     }
 
     wrt("NOTE   Fit the model")
+    wrt("ECHO 1")
     wrt("STAR")
     wrt("BATC 1")
     wrt("NEXT")
+    wrt("ECHO 0")
     wrt("MONI 1")
     wrt("ITNU 0 b21")
     wrt("CONV b22")
