@@ -5,6 +5,10 @@ Allow use of attach() -ed data
 Add data= as alias to indata=
 Automatic calculation of VPC?
 
+Only send data actually used in the model to MLwiN (but add option to send all)
+Add error checking based on input specification (e.g. is data sorted as defined by the hierarchy)
+Check all variables in the model actually exist in the data
+
 Not currently implemented:
 Multinomial proportions - need manual calculation/reshaping
 Constraints (IGLS) - RCON/FCON commands
