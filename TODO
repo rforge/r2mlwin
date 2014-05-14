@@ -8,6 +8,9 @@ Automatic calculation of VPC?
 Only send data actually used in the model to MLwiN (but add option to send all)
 Add error checking based on input specification (e.g. is data sorted as defined by the hierarchy)
 Check all variables in the model actually exist in the data
+Allow more data variables by finding empty columns for output rather than hardcoding column numbers
+Fix CAR model example when running in OpenBUGS
+Fix negative reported observations for some multivariate models
 
 Not currently implemented:
 Multinomial proportions - need manual calculation/reshaping
