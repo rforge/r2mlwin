@@ -20,6 +20,7 @@ Mon May 12 2014
    * Removed respecification of default options in demonstration code to make it more readable
    * ECHO MLwiN output to the console while model fitting
    * Automatically select 32/64-bit version of MLwiN based on running version of R
+   * Sample data used by the examples is now included within the package
 
 Tue Apr 22 2014
 1. Bug fixing
