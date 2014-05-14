@@ -25,8 +25,6 @@ Rasbash, J., Browne, W. J., Healy, M., Cameron, B., Charlton, C. M. J. (2013) ML
 \details{
   The \code{rats} dataset is one of the sample datasets provided with the multilevel-modelling software package MLwiN (Rasbash et al., 2013).}
 
-}
-
 \examples{
 \dontrun{
 #NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
