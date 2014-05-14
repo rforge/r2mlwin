@@ -32,20 +32,16 @@ options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
-# MLwiN sample worksheet folder
-wsfile=paste(mlwin,"/samples/hungary1.ws",sep="")
-# the tutorial.dta will be save under the temporary folder
-inputfile=paste(tempdir(),"/hungary1.dta",sep="")
-ws2foreign(wsfile, foreignfile=inputfile)
-library(foreign); indata =read.dta(inputfile)
+## Read hungary1 data
+data(hungary1)
 
-round(colMeans(indata[,c("es_core","biol_core","phys_core")]),4)
-round(apply(indata[,c("es_core","biol_core","phys_core")],2,sd),4)
-round(cor(indata[,c("es_core","biol_core","phys_core")]),4)
+round(colMeans(hungary1[,c("es_core","biol_core","phys_core")]),4)
+round(apply(hungary1[,c("es_core","biol_core","phys_core")],2,sd),4)
+round(cor(hungary1[,c("es_core","biol_core","phys_core")]),4)
 
 formula=c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2)~(0|cons)+(1|cons)
 levID='student'
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=hungary1))
 
 covM1=matrix(,6,6)
 colnames(covM1)=rownames(covM1)=c("cons.es_core","cons.biol_core","cons.biol_r3","cons.biol_r4","cons.phys_core","cons.phys_r2")
@@ -64,7 +60,7 @@ loading=matrix(c(1,0,0,0,0,0,1),ncol=7,nrow=nfact,byrow=TRUE)
 constr=matrix(c(1,0,0,0,0,0,0),ncol=7,nrow=nfact,byrow=TRUE)
 fact=list(nfact=nfact, lev.fact=lev.fact,nfactcor=nfactcor,factcor=factcor,loading=loading,constr=constr)
 estoptions= list(EstM=1, fact=fact)
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=hungary1, estoptions=estoptions))
 
 ranks=rank(mymodel["fact.chains"]$scores)
 plot(x=ranks,mymodel["fact.chains"]$scores,xlab="rank",ylab="factor scores",ylim=c(-2.35,1.2))
@@ -81,7 +77,7 @@ loading=matrix(c(1,0,0,0,0,0,1,0,1,0,0,0,0,1),ncol=7,nrow=nfact,byrow=TRUE)
 constr=matrix(c(1,0,0,0,0,0,0,1,1,0,0,0,0,0),ncol=7,nrow=nfact,byrow=TRUE)
 fact=list(nfact=nfact, lev.fact=lev.fact,nfactcor=nfactcor,factcor=factcor,loading=loading,constr=constr)
 estoptions= list(EstM=1, fact=fact)
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=hungary1, estoptions=estoptions))
 
 scores=mymodel["fact.chains"]$scores
 plot(scores[, 2],scores[,1],xlab="Factor 2",ylab="Factor 1")
@@ -96,7 +92,7 @@ sixway(loads[, "load2_biol_r3"],acf.maxlag=1500,name="load2.3")
 
 ##burn-in: 5000, iterations=10,000
 estoptions= list(EstM=1, fact=fact,mcmcMeth=list(burnin=5000,iterations=10000))
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=hungary1, estoptions=estoptions))
 
 loads = mymodel["fact.chains"]$loadings
 
@@ -113,13 +109,13 @@ loading=matrix(c(1,0,0,0,0,0,1,0,1,0,0,0,0,1),ncol=7,nrow=nfact,byrow=TRUE)
 constr=matrix(c(1,0,0,0,0,0,0,1,1,0,0,0,0,0),ncol=7,nrow=nfact,byrow=TRUE)
 fact=list(nfact=nfact, lev.fact=lev.fact,nfactcor=nfactcor,factcor=factcor,loading=loading,constr=constr)
 estoptions= list(EstM=1, fact=fact,mcmcMeth=list(burnin=5000,iterations=10000))
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=hungary1, estoptions=estoptions))
 
 # 20.8 Multilevel factor analysis . . . . . . . . . . . . . . . . . . . 320
 
 formula=c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2)~(0|cons)+(2|cons)+(1|cons)
 levID=c('school','student')
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=hungary1))
 
 covM1=matrix(,6,6)
 colnames(covM1)=rownames(covM1)=c("cons.es_core","cons.biol_core","cons.biol_r3","cons.biol_r4","cons.phys_core","cons.phys_r2")
@@ -144,7 +140,7 @@ loading=matrix(c(1,0,0,0,0,0,1,1,0,0,0,0,0,1),ncol=7,nrow=nfact,byrow=TRUE)
 constr=matrix(c(1,0,0,0,0,0,0,1,0,0,0,0,0,0),ncol=7,nrow=nfact,byrow=TRUE)
 fact=list(nfact=nfact, lev.fact=lev.fact,nfactcor=nfactcor,factcor=factcor,loading=loading,constr=constr)
 estoptions= list(EstM=1, fact=fact)
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=hungary1, estoptions=estoptions))
 
 
 ranks=rank(na.omit(mymodel["fact.chains"]$scores[,2]))

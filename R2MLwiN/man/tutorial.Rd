@@ -32,40 +32,43 @@ See \code{mlmRev} package for an alternative format of the same dataset.
 
 \examples{
 \dontrun{
-# NB: hange path as appropriate
-MLwiN <- "C:/Program Files (x86)/MLwiN v2.29/"
+#NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
+#...so please change relevant line if different
+#if using R2MLwiN via WINE, the path may look like 
+#options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/")
+
 data(tutorial)
 
 # Fit 2-level variance components model, using IGLS (default estimation method)
-F1 <- "normexam ~ (0|cons) + (2|cons) + (1|cons)"
+F1 <- normexam ~ (0|cons) + (2|cons) + (1|cons)
 ID <- c("school", "student")
-(VarCompModel <- runMLwiN(Formula = F1, levID = ID, indata = tutorial, MLwiNPath = MLwiN))
+(VarCompModel <- runMLwiN(Formula = F1, levID = ID, indata = tutorial))
 # print variance partition coefficient (VPC)
 print(VPC <- VarCompModel["RP"][["RP2_var_cons"]] / (VarCompModel["RP"][["RP1_var_cons"]] + 
 VarCompModel["RP"][["RP2_var_cons"]]))
 
 # Fit same model using MCMC
 (VarCompMCMC <- runMLwiN(Formula = F1, levID = ID, indata = tutorial, 
-estoptions = list(EstM = 1), MLwiNPath = MLwiN))
+estoptions = list(EstM = 1)))
 # return diagnostics for VPC
 VPC_MCMC <- VarCompMCMC["chains"][,"RP2_var_cons"] / (VarCompMCMC["chains"][,"RP1_var_cons"] + 
 VarCompMCMC["chains"][,"RP2_var_cons"])
 sixway(VPC_MCMC, name = "VPC")
 
 # Adding predictor, allowing its coefficient to vary across groups (i.e. random slopes)
-F2 <- "normexam ~ (0|cons + standlrt) + (2|cons + standlrt) + (1|cons)"
+F2 <- normexam ~ (0|cons + standlrt) + (2|cons + standlrt) + (1|cons)
 (standlrtRS_MCMC <- runMLwiN(
 Formula = F2, levID = ID, indata = tutorial,
-estoptions = list(EstM = 1), MLwiNPath = MLwiN))
+estoptions = list(EstM = 1)))
 
 # Example modelling complex level 1 variance
-F3 <- "normexam ~ (0|cons + standlrt) + (2|cons + standlrt) + (1|cons + standlrt)"
+F3 <- normexam ~ (0|cons + standlrt) + (2|cons + standlrt) + (1|cons + standlrt)
 standlrtC1V_MCMC <- runMLwiN (
 Formula = F3, levID = ID, indata = tutorial,
 estoptions = (list(EstM = 1,
 #fit log of precision at level 1 as a function of predictors
 mcmcMeth = list(lclo = 1))), 
-MLwiNPath = MLwiN)
+)
 }
 }
 \keyword{datasets}

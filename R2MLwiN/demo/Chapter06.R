@@ -26,28 +26,20 @@ options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
-## Read tutorial data from runmlwin (Leckie&Charlton, 2011) data folder
-library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/tutorial.dta")
+## Read tutorial data
+data(tutorial)
 
-## Alternatively converts tutorial.ws under mlwin sample folder to tutorial.dta
-## MLwiN sample worksheet folder
-#wsfile=paste(mlwin,"/samples/tutorial.ws",sep="")
-## the tutorial.dta will be save under the temporary folder
-#inputfile=paste(tempdir(),"/tutorial.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile)
-#library(foreign); indata =read.dta(inputfile)
-
-indata=cbind(indata,Untoggle(indata[["school"]],"school"))
+tutorial=cbind(tutorial,Untoggle(tutorial[["school"]],"school"))
 
 ## Define the model
-tempstr1=paste("+",names(indata)[12:75],collapse="")
-tempstr2=paste("+",names(indata)[12:75],":standlrt",collapse="")
+tempstr1=paste("+",names(tutorial)[12:75],collapse="")
+tempstr2=paste("+",names(tutorial)[12:75],":standlrt",collapse="")
 formula=paste("normexam~(0|cons+standlrt",tempstr1,tempstr2,")+(1|cons)",sep="")
 levID='student'
 ## Choose MCMC algoritm for estimation (IGLS will be used to obtain starting values for MCMC)
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 ## Define the model
 formula=normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)
@@ -55,23 +47,23 @@ levID=c('school','student')
 
 ## Choose IGLS algoritm for estimation
 ## Fit the model
-(mymodel0a=runMLwiN(formula, levID, indata=indata))
+(mymodel0a=runMLwiN(formula, levID, indata=tutorial))
 
 ## Choose MCMC algoritm for estimation (IGLS will be used to obtain starting values for MCMC)
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel0=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel0=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 # 6.1 Prediction intervals for a random slopes regression model . . . . . 75
 
 ## Save level 2 residual chains
 estoptions= list(EstM=1, mcmcMeth=list(iterations=5001),resi.store.levs=2)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
-predLines(mymodel, indata, xname="standlrt", lev = 2, selected =NULL, probs=c(.025,.975), legend.space="right", legend.ncol=2)
+predLines(mymodel, indata=tutorial, xname="standlrt", lev = 2, selected =NULL, probs=c(.025,.975), legend.space="right", legend.ncol=2)
 dev.new()
-predLines(mymodel, indata, xname="standlrt", lev = 2, selected =c(30,44,53,59), probs=c(.025,.975))
+predLines(mymodel, indata=tutorial, xname="standlrt", lev = 2, selected =c(30,44,53,59), probs=c(.025,.975))
 
 # 6.2 Alternative priors for variance matrices . . . . . . . . . . . . . .78
 
@@ -80,23 +72,23 @@ predLines(mymodel, indata, xname="standlrt", lev = 2, selected =c(30,44,53,59), 
 ## Change the starting values for Level 2 variance matrix to .1 on diagonal 0 otherwise.
 estoptions= list(EstM=1, mcmcMeth=list(startval=list(RP.b=c(.1,0,.1,.554))))
 ## Fit the model
-(mymodel1=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel1=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 # 6.4 Uniform prior . . . . . . . . . . . . . . . . . . . . . . . . . . . 79
 
 ## Diffuse priors (Uniform priors)
 estoptions= list(EstM=1,mcmcMeth=list(priorcode=0))
 ## Fit the model
-(mymodel2=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel2=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 # 6.5 Informative prior . . . . . . . . . . . . . . . . . . . . . . . . . 80
 
 ## Informative normal prior for Sigma_u
 prior=list(rp2=list(estimate=matrix(c(.09,.018,.09,.015),2,2),size=65))
-prior=prior2macro(prior,formula,levID,D='Normal', indata)
+prior=prior2macro(prior,formula,levID,D='Normal', indata=tutorial)
 estoptions= list(EstM=1,mcmcMeth=list(priorParam=prior))
 ## Fit the model
-(mymodel3=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel3=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 # 6.6 Results . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 81
 

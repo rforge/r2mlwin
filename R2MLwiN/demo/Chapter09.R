@@ -26,27 +26,19 @@ options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
-## Read tutorial data from runmlwin (Leckie&Charlton, 2011) data folder
-library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/tutorial.dta")
+## Read tutorial data
+data(tutorial)
 
-## Alternatively converts tutorial.ws under mlwin sample folder to tutorial.dta
-## MLwiN sample worksheet folder
-#wsfile=paste(mlwin,"/samples/tutorial.ws",sep="")
-## the tutorial.dta will be save under the temporary folder
-#inputfile=paste(tempdir(),"/tutorial.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile)
-#library(foreign); indata =read.dta(inputfile)
-
-boy.normexam=indata[["normexam"]][which(indata[["girl"]]==0)]
-girl.normexam=indata[["normexam"]][which(indata[["girl"]]==1)]
+boy.normexam=tutorial[["normexam"]][which(tutorial[["girl"]]==0)]
+girl.normexam=tutorial[["normexam"]][which(tutorial[["girl"]]==1)]
 tab1=cbind(c(length(boy.normexam),mean(boy.normexam),sd(boy.normexam)),
 c(length(girl.normexam),mean(girl.normexam),sd(girl.normexam)),
-c(length(indata[["normexam"]]),mean(indata[["normexam"]]),sd(indata[["normexam"]])))
+c(length(tutorial[["normexam"]]),mean(tutorial[["normexam"]]),sd(tutorial[["normexam"]])))
 colnames(tab1)=c("0","1","TOTAL")
 rownames(tab1)=c("N","MEANS","SDs")
 formatC(round(tab1,6))
 
-c5=indata[["standlrt"]]
+c5=tutorial[["standlrt"]]
 intakecat=rep(0,length(c5))
 intakecat[which(c5>-1)]=1
 intakecat[which(c5>-.5)]=2
@@ -54,7 +46,7 @@ intakecat[which(c5>-.1)]=3
 intakecat[which(c5>.3)]=4
 intakecat[which(c5>.7)]=5
 intakecat[which(c5>1.1)]=6
-normexam=indata[["normexam"]]
+normexam=tutorial[["normexam"]]
 tab2=cbind(c(sum(intakecat==0),mean(normexam[intakecat==0]),sd(normexam[intakecat==0])),
 c(sum(intakecat==1),mean(normexam[intakecat==1]),sd(normexam[intakecat==1])),
 c(sum(intakecat==2),mean(normexam[intakecat==2]),sd(normexam[intakecat==2])),
@@ -78,12 +70,12 @@ levID=c('student')
 ## Choose option(s) for inference
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel1=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel1=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 trajectories(mymodel1["chains"],Range=c(4501,5000))
 
-l1varfn= mymodel1["RP"]["RP1_var_cons"]+2*mymodel1["RP"]["RP1_cov_cons_standlrt"]*indata[["standlrt"]]+
-mymodel1["RP"]["RP1_var_standlrt"]*indata[["standlrt"]]^2
-plot(sort(indata[["standlrt"]]),l1varfn[order(indata[["standlrt"]])],xlab="standlrt",ylab="l1varfn",type="l")
+l1varfn= mymodel1["RP"]["RP1_var_cons"]+2*mymodel1["RP"]["RP1_cov_cons_standlrt"]*tutorial[["standlrt"]]+
+mymodel1["RP"]["RP1_var_standlrt"]*tutorial[["standlrt"]]^2
+plot(sort(tutorial[["standlrt"]]),l1varfn[order(tutorial[["standlrt"]])],xlab="standlrt",ylab="l1varfn",type="l")
 abline(v=0,lty="dotted")
 
 # 9.3 Complex variance functions in multilevel models . . . . . . . . . .119
@@ -94,12 +86,12 @@ levID=c('school','student')
 ## Choose option(s) for inference
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel2=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel2=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
-l2varfn= mymodel2["RP"]["RP2_var_cons"]+2*mymodel2["RP"]["RP2_cov_cons_standlrt"]*indata[["standlrt"]]+
-mymodel2["RP"]["RP2_var_standlrt"]*indata[["standlrt"]]^2
+l2varfn= mymodel2["RP"]["RP2_var_cons"]+2*mymodel2["RP"]["RP2_cov_cons_standlrt"]*tutorial[["standlrt"]]+
+mymodel2["RP"]["RP2_var_standlrt"]*tutorial[["standlrt"]]^2
 l1varfn=mymodel2["RP"]["RP1_var_cons"]
-plot(sort(indata[["standlrt"]]),l2varfn[order(indata[["standlrt"]])],xlab="standlrt",ylab="varfns",ylim=c(0,.6),type="l")
+plot(sort(tutorial[["standlrt"]]),l2varfn[order(tutorial[["standlrt"]])],xlab="standlrt",ylab="varfns",ylim=c(0,.6),type="l")
 abline(h=l1varfn)
 abline(v=0,lty="dotted")
 
@@ -107,15 +99,17 @@ formula=normexam~(0|cons+standlrt)+(1|cons+standlrt)+(2|cons+standlrt)
 levID=c('school','student')
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel3=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel3=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 ## Remove term standlrt/standlrt from the level 1 covariance matrix
 clre=matrix(,nrow=3,ncol=1)
 clre[1,1]=1; clre[2,1]='standlrt'; clre[3,1]='standlrt'
 estoptions= list(EstM=1,clre=clre)
 ## Fit the model
-(mymodel4=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel4=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 # 9.4 Relationship with gender . . . . . . . . . . . . . . . . . . . . . 123
+
+tutorial[["girl"]]=as.integer(tutorial[["sex"]]) -1
 
 formula=normexam~(0|cons+standlrt+girl)+(2|cons+standlrt)+(1|cons+standlrt+girl)
 levID=c('school','student')
@@ -125,32 +119,32 @@ clre[1,1]=1; clre[2,1]='standlrt'; clre[3,1]='standlrt'
 clre[1,2]=1; clre[2,2]='girl'; clre[3,2]='girl'
 estoptions= list(EstM=1,clre=clre)
 ## Fit the model
-(mymodel5=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel5=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
-l2varfn= mymodel5["RP"]["RP2_var_cons"]+2*mymodel5["RP"]["RP2_cov_cons_standlrt"]*indata[["standlrt"]]+
-mymodel5["RP"]["RP2_var_standlrt"]*indata[["standlrt"]]^2
-l1varfnboys=mymodel5["RP"]["RP1_var_cons"]+2*mymodel5["RP"]["RP1_cov_cons_standlrt"]*indata[["standlrt"]]
-l1varfngirls=mymodel5["RP"]["RP1_var_cons"]+2*mymodel5["RP"]["RP1_cov_cons_standlrt"]*indata[["standlrt"]]+
-2*mymodel5["RP"]["RP1_cov_cons_girl"]+2*mymodel5["RP"]["RP1_cov_standlrt_girl"]*indata[["standlrt"]]
-plot(sort(indata[["standlrt"]]),l2varfn[order(indata[["standlrt"]])],xlab="standlrt",ylab="varfns",ylim=c(0,.8),type="l")
-lines(sort(indata[["standlrt"]]),l1varfnboys[order(indata[["standlrt"]])])
-lines(sort(indata[["standlrt"]]),l1varfngirls[order(indata[["standlrt"]])])
+l2varfn= mymodel5["RP"]["RP2_var_cons"]+2*mymodel5["RP"]["RP2_cov_cons_standlrt"]*tutorial[["standlrt"]]+
+mymodel5["RP"]["RP2_var_standlrt"]*tutorial[["standlrt"]]^2
+l1varfnboys=mymodel5["RP"]["RP1_var_cons"]+2*mymodel5["RP"]["RP1_cov_cons_standlrt"]*tutorial[["standlrt"]]
+l1varfngirls=mymodel5["RP"]["RP1_var_cons"]+2*mymodel5["RP"]["RP1_cov_cons_standlrt"]*tutorial[["standlrt"]]+
+2*mymodel5["RP"]["RP1_cov_cons_girl"]+2*mymodel5["RP"]["RP1_cov_standlrt_girl"]*tutorial[["standlrt"]]
+plot(sort(tutorial[["standlrt"]]),l2varfn[order(tutorial[["standlrt"]])],xlab="standlrt",ylab="varfns",ylim=c(0,.8),type="l")
+lines(sort(tutorial[["standlrt"]]),l1varfnboys[order(tutorial[["standlrt"]])])
+lines(sort(tutorial[["standlrt"]]),l1varfngirls[order(tutorial[["standlrt"]])])
 abline(v=0,lty="dotted")
 
 # 9.5 Alternative log precision formulation . . . . . . . . . . . . . . .126
 
 estoptions= list(EstM=1,clre=clre,mcmcMeth=list(lclo=1))
 ## Fit the model
-(mymodel6=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel6=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
-l2varfn= mymodel6["RP"]["RP2_var_cons"]+2*mymodel6["RP"]["RP2_cov_cons_standlrt"]*indata[["standlrt"]]+
-mymodel6["RP"]["RP2_var_standlrt"]*indata[["standlrt"]]^2
-l1varfnboys=1/exp(mymodel6["RP"]["RP1_var_cons"]+2*mymodel6["RP"]["RP1_cov_cons_standlrt"]*indata[["standlrt"]])
-l1varfngirls=1/exp(mymodel6["RP"]["RP1_var_cons"]+2*mymodel6["RP"]["RP1_cov_cons_standlrt"]*indata[["standlrt"]]+
-2*mymodel6["RP"]["RP1_cov_cons_girl"]+2*mymodel6["RP"]["RP1_cov_standlrt_girl"]*indata[["standlrt"]])
-plot(sort(indata[["standlrt"]]),l2varfn[order(indata[["standlrt"]])],xlab="standlrt",ylab="varfns",ylim=c(0,.8),type="l")
-lines(sort(indata[["standlrt"]]),l1varfnboys[order(indata[["standlrt"]])])
-lines(sort(indata[["standlrt"]]),l1varfngirls[order(indata[["standlrt"]])])
+l2varfn= mymodel6["RP"]["RP2_var_cons"]+2*mymodel6["RP"]["RP2_cov_cons_standlrt"]*tutorial[["standlrt"]]+
+mymodel6["RP"]["RP2_var_standlrt"]*tutorial[["standlrt"]]^2
+l1varfnboys=1/exp(mymodel6["RP"]["RP1_var_cons"]+2*mymodel6["RP"]["RP1_cov_cons_standlrt"]*tutorial[["standlrt"]])
+l1varfngirls=1/exp(mymodel6["RP"]["RP1_var_cons"]+2*mymodel6["RP"]["RP1_cov_cons_standlrt"]*tutorial[["standlrt"]]+
+2*mymodel6["RP"]["RP1_cov_cons_girl"]+2*mymodel6["RP"]["RP1_cov_standlrt_girl"]*tutorial[["standlrt"]])
+plot(sort(tutorial[["standlrt"]]),l2varfn[order(tutorial[["standlrt"]])],xlab="standlrt",ylab="varfns",ylim=c(0,.8),type="l")
+lines(sort(tutorial[["standlrt"]]),l1varfnboys[order(tutorial[["standlrt"]])])
+lines(sort(tutorial[["standlrt"]]),l1varfngirls[order(tutorial[["standlrt"]])])
 abline(v=0,lty="dotted")
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .128

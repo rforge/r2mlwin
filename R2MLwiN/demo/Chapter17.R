@@ -28,32 +28,28 @@ options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
-# MLwiN sample worksheet folder
-wsfile=paste(mlwin,"/samples/lips1.ws",sep="")
-# the tutorial.dta will be save under the temporary folder
-inputfile=paste(tempdir(),"/lips1.dta",sep="")
-ws2foreign(wsfile, foreignfile=inputfile)
-library(foreign); indata =read.dta(inputfile)
-summary(indata)
+## Read lips1 data
+data(lips1)
+summary(lips1)
 
 # 17.2 Fixed effects models . . . . . . . . . . . . . . . . . . . . . . .248
 
 formula=log(obs,offs)~(0|cons)
 levID=c('neigh1','area','area')
 estoptions= list(EstM=1,notation="class")
-(mymodel=runMLwiN(formula, levID, D='Poisson', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Poisson', indata=lips1, estoptions=estoptions))
 
 formula=log(obs,offs)~(0|cons+perc_aff)
 levID=c('neigh1','area','area')
 estoptions= list(EstM=1,notation="class")
-(mymodel=runMLwiN(formula, levID, D='Poisson', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Poisson', indata=lips1, estoptions=estoptions))
 
 # 17.3 Random effects models . . . . . . . . . . . . . . . . . . . . . . 251
 
 formula=log(obs,offs)~(0|cons+perc_aff)+(2|cons)
 levID=c('neigh1','area','area')
 estoptions= list(EstM=1,notation="class",mcmcMeth=list(iterations=50000))
-(mymodel=runMLwiN(formula, levID, D='Poisson', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Poisson', indata=lips1, estoptions=estoptions))
 
 # 17.4 A spatial multiple-membership (MM) model . . . . . . . . . . . . .252
 
@@ -61,7 +57,7 @@ formula=log(obs,offs)~(0|cons+perc_aff)+(2|cons)+(3|cons)
 levID=c('neigh1','area','area')
 xclass=list("class"=3,"N1"=11,"weight"='weight1',"id"=NA)
 estoptions= list(xclass=xclass,EstM=1,notation="class",mcmcMeth=list(iterations=50000))
-(mymodel=runMLwiN(formula, levID, D='Poisson', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Poisson', indata=lips1, estoptions=estoptions))
 
 # 17.5 Other spatial models . . . . . . . . . . . . . . . . . . . . . . .255
 
@@ -84,7 +80,7 @@ formula=log(obs,offs)~(0|perc_aff)+(3|cons)
 levID=c('area','area','area')
 xclass=list("class"=3,"N1"=11,"weight"='wcar1',"id"='neigh1',"car"=TRUE)
 estoptions= list(xclass=xclass,EstM=1,notation="class",mcmcMeth=list(iterations=50000))
-(mymodel=runMLwiN(formula, levID, D='Poisson', indata=indata, estoptions=estoptions, BUGO=c(version=4,n.chains=1,bugs=openbugs, OpenBugs = T)))
+(mymodel=runMLwiN(formula, levID, D='Poisson', indata=lips1, estoptions=estoptions, BUGO=c(version=4,n.chains=1,bugs=openbugs, OpenBugs = T)))
 
 
 # 17.7 Including exchangeable random effects . . . . . . . . . . . . . . 259
@@ -93,7 +89,7 @@ formula=log(obs,offs)~(0|perc_aff)+(2|cons)+(3|cons)
 levID=c('area','area','area')
 xclass=list("class"=3,"N1"=11,"weight"='wcar1',"id"='neigh1',"car"=TRUE)
 estoptions= list(xclass=xclass,EstM=1,notation="class",mcmcMeth=list(iterations=50000))
-(mymodel=runMLwiN(formula, levID, D='Poisson', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Poisson', indata=lips1, estoptions=estoptions))
 
 # 17.8 Further reading on spatial modelling . . . . . . . . . . . . . . .260
 

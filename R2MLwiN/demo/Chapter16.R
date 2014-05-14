@@ -30,50 +30,44 @@ options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
-## Read wage1 data from runmlwin (Leckie&Charlton, 2011) data folder
-library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/wage1.dta")
+## Read wage1 data
+data(wage1)
 
-## Alternatively converts wage1.ws under mlwin sample folder to wage1.dta
-## MLwiN sample worksheet folder
-#wsfile=paste(mlwin,"/samples/wage1.ws",sep="")
-## the tutorial.dta will be save under the temporary folder
-#inputfile=paste(tempdir(),"/wage1.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile)
-#library(foreign); indata =read.dta(inputfile)
-#names(indata)=gsub("-","_",names(indata))
+wage1[["parttime"]] <- as.integer(wage1[["parttime"]])-1
+wage1[["sex"]] <- as.integer(wage1[["sex"]])-1
 
-summary(indata)
-hist(indata[["earnings"]])
-hist(indata[["logearn"]],breaks=20)
+summary(wage1)
+hist(wage1[["earnings"]])
+hist(wage1[["logearn"]],breaks=20)
 
 formula=logearn~(0|cons+age_40+numjobs)+(1|cons)
 levID='id'
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, indata=wage1, estoptions=estoptions))
 
 formula=logearn~(0|cons+age_40+numjobs+sex+parttime)+(1|cons)
 levID='id'
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
-round(cor(indata[,c("parttime","sex","numjobs")]),4)
+(mymodel=runMLwiN(formula, levID, indata=wage1, estoptions=estoptions))
+round(cor(wage1[,c("parttime","sex","numjobs")]),4)
 
 # 16.4 Fitting multiple membership models to the dataset . . . . . . . . 237
 
-tabulate(indata[["numjobs"]])
+tabulate(wage1[["numjobs"]])
 
 formula=logearn~(0|cons+age_40+sex+parttime)+(2|cons)+(1|cons)
 levID=c('company','id')
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, indata=wage1, estoptions=estoptions))
 
 ##Multiple membership
 xclass=list("class"=2,"N1"=4,"weight"='weight1',"id"=NA)
 estoptions= list(EstM=1,xclass=xclass,notation='class',resi.store=T,resi.store.levs=2)
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, indata=wage1, estoptions=estoptions))
 
 # 16.5 Residuals in multiple membership models . . . . . . . . . . . . . 240
 
-lencateg = length(unique(indata[["company"]]))
+lencateg = length(unique(wage1[["company"]]))
 resi0=mymodel["resi.chains"]$resi_lev2
 resi0mean = apply(resi0,2,mean)
 resi0sd = apply(resi0,2,sd)
@@ -88,8 +82,8 @@ aa=qqnorm(resi0mean,plot.it=F)
 plot(x=aa$x[rankno],y=resi0mean[rankno],pch=24,bg="black",xlab="nscore",ylab="cons")
 abline(h=0,lty="dotted")
 
-indata[["companyno54"]]=(indata[["company"]]==54)+(indata[["company2"]]==54)+(indata[["company3"]]==54)+(indata[["company4"]]==54)
-indata[["companyno67"]]=(indata[["company"]]==67)+(indata[["company2"]]==67)+(indata[["company3"]]==67)+(indata[["company4"]]==67)
+wage1[["companyno54"]]=(wage1[["company"]]==54)+(wage1[["company2"]]==54)+(wage1[["company3"]]==54)+(wage1[["company4"]]==54)
+wage1[["companyno67"]]=(wage1[["company"]]==67)+(wage1[["company2"]]==67)+(wage1[["company3"]]==67)+(wage1[["company4"]]==67)
 
 ##New model
 formula=logearn~(0|cons+age_40+sex+parttime+companyno54+companyno67)+(2|cons)+(1|cons)
@@ -98,7 +92,7 @@ levID=c('company','id')
 ##Multiple membership
 xclass=list("class"=2,"N1"=4,"weight"='weight1',"id"=NA)
 estoptions= list(EstM=1,xclass=xclass,notation='class')
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, indata=wage1, estoptions=estoptions))
 
 #  16.6 Alternative weights for multiple membership models . . . . . . . .243
 
@@ -106,7 +100,7 @@ estoptions= list(EstM=1,xclass=xclass,notation='class')
 ## New weights
 xclass=list("class"=2,"N1"=4,"weight"='ew1',"id"=NA)
 estoptions= list(EstM=1,xclass=xclass,notation='class')
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, indata=wage1, estoptions=estoptions))
 
 # 16.7 Multiple membership multiple classification (MMMC) models . . . . 244
 

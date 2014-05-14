@@ -28,23 +28,14 @@ options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
-## Read alevchem data from runmlwin (Leckie&Charlton, 2011) data folder
-library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/alevchem.dta")
-# MLwiN sample worksheet folder
+## Read alevchem data
+data(alevchem)
 
-## Alternatively converts alevchem.ws under mlwin sample folder to alevchem.dta
-#wsfile=paste(mlwin,"/samples/alevchem.ws",sep="")
-## the tutorial.dta will be save under the temporary folder
-#inputfile=paste(tempdir(),"/alevchem.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile)
-#library(foreign);indata =read.dta(inputfile)
-#names(indata)=gsub("-","_",names(indata))
+alevchem["gcseav"]=double2singlePrecision(alevchem["gcse_tot"]/alevchem["gcse_no"]-6)
+alevchem["gcse2"]=double2singlePrecision(alevchem["gcseav"]^2)
+alevchem["gcse3"]=double2singlePrecision(alevchem["gcseav"]^3)
 
-indata["gcseav"]=double2singlePrecision(indata["gcse_tot"]/indata["gcse_no"]-6)
-indata["gcse2"]=double2singlePrecision(indata["gcseav"]^2)
-indata["gcse3"]=double2singlePrecision(indata["gcseav"]^3)
-
-hist(indata[["gcseav"]],breaks=20)
+hist(alevchem[["gcseav"]],breaks=20)
 
 # 13.2 Normal response models . . . . . . . . . . . . . . . . . . . . . .184
 
@@ -53,18 +44,18 @@ formula=a_point ~ (0|cons)+(1|cons )
 levID='pupil'
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, indata=alevchem, estoptions=estoptions))
 
 ## Define the model
 formula=a_point ~ (0|cons+gcseav+gcse2+gcse3+gender)+(1|cons )
 levID='pupil'
 estoptions= list(EstM=1, resi.store=T)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, indata=alevchem, estoptions=estoptions))
 
 resi=mymodel["residual"]
 FP=mymodel["FP"]
-predCurves(mymodel, indata, xname="gcseav", group="gender")
+predCurves(mymodel, indata=alevchem, xname="gcseav", group="gender")
 
 # 13.3 Ordered multinomial modelling . . . . . . . . . . . . . . . . . . 186
 
@@ -73,12 +64,12 @@ formula=logit(a_point,cons,A) ~ (`0s`|cons)
 levID=c('pupil')
 ##IGLS
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata=indata))
+(mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata=alevchem))
 
 ##MCMC
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata=alevchem, estoptions=estoptions))
 
 # 13.4 Adding predictor variables . . . . . . . . . . . . . . . . . . . .191
 formula=logit(a_point,cons,A) ~ (`0s`|cons)+(`0c`|gcseav+gcse2+gcse3+gender)
@@ -86,7 +77,7 @@ levID=c('pupil')
 ##MCMC
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata=alevchem, estoptions=estoptions))
 
 # 13.5 Multilevel ordered response modelling . . . . . . . . . . . . . . 192
 formula=logit(a_point,cons,A) ~ (`0s`|cons)+(`0c`|gcseav+gcse2+gender) +( `2c` | cons)
@@ -94,7 +85,7 @@ levID=c('estab','pupil')
 ##MCMC
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata=alevchem, estoptions=estoptions))
 
 
 formula=logit(a_point,cons,A) ~ (`0s`|cons)+(`0c`|gcseav+gcse2+gender) +( `2c` | cons+gcseav )
@@ -102,13 +93,13 @@ levID=c('estab','pupil')
 ##MCMC
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata=alevchem, estoptions=estoptions))
 sixway(mymodel["chains"][,"RP2_var_cons_12345"],acf.maxlag = 300,"sigma2v6")
 
 ##Increases iterations to 50,000
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000))
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata=alevchem, estoptions=estoptions))
 sixway(mymodel["chains"][,"RP2_var_cons_12345"],acf.maxlag = 300,"sigma2v6")
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .128

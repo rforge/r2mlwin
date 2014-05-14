@@ -28,16 +28,8 @@ options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
-## Read tutorial data from runmlwin (Leckie&Charlton, 2011) data folder
-library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/tutorial.dta")
-
-## Alternatively converts tutorial.ws under mlwin sample folder to tutorial.dta
-## MLwiN sample worksheet folder
-#wsfile=paste(mlwin,"/samples/tutorial.ws",sep="")
-## the tutorial.dta will be save under the temporary folder
-#inputfile=paste(tempdir(),"/tutorial.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile)
-#library(foreign); indata =read.dta(inputfile)
+## Read tutorial data
+data(tutorial)
 
 ## Define the model
 formula=normexam~(0|cons+standlrt)+(2|cons)+(1|cons)
@@ -46,7 +38,7 @@ levID=c('school','student')
 ## Choose option(s) for inference
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 estimates=mymodel["chains"]
 par(mfrow=c(3,2))
@@ -68,13 +60,15 @@ sixway(mymodel["chains"][,"RP2_var_cons"],"sigma2u0")
 
 # 3.3 Comparison between fixed and random school effects . . . . . . . . .41
 
+tutorial[["girl"]]=as.integer(tutorial[["sex"]]) -1
+
 ## Define the model
 formula=normexam~(0|cons+standlrt+girl)+(2|cons)+(1|cons)
 levID=c('school','student')
 ## Choose option(s) for inference
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . . 43
 

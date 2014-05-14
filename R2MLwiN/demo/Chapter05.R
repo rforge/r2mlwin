@@ -30,16 +30,8 @@ options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
-## Read tutorial data from runmlwin (Leckie&Charlton, 2011) data folder
-library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/tutorial.dta")
-
-## Alternatively converts tutorial.ws under mlwin sample folder to tutorial.dta
-## MLwiN sample worksheet folder
-#wsfile=paste(mlwin,"/samples/tutorial.ws",sep="")
-## the tutorial.dta will be save under the temporary folder
-#inputfile=paste(tempdir(),"/tutorial.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile)
-#library(foreign); indata =read.dta(inputfile)
+## Read tutorial data
+data(tutorial)
 
 ## Define the model
 formula=normexam~(0|cons+standlrt)+(2|cons)+(1|cons)
@@ -47,17 +39,17 @@ levID=c('school','student')
 
 ## IGLS
 ## Fit the model
-(mymodel1=runMLwiN(formula, levID, indata=indata))
+(mymodel1=runMLwiN(formula, levID, indata=tutorial))
 
 ## Diffuse priors (Gamma priors)
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel2=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel2=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 ## Diffuse priors (Uniform priors)
 estoptions= list(EstM=1,mcmcMeth=list(priorcode=0))
 ## Fit the model
-(mymodel3=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel3=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 aa=cbind(mymodel1["FP"],mymodel2["FP"],mymodel3["FP"])
 bb=cbind(mymodel1["RP"],mymodel2["RP"],mymodel3["RP"])
@@ -70,28 +62,28 @@ rm(list=c("mymodel1","mymodel2","mymodel3"))
 
 ## Informative normal prior for beta_1
 prior=list(fixe=list(standlrt=c(1,.01)))
-prior=prior2macro(prior,formula,levID,D='Normal', indata)
+prior=prior2macro(prior,formula,levID,D='Normal', indata=tutorial)
 estoptions= list(EstM=1,mcmcMeth=list(priorParam=prior))
 ## Fit the model
-(mymodel4=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel4=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 sixway(mymodel4["chains"][,"FP_standlrt"],"beta_1")
 
 ## Informative normal prior for beta_1
 prior=list(fixe=list(standlrt=c(1,.1)))
-prior=prior2macro(prior,formula,levID,D='Normal', indata)
+prior=prior2macro(prior,formula,levID,D='Normal', indata=tutorial)
 estoptions= list(EstM=1,mcmcMeth=list(priorParam=prior))
 ## Fit the model
-(mymodel5=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel5=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 sixway(mymodel5["chains"][,"FP_standlrt"],"beta_1")
 
 # 5.4 Specifying an informative prior for a random parameter . . . . . . .65
 
 ## Specifies an ingormative prior for sigma2u
 prior=list(rp2=list(estimates=.2,size=100))
-prior=prior2macro(prior,formula,levID,D='Normal', indata)
+prior=prior2macro(prior,formula,levID,D='Normal', indata=tutorial)
 estoptions= list(EstM=1,mcmcMeth=list(priorParam=prior))
 ## Fit the model
-(mymodel6=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel6=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 sixway(mymodel6["chains"][,"RP2_var_cons"],"sigma^2_u0")
 
 # 5.5 Changing the random number seed and the parameter starting values  .66
@@ -100,22 +92,22 @@ sixway(mymodel6["chains"][,"RP2_var_cons"],"sigma^2_u0")
 startval=list(FP.b=c(-2,5),RP.b=c(2,4))
 estoptions= list(EstM=1,mcmcMeth=list(burnin=0, iterations=500,startval=startval))
 ## Fit the model
-(mymodel7=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel7=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 rm(list=c("mymodel4","mymodel5","mymodel6","mymodel7"))
 
 ##Use different seeds
 estoptions= list(EstM=1,mcmcMeth=list(seed=1))
-(mymodel8=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel8=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 estoptions= list(EstM=1,mcmcMeth=list(seed=2))
-(mymodel9=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel9=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 estoptions= list(EstM=1,mcmcMeth=list(seed=3))
-(mymodel10=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel10=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 estoptions= list(EstM=1,mcmcMeth=list(seed=4))
-(mymodel11=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel11=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 aa=cbind(mymodel8["FP"],mymodel9["FP"],mymodel10["FP"],mymodel11["FP"])
 bb=cbind(mymodel8["RP"],mymodel9["RP"],mymodel10["RP"],mymodel11["RP"])

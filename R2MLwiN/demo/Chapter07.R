@@ -28,16 +28,8 @@ options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
-## Read tutorial data from runmlwin (Leckie&Charlton, 2011) data folder
-library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/tutorial.dta")
-
-## Alternatively converts tutorial.ws under mlwin sample folder to tutorial.dta
-## MLwiN sample worksheet folder
-#wsfile=paste(mlwin,"/samples/tutorial.ws",sep="")
-## the tutorial.dta will be save under the temporary folder
-#inputfile=paste(tempdir(),"/tutorial.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile)
-#library(foreign); indata =read.dta(inputfile)
+## Read tutorial data
+data(tutorial)
 
 ## openbugs executable
 if(!exists("openbugs")) openbugs="C:/Program Files (x86)/OpenBUGS321/OpenBUGS.exe"
@@ -60,7 +52,7 @@ levID=c('school','student')
 ## Uses the results from IGLS to create initial values for bugs
 estoptions= list(EstM=0, show.file=T)
 ## Fit the model by calling openbugs using the rbugs package
-mymodel1=runMLwiN(formula, levID, indata=indata, estoptions=estoptions,BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=openbugs, OpenBugs = T))
+mymodel1=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions,BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=openbugs, OpenBugs = T))
 summary(mymodel1[[1]][,"beta[2]"])
 sixway(mymodel1[[1]][,"beta[2]"])
 

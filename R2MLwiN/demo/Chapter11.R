@@ -26,15 +26,10 @@ options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
-
-# MLwiN sample worksheet folder
-wsfile=paste(mlwin,"/samples/mmmec1.ws",sep="")
-# the tutorial.dta will be save under the temporary folder
-inputfile=paste(tempdir(),"/mmmec1.dta",sep="")
-ws2foreign(wsfile, foreignfile=inputfile)
-library(foreign); indata =read.dta(inputfile)
-indata[["logexp"]]=double2singlePrecision(log(indata[["exp"]]))
-levels(indata[["nation"]])=c("Belgium", "W_Germany", "Denmark", "France", "UK", "Italy", "Ireland", "Luxembourg", "Netherlands")
+## Read mmmec1 data
+data(mmmec1)
+mmmec1[["logexp"]]=double2singlePrecision(log(mmmec1[["exp"]]))
+levels(mmmec1[["nation"]])=c("Belgium", "W_Germany", "Denmark", "France", "UK", "Italy", "Ireland", "Luxembourg", "Netherlands")
 
 # 11.1 Simple Poisson regression model . . . . . . . . . . . . . . . . . 155
 
@@ -44,7 +39,7 @@ levID=c('nation','region','county')
 ## Choose option(s) for inference
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000))
 ## Fit the model
-(mymodel1=runMLwiN(formula, levID, D="Poisson", indata=indata, estoptions=estoptions))
+(mymodel1=runMLwiN(formula, levID, D="Poisson", indata=mmmec1, estoptions=estoptions))
 summary(mymodel1["chains"][,"FP_uvbi"])
 sixway(mymodel1["chains"][,"FP_uvbi"],"beta_1")
 
@@ -56,7 +51,7 @@ levID=c('region','county')
 ## Choose option(s) for inference
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000,seed=13))
 ## Fit the model
-(mymodel2=runMLwiN(formula, levID, D="Poisson", indata=indata, estoptions=estoptions))
+(mymodel2=runMLwiN(formula, levID, D="Poisson", indata=mmmec1, estoptions=estoptions))
 summary(mymodel2["chains"][,"FP_uvbi"])
 sixway(mymodel2["chains"][,"FP_uvbi"],"beta_1")
 
@@ -68,7 +63,7 @@ levID=c('nation','region','county')
 ## Choose option(s) for inference
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000,seed=13))
 ## Fit the model
-(mymodel3=runMLwiN(formula, levID, D="Poisson", indata=indata, estoptions=estoptions))
+(mymodel3=runMLwiN(formula, levID, D="Poisson", indata=mmmec1, estoptions=estoptions))
 
 ## Define the model
 formula=log(obs,logexp)~(0|uvbi+nation[])+(2|cons)
@@ -76,7 +71,7 @@ levID=c('nation','region','county')
 ## Choose option(s) for inference
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000))
 ## Fit the model
-(mymodel4=runMLwiN(formula, levID, D="Poisson", indata=indata, estoptions=estoptions))
+(mymodel4=runMLwiN(formula, levID, D="Poisson", indata=mmmec1, estoptions=estoptions))
 
 # 11.4 Interaction with UV exposure . . . . . . . . . . . . . . . . . . .161
 
@@ -86,7 +81,7 @@ levID=c('region','county')
 ## Choose option(s) for inference
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000))
 ## Fit the model
-(mymodel5=runMLwiN(formula, levID, D="Poisson", indata=indata, estoptions=estoptions))
+(mymodel5=runMLwiN(formula, levID, D="Poisson", indata=mmmec1, estoptions=estoptions))
 sixway(mymodel5["chains"][,"FP_Belgium"],acf.maxlag=5000,"beta_1")
 
 # 11.5 Problems with univariate updating Metropolis procedures . . . . . 163
@@ -94,7 +89,7 @@ sixway(mymodel5["chains"][,"FP_Belgium"],acf.maxlag=5000,"beta_1")
 ## NOTE THAT WE RUN 50,000 rather than 500,000 HERE
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000,thinning=10))
 ## Fit the model
-(mymodel6=runMLwiN(formula, levID, D="Poisson", indata=indata, estoptions=estoptions))
+(mymodel6=runMLwiN(formula, levID, D="Poisson", indata=mmmec1, estoptions=estoptions))
 sixway(mymodel6["chains"][,"FP_Belgium"],"beta_1")
 
 ## Half of million interations (could take a few hours to run)

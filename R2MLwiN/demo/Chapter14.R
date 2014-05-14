@@ -26,88 +26,72 @@ options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
-## Read tutorial data from runmlwin (Leckie&Charlton, 2011) data folder
-library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/tutorial.dta")
-
-## Alternatively converts tutorial.ws under mlwin sample folder to tutorial.dta
-# MLwiN sample worksheet folder
-#wsfile=paste(mlwin,"/samples/tutorial.ws",sep="")
-## the tutorial.dta will be save under the temporary folder
-#inputfile=paste(tempdir(),"/tutorial.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile)
-#library(foreign); indata =read.dta(inputfile)
+## Read tutorial data
+data(tutorial)
 
 # 14.1 Effects of measurement error on predictors . . . . . . . . . . . .200
 set.seed(1)
-error=double2singlePrecision(rnorm(length(indata[,"standlrt"]),0,sqrt(.2)))
-obslrt=double2singlePrecision(indata[,"standlrt"]+error)
-indata=cbind(indata,error,obslrt)
+error=double2singlePrecision(rnorm(length(tutorial[,"standlrt"]),0,sqrt(.2)))
+obslrt=double2singlePrecision(tutorial[,"standlrt"]+error)
+tutorial=cbind(tutorial,error,obslrt)
 
 formula=normexam~(0|cons+standlrt)+(1|cons)
 levID='student'
-(mymodel=runMLwiN(formula, levID, indata=indata))
+(mymodel=runMLwiN(formula, levID, indata=tutorial))
 
 
 formula=normexam~(0|cons+error)+(1|cons)
 levID='student'
-(mymodel=runMLwiN(formula, levID, indata=indata))
+(mymodel=runMLwiN(formula, levID, indata=tutorial))
 
 formula=normexam~(0|cons+obslrt)+(1|cons)
 levID='student'
-(mymodel=runMLwiN(formula, levID, indata=indata))
+(mymodel=runMLwiN(formula, levID, indata=tutorial))
 estoptions= list(EstM=1,merr=c(N=1,"obslrt",.2))
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 # 14.2 Measurement error modelling in multilevel models . . . . . . . . .205
 
 formula=normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)
 levID=c('school','student')
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 formula=normexam~(0|cons+obslrt)+(2|cons+obslrt)+(1|cons)
 levID=c('school','student')
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 formula=normexam~(0|cons+obslrt)+(2|cons+obslrt)+(1|cons)
 levID=c('school','student')
 estoptions= list(EstM=1,merr=c(N=1,"obslrt",.2))
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 # 14.3 Measurement errors in binomial models . . . . . . . . . . . . . . 208
 
 
-## Read bang1 data from runmlwin (Leckie&Charlton, 2011) data folder
-library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/bang1.dta")
+## Read bang1 data
+data(bang1)
 
-## Alternatively converts bang1.ws under mlwin sample folder to bang1.dta
-## Input the MLwiN tutorial data set
-# MLwiN folder (Modify the path as appropriate.
-#mlwin ="C:/Stat-JR/MLwiN v2.25/"
-## MLwiN sample worksheet folder
-#wsfile=paste(mlwin,"/samples/bang1.ws",sep="")
-## the tutorial.dta will be save under the temporary folder
-#inputfile=paste(tempdir(),"/bang1.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile)
-#library(foreign); indata =read.dta(inputfile)
+bang1[["denomb"]] <- bang1[["cons"]]
+bang1[["use"]] <- as.integer(bang1[["use"]]) - 1
 
 set.seed(1)
-obsage=double2singlePrecision(indata[["age"]]+rnorm(length(indata[["age"]]),0,5))
-indata=cbind(indata,obsage)
+obsage=double2singlePrecision(bang1[["age"]]+rnorm(length(bang1[["age"]]),0,5))
+bang1=cbind(bang1,obsage)
 
 formula=logit(use,denomb)~(0|cons+age)
 levID=c('district','woman')
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, D="Binomial", indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D="Binomial", indata=bang1, estoptions=estoptions))
 
 formula=logit(use,denomb)~(0|cons+obsage)
 levID=c('district','woman')
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, D="Binomial", indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D="Binomial", indata=bang1, estoptions=estoptions))
 ## Adjust for the measurement errors
 estoptions= list(EstM=1,merr=c(N=1,"obsage",25))
-(mymodel=runMLwiN(formula, levID, D="Binomial", indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D="Binomial", indata=bang1, estoptions=estoptions))
 
 # 14.4 Measurement errors in more than one variable and
 #      misclassifications . . . . . . . . . . . . . . . . . . . . . . . .211

@@ -26,16 +26,8 @@ options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
-## Read tutorial data from runmlwin (Leckie&Charlton, 2011) data folder
-library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/tutorial.dta")
-
-## Alternatively converts tutorial.ws under mlwin sample folder to tutorial.dta
-## MLwiN sample worksheet folder
-#wsfile=paste(mlwin,"/samples/tutorial.ws",sep="")
-## the tutorial.dta will be save under the temporary folder
-#inputfile=paste(tempdir(),"/tutorial.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile)
-#library(foreign); indata =read.dta(inputfile)
+## Read tutorial data
+data(tutorial)
 
 ## Define the model
 formula=normexam~(0|cons+standlrt)+(2|cons)+(1|cons)
@@ -43,12 +35,12 @@ levID=c('school','student')
 
 ## IGLS
 ## Fit the model
-(mymodel1=runMLwiN(formula, levID, indata=indata))
+(mymodel1=runMLwiN(formula, levID, indata=tutorial))
 
 ## Gibbs
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel2=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel2=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 # 4.1 Metropolis Hastings (MH) sampling for the variance components model 46
 
@@ -59,13 +51,13 @@ estoptions= list(EstM=1)
 ## MH Adaptive with defaults
 estoptions= list(EstM=1,mcmcMeth=list(fixM=2,residM=2,Lev1VarM=2))
 ## Fit the model
-(mymodel3=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel3=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 sixway(mymodel3["chains"][,"FP_standlrt"],"beta_1")
 
 ## MH Scale Factor =5.8
 estoptions= list(EstM=1,mcmcMeth=list(fixM=2,residM=2,Lev1VarM=2, adaption=0))
 ## Fit the model
-(mymodel4=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel4=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 aa=cbind(mymodel1["FP"],mymodel2["FP"],mymodel4["FP"],mymodel3["FP"])
 bb=cbind(mymodel1["RP"],mymodel2["RP"],mymodel4["RP"],mymodel3["RP"])
@@ -79,7 +71,7 @@ rm(list=c("mymodel1","mymodel2","mymodel3","mymodel4"))
 ## MH Adaptive with defaults
 estoptions= list(EstM=1,mcmcMeth=list(fixM=3,residM=2,Lev1VarM=2, rate=40))
 ## Fit the model
-(mymodel5=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel5=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 estimates=mymodel5["chains"]
 par(mfrow=c(3,2))
@@ -98,7 +90,7 @@ rm(mymodel5)
 # 4.6 Residuals in MCMC . . . . . . . . . . . . . . . . . . . . . . . . . 51
 
 estoptions= list(EstM=1,resi.store=TRUE,resi.store.levs=2,mcmcMeth=list(iterations=5001))
-(mymodel6=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel6=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 resi.chain2 <- mymodel6["resi.chains"]$resi_lev2
 sixway(resi.chain2[,1], name="u0_1")

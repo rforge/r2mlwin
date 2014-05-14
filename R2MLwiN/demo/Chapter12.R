@@ -27,16 +27,8 @@ options(MLwiN_path=mlwin)
 # User's input if necessary
 
 
-## Read bang data from runmlwin (Leckie&Charlton, 2011) data folder
-library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/bang.dta")
-
-## Alternatively converts bang.ws under mlwin sample folder to bang.dta
-## MLwiN sample worksheet folder
-#wsfile=paste(mlwin,"/samples/bang.ws",sep="")
-## the tutorial.dta will be save under the temporary folder
-#inputfile=paste(tempdir(),"/bang.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile)
-#library(foreign); indata =read.dta(inputfile)
+## Read bang data
+data(bang)
 
 # 12.1 Fitting a first single-level multinomial model . . . . . . . . . .169
 
@@ -45,7 +37,7 @@ formula=log(use4,cons,use4_4)~ (0|cons)
 levID=c('woman')
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, D='Unordered Multinomial', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Unordered Multinomial', indata=bang, estoptions=estoptions))
 
 cat(paste("Pr(y = 1) =", round(exp(mymodel["FP"]["FP_cons_use4_1"])/(1+exp(mymodel["FP"]["FP_cons_use4_1"])+exp(mymodel["FP"]["FP_cons_use4_2"])+exp(mymodel["FP"]["FP_cons_use4_3"])),4),"\n"))
 cat(paste("Pr(y = 2) =", round(exp(mymodel["FP"]["FP_cons_use4_2"])/(1+exp(mymodel["FP"]["FP_cons_use4_1"])+exp(mymodel["FP"]["FP_cons_use4_2"])+exp(mymodel["FP"]["FP_cons_use4_3"])),4),"\n"))
@@ -58,7 +50,7 @@ formula=log(use4,cons,use4_4)~ (0|cons+lc[lc0])
 levID=c('woman')
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, D='Unordered Multinomial', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Unordered Multinomial', indata=bang, estoptions=estoptions))
 
 cat(paste("Pr(y = 3) =", round(exp(mymodel["FP"]["FP_cons_use4_3"])/(1+exp(mymodel["FP"]["FP_cons_use4_1"])+exp(mymodel["FP"]["FP_cons_use4_2"])+exp(mymodel["FP"]["FP_cons_use4_3"])),4),"\n"))
 cat(paste("Pr(y = 3) =", round(exp(mymodel["FP"]["FP_cons_use4_3"]+mymodel["FP"]["FP_lc2_use4_3"])/(1+exp(mymodel["FP"]["FP_cons_use4_1"]+mymodel["FP"]["FP_lc2_use4_1"])+
@@ -85,12 +77,12 @@ levID=c('district','woman')
 #Uses IGLS
 estoptions= list(EstM=0, nonlinear=c(1,2))
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, D='Unordered Multinomial', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Unordered Multinomial', indata=bang, estoptions=estoptions))
 
 ## Uses MCMC
 estoptions= list(EstM=1, nonlinear=c(1,2))
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, D='Unordered Multinomial', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Unordered Multinomial', indata=bang, estoptions=estoptions))
 sixway(mymodel["chains"][,"RP2_var_cons_use4_1"],"sigma2v0")
 
 RP3.cons=matrix(,3,3)

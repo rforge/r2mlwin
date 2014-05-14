@@ -30,41 +30,41 @@ options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
-# MLwiN sample worksheet folder
-wsfile=paste(mlwin,"/samples/jspmix1.ws",sep="")
-# the jspmix1.dta will be save under the temporary folder
-inputfile=paste(tempdir(),"/jspmix1.dta",sep="")
-ws2foreign(wsfile, foreignfile=inputfile)
-library(foreign); indata =read.dta(inputfile)
+## Read jspmix1 data
+data(jspmix1)
+
+jspmix1[["denomb"]] <- jspmix1[["cons"]]
+jspmix1[["sex"]] <- as.integer(jspmix1[["sex"]]) - 1
+jspmix1[["behaviour"]] <- as.integer(jspmix1[["behaviour"]]) - 1
 
 tab1=matrix(,3,3)
 colnames(tab1)=c("0","1","TOTALS")
 rownames(tab1)=c("N","MEANS","SDs")
-tab1[1,1:2]=colSums(table(indata[["english"]],indata[["behaviour"]]))
+tab1[1,1:2]=colSums(table(jspmix1[["english"]],jspmix1[["behaviour"]]))
 tab1[1,3]=sum(tab1[1,1:2])
-tab1[2,1]=mean(indata[["english"]][indata[["behaviour"]]==0])
-tab1[2,2]=mean(indata[["english"]][indata[["behaviour"]]==1])
-tab1[2,3]=mean(indata[["english"]])
-tab1[3,1]=sd(indata[["english"]][indata[["behaviour"]]==0])
-tab1[3,2]=sd(indata[["english"]][indata[["behaviour"]]==1])
-tab1[3,3]=sd(indata[["english"]])
+tab1[2,1]=mean(jspmix1[["english"]][jspmix1[["behaviour"]]==0])
+tab1[2,2]=mean(jspmix1[["english"]][jspmix1[["behaviour"]]==1])
+tab1[2,3]=mean(jspmix1[["english"]])
+tab1[3,1]=sd(jspmix1[["english"]][jspmix1[["behaviour"]]==0])
+tab1[3,2]=sd(jspmix1[["english"]][jspmix1[["behaviour"]]==1])
+tab1[3,3]=sd(jspmix1[["english"]])
 formatC(tab1)
 
-round(cor(indata[,c("sex","fluent","ravens","english","behaviour")]),4)
+round(cor(jspmix1[,c("sex","fluent","ravens","english","behaviour")]),4)
 
 # 19.3 Setting up a single level mixed response model . . . . . . . . . .291
 
 formula=c(english,probit(behaviour,denomb))~(`0s`|cons+sex+ravens)+(`0c`|fluent(1,0))+(`1s`|cons.english)
 levID= 'id'
 estoptions= list(EstM=1,mcmcMeth=list(fixM=1,residM=1,Lev1VarM=1))
-(mymodel=runMLwiN(formula, levID, D=c("Mixed","Normal","Binomial"), indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D=c("Mixed","Normal","Binomial"), indata=jspmix1, estoptions=estoptions))
 
 # 19.4 Multilevel mixed response model . . . . . . . . . . . . . . . . . 294
 
 formula=c(english,probit(behaviour,denomb))~(`0s`|cons+sex+ravens)+(`0c`|fluent(1,0))+(`2s`|cons)+(`1s`|cons.english)
 levID=c('school', 'id')
 estoptions= list(EstM=1,mcmcMeth=list(fixM=1,residM=1,Lev1VarM=1))
-(mymodel=runMLwiN(formula, levID, D=c("Mixed","Normal","Binomial"), indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D=c("Mixed","Normal","Binomial"), indata=jspmix1, estoptions=estoptions))
 
 
 # 19.5 Rats dataset . . . . . . . . . . . . . . . . . . . . . . . . . . .295
@@ -81,18 +81,14 @@ while (!file.access(mlwin, mode=1)==0) {
 options(MLwiN_path=mlwin)
 
 # User's input if necessary
-# MLwiN sample worksheet folder
-wsfile=paste(mlwin,"/samples/rats.ws",sep="")
-# the tutorial.dta will be save under the temporary folder
-inputfile=paste(tempdir(),"/rats.dta",sep="")
-ws2foreign(wsfile, foreignfile=inputfile)
-library(foreign); indata =read.dta(inputfile)
 
+## Read rats data
+data(rats)
 
 formula=c(y8,y15,y22,y29,y36)~(0|cons)+(1|cons)
 levID=c('rat')
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=rats, estoptions=estoptions))
 
 sixway(mymodel["chains"][,"RP1_var_cons_y8"],"sigma2u0")
 
@@ -106,7 +102,7 @@ round(cov2cor(t(covM1)),3)
 # 19.6 Fitting an autoregressive structure to the variance matrix . . . .298
 
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000),mcmcOptions=list(mcco=4))
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=rats, estoptions=estoptions))
 
 covM2=matrix(,5,5)
 colnames(covM2)=rownames(covM2)=c("cons.y8","cons.y15","cons.y22","cons.y29","cons.y36")

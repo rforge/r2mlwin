@@ -1,7 +1,7 @@
 \docType{data}
 \name{wage1}
 \alias{wage1}
-\title{Simulated dataset of office workers' salay and other employment details.}
+\title{Simulated dataset of office workers' salary and other employment details.}
 
 \format{A data frame with 3022 observations on the following 21 variables:
   \describe{
@@ -40,16 +40,19 @@ Rasbash, J., Browne, W. J., Healy, M., Cameron, B., Charlton, C. M. J. (2013) ML
 
 \examples{
 \dontrun{
-# NB: change path as appropriate
-MLwiN <- "C:/Program Files (x86)/MLwiN v2.29/"
+#NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
+#...so please change relevant line if different
+#if using R2MLwiN via WINE, the path may look like 
+#options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/")
+
 data(wage1)
 # fit age_40 and numjobs as fixed effects, with random effects for companies, 
 # in multiple membership model
-F1 = "logearn ~ (0|cons + age_40 + numjobs) + (1|cons) + (2|cons)"
+F1 = logearn ~ (0|cons + age_40 + numjobs) + (1|cons) + (2|cons)
 ID = c("company", "id")
 OurMultiMemb <- list("class" = 2, "N1" = 4, "weight" = "weight1", "id" = NA)
 (MMembModel <- runMLwiN(Formula = F1, levID = ID, indata = wage1, 
-estoptions = list(EstM = 1, xclass = OurMultiMemb, notation = "class"), MLwiNPath = MLwiN))
+estoptions = list(EstM = 1, xclass = OurMultiMemb, notation = "class")))
 }
 }
 \keyword{datasets}

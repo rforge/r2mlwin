@@ -28,35 +28,27 @@ options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
-## Read gcsecomp1 data from runmlwin (Leckie&Charlton, 2011) data folder
-library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/gcsecomp1.dta")
-
-## Alternatively converts gcsecomp1.ws under mlwin sample folder to gcsecomp1.dta
-## MLwiN sample worksheet folder
-#wsfile=paste(mlwin,"/samples/gcsecomp1.ws",sep="")
-## the tutorial.dta will be save under the temporary folder
-#inputfile=paste(tempdir(),"/gcsecomp1.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile)
-#library(foreign); indata =read.dta(inputfile)
-#summary(indata)
-#cor(indata[,c("written","csework")])
+## Read gcsecomp1 data
+data(gcsecomp1)
+#summary(gcsecomp1)
+#cor(gcsecomp1[,c("written","csework")])
 
 # 18.2 Fitting single level multivariate models . . . . . . . . . . . . .265
 
 formula=c(written,csework)~(0|cons)+(1|cons)
 levID='student'
 ##IGLS
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=gcsecomp1))
 ##MCMC
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=gcsecomp1, estoptions=estoptions))
 
 # 18.3 Adding predictor variables . . . . . . . . . . . . . . . . . . . .270
 
 formula=c(written,csework)~(0|cons+female)+(1|cons)
 levID='student'
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=gcsecomp1, estoptions=estoptions))
 
 # 18.4 A multilevel multivariate model . . . . . . . . . . . . . . . . . 271
 
@@ -64,19 +56,19 @@ formula=c(written,csework)~(0|cons+female)+(2|cons)+(1|cons)
 levID=c('school','student')
 ##Store residual chain at level 3: school
 estoptions= list(EstM=1,resi.store=T,resi.store.levs=3)
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=gcsecomp1, estoptions=estoptions))
 
 resi=mymodel["resi.chains"]$resi_lev3
 label=1:ncol(resi)
 
 ##highlight
 hipos=rep(0,6)
-hipos[1]=which(levels(as.factor(indata[["school"]]))==68137)
-hipos[2]=which(levels(as.factor(indata[["school"]]))==68201)
-hipos[3]=which(levels(as.factor(indata[["school"]]))==68711)
-hipos[4]=which(levels(as.factor(indata[["school"]]))==60427)
-hipos[5]=which(levels(as.factor(indata[["school"]]))==22710)
-hipos[6]=which(levels(as.factor(indata[["school"]]))==67105)
+hipos[1]=which(levels(as.factor(gcsecomp1[["school"]]))==68137)
+hipos[2]=which(levels(as.factor(gcsecomp1[["school"]]))==68201)
+hipos[3]=which(levels(as.factor(gcsecomp1[["school"]]))==68711)
+hipos[4]=which(levels(as.factor(gcsecomp1[["school"]]))==60427)
+hipos[5]=which(levels(as.factor(gcsecomp1[["school"]]))==22710)
+hipos[6]=which(levels(as.factor(gcsecomp1[["school"]]))==67105)
 
 par(mfrow=c(2,1))
 ##Select u0
@@ -108,29 +100,18 @@ for(i in 1:6) points(x=resi0mean[rankno0[which(rankno0==hipos[i])]],y=resi1mean[
 # 18.5 GCSE science data with missing records . . . . . . . . . . . . . .275
 
 library(R2MLwiN)
-## Read gcsemv1 data from runmlwin (Leckie&Charlton, 2011) data folder
-library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/gcsemv1.dta")
-
-## Alternatively converts gcsemv1.ws under mlwin sample folder to gcsemv1.dta
-## Input the MLwiN tutorial data set
-# MLwiN folder (Modify the path as appropriate.
-#mlwin ="C:/Stat-JR/MLwiN v2.25/"
-## MLwiN sample worksheet folder
-#wsfile=paste(mlwin,"/samples/gcsemv1.ws",sep="")
-## the tutorial.dta will be save under the temporary folder
-#inputfile=paste(tempdir(),"/gcsemv1.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile)
-#library(foreign); indata =read.dta(inputfile)
+## Read gcsemv1 data
+data(gcsemv1)
 
 formula=c(written,csework)~(0|cons+female)+(1|cons)
 levID='student'
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=gcsemv1, estoptions=estoptions))
 
 formula=c(written,csework)~(0|cons+female)+(2|cons)+(1|cons)
 levID=c('school','student')
 estoptions= list(EstM=1,mcmcMeth=list(dami=2))
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=gcsemv1, estoptions=estoptions))
 
 
 # 18.6 Imputation methods for missing data . . . . . . . . . . . . . . . 280
@@ -149,20 +130,17 @@ while (!file.access(mlwin, mode=1)==0) {
 options(MLwiN_path=mlwin)
 
 # User's input if necessary
-# MLwiN sample worksheet folder
-wsfile=paste(mlwin,"/samples/hungary1.ws",sep="")
-# the tutorial.dta will be save under the temporary folder
-inputfile=paste(tempdir(),"/hungary1.dta",sep="")
-ws2foreign(wsfile, foreignfile=inputfile)
-library(foreign); indata =read.dta(inputfile)
-summary(indata)
+
+## Read hungary1 data
+data(hungary1)
+summary(hungary1)
 
 formula=c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2)~(0|cons+female)+(2|cons)+(1|cons)
 levID=c('school','student')
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=hungary1))
 
 estoptions= list(EstM=1,mcmcMeth=list(dami=c(0,1000,2000,3000,4000,5000)))
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=hungary1, estoptions=estoptions))
 head(mymodel["MIdata"])
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .128

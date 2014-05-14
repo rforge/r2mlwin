@@ -29,8 +29,11 @@ Rasbash, J., Browne, W. J., Healy, M., Cameron, B., Charlton, C. M. J. (2013) ML
 
 \examples{
 \dontrun{
-# NB: change path as appropriate
-MLwiN <- "C:/Program Files (x86)/MLwiN v2.29/"
+#NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
+#...so please change relevant line if different
+#if using R2MLwiN via WINE, the path may look like 
+#options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/")
+
 data(jspmix1)
 # behaviour coded 0/1
 jspmix1$behaviour <- as.numeric(jspmix1$behaviour) - 1
@@ -43,7 +46,7 @@ ID = c("school", "id")
 (MixedRespMCMC <- runMLwiN(Formula = F1, levID = ID, 
 D = c("Mixed", "Normal", "Binomial"), indata = jspmix1, 
 estoptions = list(EstM = 1, mcmcMeth = list(fixM = 1, residM = 1, Lev1VarM = 1)),
-MLwiNPath = MLwiN))
+))
 }
 }
 \keyword{datasets}

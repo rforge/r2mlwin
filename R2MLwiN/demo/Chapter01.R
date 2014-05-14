@@ -42,22 +42,14 @@ options(MLwiN_path=mlwin)
 # Double return HERE
 # User's input if necessary
 
-## Read tutorial data from runmlwin (Leckie&Charlton, 2011) data folder
-library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/tutorial.dta")
-
-## Alternatively converts tutorial.ws under mlwin sample folder to tutorial.dta
-## MLwiN sample worksheet folder
-# wsfile=paste(mlwin,"/samples/tutorial.ws",sep="")
-## the tutorial.dta will be saved under the temporary folder
-# inputfile=paste(tempdir(),"/tutorial.dta",sep="")
-# ws2foreign(wsfile, foreignfile=inputfile)
-# library(foreign); indata =read.dta(inputfile)
+## Read tutorial data
+data(tutorial)
 
 set.seed(1)
 
 ## Set variables
-y = indata[["normexam"]]
-x = indata[["standlrt"]]
+y = tutorial[["normexam"]]
+x = tutorial[["standlrt"]]
 N = length(y)
 xsq = x^2
 xy = x*y
@@ -114,8 +106,8 @@ ylab=expression(paste("Est. of ",sigma[e]^2)),type="l")
 set.seed(1)
 
 ## Set variables
-y = indata[["normexam"]]
-x = indata[["standlrt"]]
+y = tutorial[["normexam"]]
+x = tutorial[["standlrt"]]
 N = length(y)
 xsq = x^2
 xy = x*y

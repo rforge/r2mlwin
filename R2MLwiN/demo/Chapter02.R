@@ -24,30 +24,22 @@ while (!file.access(mlwin, mode=1)==0) {
 }
 options(MLwiN_path=mlwin)
 
-## Read tutorial data from runmlwin (Leckie&Charlton, 2011) data folder
-library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/tutorial.dta")
-
-## Alternatively converts tutorial.ws under mlwin sample folder to tutorial.dta
-## MLwiN sample worksheet folder
-#wsfile=paste(mlwin,"/samples/tutorial.ws",sep="")
-## the tutorial.dta will be save under the temporary folder
-#inputfile=paste(tempdir(),"/tutorial.dta",sep="")
-#ws2foreign(wsfile, foreignfile=inputfile)
-#library(foreign); indata =read.dta(inputfile)
+## Read tutorial data
+data(tutorial)
 
 ## Define the model
 formula=normexam~(0|cons+standlrt)+(1|cons)
 levID='student'
 ## Choose IGLS algoritm for estimation
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, indata=indata))
+(mymodel=runMLwiN(formula, levID, indata=tutorial))
 
 # 2.1 Running the Gibbs Sampler . . . . . . . . . . . . . . . . . . . . . 26
 
 ## Choose MCMC algoritm for estimation
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 estimates=mymodel["chains"]
 par(mfrow=c(2,2))
@@ -64,33 +56,34 @@ ylab=expression(paste("Est. of ",sigma[e0]^2)),type="l")
 
 # 2.3 Adding more predictors . . . . . . . . . . . . . . . . . . . . . . .29
 
-indata[["boysch"]]=as.integer(indata[["schgend"]]=="boysch")
-indata[["girlsch"]]=as.integer(indata[["schgend"]]=="girlsch")
+tutorial[["boysch"]]=as.integer(tutorial[["schgend"]]=="boysch")
+tutorial[["girlsch"]]=as.integer(tutorial[["schgend"]]=="girlsch")
+tutorial[["girl"]]=as.integer(tutorial[["sex"]]) -1
 
 ## Define the model
 formula=normexam~(0|cons+standlrt+girl+boysch+girlsch)+(1|cons)
 levID='student'
 ## Choose IGLS algoritm for estimation
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, indata=indata))
+(mymodel=runMLwiN(formula, levID, indata=tutorial))
 
 ## Choose MCMC algoritm for estimation
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 # 2.4 Fitting school effects as fixed parameters . . . . . . . . . . . . .32
 
-indata=cbind(indata,Untoggle(indata[["school"]],"school"))
+tutorial=cbind(tutorial,Untoggle(tutorial[["school"]],"school"))
 
 ## Define the model
-tempstr=paste("+",names(indata)[14:77],collapse="")
+tempstr=paste("+",names(tutorial)[14:77],collapse="")
 formula=paste("normexam~(0|cons+standlrt+girl",tempstr,")+(1|cons)",sep="")
 levID='student'
 ## Choose MCMC algoritm for estimation (IGLS will be used to obtain starting values for MCMC)
 estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . . 33
 

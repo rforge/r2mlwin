@@ -20,7 +20,6 @@
 # 15.3 The Fife educational dataset . . . . . . . . . . . . . . . . . . .217
 
 library(R2MLwiN)
-## Input the MLwiN tutorial data set
 # MLwiN folder
 mlwin <- getOption("MLwiN_path")
 while (!file.access(mlwin, mode=1)==0) {
@@ -32,29 +31,25 @@ options(MLwiN_path=mlwin)
 
 # User's input if necessary
 
-# MLwiN sample worksheet folder
-wsfile=paste(mlwin,"/samples/xc1.ws",sep="")
-# the tutorial.dta will be save under the temporary folder
-inputfile=paste(tempdir(),"/xc1.dta",sep="")
-ws2foreign(wsfile, foreignfile=inputfile)
-library(foreign); indata =read.dta(inputfile)
+## Read xc1 data
+data(xc1)
 
-formula=ATTAIN~(0|CONS)+(3|CONS)+(1|CONS)
-levID=c('SID','PID','PUPIL')
+formula=attain~(0|cons)+(3|cons)+(1|cons)
+levID=c('sid','pid','pupil')
 estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, indata=xc1, estoptions=estoptions))
 
 # 15.4 A Cross-classified model . . . . . . . . . . . . . . . . . . . . .220
 
-formula=ATTAIN~(0|CONS)+(3|CONS)+(2|CONS)+(1|CONS)
-levID=c('SID','PID','PUPIL')
+formula=attain~(0|cons)+(3|cons)+(2|cons)+(1|cons)
+levID=c('sid','pid','pupil')
 xclass=list("classes"=c(2,3),"N1"=c(1,1))
 estoptions= list(xclass=xclass,EstM=1,notation='class',resi.store=T,resi.store.levs=c(2,3))
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, indata=xc1, estoptions=estoptions))
 
 # 15.5 Residuals . . . . . . . . . . . . . . . . . . . . . . . . . . . . 223
 
-lencateg = length(unique(indata[["SID"]]))
+lencateg = length(unique(xc1[["sid"]]))
 resi.chain0=mymodel["resi.chains"]$resi_lev3
 residual0 = apply(resi.chain0,2,mean)
 rankno=order(residual0)
@@ -62,7 +57,7 @@ plot(x=1:lencateg,y=residual0[rankno],pch=24,bg="black",xlab="rank",ylab="cons")
 abline(h=0,lty="dotted")
 
 ## Common caterpillar
-#lencateg = length(unique(indata[["SID"]]))
+#lencateg = length(unique(xc1[["sid"]]))
 #resi.chain0=mymodel["resi.chains"]$resi_lev3
 #u0rank = apply(resi.chain0,1,rank)
 #u0rankmn = apply(u0rank, 1,mean)
@@ -72,7 +67,7 @@ abline(h=0,lty="dotted")
 #rankno = order(u0rankmn)
 #caterpillar(y=u0rankmn[rankno],x=1:lencateg,qtlow=u0ranklo[rankno],qtup=u0rankhi[rankno]],ylim=c(0,20))
 
-lencateg = length(unique(indata[["PID"]]))
+lencateg = length(unique(xc1[["pid"]]))
 resi.chain1=mymodel["resi.chains"]$resi_lev2
 residual1 = apply(resi.chain1,2,mean)
 rankno=order(residual1)
@@ -80,7 +75,7 @@ plot(x=1:length(residual1),y=residual1[rankno],pch=24,bg="black",xlab="rank",yla
 abline(h=0,lty="dotted")
 
 ## Common caterpillar
-#lencateg = length(unique(indata[["PID"]]))
+#lencateg = length(unique(xc1[["pid"]]))
 #resi.chain1=mymodel["resi.chains"]$resi_lev2
 #u0rank = apply(resi.chain1,1,rank)
 #u0rankmn = apply(u0rank, 1,mean)
@@ -92,31 +87,31 @@ abline(h=0,lty="dotted")
 
 # 15.6 Adding predictors to the model . . . . . . . . . . . . . . . . . .225
 
-formula=ATTAIN~(0|CONS+VRQ)+(3|CONS)+(2|CONS)+(1|CONS)
-levID=c('SID','PID','PUPIL')
+formula=attain~(0|cons+vrq)+(3|cons)+(2|cons)+(1|cons)
+levID=c('sid','pid','pupil')
 xclass=list("classes"=c(2,3),"N1"=c(1,1))
 estoptions= list(xclass=xclass,EstM=1,notation='class',resi.store=T,resi.store.levs=c(2,3))
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, indata=xc1, estoptions=estoptions))
 
-formula=ATTAIN~(0|CONS+VRQ+SC+FED+MED+CHOICE)+(3|CONS)+(2|CONS)+(1|CONS)
-levID=c('SID','PID','PUPIL')
+formula=attain~(0|cons+vrq+sc+fed+med+choice)+(3|cons)+(2|cons)+(1|cons)
+levID=c('sid','pid','pupil')
 xclass=list("classes"=c(2,3),"N1"=c(1,1))
 estoptions= list(xclass=xclass,EstM=1,notation='class',resi.store=T,resi.store.levs=c(2,3))
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, indata=xc1, estoptions=estoptions))
 
-lencateg = length(unique(indata[["SID"]]))
+lencateg = length(unique(xc1[["sid"]]))
 resi.chain0=mymodel["resi.chains"]$resi_lev3
 residual0 = apply(resi.chain0,2,mean)
 rankno=order(residual0)
 plot(x=1:lencateg,y=residual0[rankno],pch=24,bg="black",xlab="rank",ylab="cons")
 abline(h=0,lty="dotted")
 
-indata[["school19"]]=as.integer(indata[["SID"]]==19)
-formula=ATTAIN~(0|CONS+VRQ+SC+FED+MED+CHOICE+school19)+(2|CONS)+(1|CONS)
-levID=c('SID','PID','PUPIL')
+xc1[["school19"]]=as.integer(xc1[["sid"]]==19)
+formula=attain~(0|cons+vrq+sc+fed+med+choice+school19)+(2|cons)+(1|cons)
+levID=c('sid','pid','pupil')
 xclass=list("classes"=c(2,3),"N1"=c(1,1))
 estoptions= list(xclass=xclass,EstM=1,notation='class')
-(mymodel=runMLwiN(formula, levID, indata=indata, estoptions=estoptions))
+(mymodel=runMLwiN(formula, levID, indata=xc1, estoptions=estoptions))
 
 # 15.7 Current restrictions for cross-classified models . . . . . . . . .229
 
