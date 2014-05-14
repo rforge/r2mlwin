@@ -4,14 +4,14 @@
 \title{EC data on UV radiation exposure & malignant melanoma.}
 \format{A data frame with 354 observations on the following 8 variables:
   \describe{
-    \item{\code{nation}}{.}
-    \item{\code{region}}{.}
-    \item{\code{county}}{.}
-    \item{\code{obs}}{.}
-    \item{\code{exp}}{.}
-    \item{\code{cons}}{.}
-    \item{\code{uvbi}}{.}
-    \item{\code{pcons}}{.}
+    \item{\code{nation}}{Nation ID.}
+    \item{\code{region}}{Region ID.}
+    \item{\code{county}}{Country ID.}
+    \item{\code{obs}}{Observed number of deaths.}
+    \item{\code{exp}}{Expected number of deaths.}
+    \item{\code{cons}}{Constant (=1).}
+    \item{\code{uvbi}}{UV B radiation.}
+    \item{\code{pcons}}{Constant (=1).}
 }}
 \source{
 Browne, W. J. (2012) \emph{MCMC Estimation in MLwiN Version 2.26.} University of Bristol: Centre for Multilevel Modelling.
