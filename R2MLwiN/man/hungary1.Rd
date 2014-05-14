@@ -4,17 +4,16 @@
 \title{Hungarian component of 2nd International Science Survey, '84; see Goldstein 2003}
 \format{A data frame with 2439 observations on the following 10 variables:
   \describe{
-    \item{\code{woman}}{Identifying code for each woman (level 1 unit).}
-    \item{\code{district}}{Identifying code for each district (level 2 unit).}
-    \item{\code{use}}{Contraceptive use status at time of survey; levels are \code{Not using} and \code{Using}.}
-    \item{\code{lc}}{Number of living children at time of survey; levels correspond to none (\code{nokids}), one (\code{onekid}), two (\code{twokids}), or three or more children (\code{threeplus}).}
-    \item{\code{age}}{Age of woman at time of survey (in years), centred on sample mean of 30 years.}
-    \item{\code{urban}}{Type of region of residence; levels are \code{Rural} and \code{Urban}.}
-    \item{\code{educ}}{Woman's level of education (\code{1} = None, \code{2} = Lower primary, \code{3} = Upper primary, \code{4} = Secondary and above.}
-    \item{\code{hindu}}{Woman's religion; levels are \code{Muslim} and \code{Hindu}.}
-    \item{\code{d_illit}}{Proportion of women in district who are literate.}
-    \item{\code{d_pray}}{Proportion of Muslim women in district who pray every day (a measure of religiosity).}    
-    \item{\code{cons}}{A column of ones. If included as an explanatory variable in a regression model (e.g. in MLwiN), its coefficient is the intercept.}
+    \item{\code{school}}{Identifying code for each school (level 2 unit).}
+    \item{\code{female}}{Gender indicator (\code{0} = Male, \code{1} = Female).}
+    \item{\code{es_core}}{Core Earth Scienses test result.}
+    \item{\code{biol_core}}{Core Biology test result.}
+    \item{\code{biol_r3}}{Optional Biology test result.}
+    \item{\code{biol_r4}}{Optional Biology test result.}
+    \item{\code{phys_core}}{Core Physics test result.}
+    \item{\code{phys_r2}}{Optional Physics test result.}
+    \item{\code{cons}}{Constant(=1).}
+    \item{\code{student}}{Identifying code for each student (level 1 unit).}    
 }}
 \source{
 Browne, W. J. (2012) \emph{MCMC Estimation in MLwiN Version 2.26.} University of Bristol: Centre for Multilevel Modelling.
