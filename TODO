@@ -11,6 +11,8 @@ Check all variables in the model actually exist in the data
 Allow more data variables by finding empty columns for output rather than hardcoding column numbers
 Fix CAR model example when running in OpenBUGS
 Fix negative reported observations for some multivariate models
+Allow pausing before the model fit to check the specification/starting values
+Add checking for mixed response models (MLwiN allows Normals plus binaries OR Poissons, all discrete responses must use the same link function)
 
 Not currently implemented:
 Multinomial proportions - need manual calculation/reshaping
