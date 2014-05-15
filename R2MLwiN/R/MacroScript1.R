@@ -144,10 +144,9 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
 
         wrt('RDISt 1 0')
         wrt(paste("DOFFs 1 '",D[3],"'",sep=""))
-        wrt('SET b10 0')
-        if (D[2] == 'logit') {wrt('SET b13 0');DD2=0}
-        if (D[2] == 'probit') {wrt('SET b13 1');DD2=1}
-        if (D[2] == 'cloglog') {wrt('SET b13 2');DD2=2}
+        if (D[2] == 'logit') {wrt('LFUN 0');DD2=0}
+        if (D[2] == 'probit') {wrt('LFUN 1');DD2=1}
+        if (D[2] == 'cloglog') {wrt('LFUN 2');DD2=2}
 
         interpos=grep("\\:",expl)
         if (length(interpos)==0){
@@ -216,14 +215,13 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
             if(D[[ii]][1]=="Binomial"){
                 wrt(paste("RDISt ",jj," 0",sep=""))
                 wrt(paste("DOFFs ",jj," '",D[[ii]][3],"'",sep=""))
-                if (D[[ii]][2] == 'logit') {wrt('SET b13 0');DD2=0}
-                if (D[[ii]][2] == 'probit') {wrt('SET b13 1');DD2=1}
-                if (D[[ii]][2] == 'cloglog') {wrt('SET b13 2');DD2=2}
+                if (D[[ii]][2] == 'logit') {wrt('LFUN 0');DD2=0}
+                if (D[[ii]][2] == 'probit') {wrt('LFUN 1');DD2=1}
+                if (D[[ii]][2] == 'cloglog') {wrt('LFUN 2');DD2=2}
             }
             if(D[[ii]][1]=="Poisson"){
                 wrt(paste("RDISt ",jj," 1",sep=""))
-                wrt('SET b10 1')
-                wrt('SET b13 3');DD2=3
+                wrt('LFUN 3');DD2=3
                 DD2=3
                 if (as.logical(D[[jj]][2])) {
                     #wrt(paste("CALC '",D[[jj]][3],"' = loge(","'", D[[jj]][3],"')",sep=""))
@@ -417,7 +415,7 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
             if(!is.na(levID[ii])) wrt(paste("IDEN ",aa[ii],"    '",levID[ii],"'",sep=""))
         }
         wrt("IDEN 1 'resp_indicator'")
-        wrt('SET b13 0')
+        wrt('LFUN 0')
         wrt("")
         if(is.list(expl)){
             interpos1=grep("\\:",sep.coeff)
@@ -610,9 +608,9 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
 
         if (as.numeric(D[4])==0) wrt('RDISt 1 4') else wrt('RDISt 1 5')
         wrt(paste("DOFFs 1 '",D[3],"'",sep=""))
-        if (D[2] == 'logit') {wrt('SET b13 0');DD2=0}
-        if (D[2] == 'probit') {wrt('SET b13 1');DD2=1}
-        if (D[2] == 'cloglog') {wrt('SET b13 2');DD2=2}
+        if (D[2] == 'logit') {wrt('LFUN 0');DD2=0}
+        if (D[2] == 'probit') {wrt('LFUN 1');DD2=1}
+        if (D[2] == 'cloglog') {wrt('LFUN 2');DD2=2}
 
         wrt("")
         if(is.list(expl)){
@@ -858,8 +856,7 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
         wrt("")
 
         wrt('RDISt 1 1')
-        wrt('SET b10 1')
-        wrt('SET b13 3')
+        wrt('LFUN 3')
         DD2=3
         if (as.logical(D[2])) {
             wrt(paste("DOFFs 1 '",D[3],"'",sep=""))
@@ -926,8 +923,7 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
         wrt("")
 
         wrt('RDISt 1 2')
-        wrt('SET b10 1')
-        wrt('SET b13 3')
+        wrt('LFUN 3')
         DD2=3
         if (as.logical(D[2])) {
             #wrt(paste("CALC '",D[3],"' = loge(","'", D[3],"')",sep=""))
