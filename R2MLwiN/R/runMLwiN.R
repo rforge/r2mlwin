@@ -301,20 +301,23 @@ version:date:md5:filename:x64:trial
 
         # Multiple membership IDs if applicable
         if (!is.null(xclass)) {
-            for (i in 1:length(as.numeric(xclass[[1]]))) {
-                lev <- as.numeric(xclass[[1]][i])
-                num <- as.numeric(xclass[[2]][i])
-                weightcol <- xclass[[3]][i]
-                idcol <- xclass[[4]][i]
-                if (is.na(idcol)) {
+            for (i in 1:length(as.numeric(xclass$classes))) {
+                lev <- as.numeric(xclass$classes[i])
+                num <- as.numeric(xclass$N1[i])
+                weightcol <- xclass$weight[i]
+                idcol <- xclass$id[i]
+                if (is.null(idcol)) {
                     idcol <- levID[lev]
                 }
                 idstart = which(colnames(indata) == idcol)
                 idend = idstart+(num-1)
-                weightstart = which(colnames(indata) == weightcol)
-                weightend = weightstart+(num-1)
                 outvars <- c(outvars, colnames(indata)[idstart:idend])
-                outvars <- c(outvars, colnames(indata)[weightstart:weightend])
+
+                if (!is.null(weightcol)) {
+                    weightstart = which(colnames(indata) == weightcol)
+                    weightend = weightstart+(num-1)
+                    outvars <- c(outvars, colnames(indata)[weightstart:weightend])
+                }
             }
         }
 
