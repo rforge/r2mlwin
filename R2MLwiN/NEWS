@@ -1,10 +1,12 @@
 Tue Jun 3 2014
 1. Bug fixing
    * Check the input data are sorted according to the model hierarchy and provide error if not
+   * Only send the data used in the model to MLwiN
 
 2. Changes
    * Add sort.force option to make R2MLwiN sort the data as expected
    * Add sort.ignore option to disable checking of sort order
+   * Add drop.data option to send the whole data file to MLwiN
 
 Mon May 12 2014
 1. Bug fixing
