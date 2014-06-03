@@ -5,8 +5,9 @@ Allow use of attach() -ed data
 Add data= as alias to indata=
 Automatic calculation of VPC?
 
-Only send data actually used in the model to MLwiN (but add option to send all)
-Add error checking based on input specification (e.g. is data sorted as defined by the hierarchy)
+Add error checking based on input specification (e.g. binary responses are 0/1, etc)
+Check MM/CAR ids/weights to ensure they are valid before running MLwiN
+Allow specification of all ID/Weight columns instead of assuming they are consecutive
 Display hierarchy information in the model output
 Check all variables in the model actually exist in the data
 Allow more data variables by finding empty columns for output rather than hardcoding column numbers
