@@ -202,22 +202,6 @@ version:date:md5:filename:x64:trial
     if (resi.store) resifile=gsub("\\", "/", tempfile("resifile_",tmpdir =workdir,fileext=".dta"), fixed=TRUE)
     if (!is.null(resi.store.levs)) resichains=gsub("\\", "/", tempfile("resichains_",tmpdir =workdir,fileext=".dta"), fixed=TRUE)
 
-    sort.force=estoptions$sort.force
-    if (is.null(sort.force)) sort.force = FALSE
-
-    sort.ignore=estoptions$sort.ignore
-    if (is.null(sort.ignore)) sort.ignore = FALSE
-
-    if (sort.ignore == FALSE) {
-        if (sort.force == TRUE) {
-            indata <- indata[do.call(order, indata[levID]), ]
-        } else {
-            if (is.null(estoptions$xclass) && all(do.call(order, indata[levID]) == seq(1, nrow(indata))) == FALSE) {
-                stop("The input data are not sorted according to the model hierarchy")
-            }
-        }
-    }
-
     invars=Formula.translate(Formula,levID, D, EstM, indata)
     resp=invars$resp
     expl=invars$expl
@@ -267,6 +251,13 @@ version:date:md5:filename:x64:trial
 
     drop.data=estoptions$drop.data
     if (is.null(drop.data)) drop.data=T
+
+    sort.force=estoptions$sort.force
+    if (is.null(sort.force)) sort.force = FALSE
+
+    sort.ignore=estoptions$sort.ignore
+    if (is.null(sort.ignore)) sort.ignore = FALSE
+
 
     if (!is.null(centring)){
         for (p in names(centring)){
@@ -328,11 +319,35 @@ version:date:md5:filename:x64:trial
         }
 
         outdata <- indata[, outvars]
-
-        write.dta(outdata, dtafile, version = 10)
     } else {
-        write.dta(indata, dtafile, version = 10)
+        outdata <- indata
     }
+
+    if (sort.ignore == FALSE) {
+        # Don't enforce sorting on level-1 in cases where it isn't used
+        if (D[1] == 'Normal' || D[1] == 'Binomial' || D[1] == 'Poisson' || D[1] == 'Negbinom') {
+            outdata[["_sortindex"]] <- seq(1, nrow(outdata)) # replace with sequence to keep sorting stable
+            l1id <- levID[length(levID)]
+            levID[length(levID)] <- "_sortindex"
+        }
+
+        # Check/sort data as approriate
+        if (sort.force == TRUE) {
+            outdata <- outdata[do.call(order, outdata[levID]), ]
+        } else {
+            if (is.null(estoptions$xclass) && all(do.call(order, outdata[levID]) == seq(1, nrow(outdata))) == FALSE) {
+                stop("The input data are not sorted according to the model hierarchy")
+            }
+        }
+
+        # Restore original level ID and drop temporary variable
+        if (D[1] == 'Normal' || D[1] == 'Binomial' || D[1] == 'Poisson' || D[1] == 'Negbinom') {
+            levID[length(levID)] <- l1id
+            outdata[["_sortindex"]] <- NULL
+        }
+    }
+
+    write.dta(outdata, dtafile, version = 10)
 
     finalClean <- function(clean.files){
       if (clean.files){
