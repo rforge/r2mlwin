@@ -177,21 +177,6 @@ version:date:md5:filename:x64:trial
 
     centring = estoptions$centring
 
-
-    if (!is.null(centring)){
-        for (p in names(centring)){
-            if(as.integer(centring[[p]][1])==1){
-                indata[[p]]=indata[[p]]-mean(indata[[p]])
-            }
-            if(as.integer(centring[[p]][1])==2){
-                indata[[p]]=indata[[p]]-mean(indata[[p]][as.logical(indata[[centring[[p]][2]]])])
-            }
-            if(as.integer(centring[[p]][1])==3){
-                indata[[p]]=indata[[p]]-as.integer(centring[[p]][2])
-            }
-        }
-    }
-
     clean.files=estoptions$clean.files
     if (is.null(clean.files)) clean.files=T
 
@@ -280,7 +265,74 @@ version:date:md5:filename:x64:trial
     fact=estoptions$fact
     xclass=estoptions$xclass
 
-    write.dta(indata, dtafile, version = 10)
+    drop.data=estoptions$drop.data
+    if (is.null(drop.data)) drop.data=T
+
+    if (!is.null(centring)){
+        for (p in names(centring)){
+            if(as.integer(centring[[p]][1])==1){
+                indata[[p]]=indata[[p]]-mean(indata[[p]])
+            }
+            if(as.integer(centring[[p]][1])==2){
+                indata[[p]]=indata[[p]]-mean(indata[[p]][as.logical(indata[[centring[[p]][2]]])])
+            }
+            if(as.integer(centring[[p]][1])==3){
+                indata[[p]]=indata[[p]]-as.integer(centring[[p]][2])
+            }
+        }
+    }
+
+    if (drop.data) {
+        outvars <- c(resp, levID)
+        for (e in expl) {
+            outvars <- c(outvars, unlist(strsplit(e,"\\:")))
+        }
+
+        # Denominators/Offsets if applicable
+        if (D[1] == 'Binomial' || D[1] == 'Poisson' || D[1] == 'Multinomial' || D[1] == 'Negbinom') {
+            outvars <- c(outvars, D[3])
+        }
+        if (D[1] == 'Mixed') {
+            for (i in 2:length(D)) {
+                 if (D[[i]][1] == 'Binomial' || D[[i]][1] == 'Poisson')
+                 outvars <- c(outvars, D[[i]][3])
+            }
+        }
+
+        # (R)IGLS Weights if applicable
+        if (!is.null(weighting)) {
+            for (w in weighting$weights) {
+                if (!is.na(w)) {
+                    outvars <- c(outvars, w)
+                }
+            }
+        }
+
+        # Multiple membership IDs if applicable
+        if (!is.null(xclass)) {
+            for (i in 1:length(as.numeric(xclass[[1]]))) {
+                lev <- as.numeric(xclass[[1]][i])
+                num <- as.numeric(xclass[[2]][i])
+                weightcol <- xclass[[3]][i]
+                idcol <- xclass[[4]][i]
+                if (is.na(idcol)) {
+                    idcol <- levID[lev]
+                }
+                idstart = which(colnames(indata) == idcol)
+                idend = idstart+(num-1)
+                weightstart = which(colnames(indata) == weightcol)
+                weightend = weightstart+(num-1)
+                outvars <- c(outvars, colnames(indata)[idstart:idend])
+                outvars <- c(outvars, colnames(indata)[weightstart:weightend])
+            }
+        }
+
+        outdata <- indata[, outvars]
+
+        write.dta(outdata, dtafile, version = 10)
+    } else {
+        write.dta(indata, dtafile, version = 10)
+    }
 
     finalClean <- function(clean.files){
       if (clean.files){
