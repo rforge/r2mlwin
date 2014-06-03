@@ -15,6 +15,7 @@ Fix CAR model example when running in OpenBUGS
 Fix negative reported observations for some multivariate models
 Allow pausing before the model fit to check the specification/starting values
 Add checking for mixed response models (MLwiN allows Normals plus binaries OR Poissons, all discrete responses must use the same link function)
+Revisit interactions, e.g. the following doesn't work: formula=log(obs,logexp)~(0|nation[]+nation[]:uvbi)+(2|cons)
 
 Not currently implemented:
 Multinomial proportions - need manual calculation/reshaping
