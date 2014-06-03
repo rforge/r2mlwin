@@ -217,8 +217,21 @@ version:date:md5:filename:x64:trial
     if (resi.store) resifile=gsub("\\", "/", tempfile("resifile_",tmpdir =workdir,fileext=".dta"), fixed=TRUE)
     if (!is.null(resi.store.levs)) resichains=gsub("\\", "/", tempfile("resichains_",tmpdir =workdir,fileext=".dta"), fixed=TRUE)
 
-    write.dta(indata, dtafile, version = 10)
+    sort.force=estoptions$sort.force
+    if (is.null(sort.force)) sort.force = FALSE
 
+    sort.ignore=estoptions$sort.ignore
+    if (is.null(sort.ignore)) sort.ignore = FALSE
+
+    if (sort.ignore == FALSE) {
+        if (sort.force == TRUE) {
+            indata <- indata[do.call(order, indata[levID]), ]
+        } else {
+            if (is.null(estoptions$xclass) && all(do.call(order, indata[levID]) == seq(1, nrow(indata))) == FALSE) {
+                stop("The input data are not sorted according to the model hierarchy")
+            }
+        }
+    }
 
     invars=Formula.translate(Formula,levID, D, EstM, indata)
     resp=invars$resp
@@ -242,7 +255,6 @@ version:date:md5:filename:x64:trial
         }
     }
 
-
     if (D[1]=='Multinomial'||D[1]=='Multivariate Normal'||D[1]=='Mixed'){
         levID=c(levID,NA)
     }
@@ -253,23 +265,22 @@ version:date:md5:filename:x64:trial
     notation=estoptions$notation
     if(is.null(notation)) notation="level"
 
-
     mem.init=estoptions$mem.init
     if(is.null(mem.init)) mem.init="default"
 
-
     optimat=estoptions$optimat
     if(is.null(optimat)) optimat=F
-
     
     nonlinear=estoptions$nonlinear
-
     if (is.null(nonlinear)) nonlinear=c(0,1)
+
     Meth=estoptions$Meth
     if(is.null(Meth)) Meth=1
 
     fact=estoptions$fact
     xclass=estoptions$xclass
+
+    write.dta(indata, dtafile, version = 10)
 
     finalClean <- function(clean.files){
       if (clean.files){

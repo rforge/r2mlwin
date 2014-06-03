@@ -1,3 +1,11 @@
+Tue Jun 3 2014
+1. Bug fixing
+   * Check the input data are sorted according to the model hierarchy and provide error if not
+
+2. Changes
+   * Add sort.force option to make R2MLwiN sort the data as expected
+   * Add sort.ignore option to disable checking of sort order
+
 Mon May 12 2014
 1. Bug fixing
    * Allow R formula object to be used when fitting factor models
