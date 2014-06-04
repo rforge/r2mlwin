@@ -283,7 +283,7 @@ version:date:md5:filename:x64:trial
                 num <- as.numeric(xclass$N1[i])
                 weightcol <- xclass$weight[i]
                 idcol <- xclass$id[i]
-                if (is.na(idcol) || is.null(idcol)) {
+                if (is.null(idcol) || is.na(idcol)) {
                     idcol <- rev(na.omit(levID))[lev]
                 }
                 idstart = which(colnames(indata) == idcol)
