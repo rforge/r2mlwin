@@ -34,6 +34,8 @@ summary(lips1)
 
 # 17.2 Fixed effects models . . . . . . . . . . . . . . . . . . . . . . .248
 
+lips1<- lips1[with(lips1, order(neigh1,area,area)), ]
+
 formula=log(obs,offs)~(0|cons)
 levID=c('neigh1','area','area')
 estoptions= list(EstM=1,notation="class")

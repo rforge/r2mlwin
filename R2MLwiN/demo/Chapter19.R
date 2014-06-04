@@ -56,7 +56,7 @@ round(cor(jspmix1[,c("sex","fluent","ravens","english","behaviour")]),4)
 
 formula=c(english,probit(behaviour,denomb))~(`0s`|cons+sex+ravens)+(`0c`|fluent(1,0))+(`1s`|cons.english)
 levID= 'id'
-estoptions= list(EstM=1,mcmcMeth=list(fixM=1,residM=1,Lev1VarM=1))
+estoptions= list(EstM=1,mcmcMeth=list(fixM=1,residM=1,Lev1VarM=1),sort.ignore=TRUE)
 (mymodel=runMLwiN(formula, levID, D=c("Mixed","Normal","Binomial"), indata=jspmix1, estoptions=estoptions))
 
 # 19.4 Multilevel mixed response model . . . . . . . . . . . . . . . . . 294

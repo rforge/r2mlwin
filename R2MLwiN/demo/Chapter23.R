@@ -91,12 +91,17 @@ sixway(mymodel["chains"][,"FP_Belgium"],acf.maxlag=100,"beta_1")
 ## Read alevchem data
 data(alevchem)
 
+# Note: Establishment codes on their own do not uniquely identify schools.
+# Schools are instead uniquely identified by LEA code, establishment ID 
+# combination. Thus, here we generated a unique school ID.
+alevchem$school <- as.numeric(factor(paste0(alevchem$lea, alevchem$estab)))
+
 alevchem["gcseav"]=double2singlePrecision(alevchem["gcse_tot"]/alevchem["gcse_no"]-6)
 alevchem["gcse2"]=double2singlePrecision(alevchem["gcseav"]^2)
 alevchem["gcse3"]=double2singlePrecision(alevchem["gcseav"]^3)
 
 formula=logit(a_point,cons,A) ~ (`0s`|cons)+(`0c`|gcseav+gcse2+gender) +( `2c` | cons)
-levID=c('estab','pupil')
+levID=c('school','pupil')
 ##MCMC
 estoptions= list(EstM=1)
 ## Fit the model

@@ -38,16 +38,17 @@ data(gcsecomp1)
 formula=c(written,csework)~(0|cons)+(1|cons)
 levID='student'
 ##IGLS
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=gcsecomp1))
+estoptions= list(sort.ignore=TRUE)
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=gcsecomp1, estoptions=estoptions))
 ##MCMC
-estoptions= list(EstM=1)
+estoptions= list(EstM=1, sort.ignore=TRUE)
 (mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=gcsecomp1, estoptions=estoptions))
 
 # 18.3 Adding predictor variables . . . . . . . . . . . . . . . . . . . .270
 
 formula=c(written,csework)~(0|cons+female)+(1|cons)
 levID='student'
-estoptions= list(EstM=1)
+estoptions= list(EstM=1, sort.ignore=TRUE)
 (mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=gcsecomp1, estoptions=estoptions))
 
 # 18.4 A multilevel multivariate model . . . . . . . . . . . . . . . . . 271
@@ -105,7 +106,7 @@ data(gcsemv1)
 
 formula=c(written,csework)~(0|cons+female)+(1|cons)
 levID='student'
-estoptions= list(EstM=1)
+estoptions= list(EstM=1, sort.ignore=TRUE)
 (mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=gcsemv1, estoptions=estoptions))
 
 formula=c(written,csework)~(0|cons+female)+(2|cons)+(1|cons)

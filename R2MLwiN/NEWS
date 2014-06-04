@@ -3,6 +3,7 @@ Tue Jun 3 2014
    * Check the input data are sorted according to the model hierarchy and provide error if not
    * Only send the data used in the model to MLwiN
    * Interpret xclass by option names instead of positions
+   * Updated demos to fix cases where that data is not sorted as expected
 
 2. Changes
    * Add sort.force option to make R2MLwiN sort the data as expected
