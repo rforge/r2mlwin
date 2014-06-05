@@ -16,6 +16,8 @@ Fix negative reported observations for some multivariate models
 Allow pausing before the model fit to check the specification/starting values
 Add checking for mixed response models (MLwiN allows Normals plus binaries OR Poissons, all discrete responses must use the same link function)
 Revisit interactions, e.g. the following doesn't work: formula=log(obs,logexp)~(0|nation[]+nation[]:uvbi)+(2|cons)
+Add an option to allow the model to be set up but not run, useful for example if we just want to run a BUGS model or see the MLwiN syntax
+Allow starting values to be specified for IGLS models
 
 Not currently implemented:
 Multinomial proportions - need manual calculation/reshaping
@@ -24,3 +26,31 @@ Allow negative variances (IGLS) - RESE command
 Extra binomial/poisson/negative binomial/multinomial variation (IGLS) - EXTR command
 Allow user specified design matrix (IGLS) - SETD command
 Debugging option to extract internal model matrices (IGLS) - XSS/VMAT/ZMAT/YRES/YMAT/XMAT commands
+
+Extra checks required:
+
+IGLS:
+Check model is univariate if weights are specified
+Check lower levels are non-equal standardised weights if standardised weights are specified
+Don't allow MCMC specific options to be specified
+
+MCMC:
+Don't allow leverage/deletion/influence/etc residuals
+Check model is multivariate if factors are specified
+Check CAR is only specified at one level (unless CAR mean centring is specified)
+Check responses are valid for MCMC (e.g. no Negbinom or mixtures including Poisson, or link functions other than probit)
+Don't allow IGLS specific options to be specified
+
+All:
+Check distribution and link functions are valid
+Check model has more than one level if > MQL1 specified
+Check denom has been specified with binomial models
+Check model is Poisson/Negbinom if offset is specified
+Check binary response are 0/1 and binomial are 0-1
+Check Poisson response are integer and >= 0
+Check there are no variables random at level 1 if model is discrete
+Check multinomial models have >=3 responses
+Check base category is defined (and exists in the data) for multinomial models
+Check hierarchical centring level is >=2
+Check model is univariate if measurement error is specified
+Check ordered multinomial base is either the highest or lowest value
