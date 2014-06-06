@@ -1,7 +1,7 @@
 predLines <- function(object, indata, xname, lev=2, selected=NULL, probs=c(.025,.975), 
-legend=TRUE, legend.space="top", legend.ncol=4, ...){ 
-
-## This function is to draw predicted lines at higher levels (level>=2)
+                      legend=TRUE, legend.space="top", legend.ncol=4, ...){ 
+  
+  ## This function is to draw predicted lines at higher levels (level>=2)
   if (lev <2)
     stop("lev has to be greater than 1")
   cls <- class(object)
@@ -19,13 +19,7 @@ legend=TRUE, legend.space="top", legend.ncol=4, ...){
     if (is.null(selected)){
       selected <- unique(categrv)
     }
-
-    #if (is.character(resi)){
-    #  myresi <- read.dta(resi)
-    #}else{
-    #  myresi <- resi
-    #}
-
+    
     est.names <- names(myresi)[grep(paste("lev_",lev,"_resi_est",sep=""),names(myresi))]
     if (length(est.names)==1){
       est0 <- na.omit(myresi[[est.names]])
@@ -47,8 +41,7 @@ legend=TRUE, legend.space="top", legend.ncol=4, ...){
         stop("The number of groups do not match the number of residual estimates.")
       }   
     }
-
-
+    
     rpx.names <- sub(paste("lev_",lev,"_",sep=""),"",colnames(est))
     fp.names <- sub("FP_","",names(FP))
     tval <- 0
@@ -64,59 +57,51 @@ legend=TRUE, legend.space="top", legend.ncol=4, ...){
       }
       tval <- tval+indata[[rpx.names[i]]]*est[,i]  
     }
-
-
+    
     pred.min <- min(tval)
     pred.max <- max(tval)
     pred.diff <- pred.max-pred.min
     x <- indata[[xname]]
     x.min <- min(x)
     x.max <- max(x)
-
+    
     if (legend){
       key=list(lines = Rows(trellis.par.get("superpose.line"),1:length(selected)),
-      text=list(lab= as.character(selected)), space=legend.space, columns=legend.ncol)
+               text=list(lab= as.character(selected)), space=legend.space, columns=legend.ncol)
     }else{
       key <- NULL
     }   
-                  
+    
     trellis.obj <- xyplot(tval~x, 
-          prepanel = function(x,y,...){list(xlim=c(x.min, x.max), ylim=c(pred.min,pred.max))},
-          groups=categrv,
-          panel= function(x,y, groups,...){  
-            col <- Rows(trellis.par.get("superpose.line"),1:length(selected))$col
-            j <- 1
-            for (i in selected){
-              ypred <- y[which(groups==i)]
-              panel.xyplot(x=sort(x[which(groups==i)]),y=ypred[order(x[which(groups==i)])], col=col[j], type="l", ...)
-              j <- j +1
-            }
-          },key=key, ylab="ypred", xlab=xname, ...)
-     print(trellis.obj)
+                          prepanel = function(x,y,...){list(xlim=c(x.min, x.max), ylim=c(pred.min,pred.max))},
+                          groups=categrv,
+                          panel= function(x,y, groups,...){  
+                            col <- Rows(trellis.par.get("superpose.line"),1:length(selected))$col
+                            j <- 1
+                            for (i in selected){
+                              ypred <- y[which(groups==i)]
+                              panel.xyplot(x=sort(x[which(groups==i)]),y=ypred[order(x[which(groups==i)])], col=col[j], type="l", ...)
+                              j <- j +1
+                            }
+                          },key=key, ylab="ypred", xlab=xname, ...)
+    print(trellis.obj)
   }  
   if (cls=="mlwinfitMCMC"){
-
-  ## This function is to draw predicted lines (medians, lower quantiles and upper quantiles) at higher levels (level>=2) 
-    #resi.chains <- as.data.frame(object["resi.chains"])
-    #chains <- as.data.frame(object["chains"])
+    
+    ## This function is to draw predicted lines (medians, lower quantiles and upper quantiles) at higher levels (level>=2) 
     resi.chains <- object["resi.chains"][[paste0("resi_lev", lev)]]
     chains <- object["chains"]
     levID <- object["levID"]
-
+    
     categrv=indata[[rev(levID)[lev]]]
     if (is.null(selected)){
-        selected =unique(categrv)
+      selected =unique(categrv)
     }
-
-    #if (is.character(resi.chains)){
-    #    resi.chains=read.dta(resi.chains)
-    #}
-
+    
     rpx.names=sub(paste("RP",lev,"_var_",sep=""),"",colnames(chains)[grep(paste("RP",lev,"_var_",sep=""),colnames(chains))])
     lenrpx=length(rpx.names)
     lencateg=length(unique(categrv))
-
-    #resi.chains=matrix(resi.chains[[grep(paste("resi_lev",lev,sep=""),names(resi.chains))]],nrow=lenrpx*lencateg)
+    
     FP.pos=grep("FP_",colnames(chains))
     fp.names=sub("FP_","",colnames(chains)[FP.pos])
     tval=matrix(0, nrow(indata), nrow(chains))
@@ -127,7 +112,7 @@ legend=TRUE, legend.space="top", legend.ncol=4, ...){
       }
       tval=tval+fpxdata%o%chains[,FP.pos[i]]
     }
-
+    
     for (i in 1:length(rpx.names)){  
       for (j in 1:lencateg) {
         rpxdata = indata[[rpx.names[i]]][categrv==j]
@@ -137,7 +122,7 @@ legend=TRUE, legend.space="top", legend.ncol=4, ...){
         tval[categrv==j,] = tval[categrv==j,]+(rpxdata%o%resi.chains[,((i-1)*lencateg)+j])
       }
     }
-
+    
     tval.med=apply(tval,1, median)
     tval.low=apply(tval,1,function(x) quantile(x,probs[1]))
     tval.up=apply(tval,1,function(x) quantile(x,probs[2]))
@@ -145,31 +130,31 @@ legend=TRUE, legend.space="top", legend.ncol=4, ...){
     x=indata[[xname]]
     x.min=min(x) 
     x.max=max(x)
-
+    
     if (legend){
       key=list(lines = Rows(trellis.par.get("superpose.line"),1:length(selected)),
-      text=list(lab= as.character(selected)), space=legend.space, columns=legend.ncol)
+               text=list(lab= as.character(selected)), space=legend.space, columns=legend.ncol)
     }else{
       key <- NULL
     }   
-
+    
     trellis.obj <- xyplot(tval~x, 
-          prepanel = function(x,y,...){list(xlim=c(x.min, x.max), ylim=c(pred.min,pred.max))},
-          groups=categrv,
-          panel= function(x,y, groups,...){  
-            col <- Rows(trellis.par.get("superpose.line"),1:length(selected))$col
-            j <- 1
-            for (i in selected){
-              ypred <- y[which(groups==i)]
-              ypred.low=tval.low[which(categrv==i)]
-              ypred.up=tval.up[which(categrv==i)]
-              panel.xyplot(x=sort(x[which(groups==i)]),y=ypred[order(x[which(groups==i)])], col=col[j], type="l", ...)
-              panel.xyplot(x=sort(x[which(groups==i)]),y=ypred.low[order(x[which(groups==i)])], col=col[j], type="l",lty=3, ...)
-              panel.xyplot(x=sort(x[which(groups==i)]),y=ypred.up[order(x[which(groups==i)])], col=col[j], type="l",lty=3, ...)
-              j <- j +1
-            }
-          },key=key, ylab="ypred", xlab=xname, ...)
-     print(trellis.obj)
+                          prepanel = function(x,y,...){list(xlim=c(x.min, x.max), ylim=c(pred.min,pred.max))},
+                          groups=categrv,
+                          panel= function(x,y, groups,...){  
+                            col <- Rows(trellis.par.get("superpose.line"),1:length(selected))$col
+                            j <- 1
+                            for (i in selected){
+                              ypred <- y[which(groups==i)]
+                              ypred.low=tval.low[which(categrv==i)]
+                              ypred.up=tval.up[which(categrv==i)]
+                              panel.xyplot(x=sort(x[which(groups==i)]),y=ypred[order(x[which(groups==i)])], col=col[j], type="l", ...)
+                              panel.xyplot(x=sort(x[which(groups==i)]),y=ypred.low[order(x[which(groups==i)])], col=col[j], type="l",lty=3, ...)
+                              panel.xyplot(x=sort(x[which(groups==i)]),y=ypred.up[order(x[which(groups==i)])], col=col[j], type="l",lty=3, ...)
+                              j <- j +1
+                            }
+                          },key=key, ylab="ypred", xlab=xname, ...)
+    print(trellis.obj)
   }
   invisible(trellis.obj)
 }

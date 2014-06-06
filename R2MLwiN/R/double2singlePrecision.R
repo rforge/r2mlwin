@@ -1,16 +1,16 @@
 double2singlePrecision <- function(x) {
-    ## A wrapped function is used to change double to single
-    if(is.matrix(x)||is.data.frame(x)){
-       flag=0
-       if(is.data.frame(x)) flag=1
-       x=apply(x,2, function(y) if (is.double(y)) .changePrecision(y, size=4) else y)
-       if (flag==1) x=as.data.frame(x)
-    }else{
-         if (is.vector(x)&&is.double(x)){
-           x=.changePrecision(x, size=4)
-         }
+  ## A wrapped function is used to change double to single
+  if(is.matrix(x)||is.data.frame(x)){
+    flag=0
+    if(is.data.frame(x)) flag=1
+    x=apply(x,2, function(y) if (is.double(y)) .changePrecision(y, size=4) else y)
+    if (flag==1) x=as.data.frame(x)
+  }else{
+    if (is.vector(x)&&is.double(x)){
+      x=.changePrecision(x, size=4)
     }
-    x
+  }
+  x
 }
 
 ### function .changePrecision
