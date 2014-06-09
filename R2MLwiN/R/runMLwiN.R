@@ -1,4 +1,10 @@
-runMLwiN <- function(Formula, levID, D="Normal", indata=NULL, estoptions=list(EstM=0), BUGO=NULL, MLwiNPath=NULL,stdout="",stderr="",workdir=tempdir(),checkversion=TRUE) {
+runMLwiN <- function(Formula, levID, D="Normal", data=NULL, estoptions=list(EstM=0), BUGO=NULL, MLwiNPath=NULL,stdout="",stderr="",workdir=tempdir(),checkversion=TRUE, indata=NULL) {
+  if (!is.null(indata) && !is.null(data)) {
+    stop("Only one of data and indata can be specified")
+  }
+  if (!is.null(data)) {
+    indata <- data
+  }
   if (is.null(indata)) {
     stop("Using the currently attached data is not yet implemented")
   }
@@ -139,10 +145,109 @@ version:date:md5:filename:x64:trial
   
   # the current function call
   cl <- match.call()
-  
+
+  invars = Formula.translate(Formula, levID, D, indata)
+
   EstM=estoptions$EstM
   if (is.null(EstM)) EstM=0
+  if (EstM != 0 && EstM != 1) {
+    stop("Invalid EstM option (can be zero or one)")
+  }
+
+  resp = invars$resp
+  expl = invars$expl
+
+  D = invars$D
+  if (EstM == 0) {
+    if (!is.element(D[1], c("Normal", "Binomial", "Poisson", "Negbinom", "Multivariate Normal", "Mixed", "Multinomial"))) {
+      stop(cat("Invalid distribution specified", D[1]))
+    }
+    if (D[1] == "Binomial") {
+      if (!is.element(D[2], c("logit", "probit", "cloglog"))) {
+        stop(cat("Invalid link function specified", D[2]))
+      }
+    }
+    if (D[1] == "Mixed") {
+      for (i in 2:length(D)) {
+        if (!is.element(D[[i]][[1]], c("Normal", "Binomial", "Poisson"))) {
+          stop(cat("Invalid distribution specified", D[[i]][[1]]))
+        }
+        if (D[[i]][[1]] == "Binomial") {
+          if (!is.element(D[[i]][[2]], c("logit", "probit", "cloglog"))) {
+            stop(cat("Invalid link function specified", D[[i]][[2]]))
+          }
+        }
+      }
+    }
+    if (D[1] == "Multinomial") {
+      if (D[4] == 1) { # Unordered
+        if (D[2] != "logit") {
+          stop("Invalid link function specified")
+        }
+      }
+      if (D[4] == 0) { # Ordered
+        if (!is.element(D[2], c("logit", "probit", "cloglog"))) {
+          stop(cat("Invalid link function specified", D[2]))
+        }
+      }
+    }
+  } else {
+    if (!is.element(D[1], c("Normal", "Binomial", "Poisson", "Multivariate Normal", "Mixed", "Multinomial"))) {
+      stop(cat("Invalid distribution specified", D[1]))
+    }
+    if (D[1] == "Binomial") {
+      if (!is.element(D[2], c("logit", "probit", "cloglog"))) {
+          stop(cat("Invalid link function specified", D[2]))
+      }
+    }
+    if (D[1] == "Mixed") {
+      for (i in 2:length(D)) {
+        if (!is.element(D[[i]][[1]], c("Normal", "Binomial"))) {
+          stop(cat("Invalid distribution specified", D[[i]][[1]]))
+        }
+        if (D[[i]][[1]] == "Binomial") {
+          if (!D[[i]][[2]] == "probit") {
+            stop(cat("Invalid link function specified", D[[i]][[2]]))
+          }
+        }
+      }
+    }
+    if (D[1] == "Multinomial") {
+      if (D[4] == 1) { # Unordered
+        if (D[2] != "logit") {
+          stop("Invalid link function specified")
+        }
+      }
+      if (D[4] == 0) { # Ordered
+        if (!is.element(D[2], c("logit", "probit", "cloglog"))) {
+          stop(cat("Invalid link function specified", D[2]))
+        }
+      }
+    }
+  }
+
+  rp = invars$rp
+  nonfp = invars$nonfp
+  if(is.null(nonfp)) {
+    if(is.list(expl)){
+      nonfp = list("nonfp.sep"=NA,"nonfp.common"=NA)
+    }else{
+      nonfp = NA
+    }
+  }
+  categ = invars$categ
+  if(is.null(categ)){
+    categ=NULL
+  }else{
+    if (is.null(rownames(categ))){
+      rownames(categ)=c("var","ref","ncateg")
+    }
+  }
   
+  if (D[1]=='Multinomial'||D[1]=='Multivariate Normal'||D[1]=='Mixed'){
+    levID=c(levID,NA)
+  }
+   
   show.file=estoptions$show.file
   if (is.null(show.file)) show.file = F
   
@@ -161,65 +266,35 @@ version:date:md5:filename:x64:trial
   if ("variance"%in%resioptions&&("standardised"%in%resioptions||"deletion"%in%resioptions||"leverage"%in%resioptions)){
     stop("variance will not be calculated together with standardised or deletion or leverage. Please remove variance in resioptions, and then standard error will be calculated instead.")
   }
+
+  if (EstM == 1 && ("sampling" %in% resioptions || "leverage" %in% resioptions || "infleuence" %in% resioptions || "deletion" %in% resioptions)) {
+    stop("Invalid residual option specified for MCMC estimation")
+  }
   
-  resi.store.levs=estoptions$resi.store.levs
+  resi.store.levs = estoptions$resi.store.levs
+  if (EstM == 0 && !is.null(resi.store.levs)) {
+    stop("resi.store.levs option is not valid for (R)IGLS estimation")
+  }
   
   weighting = estoptions$weighting
+  if (EstM == 1 && !is.null(weighting)) {
+    stop("weighting option is not valid for MCMC estimation")
+  }
+  if (!is.null(weighting) && (!is.element(D[1], c("Normal", "Poisson", "Binomial", "Negbinom")))) {
+    stop("weighting can only be used in univariate models")
+  }
   
   centring = estoptions$centring
   
   clean.files=estoptions$clean.files
   if (is.null(clean.files)) clean.files=T
-  
-  if (!file.access(workdir)==0) dir.create(workdir)
-  
-  dtafile = gsub("\\", "/", tempfile("dtafile_",tmpdir =workdir, fileext=".dta"), fixed=TRUE)
-  macrofile =gsub("\\", "/", tempfile("macrofile_",tmpdir =workdir, fileext=".txt"), fixed=TRUE)
-  
-  args <- paste0("/run ", "\"" , macrofile, "\"")
-  if (debugmode){
-    args <- paste0("/nogui ", args)
-  }
-  
-  IGLSfile =gsub("\\", "/", tempfile("IGLSfile_",tmpdir =workdir, fileext=".dta"), fixed=TRUE)
-  if (EstM==1) MCMCfile =gsub("\\", "/", tempfile("MCMCfile_",tmpdir =workdir, fileext=".dta"), fixed=TRUE)
-  if (EstM==1) chainfile =gsub("\\", "/", tempfile("chainfile_",tmpdir =workdir, fileext=".dta"), fixed=TRUE)
-  if (!is.null(BUGO))  modelfile=gsub("\\", "/", tempfile("modelfile_",tmpdir =workdir, fileext=".txt"), fixed=TRUE) else modelfile=NULL
-  if (!is.null(BUGO))  initfile=gsub("\\", "/", tempfile("initfile_",tmpdir =workdir,fileext=".txt"), fixed=TRUE) else initfile=NULL
-  if (!is.null(BUGO))  datafile=gsub("\\", "/", tempfile("datafile_",tmpdir =workdir,fileext=".txt"), fixed=TRUE) else datafile=NULL
-  if (!is.null(BUGO))  scriptfile=gsub("\\", "/", tempfile("scriptfile_",tmpdir =workdir,fileext=".txt"), fixed=TRUE)
-  if (!is.null(BUGO))  bugEst=gsub("\\", "/", tempfile("bugEst_",tmpdir =workdir, fileext=".txt"), fixed=TRUE)
-  if (resi.store) resifile=gsub("\\", "/", tempfile("resifile_",tmpdir =workdir,fileext=".dta"), fixed=TRUE)
-  if (!is.null(resi.store.levs)) resichains=gsub("\\", "/", tempfile("resichains_",tmpdir =workdir,fileext=".dta"), fixed=TRUE)
-  
-  invars=Formula.translate(Formula,levID, D, indata)
-  resp=invars$resp
-  expl=invars$expl
-  D =invars$D
-  rp=invars$rp
-  nonfp=invars$nonfp
-  if(is.null(nonfp)) {
-    if(is.list(expl)){
-      nonfp=list("nonfp.sep"=NA,"nonfp.common"=NA)
-    }else{
-      nonfp=NA
-    }
-  }
-  categ=invars$categ
-  if(is.null(categ)){
-    categ=NULL
-  }else{
-    if (is.null(rownames(categ))){
-      rownames(categ)=c("var","ref","ncateg")
-    }
-  }
-  
-  if (D[1]=='Multinomial'||D[1]=='Multivariate Normal'||D[1]=='Mixed'){
-    levID=c(levID,NA)
-  }
-  
+   
   clre=estoptions$clre
   smat=estoptions$smat
+
+  if (!is.null(smat) && !is.null(clre)) {
+    stop("clre and smat cannot current both be specified at once")
+  }
   
   notation=estoptions$notation
   if(is.null(notation)) notation="level"
@@ -237,8 +312,121 @@ version:date:md5:filename:x64:trial
   if(is.null(Meth)) Meth=1
   
   fact=estoptions$fact
+  if (EstM == 0 && !is.null(fact)) {
+    stop("Factor models not available with (R)IGLS estimation")
+  }
+  if (!is.null(fact) && D[1] != "Multivariate Normal") {
+    stop("Factor models can only be defined for multivariate models")
+  }
+
   xclass=estoptions$xclass
-  
+  if (EstM == 0 && !is.null(xclass)) {
+    stop("Cross-classification is not available with (R)IGLS estimation")
+  }
+
+  merr=estoptions$merr
+  if (EstM == 0 && !is.null(merr)) {
+    stop("Measurement error is not available with (R)IGLS estimation")
+  }
+  if (!is.null(merr) && (!is.element(D[1], c("Normal", "Poisson", "Binomial", "Negbinom")))) {
+    stop("measurement error can only be used in univariate models")
+  }
+  mcmcMeth=estoptions$mcmcMeth
+  if (EstM == 0 && !is.null(merr)) {
+    stop("MCMC method options cannot be specified with (R)IGLS estimation")
+  }
+
+  startval=estoptions$startval
+
+  if (EstM == 1) {
+    if (!is.null(mcmcMeth$startval)) {
+      warning("startval is now specified directly within estoptions")
+      startval=mcmcMeth$startval
+    }
+    seed=mcmcMeth$seed
+    if(is.null(seed)) seed=1
+    iterations=mcmcMeth$iterations
+    if(is.null(iterations)) iterations=5000
+    burnin=mcmcMeth$burnin
+    if(is.null(burnin)) burnin=500
+    thinning=mcmcMeth$thinning
+    if(is.null(thinning)) thinning=1
+    priorParam=mcmcMeth$priorParam
+    if(is.null(priorParam)) priorParam="default"
+    scale =mcmcMeth$scale
+    if(is.null(scale)) scale=5.8
+    refresh=mcmcMeth$refresh
+    if(is.null(refresh)) refresh=50
+    fixM=mcmcMeth$fixM
+    if(is.null(fixM)) {
+      if(D[1]=="Poisson"||D[1]=="Multinomial"||D[1]=="Binomial"||D[1]=="Mixed"){
+        fixM=2
+      }else{
+        fixM=1
+      }
+    }
+    residM=mcmcMeth$residM
+    if(is.null(residM)){
+      if(D[1]=="Poisson"||D[1]=="Multinomial"||D[1]=="Binomial"||D[1]=="Mixed"){
+        residM=2
+      }else{
+        residM=1
+      }
+    }
+    Lev1VarM=mcmcMeth$Lev1VarM
+    if(is.null(Lev1VarM)){
+      if(D[1]=="Poisson"||D[1]=="Multinomial"||D[1]=="Binomial"||D[1]=="Mixed"){
+        Lev1VarM=2
+      }else{
+        Lev1VarM=1
+      }
+    }
+    OtherVarM=mcmcMeth$OtherVarM
+    if(is.null(OtherVarM)) OtherVarM=1
+    adaption=mcmcMeth$adaption
+    if(is.null(adaption)) adaption=1
+    priorcode=mcmcMeth$priorcode
+    if (is.null(priorcode)) priorcode=1
+    rate=mcmcMeth$rate
+    if (is.null(rate)) rate=50
+    tol=mcmcMeth$tol
+    if (is.null(tol)) tol=10
+    lclo=mcmcMeth$lclo
+    if (is.null(lclo)) lclo =0
+    nopause=mcmcMeth$nopause
+    if (is.null(nopause)) nopause=F
+    dami=mcmcMeth$dami
+  }
+
+  mcmcOptions=estoptions$mcmcOptions
+  if (EstM == 0 && !is.null(merr)) {
+    stop("MCMC options cannot be specified with (R)IGLS estimation")
+  }
+
+  if (EstM == 1) {
+    if(!is.null(mcmcOptions)) {
+      if (D[1]=='Multivariate Normal'){
+        mcmcOptions2=list(orth=0,hcen=0, smcm=0,smvn=0, paex=c(2,0),mcco=0)
+        for (ii in names(mcmcOptions)) mcmcOptions2[[ii]]=mcmcOptions[[ii]]
+        mcmcOptions=mcmcOptions2
+      }else{
+        mcmcOptions2=list(orth=0,hcen=0, smcm=0,smvn=0, paex=c(2,0))
+        for (ii in names(mcmcOptions)) mcmcOptions2[[ii]]=mcmcOptions[[ii]]
+        mcmcOptions=mcmcOptions2
+      }
+    }else{
+      if (D[1]=='Multivariate Normal'){
+        mcmcOptions=list(orth=0,hcen=0, smcm=0,smvn=0, paex=c(2,0),mcco=0)
+      }else{
+        mcmcOptions=list(orth=0,hcen=0, smcm=0,smvn=0, paex=c(2,0))
+      }
+    }
+  }
+
+  if (EstM == 0 && !is.null(BUGO)) {
+    stop("BUGO requires MCMC estimation to be selected")
+  }
+
   drop.data=estoptions$drop.data
   if (is.null(drop.data)) drop.data=T
   
@@ -247,7 +435,6 @@ version:date:md5:filename:x64:trial
   
   sort.ignore=estoptions$sort.ignore
   if (is.null(sort.ignore)) sort.ignore = FALSE
-  
   
   if (!is.null(centring)){
     for (p in names(centring)){
@@ -263,6 +450,34 @@ version:date:md5:filename:x64:trial
     }
   }
   
+  if (D[1] == "Binomial") {
+    if (!all(indata[[resp]] >= 0 && indata[[resp]] <= 1)) {
+      stop("All values for a binomial response must lie between zero and one")
+    }
+  }
+
+  if (D[1] == "Poisson") {
+    if (!all(indata[[resp]] >= 0) && all(as.integer(indata[[resp]]) == indata[[resp]])) {
+      stop("All values for a Poisson response must be positive integers")
+    }
+  }
+
+  if (D[1] == "Mixed") {
+    for (i in 2:length(D)) {
+      if (D[[i]][1] == "Binomial") {
+        if (!all(indata[[resp[i-1]]] >= 0 && indata[[resp[i-1]]] <= 1)) {
+          stop("All values for a binomial response must lie between zero and one")
+        }
+      }
+
+      if (D[[i]][1] == "Poisson") {
+        if (!all(indata[[resp[i-1]]] >= 0) && all(as.integer(indata[[resp[i-1]]]) == indata[[resp]])) {
+          stop("All values for a Poisson response must be positive integers")
+        }
+      }
+    }
+  }
+
   if (drop.data) {
     outvars <- c(resp)
     
@@ -352,6 +567,45 @@ version:date:md5:filename:x64:trial
       outdata[["_sortindex"]] <- NULL
     }
   }
+
+  if (!file.access(workdir)==0) dir.create(workdir)
+  
+  dtafile = gsub("\\", "/", tempfile("dtafile_",tmpdir =workdir, fileext=".dta"), fixed=TRUE)
+  macrofile = gsub("\\", "/", tempfile("macrofile_",tmpdir =workdir, fileext=".txt"), fixed=TRUE)
+  
+  IGLSfile = gsub("\\", "/", tempfile("IGLSfile_", tmpdir=workdir, fileext=".dta"), fixed=TRUE)
+  if (EstM==1) {
+    MCMCfile = gsub("\\", "/", tempfile("MCMCfile_", tmpdir=workdir, fileext=".dta"), fixed=TRUE)
+    chainfile = gsub("\\", "/", tempfile("chainfile_", tmpdir=workdir, fileext=".dta"), fixed=TRUE)
+    if (!is.null(dami)){
+      MIfile=gsub("\\", "/", tempfile("MIfile_",tmpdir =workdir, fileext=".dta"), fixed=TRUE)
+    }else{
+      dami=MIfile=NULL
+    }
+    if (!is.null(fact)){
+      FACTchainfile=gsub("\\", "/", tempfile("factchainfile_",tmpdir =workdir,fileext=".dta"), fixed=TRUE)
+    }else{
+      FACTchainfile=NULL
+    }
+  }
+  if (!is.null(BUGO)) {
+    modelfile = gsub("\\", "/", tempfile("modelfile_", tmpdir=workdir, fileext=".txt"), fixed=TRUE)
+    initfile = gsub("\\", "/", tempfile("initfile_", tmpdir=workdir,fileext=".txt"), fixed=TRUE)
+    datafile = gsub("\\", "/", tempfile("datafile_", tmpdir=workdir,fileext=".txt"), fixed=TRUE)
+    scriptfile = gsub("\\", "/", tempfile("scriptfile_", tmpdir=workdir,fileext=".txt"), fixed=TRUE)
+    bugEst = gsub("\\", "/", tempfile("bugEst_", tmpdir=workdir, fileext=".txt"), fixed=TRUE)
+  } else {
+    modelfile=NULL
+    initfile=NULL
+    datafile=NULL
+  }
+  if (resi.store) resifile = gsub("\\", "/", tempfile("resifile_", tmpdir =workdir,fileext=".dta"), fixed=TRUE)
+  if (!is.null(resi.store.levs)) resichains = gsub("\\", "/", tempfile("resichains_",tmpdir =workdir,fileext=".dta"), fixed=TRUE)
+
+  args <- paste0("/run ", "\"" , macrofile, "\"")
+  if (debugmode){
+    args <- paste0("/nogui ", args)
+  }
   
   write.dta(outdata, dtafile, version = 10)
   
@@ -372,9 +626,9 @@ version:date:md5:filename:x64:trial
     } 
   }
   if (EstM==0){
-    MacroScript1(indata, dtafile,resp, levID, expl, rp, D, nonlinear, categ,notation, nonfp, clre,smat,Meth,
+    MacroScript1(outdata, dtafile,resp, levID, expl, rp, D, nonlinear, categ,notation, nonfp, clre,smat,Meth,
                  BUGO,mem.init, optimat, weighting,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,
-                 IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode)
+                 IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode,startval=startval)
     iterations=estoptions$mcmcMeth$iterations
     if(is.null(iterations)) iterations=5000
     burnin=estoptions$mcmcMeth$burnin
@@ -435,94 +689,7 @@ version:date:md5:filename:x64:trial
   
   # MCMC algorithm (using the starting values obtain from IGLS algorithm)
   if (EstM==1){
-    mcmcMeth=estoptions$mcmcMeth
-    startval=mcmcMeth$startval
-    seed=mcmcMeth$seed
-    if(is.null(seed)) seed=1
-    iterations=mcmcMeth$iterations
-    if(is.null(iterations)) iterations=5000
-    burnin=mcmcMeth$burnin
-    if(is.null(burnin)) burnin=500
-    thinning=mcmcMeth$thinning
-    if(is.null(thinning)) thinning=1
-    priorParam=mcmcMeth$priorParam
-    if(is.null(priorParam)) priorParam="default"
-    scale =mcmcMeth$scale
-    if(is.null(scale)) scale=5.8
-    refresh=mcmcMeth$refresh
-    if(is.null(refresh)) refresh=50
-    fixM=mcmcMeth$fixM
-    if(is.null(fixM)) {
-      if(D[1]=="Poisson"||D[1]=="Multinomial"||D[1]=="Binomial"||D[1]=="Mixed"){
-        fixM=2
-      }else{
-        fixM=1
-      }
-    }
-    residM=mcmcMeth$residM
-    if(is.null(residM)){
-      if(D[1]=="Poisson"||D[1]=="Multinomial"||D[1]=="Binomial"||D[1]=="Mixed"){
-        residM=2
-      }else{
-        residM=1
-      }
-    }
-    Lev1VarM=mcmcMeth$Lev1VarM
-    if(is.null(Lev1VarM)){
-      if(D[1]=="Poisson"||D[1]=="Multinomial"||D[1]=="Binomial"||D[1]=="Mixed"){
-        Lev1VarM=2
-      }else{
-        Lev1VarM=1
-      }
-    }
-    OtherVarM=mcmcMeth$OtherVarM
-    if(is.null(OtherVarM)) OtherVarM=1
-    adaption=mcmcMeth$adaption
-    if(is.null(adaption)) adaption=1
-    priorcode=mcmcMeth$priorcode
-    if (is.null(priorcode)) priorcode=1
-    rate=mcmcMeth$rate
-    if (is.null(rate)) rate=50
-    tol=mcmcMeth$tol
-    if (is.null(tol)) tol=10
-    lclo=mcmcMeth$lclo
-    if (is.null(lclo)) lclo =0
-    nopause=mcmcMeth$nopause
-    if (is.null(nopause)) nopause=F
-    dami=mcmcMeth$dami
-    if (!is.null(dami)){
-      MIfile=gsub("\\", "/", tempfile("MIfile_",tmpdir =workdir, fileext=".dta"), fixed=TRUE)
-    }else{
-      dami=MIfile=NULL
-    }
-    if (!is.null(fact)){
-      FACTchainfile=gsub("\\", "/", tempfile("factchainfile_",tmpdir =workdir,fileext=".dta"), fixed=TRUE)
-    }else{
-      FACTchainfile=NULL
-    }
-    mcmcOptions=estoptions$mcmcOptions
-    if (D[1]=='Multivariate Normal'){
-      if(!is.null(mcmcOptions)) {
-        mcmcOptions2=list(orth=0,hcen=0, smcm=0,smvn=0, paex=c(2,0),mcco=0)
-        for (ii in names(mcmcOptions)) mcmcOptions2[[ii]]=mcmcOptions[[ii]]
-        mcmcOptions=mcmcOptions2
-      }else{
-        mcmcOptions=list(orth=0,hcen=0, smcm=0,smvn=0, paex=c(2,0),mcco=0)
-      }
-    }else{
-      if(!is.null(mcmcOptions)) {
-        mcmcOptions2=list(orth=0,hcen=0, smcm=0,smvn=0, paex=c(2,0))
-        for (ii in names(mcmcOptions)) mcmcOptions2[[ii]]=mcmcOptions[[ii]]
-        mcmcOptions=mcmcOptions2
-      }else{
-        mcmcOptions=list(orth=0,hcen=0, smcm=0,smvn=0, paex=c(2,0))
-      }
-    }
-    merr=estoptions$merr
-    
-    
-    
-    MacroScript2(indata, dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,smat,Meth,merr,
+    MacroScript2(outdata, dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,smat,Meth,merr,
                  seed,iterations,burnin,scale,thinning,priorParam,refresh,fixM,residM,Lev1VarM, 
                  OtherVarM,adaption,priorcode,rate, tol,lclo,mcmcOptions,fact,xclass,BUGO,mem.init,optimat,
                  nopause,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,MCMCfile=MCMCfile,

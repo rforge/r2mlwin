@@ -1042,8 +1042,29 @@ MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, cate
   wrt("NOTE   Fit the model")
   wrt("ECHO 1")
   wrt("STAR")
-  wrt("BATC 1")
-  wrt("NEXT")
+
+  wrt("NAME   c1098 '_FP_b'")
+  wrt("NAME   c1099 '_FP_v'")
+  wrt("NAME   c1096 '_RP_b'")
+  wrt("NAME   c1097 '_RP_v'")
+
+  if (!is.null(startval)){
+    if (!is.null(startval$FP.b)){
+      wrt(paste("JOIN ",paste(startval$FP.b, collapse=" "), " '_FP_b'",sep=""))
+    }
+    if (!is.null(startval$FP.v)){
+      wrt(paste("JOIN ",paste(startval$FP.v, collapse=" "), " '_FP_v'",sep=""))
+    }
+    if (!is.null(startval$RP.b)){
+      wrt(paste("JOIN ",paste(startval$RP.b, collapse=" "), " '_RP_b'",sep=""))
+    }
+    if (!is.null(startval$RP.v)){
+      wrt(paste("JOIN ",paste(startval$RP.v, collapse=" "), " '_RP_v'",sep=""))
+    }
+  } else {
+    wrt("BATC 1")
+    wrt("NEXT")
+  }
   wrt("ECHO 0")
   wrt("MONI 1")
   wrt("ITNU 0 b21")
@@ -1069,36 +1090,16 @@ MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, cate
   wrt("EDIT 3 c1300 b100")
   wrt("EDIT 7 c1300 b21")
   wrt("EDIT 8 c1300 b22")
-  wrt("NAME   c1098 '_FP_b'")
-  wrt("NAME   c1099 '_FP_v'")
-  wrt("NAME   c1096 '_RP_b'")
-  wrt("NAME   c1097 '_RP_v'")
   wrt("NAME   c1094 '_esample'")
   wrt("SUM '_esample' b1")
   wrt("EDIT 9 c1300 b1")
   wrt(paste("PSTA '",IGLSfile, "' ","'_FP_b' ","'_FP_v' ", "'_RP_b' ", "'_RP_v' ", "'_Stats'",sep=""))
   
-  
   wrt("NOTE    *****************************************************************")
   wrt("NOTE Set estimation method to MCMC")
   wrt("NOTE    *****************************************************************")
   wrt("EMODe  3")
-  
-  if (!is.null(startval)){
-    if (!is.null(startval$FP.b)){
-      wrt(paste("JOIN ",paste(startval$FP.b, collapse=" "), " '_FP_b'",sep=""))
-    }
-    if (!is.null(startval$FP.v)){
-      wrt(paste("JOIN ",paste(startval$FP.v, collapse=" "), " '_FP_v'",sep=""))
-    }
-    if (!is.null(startval$RP.b)){
-      wrt(paste("JOIN ",paste(startval$RP.b, collapse=" "), " '_RP_b'",sep=""))
-    }
-    if (!is.null(startval$RP.v)){
-      wrt(paste("JOIN ",paste(startval$RP.v, collapse=" "), " '_RP_v'",sep=""))
-    }
-  }
-  
+   
   if (!is.null(resi.store.levs)){
     tcell=350
     for (i in 1:length(resi.store.levs)){

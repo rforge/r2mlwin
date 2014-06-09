@@ -1,3 +1,26 @@
+Fri Jun 6 2014
+1. Bug fixing
+   * Don't bother running the model with (R)IGLS first if initial values have been specified by the user
+   * Ensure that EstM is set to one when the BUGO option is specified in the demos
+   * Allow initial values to be specified for (R)IGLS estimateion
+
+2. Changes
+   * Check EstM option is set to zero or one
+   * Check response type and link functions are valid
+   * Check that the selected residual options are valid for the current estimation method
+   * Only allow weighting to be specified if the model is univariate and is esimated with (R)IGLS
+   * Don't allow clre and smat options to be specified at the same time as they current clash
+   * Only allow factor models to be specified if the model is multivariate and estimated with MCMC
+   * Disallow cross-classification options if the model is estimated with (R)IGLS
+   * Disallow measurement error options if the model is estimated with (R)IGLS
+   * Disallow MCMC options and estimation settings if the model is estimated with (R)IGLS
+   * Disallow setting BUGO options if the models is set to be estimated with (R)IGLS
+   * Check that binomial response variables lie between zero and one inclusive
+   * Check that Poisson response variables are positive integers
+   * startval moved from MCMC to general options
+   * Allow data keyword to be used as an alternative to indata
+   * Untoggle no longer sometimes produces numeric column names
+
 Tue Jun 3 2014
 1. Bug fixing
    * Check the input data are sorted according to the model hierarchy and provide error if not
