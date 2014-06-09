@@ -45,9 +45,11 @@ runMLwiN <- function(Formula, levID, D="Normal", data=NULL, estoptions=list(EstM
       if (file.access(cmd, mode=1) != 0) {
         cmd <- paste0(MLwiNPath, "/mlwin.exe")
       } else {
-        cmd <- paste0(MLwiNPath, "/i386/mlnscript.exe")
         if (file.access(cmd, mode=1) != 0) {
-          stop("Cannot find valid MLwiN executable")
+          cmd <- paste0(MLwiNPath, "/i386/mlnscript.exe")
+          if (file.access(cmd, mode=1) != 0) {
+            stop("Cannot find valid MLwiN executable")
+          }
         }
       }
     } else {
