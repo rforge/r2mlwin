@@ -130,7 +130,7 @@ print(sdtable)
 ## Define the model
 formula=logit(use,denomb)~(0|cons+age)+(2|cons)
 levID=c('district','woman')
-mymodel9=runMLwiN(formula, levID, D="Binomial", indata=bang1, BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=openbugs, OpenBugs = T))
+mymodel9=runMLwiN(formula, levID, D="Binomial", indata=bang1, estoptions=list(EstM=1), BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=openbugs, OpenBugs = T))
 summary(mymodel9[[1]][,"beta[1]"])
 sixway(mymodel9[[1]][,"beta[1]"],"beta[1]")
 

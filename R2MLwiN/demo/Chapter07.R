@@ -50,7 +50,7 @@ formula=normexam~(0|cons+standlrt)+(2|cons)+(1|cons)
 levID=c('school','student')
 
 ## Uses the results from IGLS to create initial values for bugs
-estoptions= list(EstM=0, show.file=T)
+estoptions= list(EstM=1, show.file=T)
 ## Fit the model by calling openbugs using the rbugs package
 mymodel1=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions,BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=openbugs, OpenBugs = T))
 summary(mymodel1[[1]][,"beta[2]"])
