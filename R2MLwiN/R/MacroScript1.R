@@ -1085,6 +1085,13 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
     }
   }
 
+  if (debugmode){
+    wrt("WSET 15 1")
+    wrt("EXPA 3")
+    wrt("ESTM 2")
+    wrt("PAUS")
+  }
+
   wrt("BATC 1")
   wrt("NEXT")
   wrt("ECHO 0")
@@ -1100,6 +1107,7 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
     wrt("WSET 15 1")
     wrt("EXPA 3")
     wrt("ESTM 2")
+    wrt("PAUS")
   }
   wrt("NOTE    *****************************************************************")
   wrt("")

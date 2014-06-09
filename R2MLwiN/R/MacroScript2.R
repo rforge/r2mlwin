@@ -1071,12 +1071,6 @@ MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, cate
   wrt("CONV b22")
   wrt("")
   
-  if (debugmode){
-    wrt("NOTE   Open the equations window")
-    wrt("WSET 15 1")
-    wrt("EXPA 3")
-    wrt("ESTM 2")
-  }
   wrt("NOTE    *****************************************************************")
   wrt("")
   
@@ -1236,7 +1230,17 @@ MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, cate
   if(D[1]=="Poisson") DD=3
   if(D[1]=="Multivariate Normal") DD=4
   if(D[1]=="Multinomial") {if (as.numeric(D[4])==0) DD=6 else DD=7; wrt("CLRV 2")}
+
+  wrt(paste("LCLO   ",lclo,sep=""))
   
+  if (debugmode){
+    wrt("NOTE   Open the equations window")
+    wrt("WSET 15 1")
+    wrt("EXPA 3")
+    wrt("ESTM 2")
+    wrt("PAUS")
+  }
+
   if ((!is.null(BUGO))&&!(D[1]=="Mixed")&&nrp>0){
     version=as.numeric(BUGO["version"])
     if(D[1]=='Normal'||D[1]=='Multivariate Normal') DD2=0
@@ -1245,7 +1249,6 @@ MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, cate
   }else{
     wrt("NOTE   fit the model in MCMC")
     wrt(paste("MTOT   ",iterations,sep=""))
-    wrt(paste("LCLO   ",lclo,sep=""))
     wrt("ECHO 1")
     if (!is.null(xclass)&&length(xclass)>=4){
       wrt(paste("MCMC   0 ", burnin," ",adaption," ",scale," ",rate," ", tol," ",fixM," ",residM," ", Lev1VarM, " ", OtherVarM," ",priorcode," ",DD,sep=""))
@@ -1304,6 +1307,13 @@ MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, cate
       }
     }
     wrt("ECHO 0")
+
+    if (debugmode){
+      wrt("WSET 15 1")
+      wrt("EXPA 3")
+      wrt("ESTM 2")
+      wrt("PAUS")
+    }
     
     wrt("NOTE    *****************************************************************")
     wrt("NOTE       Export the model results to R")
