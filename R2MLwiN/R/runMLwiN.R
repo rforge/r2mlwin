@@ -643,7 +643,7 @@ version:date:md5:filename:x64:trial
   if (!is.null(resi.store.levs)) resichains = gsub("\\", "/", tempfile("resichains_",tmpdir =workdir,fileext=".dta"), fixed=TRUE)
 
   args <- paste0("/run ", "\"" , macrofile, "\"")
-  if (debugmode){
+  if (!debugmode){
     args <- paste0("/nogui ", args)
   }
   
