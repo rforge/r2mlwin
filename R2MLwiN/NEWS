@@ -1,3 +1,7 @@
+Mon Jun 9 2014
+1. Changes
+   * 1 can now be used in the model formula to specify an intercept term
+
 Fri Jun 6 2014
 1. Bug fixing
    * Don't bother running the model with (R)IGLS first if initial values have been specified by the user

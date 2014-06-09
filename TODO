@@ -1,5 +1,4 @@
 Allow omission of 0| for the fixed part in model formula
-Allow 1 to be used in place of cons in model formula
 Allow use of attach() -ed data
 
 Automatic calculation of VPC?

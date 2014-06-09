@@ -478,6 +478,44 @@ version:date:md5:filename:x64:trial
     }
   }
 
+  needsint <- FALSE
+  if (is.list(expl)){
+    if ("1" %in% expl$sep.coeff || "1" %in% nonfp$common.coeff) {
+      needsint <- TRUE
+      expl$sep.coeff[expl$sep.coeff == "1"] <- "Intercept"
+      expl$common.coeff[expl$common.coeff == "1"] <- "Intercept"
+    }
+  } else { 
+    if ("1" %in% expl) {
+      needsint <- TRUE
+      expl[expl == "1"] <- "Intercept"
+    }
+  }
+
+  if (is.list(nonfp)){
+    if ("1" %in% nonfp$nonfp.sep || "1" %in% nonfp$nonfp.common) {
+      needsint <- TRUE
+      nonfp$nonfp.sep[nonfp$nonfp.sep == "1"] <- "Intercept"
+      nonfp$nonfp.common[nonfp$nonfp.common == "1"] <- "Intercept"
+    }
+  } else { 
+    if ("1" %in% nonfp) {
+      needsint <- TRUE
+      nonfp[nonfp == "1"] <- "Intercept"
+    }
+  }
+
+  for (ii in 1:length(rp)) {
+    if ("1" %in% rp[[ii]]) {
+      needsint <- TRUE
+      rp[[ii]][rp[[ii]] == "1"] <- "Intercept"
+    }
+  }
+
+  if (needsint == TRUE) {
+    indata[["Intercept"]] <- rep(1, nrow(indata))
+  }  
+
   if (drop.data) {
     outvars <- c(resp)
     
