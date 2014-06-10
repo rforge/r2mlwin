@@ -18,8 +18,6 @@ Allow smat option to apply to more than one level
 Not currently implemented:
 Multinomial proportions - need manual calculation/reshaping
 Constraints (IGLS) - RCON/FCON commands
-Allow negative variances (IGLS) - RESE command
-Extra binomial/poisson/negative binomial/multinomial variation (IGLS) - EXTR command
 Allow user specified design matrix (IGLS) - SETD command
 Debugging option to extract internal model matrices (IGLS) - XSS/VMAT/ZMAT/YRES/YMAT/XMAT commands
 
@@ -40,3 +38,4 @@ Check multinomial models have >=3 responses
 Check base category is defined (and exists in the data) for multinomial models
 Check hierarchical centring level is >=2
 Check ordered multinomial base is either the highest or lowest value
+Check no level-1 random variables are defined for binomial responses

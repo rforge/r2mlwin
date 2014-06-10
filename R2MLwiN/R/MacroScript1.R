@@ -1,4 +1,4 @@
-MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonlinear=c(0,1), categ=NULL,notation=NULL, nonfp=NA, clre,smat, Meth=1,
+MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonlinear=c(0,1), categ=NULL,notation=NULL, nonfp=NA, clre,smat, Meth=1, extra=F,reset,
                          BUGO=NULL,mem.init="default", optimat=F, weighting=NULL,modelfile=modelfile,initfile=initfile,datafile=datafile,
                          macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode,startval=startval){
   
@@ -997,7 +997,15 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
   if (Meth!=2){
     wrt(paste("METH",Meth))
   }
+
+  for (ii in 1:nlev){
+    wrt(paste("RESEt",ii,reset[ii]))
+  }
+
   wrt(paste("LINE ",nonlinear[1],nonlinear[2]))
+  if (extra==TRUE) {
+    wrt("EXTRa 1")
+  }
   wrt("")
   if (!is.null(weighting)){
     if (is.null(weighting$FSDE)) weighting$FSDE=2

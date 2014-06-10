@@ -2,6 +2,8 @@ Mon Jun 9 2014
 1. Changes
    * 1 can now be used in the model formula to specify an intercept term
    * If debugmode is turned on MLwiN will pause before and after fitting the model
+   * Added extra estimation option to allow extra binomial/poisson/negative binomial/multinomial variables in (R)IGLS
+   * Added reset estimation option to control negative variances in (R)IGLS models
 
 Fri Jun 6 2014
 1. Bug fixing

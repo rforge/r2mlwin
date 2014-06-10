@@ -306,6 +306,17 @@ version:date:md5:filename:x64:trial
   
   optimat=estoptions$optimat
   if(is.null(optimat)) optimat=F
+
+  extra=estoptions$extra
+  if(is.null(extra)) extra=F
+  if (extra == TRUE) {
+    if (EstM != 0) {
+      stop("extra can only be specified for (R)IGLS models")
+    }
+    if (D[1] != "Poisson" && D[1] != "Binomial" && D[1] != "Negbinom" && D[1] != "Multinomial") {
+      stop("extra can only be specified for discrete outcome models")
+    }
+  }
   
   nonlinear=estoptions$nonlinear
   if (is.null(nonlinear)) nonlinear=c(0,1)
@@ -313,6 +324,26 @@ version:date:md5:filename:x64:trial
   Meth=estoptions$Meth
   if(is.null(Meth)) Meth=1
   
+  reset=estoptions$reset
+  if (is.null(reset)) {
+    if (EstM == 0) {
+      reset=rep(0, length(levID))
+      reset[1] <- 2
+    }
+  }
+  if (!is.null(reset)) {
+    if (EstM == 1) {
+      stop("reset is only available for (R)IGLS models")
+    } else {
+      if (length(reset) != length(levID)) {
+        stop("reset vector is wrong length")
+      }
+      if (any(reset<0 || reset>2)) {
+        stop("Invalid reset value")
+      }
+    }
+  }
+
   fact=estoptions$fact
   if (EstM == 0 && !is.null(fact)) {
     stop("Factor models not available with (R)IGLS estimation")
@@ -666,7 +697,7 @@ version:date:md5:filename:x64:trial
     } 
   }
   if (EstM==0){
-    MacroScript1(outdata, dtafile,resp, levID, expl, rp, D, nonlinear, categ,notation, nonfp, clre,smat,Meth,
+    MacroScript1(outdata, dtafile,resp, levID, expl, rp, D, nonlinear, categ,notation, nonfp, clre,smat,Meth,extra,reset,
                  BUGO,mem.init, optimat, weighting,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,
                  IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode,startval=startval)
     iterations=estoptions$mcmcMeth$iterations
