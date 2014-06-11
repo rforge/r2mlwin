@@ -344,6 +344,66 @@ version:date:md5:filename:x64:trial
     }
   }
 
+  fcon <- NULL
+  rcon <- NULL
+  if (!is.null(estoptions$constraints)) {
+    if (EstM == 1) {
+      stop("constraints are not available for MCMC estimation")
+    } else {
+      if (!is.null(estoptions$constraints$fixed.ui) || !is.null(estoptions$constraints$fixed.ci)) {
+        if (is.null(estoptions$constraints$fixed.ui) || is.null(estoptions$constraints$fixed.ci)) {
+          stop("fixed.ui and fixed.ci must be specified for fixed constaints")
+        }
+        if (ncol(estoptions$constraints$fixed.ui) != length(estoptions$constraints$fixed.ci)) {
+          stop("number of columns in fixed.ui and fixed.ci must be equal for fixed constaints")
+        }
+
+        if (!is.list(expl)) {
+          numfp <- length(setdiff(expl, nonfp))
+        } else {
+          numfp <- length(setdiff(expl$sep.coeff, nonfp$sep))*length(resp) + setdiff(expl$common.coeff, nonfp.common)
+        }
+
+        if (!is.vector(estoptions$constraints$fixed.ci)) {
+          stop("fixed.ci should be a vector")
+        }
+
+        if (nrow(estoptions$constraints$fixed.ui) != numfp) {
+          stop("number of rows for fixed.ci must equal the number of fixed parameters")
+        }
+
+        fcon <- rbind(estoptions$constraints$fixed.ui, estoptions$constraints$fixed.ci)
+      }
+      if (!is.null(estoptions$constraints$random.ui) || !is.null(estoptions$constraints$random.ci)) {
+        if (is.null(estoptions$constraints$random.ui) || is.null(estoptions$constraints$random.ci)) {
+          stop("random.ui and random.ci must be specified for fixed constaints")
+        }
+        if (ncol(estoptions$constraints$random.ui) != length(estoptions$constraints$random.ci)) {
+          stop("number of columns in random.ui and random.ci must be equal for random constaints")
+        }
+
+        numrp <- 0
+        for (ii in 1:length(rp)) {
+          numrp <- numrp + (length(rp[[ii]])*(length(rp[[ii]])+1)/2)
+        }
+
+        if (!is.null(clre)){
+          numrp <- numrp - ncol(clre)
+        }
+
+        if (!is.vector(estoptions$constraints$random.ci)) {
+          stop("random.ci should be a vector")
+        }
+
+        if (nrow(estoptions$constraints$random.ui) != numrp) {
+          stop("number of rows for random.ci must equal the number of random parameters")
+        }
+
+        rcon <- rbind(estoptions$constraints$random.ui, estoptions$constraints$random.ci)
+      }
+    }
+  }
+
   fact=estoptions$fact
   if (EstM == 0 && !is.null(fact)) {
     stop("Factor models not available with (R)IGLS estimation")
@@ -697,7 +757,7 @@ version:date:md5:filename:x64:trial
     } 
   }
   if (EstM==0){
-    MacroScript1(outdata, dtafile,resp, levID, expl, rp, D, nonlinear, categ,notation, nonfp, clre,smat,Meth,extra,reset,
+    MacroScript1(outdata, dtafile,resp, levID, expl, rp, D, nonlinear, categ,notation, nonfp, clre,smat,Meth,extra,reset,rcon,fcon,
                  BUGO,mem.init, optimat, weighting,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,
                  IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode,startval=startval)
     iterations=estoptions$mcmcMeth$iterations

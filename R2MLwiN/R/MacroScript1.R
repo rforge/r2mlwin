@@ -1,4 +1,4 @@
-MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonlinear=c(0,1), categ=NULL,notation=NULL, nonfp=NA, clre,smat, Meth=1, extra=F,reset,
+MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonlinear=c(0,1), categ=NULL,notation=NULL, nonfp=NA, clre,smat, Meth=1, extra=F,reset,rcon,fcon,
                          BUGO=NULL,mem.init="default", optimat=F, weighting=NULL,modelfile=modelfile,initfile=initfile,datafile=datafile,
                          macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode,startval=startval){
   
@@ -992,6 +992,16 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
   
   nexpl=length(expl)
   wrt("")
+
+  if (!is.null(fcon)) {
+    wrt(paste("JOIN", paste(as.vector(fcon), collapse=" "), "c900"))
+    wrt("FCON c900")
+  }
+
+  if (!is.null(rcon)) {
+    wrt(paste("JOIN", paste(as.vector(rcon), collapse=" "), "c901"))
+    wrt("RCON c901")
+  }
   
   wrt("NOTE   Set estimation method")
   if (Meth!=2){
