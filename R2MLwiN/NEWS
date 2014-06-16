@@ -5,6 +5,7 @@ Mon Jun 9 2014
    * Added extra estimation option to allow extra binomial/poisson/negative binomial/multinomial variables in (R)IGLS
    * Added reset estimation option to control negative variances in (R)IGLS models
    * Added constraints option for fixed and random part in (R)IGLS models
+   * Allow more data variables by finding empty columns for output rather than hardcoding column numbers
 
 Fri Jun 6 2014
 1. Bug fixing
