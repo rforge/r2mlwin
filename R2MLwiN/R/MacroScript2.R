@@ -1,4 +1,4 @@
-MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,smat,Meth,merr,
+MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,smat,Meth,merr,carcentre,
                          seed,iterations,burnin,scale,thinning,priorParam,refresh,fixM,residM,Lev1VarM, 
                          OtherVarM,adaption,priorcode,rate, tol,lclo,mcmcOptions,fact,xclass=NULL,BUGO=NULL,mem.init,optimat=F,
                          nopause,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,MCMCfile=MCMCfile,
@@ -1132,6 +1132,9 @@ MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, cate
   }
   
   if (D[1]=="Multivariate Normal") wrt(paste("MCCO ",mcmcOptions$mcco))
+  if (!is.null(carcentre) && carcentre == TRUE) {
+    wrt("CARC 1")
+  }
   if (!is.null(xclass)){
     for(ii in 1:length(as.numeric(xclass$class))){
       if (as.numeric(xclass$N1[ii])==1){

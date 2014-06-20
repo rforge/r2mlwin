@@ -417,6 +417,24 @@ version:date:md5:filename:x64:trial
     stop("Cross-classification is not available with (R)IGLS estimation")
   }
 
+  carcentre=estoptions$carcentre
+  if (is.null(carcentre)) {
+    carcentre <- FALSE
+  }
+  carcount <- 0
+  if (is.null(xclass)) {
+    for(i in 1:length(as.numeric(xclass$class))) {
+      if (length(xclass) > 4){
+        if (xclass$car[i] == TRUE) {
+          carcount <- carcount + 1
+        }
+        if (carcount > 1 && xclass$car[i] == TRUE && carcentre != TRUE) {
+          stop("CAR can only apply to one level unless CAR centring is turned on")
+        }
+      }
+    }
+  }
+
   merr=estoptions$merr
   if (EstM == 0 && !is.null(merr)) {
     stop("Measurement error is not available with (R)IGLS estimation")
@@ -820,7 +838,7 @@ version:date:md5:filename:x64:trial
   
   # MCMC algorithm (using the starting values obtain from IGLS algorithm)
   if (EstM==1){
-    MacroScript2(outdata, dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,smat,Meth,merr,
+    MacroScript2(outdata, dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,smat,Meth,merr,carcentre,
                  seed,iterations,burnin,scale,thinning,priorParam,refresh,fixM,residM,Lev1VarM, 
                  OtherVarM,adaption,priorcode,rate, tol,lclo,mcmcOptions,fact,xclass,BUGO,mem.init,optimat,
                  nopause,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,MCMCfile=MCMCfile,

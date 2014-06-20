@@ -24,9 +24,6 @@ Extra checks required:
 IGLS:
 Check lower levels are non-equal standardised weights if standardised weights are specified
 
-MCMC:
-Check CAR is only specified at one level (unless CAR mean centring is specified)
-
 All:
 Check model has more than one level if > MQL1 specified
 Check denom has been specified with binomial models

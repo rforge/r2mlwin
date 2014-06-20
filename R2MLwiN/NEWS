@@ -1,3 +1,10 @@
+Fri Jun 20 2014
+1. Bug fixing
+   * Added check that CAR is only requested at one level, unless CAR mean centring is turned on
+
+2. Changes
+   * Added option to turn on CAR mean centring
+
 Mon Jun 9 2014
 1. Changes
    * 1 can now be used in the model formula to specify an intercept term
