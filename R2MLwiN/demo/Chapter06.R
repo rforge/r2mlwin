@@ -70,7 +70,9 @@ predLines(mymodel, indata=tutorial, xname="standlrt", lev = 2, selected =c(30,44
 # 6.3 WinBUGS priors (Prior 2) . . . . . . . . . . . . . . . . . . . . . .78
 
 ## Change the starting values for Level 2 variance matrix to .1 on diagonal 0 otherwise.
-estoptions= list(EstM=1, mcmcMeth=list(startval=list(RP.b=c(.1,0,.1,.554))))
+RP.b=c(.1,0,.1,.554)
+names(RP.b) <- c("RP2_var_cons", "RP2_cov_cons_standlrt", "RP2_var_standlrt", "RP1_var_cons")
+estoptions= list(EstM=1, startval=list(RP.b=RP.b))
 ## Fit the model
 (mymodel1=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 

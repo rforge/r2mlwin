@@ -89,8 +89,12 @@ sixway(mymodel6["chains"][,"RP2_var_cons"],"sigma^2_u0")
 # 5.5 Changing the random number seed and the parameter starting values  .66
 
 ## Set starting values for random and fixed parameter estimates
-startval=list(FP.b=c(-2,5),RP.b=c(2,4))
-estoptions= list(EstM=1,mcmcMeth=list(burnin=0, iterations=500,startval=startval))
+FP.b=c(-2,5)
+names(FP.b)=c("FP_cons","FP_standlrt")
+RP.b=c(2,4)
+names(RP.b)=c("RP2_var_cons","RP1_var_cons")
+startval=list(FP.b=FP.b,RP.b=RP.b)
+estoptions= list(EstM=1,mcmcMeth=list(burnin=0, iterations=500),startval=startval)
 ## Fit the model
 (mymodel7=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
