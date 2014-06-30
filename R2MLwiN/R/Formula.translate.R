@@ -629,6 +629,10 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
       fixs=unlist(strsplit(fixs,"\\|"))
       fixs=unlist(strsplit(fixs[2],"\\+"))
     }
+
+    rp=list()
+    rp[["rp1"]] = "bcons.1"
+
     if(nlev>1){
       effect.lev=nlev:2
       rands.no=rep(NA,nlev-1)
@@ -659,9 +663,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
         }
       }
       
-      rp=list()
       rp.names=NULL
-      rp[["rp1"]] = c(rp[["rp1"]], "bcons.1")
       for (i in 1:length(rands)){
         if (!is.na(rands[[i]][1])){
           rp.name=paste("rp",effect.lev[i],sep="")
@@ -675,7 +677,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
         }
       }
     }else{
-      rp=nonfps=NULL
+      nonfps=NULL
     }
     
     invars <-new.env()
