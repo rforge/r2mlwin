@@ -782,39 +782,39 @@ version:date:md5:filename:x64:trial
   }
 
   if (!is.null(sval)) {
-    if (!is.null(sval$FP) && is.null(names(sval$FP))) {
-      names(sval$FP) <- FP.names
+    if (!is.null(sval$FP.b) && is.null(names(sval$FP.b))) {
+      names(sval$FP.b) <- FP.names
     }
 
-    if (!is.null(sval$FP.cov) && (is.null(rownames(sval$FP.cov)) || is.null(colnames(sval$FP.cov)))) {
-      rownames(sval$FP.cov) <- FP.names
-      colnames(sval$FP.cov) <- FP.names
+    if (!is.null(sval$FP.v) && (is.null(rownames(sval$FP.v)) || is.null(colnames(sval$FP.v)))) {
+      rownames(sval$FP.v) <- FP.names
+      colnames(sval$FP.v) <- FP.names
     }
 
-    if (!is.null(sval$RP) && is.null(names(sval$RP))) {
-      names(sval$RP) <- RP.names
+    if (!is.null(sval$RP.b) && is.null(names(sval$RP.b))) {
+      names(sval$RP.b) <- RP.names
     }
 
-    if (!is.null(sval$RP.cov) && (is.null(rownames(sval$RP.cov)) || is.null(colnames(sval$RP.cov)))) {
-      rownames(sval$RP.cov) <- RP.names
-      colnames(sval$RP.cov) <- RP.names
+    if (!is.null(sval$RP.v) && (is.null(rownames(sval$RP.v)) || is.null(colnames(sval$RP.v)))) {
+      rownames(sval$RP.v) <- RP.names
+      colnames(sval$RP.v) <- RP.names
     }
 
-    sharedFP <- intersect(FP.names, names(sval$FP))
-    if (!is.null(sval$FP) && !is.null(sharedFP)) {
-      FP[sharedFP] <- sval$FP[sharedFP]
+    sharedFP <- intersect(FP.names, names(sval$FP.b))
+    if (!is.null(sval$FP.b) && !is.null(sharedFP)) {
+      FP[sharedFP] <- sval$FP.b[sharedFP]
     }
-    if (!is.null(sval$FP.cov) && !is.null(sharedFP)) {
-      FP.cov[sharedFP, sharedFP] <- sval$FP.cov[sharedFP, sharedFP]
+    if (!is.null(sval$FP.v) && !is.null(sharedFP)) {
+      FP.cov[sharedFP, sharedFP] <- sval$FP.v[sharedFP, sharedFP]
     }
     sharedRP <- intersect(RP.names, names(sval$RP))
-    if (!is.null(RP.cov) && !is.null(sharedRP)) {
-      RP[sharedRP] <- sval$RP[sharedRP]
+    if (!is.null(sval$RP.b) && !is.null(sharedRP)) {
+      RP[sharedRP] <- sval$RP.b[sharedRP]
     }
-    if (!is.null(sval$RP.cov) && !is.null(sharedRP)) {
-      RP.cov[sharedRP, sharedRP] <- sval$RP.cov[sharedRP, sharedRP]
+    if (!is.null(sval$RP.v) && !is.null(sharedRP)) {
+      RP.cov[sharedRP, sharedRP] <- sval$RP.v[sharedRP, sharedRP]
     }
-    startval <- list(FP=FP, FP.cov=FP.cov, RP=RP, RP.cov=RP.cov)
+    startval <- list(FP.b=FP, FP.v=FP.cov, RP.b=RP, RP.v=RP.cov)
   } else {
     startval <- NULL
   }
