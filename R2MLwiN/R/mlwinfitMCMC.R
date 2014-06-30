@@ -412,3 +412,44 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
 setMethod("print", "mlwinfitMCMC", printMCMC)
 setMethod("show",  "mlwinfitMCMC", function(object) printMCMC(object))
 setMethod("update", "mlwinfitMCMC", updateMLwiN)
+
+setMethod("coef", "mlwinfitIGLS", function (object,  ...) {
+  c(object@FP, object@RP)           
+})
+
+setMethod("coefficients", "mlwinfitIGLS", function (object,  ...) {
+  coef(object)
+})
+
+setMethod("vcov", "mlwinfitIGLS", function (object,  ...) {
+  m <- matrix(0, nrow(object@FP.cov)+nrow(object@RP.cov), ncol(object@FP.cov)+ncol(object@RP.cov))
+  colnames(m) <- c(colnames(object@FP.cov), colnames(object@RP.cov))
+  rownames(m) <- c(rownames(object@FP.cov), rownames(object@RP.cov))
+  m[colnames(object@FP.cov), rownames(object@FP.cov)] <- object@FP.cov  
+  m[colnames(object@RP.cov), rownames(object@RP.cov)] <- object@RP.cov 
+  m
+})
+
+setMethod("df.residual", "mlwinfitIGLS", function (object,  ...) {
+  NULL
+})
+
+setMethod("fitted", "mlwinfitIGLS", function (object,  ...) {
+  NULL
+})
+
+setMethod("fitted.values", "mlwinfitIGLS", function (object,  ...) {
+  fitted(object)
+})
+
+setMethod("residuals", "mlwinfitIGLS", function (object,  ...) {
+  NULL
+})
+
+setMethod("resid", "mlwinfitIGLS", function (object,  ...) {
+  residuals(object)
+})
+
+setMethod("predict", "mlwinfitIGLS", function (object,  ...) {
+  NULL
+})

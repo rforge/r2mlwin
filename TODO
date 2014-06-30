@@ -14,6 +14,7 @@ Revisit interactions, e.g. the following doesn't work: formula=log(obs,logexp)~(
 Add an option to allow the model to be set up but not run, useful for example if we just want to run a BUGS model or see the MLwiN syntax
 Allow smat option to apply to more than one level
 Make offset optional for Poisson and Negative-binomial
+Add implementation for predict, residuals, df.residual and fitted methods
 
 Not currently implemented:
 Multinomial proportions - need manual calculation/reshaping
