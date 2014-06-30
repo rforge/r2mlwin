@@ -254,6 +254,7 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
     resp=sub("c\\(","",resp)
     resp=sub("\\)","",resp)
     resp=strsplit(resp,",")[[1]]
+    resp=gsub("^\\s+|\\s+$", "", resp)
     
     k=1
     for (i in 1:object@fact$nfact){
