@@ -412,6 +412,16 @@ version:date:md5:filename:x64:trial
     stop("Factor models can only be defined for multivariate models")
   }
 
+  if (!is.null(fact)) {
+    for (i in 1:fact$nfact) {
+      for (j in 1:length(rp[[paste0("rp", fact$lev.fact[i])]])) {
+        for (k in 1:j) {
+          if (j != k) clre <- cbind(clre, c(fact$lev.fact[i], rp[[paste0("rp", fact$lev.fact[i])]][j], rp[[paste0("rp", fact$lev.fact[i])]][k]))
+        }
+      }
+    }
+  }
+
   xclass=estoptions$xclass
   if (EstM == 0 && !is.null(xclass)) {
     stop("Cross-classification is not available with (R)IGLS estimation")
@@ -447,13 +457,369 @@ version:date:md5:filename:x64:trial
     stop("MCMC method options cannot be specified with (R)IGLS estimation")
   }
 
-  startval=estoptions$startval
 
+  FP.names=NULL
+  
+  if (D[1]=='Multinomial'){
+    nresp=length(levels(indata[,resp]))-1
+    resp.names=levels(indata[,resp])[-as.numeric(D[5])]
+    
+    if (is.list(expl)){
+      nonfp.sep=nonfp$nonfp.sep
+      nonfp.s=nonfp.sep
+      for (i in 1:length(resp.names)){
+        if (D['mode']==0){
+          nonfp.s=gsub(paste(".",resp.names[i],sep=""),"", nonfp.s)
+        }
+        if (D['mode']==1){
+          nonfp.s=gsub(paste(".(>=",resp.names[i],")",sep=""),"", nonfp.s)
+        }
+      }
+      nonfp.s=unique(nonfp.s)
+      for (p in expl$sep.coeff){
+        if (is.na(nonfp.sep[1])||sum(p==nonfp.s)==0){
+          if (is.null(categ)|| sum(p==categ["var",])==0){
+            for (j in 1:nresp){
+              FP.names=c(FP.names, paste("FP_",chartr(".","_",p),"_",resp.names[j],sep=""))
+            }
+          }else{
+            if (is.na(categ["ref",which(p==categ["var",])])){
+              categ.names=levels(indata[[p]])
+              for (j in 1:nresp){
+                for (i in 1:as.numeric(categ["ncateg",which(p==categ["var",])])){
+                  FP.names=c(FP.names,  paste("FP_",chartr(".","_",categ.names[i]),"_",resp.names[j],sep=""))
+                }
+              }
+            }else{
+              categ.names=levels(indata[[p]])
+              refx=categ["ref",which(p==categ["var",])]
+              categ.names=categ.names[-which(refx==categ.names)]
+              for (j in 1:nresp){
+                for (i in 1:(as.numeric(categ["ncateg",which(p==categ["var",])])-1)){
+                  FP.names=c(FP.names, paste("FP_",chartr(".","_",categ.names[i]),"_",resp.names[j],sep=""))
+                }
+              }
+            }
+          }
+        }
+      }
+      for (p in expl$common.coeff){
+        nonfp.common=nonfp$nonfp.common
+        nonfp.c=nonfp.common
+        for (i in 1:length(nonfp.c)){
+          nonfp.c[i]=gsub("\\.*[[:digit:]]","",nonfp.c[i])
+        }
+        if (is.na(nonfp.common[1])||sum(p==nonfp.c)==0){
+          if (is.null(categ)|| sum(p==categ["var",])==0){
+            FP.names=c(FP.names, paste("FP_",chartr(".","_",p),sep=""))
+          }else{
+            if (is.na(categ["ref",which(p==categ["var",])])){
+              categ.names=levels(indata[[p]])
+              for (i in 1:as.numeric(categ["ncateg",which(p==categ["var",])])){
+                FP.names=c(FP.names, paste("FP_",chartr(".","_",categ.names[i]),sep=""))
+              }
+            }else{
+              categ.names=levels(indata[[p]])
+              refx=categ["ref",which(p==categ["var",])]
+              categ.names=categ.names[-which(refx==categ.names)]
+              for (i in 1:(as.numeric(categ["ncateg",which(p==categ["var",])])-1)){
+                FP.names=c(FP.names, paste("FP_",chartr(".","_",categ.names[i]),sep=""))
+              }
+            }
+          }
+        }
+      }
+    }else{
+      nonfp.s=nonfp
+      for (i in 1:length(resp.names)){
+        if (D['mode']==0){
+          nonfp.s=gsub(paste(".",resp.names[i],sep=""),"", nonfp.s)
+        }
+        if (D['mode']==1){
+          nonfp.s=gsub(paste(".(>=",resp.names[i],")",sep=""),"", nonfp.s)
+        }
+      }
+      nonfp.s=unique(nonfp.s)
+      expla=expl
+      for (p in expla){
+        if (is.na(nonfp[1])||sum(p==nonfp.s)==0){
+          if (is.null(categ)|| sum(p==categ["var",])==0){
+            for (j in 1:nresp){
+              FP.names=c(FP.names, paste("FP_",chartr(".","_",p),"_",resp.names[j],sep=""))
+            }
+          }else{
+            if (is.na(categ["ref",which(p==categ["var",])])){
+              categ.names=levels(indata[[p]])
+              for (j in 1:nresp){
+                for (i in 1:as.numeric(categ["ncateg",which(p==categ["var",])])){
+                  FP.names=c(FP.names,  paste("FP_",chartr(".","_",categ.names[i]),"_",resp.names[j],sep=""))
+                }
+              }
+            }else{
+              categ.names=levels(indata[[p]])
+              refx=categ["ref",which(p==categ["var",])]
+              categ.names=categ.names[-which(refx==categ.names)]
+              for (j in 1:nresp){
+                for (i in 1:(as.numeric(categ["ncateg",which(p==categ["var",])])-1)){
+                  FP.names=c(FP.names, paste("FP_",chartr(".","_",categ.names[i]),"_",resp.names[j],sep=""))
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }else{
+    if (D[1]=="Multivariate Normal"||D[1]=="Mixed"){
+      nresp=length(resp)
+      
+      if (is.list(expl)){
+        nonfp.sep=nonfp$nonfp.sep
+        nonfp.s=nonfp.sep
+        for (i in 1:length(resp)){
+          nonfp.s=gsub(paste(".",resp[i],sep=""),"", nonfp.s)
+        }
+        nonfp.s=unique(nonfp.s)
+        for (p in expl$sep.coeff){
+          if (is.na(nonfp.sep[1])||sum(p==nonfp.s)==0){
+            if (is.null(categ)|| sum(p==categ["var",])==0){
+              for (j in 1:nresp){
+                FP.names=c(FP.names, paste("FP_",chartr(".","_",p),"_",resp[j],sep=""))
+              }
+            }else{
+              if (is.na(categ["ref",which(p==categ["var",])])){
+                categ.names=levels(indata[[p]])
+                for (j in 1:nresp){
+                  for (i in 1:as.numeric(categ["ncateg",which(p==categ["var",])])){
+                    FP.names=c(FP.names,  paste("FP_",chartr(".","_",categ.names[i]),"_",resp.names[j],sep=""))
+                  }
+                }
+                
+              }else{
+                categ.names=levels(indata[[p]])
+                refx=categ["ref",which(p==categ["var",])]
+                categ.names=categ.names[-which(refx==categ.names)]
+                for (j in 1:nresp){
+                  for (i in 1:(as.numeric(categ["ncateg",which(p==categ["var",])])-1)){
+                    FP.names=c(FP.names, paste("FP_",chartr(".","_",categ.names[i]),"_",resp.names[j],sep=""))
+                  }
+                }
+              }
+            }
+          }
+        }
+        for (p in expl$common.coeff){
+          nonfp.common=nonfp$nonfp.common
+          nonfp.c=nonfp.common
+          for (i in 1:length(nonfp.c)){
+            nonfp.c[i]=gsub("\\.*[[:digit:]]","",nonfp.c[i])
+          }
+          if (is.na(nonfp.common[1])||sum(p==nonfp.c)==0){
+            if (is.null(categ)|| sum(p==categ["var",])==0){
+              FP.names=c(FP.names, paste("FP_",chartr(".","_",p),sep=""))
+            }else{
+              if (is.na(categ["ref",which(p==categ["var",])])){
+                categ.names=levels(indata[[p]])
+                for (i in 1:as.numeric(categ["ncateg",which(p==categ["var",])])){
+                  FP.names=c(FP.names, paste("FP_",chartr(".","_",categ.names[i]),sep=""))
+                }
+              }else{
+                categ.names=levels(indata[[p]])
+                refx=categ["ref",which(p==categ["var",])]
+                categ.names=categ.names[-which(refx==categ.names)]
+                for (i in 1:(as.numeric(categ["ncateg",which(p==categ["var",])])-1)){
+                  FP.names=c(FP.names, paste("FP_",chartr(".","_",categ.names[i]),sep=""))
+                }
+              }
+            }
+          }
+        }
+      }else{
+        nonfp.s=nonfp
+        for (i in 1:length(resp)){
+          nonfp.s=gsub(paste(".",resp[i],sep=""),"", nonfp.s)
+        }
+        nonfp.s=unique(nonfp.s)
+        
+        expla=expl
+        for (p in expla){
+          if (is.na(nonfp[1])||sum(p==nonfp.s)==0){
+            if (is.null(categ)|| sum(p==categ["var",])==0){
+              for (j in 1:nresp){
+                FP.names=c(FP.names, paste("FP_",chartr(".","_",p),"_",resp[j],sep=""))
+              }
+              
+            }else{
+              if (is.na(categ["ref",which(p==categ["var",])])){
+                categ.names=levels(indata[[p]])
+                for (j in 1:nresp){
+                  for (i in 1:as.numeric(categ["ncateg",which(p==categ["var",])])){
+                    FP.names=c(FP.names,  paste("FP_",chartr(".","_",categ.names[i]),"_",resp.names[j],sep=""))
+                  }
+                }
+              }else{
+                categ.names=levels(indata[[p]])
+                refx=categ["ref",which(p==categ["var",])]
+                categ.names=categ.names[-which(refx==categ.names)]
+                for (j in 1:nresp){
+                  for (i in 1:(as.numeric(categ["ncateg",which(p==categ["var",])])-1)){
+                    FP.names=c(FP.names, paste("FP_",chartr(".","_",categ.names[i]),"_",resp.names[j],sep=""))
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }else{
+      expla=expl
+      for (p in expla){
+        if (is.na(nonfp[1])||sum(p==nonfp)==0){
+          if (is.null(categ)|| sum(p==categ["var",])==0){
+            FP.names=c(FP.names, paste("FP_",chartr(".","_",p),sep=""))
+          }else{
+            if (is.na(categ["ref",which(p==categ["var",])])){
+              categ.names=levels(indata[[p]])
+              for (i in 1:as.numeric(categ["ncateg",which(p==categ["var",])])){
+                FP.names=c(FP.names, paste("FP_",chartr(".","_",categ.names[i]),sep=""))
+              }
+            }else{
+              categ.names=levels(indata[[p]])
+              refx=categ["ref",which(p==categ["var",])]
+              categ.names=categ.names[-which(refx==categ.names)]
+              for (i in 1:(as.numeric(categ["ncateg",which(p==categ["var",])])-1)){
+                FP.names=c(FP.names, paste("FP_",chartr(".","_",categ.names[i]),sep=""))
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  resid.names=function(rpx, resid.lev,RP){
+    nrpx=length(rpx)
+    for (j in 1: nrpx){
+      for (i in 1:j){
+        if (i==j){
+          RP=c(RP, paste("RP",resid.lev,"_var_",chartr(".", "_", rpx[i]),sep=""))
+        }else{
+          RP=c(RP, paste("RP",resid.lev,"_cov_",chartr(".", "_", rpx[i]),"_",chartr(".", "_", rpx[j]),sep=""))
+        }
+      }
+    }
+    RP
+  }
+  
+  resid2.names=function(rpx, resid.lev, clre,RP){
+    nrpx=length(rpx)
+    nclre=ncol(clre)
+    k=1
+    for (j in 1: nrpx){
+      for (i in 1:j){
+        if (!any(as.numeric(clre[1,])==resid.lev & ((clre[2,]==rpx[i] & clre[3,]==rpx[j]) | (clre[2,]==rpx[j] & clre[3,]==rpx[i])))) {
+          if (i==j) {
+            RP=c(RP, paste("RP",resid.lev,"_var_",chartr(".", "_", rpx[i]),sep=""))
+          }else{
+            RP=c(RP, paste("RP",resid.lev,"_cov_",chartr(".", "_", rpx[i]),"_",chartr(".", "_", rpx[j]),sep=""))
+          }
+        }
+      }
+    }
+    RP
+  }
+  
+  RP.names =NULL
+  if (length(rp)>0){
+    for (ii in 1:length(rp)){
+      if (is.null(clre)){
+        RP.names=resid.names(rp[[ii]],as.numeric(sub("rp","",names(rp)[ii])),RP.names)
+      }else{
+        RP.names=resid2.names(rp[[ii]],as.numeric(sub("rp","",names(rp)[ii])), clre,RP.names)
+      }
+    }
+  }
+
+
+  if (D[1]=='Multinomial') {
+    RP.names=c(RP.names, "RP1_bcons_1")
+    if (EstM == 0 && as.numeric(D[4])==0) {
+      RP.names=c(RP.names, "RP1_bcons_2")
+    }
+  }
+
+
+  levID0=levID
+  #if (is.na(levID0[length(levID0)])){
+  #  tmp.RP.names=gsub("RP","",RP.names)
+  #  for (i in 1:length(RP.names)){
+  #    tmpstrlist=unlist(strsplit(tmp.RP.names[i],"\\_"))
+  #    tmpno=as.integer(tmpstrlist[1])-1
+  #    RP.names[i]=paste0("RP",tmpno,"_",paste(tmpstrlist[-1],collapse="_"))
+  #  }
+  #}
+
+  FP <- rep(0, length(FP.names))
+  names(FP) <- FP.names
+
+  FP.cov <- matrix(0,length(FP.names),length(FP.names))
+  colnames(FP.cov) <- FP.names
+  rownames(FP.cov) <- FP.names
+
+  RP <- rep(0, length(RP.names))
+  names(RP) <- RP.names
+
+  RP.cov <- matrix(0,length(RP.names),length(RP.names))
+  colnames(RP.cov) <- RP.names
+  rownames(RP.cov) <- RP.names
+
+  sval <- estoptions$startval
   if (EstM == 1) {
     if (!is.null(mcmcMeth$startval)) {
       warning("startval is now specified directly within estoptions")
-      startval=mcmcMeth$startval
+      sval=mcmcMeth$startval
     }
+  }
+
+  if (!is.null(sval)) {
+    if (!is.null(sval$FP) && is.null(names(sval$FP))) {
+      names(sval$FP) <- FP.names
+    }
+
+    if (!is.null(sval$FP.cov) && (is.null(rownames(sval$FP)) || is.null(rownames(sval$FP)))) {
+      rownames(sval$FP.cov) <- FP.names
+      colnames(sval$FP.cov) <- FP.names
+    }
+
+    if (!is.null(sval$RP) && is.null(names(sval$RP))) {
+      names(sval$RP) <- RP.names
+    }
+
+    if (!is.null(sval$RP.cov) && (is.null(rownames(sval$RP)) || is.null(rownames(sval$RP)))) {
+      rownames(sval$RP.cov) <- RP.names
+      colnames(sval$RP.cov) <- RP.names
+    }
+
+    sharedFP <- intersect(FP.names, names(sval$FP))
+    if (!is.null(sval$FP) && !is.null(sharedFP)) {
+      FP[sharedFP] <- sval$FP[sharedFP]
+    }
+    if (!is.null(sval$FP.cov) && !is.null(sharedFP)) {
+      FP.cov[sharedFP, sharedFP] <- sval$FP.cov[sharedFP, sharedFP]
+    }
+    sharedRP <- intersect(RP.names, names(sval$RP))
+    if (!is.null(RP.cov) && !is.null(sharedRP)) {
+      RP[sharedRP] <- sval$RP[sharedRP]
+    }
+    if (!is.null(sval$RP.cov) && !is.null(sharedRP)) {
+      RP.cov[sharedRP, sharedRP] <- sval$RP.cov[sharedRP, sharedRP]
+    }
+    startval <- list(FP=FP, FP.cov=FP.cov, RP=RP, RP.cov=RP.cov)
+  } else {
+    startval <- NULL
+  }
+
+  if (EstM == 1) {
     seed=mcmcMeth$seed
     if(is.null(seed)) seed=1
     iterations=mcmcMeth$iterations
@@ -751,6 +1117,10 @@ version:date:md5:filename:x64:trial
   if (resi.store) resifile = gsub("\\", "/", tempfile("resifile_", tmpdir =workdir,fileext=".dta"), fixed=TRUE)
   if (!is.null(resi.store.levs)) resichains = gsub("\\", "/", tempfile("resichains_",tmpdir =workdir,fileext=".dta"), fixed=TRUE)
 
+  if ((D[1]=="Multivariate Normal"||D[1]=="Mixed"||D[1]=="Multinomial") && !is.null(clre)) {
+    clre[1,] <- as.numeric(clre[1,]) + 1
+  }
+
   args <- paste0("/run ", "\"" , macrofile, "\"")
   if (!debugmode){
     args <- paste0("/nogui ", args)
@@ -790,50 +1160,39 @@ version:date:md5:filename:x64:trial
     cat("\n")
     time2=proc.time()-time1
     
-    estIGLS <-read.dta(IGLSfile)
-    
-    FP=as.vector(na.omit(estIGLS[,1]))
-    names(FP)=FP.names
-    RP=as.vector(na.omit(estIGLS[,3]))
-    levID0=levID
-    if (is.na(levID0[length(levID0)])){
-      tmp.RP.names=gsub("RP","",RP.names)
-      for (i in 1:length(RP.names)){
-        tmpstrlist=unlist(strsplit(tmp.RP.names[i],"\\_"))
-        tmpno=as.integer(tmpstrlist[1])-1
-        RP.names[i]=paste("RP",tmpno,"_",paste(tmpstrlist[-1],collapse="_"),sep="")
-      }
-    }
-    namediff = length(RP)-length(RP.names)
-    if (namediff>0){
-      for (i in 1:namediff){
-        RP.names = c(RP.names, paste0("bcons.", i))
-      }
-    }
-    names(RP)=RP.names
-    LIKE=estIGLS[,dim(estIGLS)[2]][3]
-    if(!is.na(LIKE)){ if(LIKE==1) LIKE=NA}
-    Missing=estIGLS[,dim(estIGLS)[2]][9]
-    estIGLS2=na.omit(estIGLS[,2])
-    FP.cov=matrix(NA,length(FP),length(FP))
-    k=1
+    estIGLS <- read.dta(IGLSfile)
+
+    FP[] <- na.omit(estIGLS[,1])    
+
+    estIGLS2 <- na.omit(estIGLS[,2])
+    k <- 1
     for (i in 1:length(FP)){
       for (j in 1:i){
-        FP.cov[i,j]=estIGLS2[k]
-        k=k+1
+        FP.cov[i,j] <- estIGLS2[k]
+        FP.cov[j,i] <- FP.cov[i,j]
+        k <- k+1
       }
     }
-    colnames(FP.cov)=rownames(FP.cov)=FP.names
-    estIGLS4=na.omit(estIGLS[,4])
-    RP.cov=matrix(NA,length(RP),length(RP))
-    k=1
+
+    RP[] <- na.omit(estIGLS[,3])
+
+    estIGLS4 <- na.omit(estIGLS[,4])
+    k <- 1
     for (i in 1:length(RP)){
       for (j in 1:i){
-        RP.cov[i,j]=estIGLS4[k]
-        k=k+1
+        RP.cov[i,j] <- estIGLS4[k]
+        RP.cov[j,i] <- RP.cov[i,j]
+        k <- k+1
       }
     }
-    colnames(RP.cov)=rownames(RP.cov)=RP.names
+
+    LIKE <- estIGLS[,dim(estIGLS)[2]][3]
+    if (!is.na(LIKE)) {
+      if (LIKE==1)
+        LIKE <- NA
+    }
+
+    Missing <- estIGLS[,dim(estIGLS)[2]][9]
   }
   
   # MCMC algorithm (using the starting values obtain from IGLS algorithm)
@@ -853,39 +1212,55 @@ version:date:md5:filename:x64:trial
     
     nlev=length(levID)
     if (is.null(BUGO)){
-      estMCMC <-read.dta(MCMCfile)
-      chains <- read.dta(chainfile)
-      
-      chain.names=names(chains)
-      FP.names=chain.names[grep('FP',chain.names)]
-      RP.names=chain.names[grep('RP',chain.names)]
-      FP=as.vector(na.omit(estMCMC[,1]))
-      names(FP)=FP.names
-      RP=as.vector(na.omit(estMCMC[,3]))
-      levID0=levID
-      if (is.na(levID0[length(levID0)])){
-        tmp.RP.names=gsub("RP","",RP.names)
-        for (i in 1:length(RP.names)){
-          tmpstrlist=unlist(strsplit(tmp.RP.names[i],"\\_"))
-          tmpno=as.integer(tmpstrlist[1])-1
-          RP.names[i]=paste("RP",tmpno,"_",paste(tmpstrlist[-1],collapse="_"),sep="")
+      estMCMC <- read.dta(MCMCfile)
+
+      FP[] <- na.omit(estMCMC[,1])
+
+      estMCMC2 <- na.omit(estMCMC[,2])
+      k <- 1
+      for (i in 1:length(FP)){
+        for (j in 1:i){
+          FP.cov[i,j] <- estMCMC2[k]
+          FP.cov[j,i] <- FP.cov[i,j]
+          k <- k+1
         }
-        chain.names[grep('RP',chain.names)] =RP.names
-        names(chains)=chain.names
       }
-      names(RP)=RP.names
-      chains=mcmc(data=chains[,-1], thin = thinning)        
-      ESS=effectiveSize(chains)
+
+      RP[] <- na.omit(estMCMC[,3])
+
+      estMCMC4 <- na.omit(estMCMC[,4])
+      k <- 1
+      for (i in 1:length(RP)){
+        for (j in 1:i){
+          RP.cov[i,j] <- estMCMC4[k]
+          RP.cov[j,i] <- RP.cov[i,j]
+          k <- k+1
+        }
+      }
+
+
+      chains <- read.dta(chainfile)
+
+      chains <- mcmc(data=chains[,-1], thin = thinning)       
+      chain.names <- colnames(chains)
+      chain.names[grep('RP',chain.names)] <- RP.names
+      colnames(chains) <- chain.names
+
+      ESS <- effectiveSize(chains)
       
       if (!(D[1]=="Mixed")&&is.null(merr)&&is.null(fact)){
-        BDIC=estMCMC[,dim(estMCMC)[2]][c(5,6,4,3)]
-        BDIC.names=c("Dbar", "D(thetabar)",  "pD", "DIC")
-        names(BDIC)=BDIC.names
+        BDIC <- estMCMC[,dim(estMCMC)[2]][c(5,6,4,3)]
+        BDIC.names <- c("Dbar", "D(thetabar)",  "pD", "DIC")
+        names(BDIC) <- BDIC.names
       }else{
-        LIKE=estMCMC[,dim(estMCMC)[2]][3]
-        if(!is.na(LIKE)){ if(LIKE==1) LIKE=NA}
+        LIKE <- estMCMC[,dim(estMCMC)[2]][3]
+        if(!is.na(LIKE)){
+          if(LIKE==1) 
+            LIKE <- NA
+        }
       }
-      Missing=estMCMC[,dim(estMCMC)[2]][9]
+
+      Missing <- estMCMC[,dim(estMCMC)[2]][9]
       levID.display=""
       if (is.na(levID0[length(levID0)])){
         levID0=levID0[-length(levID0)]
@@ -948,29 +1323,7 @@ version:date:md5:filename:x64:trial
         colnames(factcovs) = fact.cov.names
         factChains = list(scores=factscores, scores_v=factscores_v, loadings=mcmc(data=factloads, thin = thinning), cov=mcmc(data=factcovs, thin = thinning))
       }
-      
-      
-      estMCMC2=na.omit(estMCMC[,2])
-      FP.cov=matrix(NA,length(FP),length(FP))
-      k=1
-      for (i in 1:length(FP)){
-        for (j in 1:i){
-          FP.cov[i,j]=estMCMC2[k]
-          k=k+1
-        }
-      }
-      colnames(FP.cov)=rownames(FP.cov)=FP.names
-      estMCMC4=na.omit(estMCMC[,4])
-      RP.cov=matrix(NA,length(RP),length(RP))
-      k=1
-      for (i in 1:length(RP)){
-        for (j in 1:i){
-          RP.cov[i,j]=estMCMC4[k]
-          k=k+1
-        }
-      }
-      colnames(RP.cov)=rownames(RP.cov)=RP.names
-      
+       
       if (sum(grepl("bcons",colnames(chains)))>0){
         bcons.pos=grep("bcons",colnames(chains))
         chains[1,bcons.pos]=chains[1,bcons.pos]-0.001

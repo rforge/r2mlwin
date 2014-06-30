@@ -999,14 +999,6 @@ MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, cate
   if (!is.null(smat)){
     wrt(paste("SMAT ", smat[1], smat[2]))
   }
-  if (!is.null(fact)){
-    if (D[1]=="Multinomial"||D[1]=="Multivariate Normal"||D[1]=="Mixed"){
-      fact$lev.fact=fact$lev.fact+1
-    }
-    for (i in 1:fact$nfact){
-      wrt(paste("SMAT ",fact$lev.fact[i],0))
-    }
-  }
   
   nexpl=length(expl)
   wrt("")
@@ -1021,7 +1013,7 @@ MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, cate
   if (!is.null(fact)){
     TT=NULL
     for (i in 1:fact$nfact){
-      TT=c(TT, fact$lev.fact[i], matrix(rbind(fact$loading[i,],fact$constr[i,]),nrow=1))
+      TT=c(TT, fact$lev.fact[i]+1, matrix(rbind(fact$loading[i,],fact$constr[i,]),nrow=1))
     }
     if (fact$nfactcor>0) TT=c(TT,fact$factcor)
     FACT=as.vector(c(length(resp),fact$nfact, fact$nfactcor,TT))
@@ -1055,13 +1047,13 @@ MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, cate
       wrt(paste("JOIN ",paste(startval$FP.b, collapse=" "), " '_FP_b'",sep=""))
     }
     if (!is.null(startval$FP.v)){
-      wrt(paste("JOIN ",paste(startval$FP.v, collapse=" "), " '_FP_v'",sep=""))
+      wrt(paste("JOIN ",paste(startval$RP.v[!upper.tri(startval$RP.v)], collapse=" "), " '_FP_v'",sep=""))
     }
     if (!is.null(startval$RP.b)){
       wrt(paste("JOIN ",paste(startval$RP.b, collapse=" "), " '_RP_b'",sep=""))
     }
     if (!is.null(startval$RP.v)){
-      wrt(paste("JOIN ",paste(startval$RP.v, collapse=" "), " '_RP_v'",sep=""))
+      wrt(paste("JOIN ",paste(startval$RP.v[!upper.tri(startval$RP.v)], collapse=" "), " '_RP_v'",sep=""))
     }
   } else {
     wrt("BATC 1")

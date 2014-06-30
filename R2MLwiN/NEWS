@@ -1,3 +1,10 @@
+Mon Jun 30 2014
+1. Bug fixing
+   * Return full covariance matrices in FP.cov and RP.cov
+
+2. Changes
+   * Enabled matching starting values on parameter names (allowing subsets of parameters to be specified)
+
 Fri Jun 20 2014
 1. Bug fixing
    * Added check that CAR is only requested at one level, unless CAR mean centring is turned on
