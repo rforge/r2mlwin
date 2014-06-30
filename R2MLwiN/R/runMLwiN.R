@@ -786,7 +786,7 @@ version:date:md5:filename:x64:trial
       names(sval$FP) <- FP.names
     }
 
-    if (!is.null(sval$FP.cov) && (is.null(rownames(sval$FP)) || is.null(rownames(sval$FP)))) {
+    if (!is.null(sval$FP.cov) && (is.null(rownames(sval$FP.cov)) || is.null(colnames(sval$FP.cov)))) {
       rownames(sval$FP.cov) <- FP.names
       colnames(sval$FP.cov) <- FP.names
     }
@@ -795,7 +795,7 @@ version:date:md5:filename:x64:trial
       names(sval$RP) <- RP.names
     }
 
-    if (!is.null(sval$RP.cov) && (is.null(rownames(sval$RP)) || is.null(rownames(sval$RP)))) {
+    if (!is.null(sval$RP.cov) && (is.null(rownames(sval$RP.cov)) || is.null(colnames(sval$RP.cov)))) {
       rownames(sval$RP.cov) <- RP.names
       colnames(sval$RP.cov) <- RP.names
     }
