@@ -445,7 +445,6 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
         for (j in 2:length(D)){
           if (D[[j]][1] == 'Binomial' | D[[j]][1] == 'Poisson'){
             rp[["rp1"]] = c(rp[["rp1"]], paste0("bcons.", j-1))
-            
           }
         }
       }
@@ -737,6 +736,14 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
       fixs=unlist(strsplit(fixs,"\\|"))
       fixs=unlist(strsplit(fixs[2],"\\+"))
     }
+    rp=list()
+    if (D[1] == 'Poisson'){
+      rp[["rp1"]] = "bcons.1"
+    }
+    if (D[1] == 'Negbinom'){
+      rp[["rp1"]] = c("bcons.1", "bcons2.1")
+    }
+
     if(nlev>1){
       effect.lev=nlev:2
       rands.no=rep(NA,nlev-1)
@@ -768,14 +775,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
         }
       }
       
-      rp=list()
       rp.names=NULL
-      if (D[1] == 'Poisson'){
-        rp[["rp1"]] = c(rp[["rp1"]], "bcons.1")
-      }
-      if (D[1] == 'Negbinom'){
-        rp[["rp1"]] = c(rp[["rp1"]], "bcons.1", "bcons2.1")
-      }
       for (i in 1:length(rands)){
         if (!is.na(rands[[i]][1])){
           rp.name=paste("rp",effect.lev[i],sep="")
@@ -789,7 +789,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
         }
       }
     }else{
-      rp=nonfps=NULL
+      nonfps=NULL
     }
     
     invars <-new.env()

@@ -2,6 +2,7 @@ Mon Jun 30 2014
 1. Bug fixing
    * Return full covariance matrices in FP.cov and RP.cov
    * Fix level numbers in residual names for Multivariate/Multinomial models
+   * Allow single-level binomial/Poisson/negative binomial models to be fitted
 
 2. Changes
    * Enabled matching starting values on parameter names (allowing subsets of parameters to be specified)
