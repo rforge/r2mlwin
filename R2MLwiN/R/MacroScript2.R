@@ -1834,7 +1834,7 @@ MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, cate
     wrt("LINK 0 G27")
     wrt("LINK 0 G26")
     
-    calcresiduals = function(level, rpx, resioptions, clre=clre){
+    calcresiduals = function(level, displevel, rpx, resioptions, clre=clre){
       wrt("")
       if (!("norecode"%in%resioptions)){
         wrt("MISR 0")
@@ -1847,13 +1847,13 @@ MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, cate
       for (k in 1:len.rpx){
         if (!is.null(clre)){
           if (!(level==as.numeric(clre[1,ii])&&rpx[k]==clre[2,ii]&&rpx[k]==clre[3,ii])){
-            wrt(paste0("NAME G26[", k, "] ", paste0("'lev_",level,"_resi_est_",rpx[k],"'")))
+            wrt(paste0("NAME G26[", k, "] ", paste0("'lev_",displevel,"_resi_est_",rpx[k],"'")))
             wrt(paste0("DESC G26[", k, "] ", "'residual estimates'"))
           }else{
             if (ii<ncol(clre)) ii = ii+1
           }
         }else{
-          wrt(paste0("NAME G26[", k, "] ", paste0("'lev_",level,"_resi_est_",rpx[k],"'")))
+          wrt(paste0("NAME G26[", k, "] ", paste0("'lev_",displevel,"_resi_est_",rpx[k],"'")))
           wrt(paste0("DESC G26[", k, "] ", "'residual estimates'"))
         }
       }
@@ -1864,13 +1864,13 @@ MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, cate
         for (k in 1:len.rpx){
           if (!is.null(clre)){
             if (!(level==as.numeric(clre[1,ii])&&rpx[k]==clre[2,ii]&&rpx[k]==clre[3,ii])){
-              wrt(paste0("NAME G27[",k,"] ", paste0("'lev_",level,"_resi_variance_",rpx[k],"'")))
+              wrt(paste0("NAME G27[",k,"] ", paste0("'lev_",displevel,"_resi_variance_",rpx[k],"'")))
               wrt(paste0("DESC G27[",k,"] ", "'residual variance'"))
             }else{
               if (ii<ncol(clre)) ii = ii+1
             }
           }else{
-            wrt(paste0("NAME G27[",k,"] ", paste0("'lev_",level,"_resi_variance_",rpx[k],"'")))
+            wrt(paste0("NAME G27[",k,"] ", paste0("'lev_",displevel,"_resi_variance_",rpx[k],"'")))
             wrt(paste0("DESC G27[",k,"] ", "'residual variance'"))
           }
         }
@@ -1880,13 +1880,13 @@ MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, cate
         for (k in 1:len.rpx){
           if (!is.null(clre)){
             if (!(level==as.numeric(clre[1,ii])&&rpx[k]==clre[2,ii]&&rpx[k]==clre[3,ii])){
-              wrt(paste0("NAME G27[",k,"] ", paste0("'lev_",level,"_resi_se_",rpx[k],"'")))
+              wrt(paste0("NAME G27[",k,"] ", paste0("'lev_",displevel,"_resi_se_",rpx[k],"'")))
               wrt(paste0("DESC G27[",k,"] ", "'residual standard error'"))
             }else{
               if (ii<ncol(clre)) ii = ii+1
             }
           }else{
-            wrt(paste0("NAME G27[",k,"] ", paste0("'lev_",level,"_resi_se_",rpx[k],"'")))
+            wrt(paste0("NAME G27[",k,"] ", paste0("'lev_",displevel,"_resi_se_",rpx[k],"'")))
             wrt(paste0("DESC G27[",k,"] ", "'residual standard error'"))
           }
         }
@@ -1906,13 +1906,13 @@ MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, cate
         for (k in 1:len.rpx){
           if (!is.null(clre)){
             if (!(level==as.numeric(clre[1,ii])&&rpx[k]==clre[2,ii]&&rpx[k]==clre[3,ii])){
-              wrt(paste0("NAME G28[",k,"] ", paste0("'lev_",level,"_std_resi_est_",rpx[k],"'")))
+              wrt(paste0("NAME G28[",k,"] ", paste0("'lev_",displevel,"_std_resi_est_",rpx[k],"'")))
               wrt(paste0("DESC G28[",k,"] ", "'std standardised residual'"))
             }else{
               if (ii<ncol(clre)) ii = ii+1
             }
           }else{
-            wrt(paste0("NAME G28[",k,"] ", paste0("'lev_",level,"_std_resi_est_",rpx[k],"'")))
+            wrt(paste0("NAME G28[",k,"] ", paste0("'lev_",displevel,"_std_resi_est_",rpx[k],"'")))
             wrt(paste0("DESC G28[",k,"] ", "'std standardised residual'"))
           }
         }
@@ -1942,7 +1942,7 @@ MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, cate
       wrt(paste0("NOBS ", level, " b30 b31"))
       wrt("LINK 1 G29")
       wrt("GENE 1 b30 1 G29[1]")
-      wrt(paste0("NAME G29[1] 'lev_",level,"_residualid'"))
+      wrt(paste0("NAME G29[1] 'lev_",displevel,"_residualid'"))
       outgroups <- c(outgroups, "G29")
       if (!("norecode"%in%resioptions)){
         wrt("MISR 1")
@@ -1957,7 +1957,11 @@ MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, cate
         len.rpx=length(rp[[j]])
         wrt(paste("NOTE Calculate level ",as.numeric(sub("rp","",rp.names[j]))," residuals",sep=""))
         levtt=as.numeric(sub("rp","",rp.names[j]))
-        calcresiduals(levtt, rpx, resioptions, clre=clre)
+        displevel = levtt
+        if (D[1] == "Multivariate Normal" || D[1] == "Mixed" || D[1] == "Multinomial") {
+          displevel <- displevel - 1
+        }
+        calcresiduals(levtt, displevel, rpx, resioptions, clre=clre)
         wrt(paste("PSTA '", resifile, "' G30",sep=""))
       }
       wrt("ERAS G30")
