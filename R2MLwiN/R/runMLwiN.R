@@ -369,7 +369,7 @@ version:date:md5:filename:x64:trial
         }
 
         if (nrow(estoptions$constraints$fixed.ui) != numfp) {
-          stop("number of rows for fixed.ci must equal the number of fixed parameters")
+          stop(paste("number of rows for fixed.ci must equal the number of fixed parameters:", numfp))
         }
 
         fcon <- rbind(estoptions$constraints$fixed.ui, estoptions$constraints$fixed.ci)
@@ -396,7 +396,7 @@ version:date:md5:filename:x64:trial
         }
 
         if (nrow(estoptions$constraints$random.ui) != numrp) {
-          stop("number of rows for random.ci must equal the number of random parameters")
+          stop(paste("number of rows for random.ui must equal the number of random parameters", numrp))
         }
 
         rcon <- rbind(estoptions$constraints$random.ui, estoptions$constraints$random.ci)
