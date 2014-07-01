@@ -8,6 +8,7 @@ Mon Jun 30 2014
    * Enabled matching starting values on parameter names (allowing subsets of parameters to be specified)
    * Enabled use of the coef, vcov and logLik functions
    * Added stubs for predict, residuals, df.residual and fitted
+   * Added further example data
 
 Fri Jun 20 2014
 1. Bug fixing
