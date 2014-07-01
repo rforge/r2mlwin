@@ -807,7 +807,7 @@ version:date:md5:filename:x64:trial
     if (!is.null(sval$FP.v) && !is.null(sharedFP)) {
       FP.cov[sharedFP, sharedFP] <- sval$FP.v[sharedFP, sharedFP]
     }
-    sharedRP <- intersect(RP.names, names(sval$RP))
+    sharedRP <- intersect(RP.names, names(sval$RP.b))
     if (!is.null(sval$RP.b) && !is.null(sharedRP)) {
       RP[sharedRP] <- sval$RP.b[sharedRP]
     }
