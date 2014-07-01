@@ -10,18 +10,15 @@ MacroScript1 is an internal function which creates an MLwiN macro file to fit a 
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-MacroScript1(indata, dtafile, resp,
-levID, expl, rp, D = "Normal",
-nonlinear = c(0, 1), categ = NULL,
-notation = NULL, nonfp = NA,
-clre, smat, Meth = 1,
-BUGO = NULL, mem.init = "default",
-optimat=F, weighting = NULL,
-modelfile = modelfile,
-initfile = initfile, datafile = datafile,
-macrofile = macrofile, IGLSfile = IGLSfile,
-resifile = resifile, resi.store = resi.store,
-resioptions = resioptions, debugmode = debugmode)
+MacroScript1(indata, dtafile, resp, levID, expl, rp, D = "Normal", 
+nonlinear = c(0, 1), categ = NULL, notation = NULL,
+nonfp = NA, clre, smat, Meth = 1, extra = F, reset,
+rcon, fcon, BUGO = NULL, mem.init = "default", optimat = F,
+weighting = NULL, modelfile = modelfile, initfile = initfile,
+datafile = datafile, macrofile = macrofile, 
+IGLSfile = IGLSfile, resifile = resifile,
+resi.store = resi.store, resioptions = resioptions,
+debugmode = debugmode, startval = startval)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

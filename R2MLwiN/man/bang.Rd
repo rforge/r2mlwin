@@ -49,7 +49,8 @@ F1=log(use4,cons,use4_4)~(0|cons+lc[lc0])+(2|cons)
 ID=c('district','woman')
 estoptions= list(EstM=1, nonlinear=c(1,2))
 
-(mymodel=runMLwiN(formula=F1, levID=ID, D='Unordered Multinomial', indata=bang, estoptions=estoptions))
+(mymodel=runMLwiN(formula=F1, levID=ID, D='Unordered Multinomial', 
+                  indata=bang, estoptions=estoptions))
 
 }
 }

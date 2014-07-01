@@ -8,36 +8,21 @@ Writes MLwiN macros to fit models using Markov chain Monte Carlo (MCMC) methods
 MacroScript2 is an internal function which creates an MLwiN macro file to fit models using MCMC.
 }
 \usage{
-MacroScript2(indata, dtafile, resp,
-levID, expl, rp,
-D, nonlinear, categ,
-notation, nonfp, clre,
-smat, Meth, merr, seed,
-iterations, burnin, scale,
-thinning, priorParam, refresh,
-fixM, residM, Lev1VarM,
-OtherVarM, adaption, priorcode,
-rate, tol, lclo,
-mcmcOptions, fact,
-xclass = NULL, BUGO = NULL,
-mem.init, optimat,nopause,
-modelfile = modelfile,
-initfile = initfile,
-datafile = datafile,
-macrofile = macrofile,
-IGLSfile = IGLSfile,
-MCMCfile = MCMCfile,
-chainfile = chainfile,
-MIfile = MIfile,
-resifile = resifile,
-resi.store = resi.store,
-resioptions=resioptions,
-resichains = resichains,
-FACTchainfile = FACTchainfile,
-resi.store.levs = resi.store.levs,
-debugmode = debugmode,
-startval = startval,
-dami = dami)
+MacroScript2(indata, dtafile, resp, levID, expl, rp, D, nonlinear,
+                 categ, notation, nonfp, clre, smat, Meth, merr,
+                 carcentre, seed, iterations, burnin, scale, thinning,
+                 priorParam, refresh, fixM, residM, Lev1VarM,
+                 OtherVarM, adaption, priorcode, rate, tol, lclo,
+                 mcmcOptions, fact, xclass = NULL, BUGO = NULL,
+                 mem.init, optimat = F, nopause, modelfile = modelfile,
+                 initfile = initfile, datafile = datafile, macrofile =
+                 macrofile, IGLSfile = IGLSfile, MCMCfile = MCMCfile,
+                 chainfile = chainfile, MIfile = MIfile, resifile =
+                 resifile, resi.store = resi.store, resioptions =
+                 resioptions, resichains = resichains, FACTchainfile =
+                 FACTchainfile, resi.store.levs = resi.store.levs,
+                 debugmode = debugmode, startval = startval, dami =
+                 dami)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

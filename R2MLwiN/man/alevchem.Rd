@@ -7,9 +7,9 @@
     \item{\code{lea}}{LEA ID.}
     \item{\code{estab}}{Establishment ID.}
     \item{\code{pupil}}{Pupil ID.}
-    \item{\code{a-point}}{A-level point score (\code{1} = F, \code{2} = E, \code{3} = D, \code{4} = C, \code{5} = B, \code{6} = A).}
-    \item{\code{gcse-tot}}{Total GCSE point score.}
-    \item{\code{gcse-no}}{Number of GCSEs taken.}
+    \item{\code{a_point}}{A-level point score (\code{1} = F, \code{2} = E, \code{3} = D, \code{4} = C, \code{5} = B, \code{6} = A).}
+    \item{\code{gcse_tot}}{Total GCSE point score.}
+    \item{\code{gcse_no}}{Number of GCSEs taken.}
     \item{\code{cons}}{Constant (= 1)}
     \item{\code{gender}}{Pupil's gender (\code{0} = male, code{1} = female).}
 }}
@@ -45,7 +45,8 @@ ID=c('estab','pupil')
 
 ## Fit the model
 
-(mymodel=runMLwiN(formula=F1, levID=ID, D='Ordered Multinomial', indata=alevchem, estoptions=list(EstM=1)))
+(mymodel <- runMLwiN(formula=F1, levID=ID, D='Ordered Multinomial', 
+                     indata=alevchem, estoptions=list(EstM=1)))
 
 }
 }

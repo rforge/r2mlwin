@@ -39,7 +39,8 @@ data(hungary1)
 
 F1 = c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2) ~ (0|cons+female) + (2|cons) + (1|cons)
 ID = c('school','student')
-(mymodel=runMLwiN(formula=F1, levID=ID, D='Multivariate Normal', indata=hungary1, estoptions=list(EstM=1)))
+(mymodel=runMLwiN(formula=F1, levID=ID, D='Multivariate Normal', 
+                  indata=hungary1, estoptions=list(EstM=1)))
 }
 }
 \keyword{datasets}

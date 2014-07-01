@@ -33,7 +33,8 @@ data(gcsecomp1)
 
 F1 = c(written,csework) ~ (0|cons+female) + (2|cons) + (1|cons)
 ID = c('school','student')
-(mymodel=runMLwiN(formula=F1, levID=ID, D='Multivariate Normal', indata=gcsecomp1, estoptions=list(EstM=1)))
+(mymodel=runMLwiN(formula=F1, levID=ID, D='Multivariate Normal', 
+                  indata=gcsecomp1, estoptions=list(EstM=1)))
 }
 }
 \keyword{datasets}

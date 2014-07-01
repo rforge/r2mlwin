@@ -36,7 +36,8 @@ data(rats)
 
 F1 = c(y8,y15,y22,y29,y36) ~ (0|cons) + (1|cons)
 ID = c('rat')
-(mymodel=runMLwiN(formula=F1, levID=ID, D='Multivariate Normal', indata=rats, estoptions=list(EstM=1)))
+(mymodel=runMLwiN(formula=F1, levID=ID, D='Multivariate Normal', 
+                  indata=rats, estoptions=list(EstM=1)))
 }
 }
 \keyword{datasets}

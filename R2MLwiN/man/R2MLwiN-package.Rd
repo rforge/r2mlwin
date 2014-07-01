@@ -13,8 +13,8 @@ MLwiN uses both classical and Bayesian approaches to fitting multilevel models, 
 \details{
 \tabular{ll}{
 Package: \tab R2MLwiN\cr
-Version: \tab 0.2-1\cr
-Date: \tab 2014-04-22\cr
+Version: \tab 0.2-2\cr
+Date: \tab 2014-07-01\cr
 License: \tab  GPL (>= 2)\cr
 }
 To use the package, the following objects should be specified:
@@ -52,7 +52,7 @@ library(R2MLwiN)
 ## Modify the following paths as appropriate.
 ## MLwiN folder
 mlwin ="C:/Program Files (x86)/MLwiN v2.29/"
-## MLwiN sample worksheet folder 
+## MLwiN sample worksheet folder
 wspath=paste(mlwin,"/samples/",sep="")
 
 ## MLwiN sample worksheet: tutorial dataset
