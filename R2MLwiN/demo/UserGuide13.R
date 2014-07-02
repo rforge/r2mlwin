@@ -1,0 +1,141 @@
+############################################################################
+#     MLwiN User Manual
+#
+# 13  Fitting Models to Repeated Measures Data . . . . . . . . . . . . . 191
+#
+#     Rasbash, J., Steele, F., Browne, W. J. and Goldstein, H. (2012).
+#     A User’s Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
+#     University of Bristol.
+############################################################################
+#     R script to replicate all analyses using R2MLwiN
+#
+#     Zhang, Z., Charlton, C., Parker, R, Leckie, G., and Browne, W.J.
+#     Centre for Multilevel Modelling, 2012
+#     http://www.bristol.ac.uk/cmm/software/R2MLwiN/
+############################################################################
+
+library(R2MLwiN)
+## Input the MLwiN tutorial data set
+# MLwiN folder
+mlwin <- getOption("MLwiN_path")
+while (!file.access(mlwin, mode=1)==0) {
+  cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
+  mlwin=scan(what=character(0),sep ="\n")
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
+}
+options(MLwiN_path=mlwin)
+
+# Double return HERE
+# User's input if necessary
+
+# 13.1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . .191
+
+# 13.2 A basic model . . . . . . . . . . . . . . . . . . . . . . . . . . 194
+
+data(reading1)
+summary(reading1)
+
+reading1[reading1==-10] <- NA
+
+summary(reading1)
+
+reading <- reshape(reading1, 
+  idvar="student", 
+  timevar="ID",
+  varying=c("READ1", "AGE1", "READ2", "AGE2", "READ3", "AGE3", "READ4", "AGE4", "READ5", "AGE5", "READ6", "AGE6"), 
+  sep="", 
+  direction="long"
+)
+
+reading <- reading[c("student", "ID", "AGE", "READ")]
+reading <- reading[order(reading$student, reading$ID),]
+
+colnames(reading) <- c("student", "occasion", "age", "reading")
+rownames(reading) <- NULL
+
+
+summary(reading)
+
+head(reading, 5)
+
+tab <- aggregate(reading~occasion, reading, function(x) c(N=length(x), mean=mean(x), sd=sd(x)))
+tab <- rbind(tab, c(NA,NA))
+tab$reading[7,] <- c(length(na.omit(reading$reading)), mean(na.omit(reading$reading)), sd(na.omit(reading$reading)))
+rownames(tab)[7] <- "Total"
+tab
+
+tab <- aggregate(age~occasion, reading, function(x) c(N=length(x), mean=mean(x), sd=sd(x)))
+tab <- rbind(tab, c(NA,NA))
+tab$age[7,] <- c(length(na.omit(reading$age)), mean(na.omit(reading$age)), sd(na.omit(reading$age)))
+rownames(tab)[7] <- "Total"
+tab
+
+reading$cons <- rep(1, nrow(reading))
+
+(mymodel1 <- runMLwiN(reading~(0|cons)+(1|cons)+(2|cons), levID=c("student", "occasion"), data=reading))
+
+
+# 13.3 A linear growth curve model . . . . . . . . . . . . . . . . . . . 201
+
+(mymodel2 <- runMLwiN(reading~(0|cons+age)+(1|cons)+(2|cons), levID=c("student", "occasion"), estoptions=list(startval=list(FP.b=mymodel1@FP, FP.v=mymodel1@FP.cov, RP.b=mymodel1@RP, RP.v=mymodel1@RP.cov)), data=reading))
+
+(mymodel3 <- runMLwiN(reading~(0|cons+age)+(1|cons)+(2|cons+age), levID=c("student", "occasion"), estoptions=list(resi.store=TRUE, startval=list(FP.b=mymodel2@FP, FP.v=mymodel2@FP.cov, RP.b=mymodel2@RP, RP.v=mymodel2@RP.cov)), data=reading))
+
+u0 <- na.omit(mymodel3@residual[,"lev_2_resi_est_cons"])
+u0std <- (u0 - mean(u0))/sd(u0)
+
+u1 <- na.omit(mymodel3@residual[,"lev_2_resi_est_age"])
+u1std <- (u1 - mean(u1))/sd(u1)
+
+plot(u0std, u1std, asp=1)
+
+e0 <- na.omit(mymodel3@residual[,"lev_1_resi_est_cons"])
+e0std <- (e0 - mean(e0))/sd(e0)
+e0rank <- rank(e0)
+e0uniform <- (e0rank - 0.5)/length(e0rank)
+e0nscore <- qnorm(e0uniform)
+
+plot(e0std, e0nscore, asp=1)
+
+# 13.4 Complex level 1 variation . . . . . . . . . . . . . . . . . . . . 204
+
+(mymodel4 <- runMLwiN(reading~(0|cons+age)+(1|cons+age)+(2|cons+age), levID=c("student", "occasion"), data=reading))
+
+# 13.5 Repeated measures modelling of non-linear polynomial growth . . . 205
+
+reading$agesq <- reading$age^2
+
+(mymodel5 <- runMLwiN(reading~(0|cons+age+agesq)+(1|cons+age)+(2|cons+age+agesq), levID=c("student", "occasion"), estoptions=list(resi.store=TRUE), data=reading))
+
+l2varfn <- mymodel5@RP["RP2_var_cons"] + 2*mymodel5@RP["RP2_cov_cons_age"]*reading$age + mymodel5@RP["RP2_var_age"]*reading$age^2 + 2*mymodel5@RP["RP2_cov_cons_agesq"]*reading$agesq + 2*mymodel5@RP["RP2_cov_age_agesq"]*reading$age*reading$agesq + mymodel5@RP["RP2_var_agesq"]*reading$agesq^2
+
+l1varfn <- mymodel5@RP["RP1_var_cons"] + 2*mymodel5@RP["RP1_cov_cons_age"]*reading$age + mymodel5@RP["RP1_var_age"]*reading$age^2
+
+totvarfn <- l2varfn + l2varfn
+
+plot(totvarfn, reading$age)
+
+xb <- as.matrix(reading[,c("cons", "age", "agesq")]) %*% as.matrix(mymodel5@FP)
+
+u0 <- na.omit(mymodel5@residual[,"lev_2_resi_est_cons"])
+u1 <- na.omit(mymodel5@residual[,"lev_2_resi_est_age"])
+u2 <- na.omit(mymodel5@residual[,"lev_2_resi_est_agesq"])
+
+yhat <- xb + u0[reading$student] + u1[reading$student]*reading$age + u2[reading$student]*reading$agesq
+
+plot(reading$age, yhat, type="n")
+lines(reading$age[reading$student==1], yhat[reading$student==1], col=1)
+lines(reading$age[reading$student==2], yhat[reading$student==2], col=2)
+lines(reading$age[reading$student==3], yhat[reading$student==3], col=3)
+lines(reading$age[reading$student==4], yhat[reading$student==4], col=4)
+
+plot(reading$age, yhat, type="n")
+lines(reading$age[reading$student==10], yhat[reading$student==10], col=1)
+lines(reading$age[reading$student==11], yhat[reading$student==11], col=2)
+lines(reading$age[reading$student==12], yhat[reading$student==12], col=3)
+lines(reading$age[reading$student==13], yhat[reading$student==13], col=4)
+lines(reading$age[reading$student==14], yhat[reading$student==14], col=4)
+
+# Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .209
+
+############################################################################

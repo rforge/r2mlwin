@@ -13,7 +13,9 @@ Depends:
     coda (>= 0.16-1),
     foreign (>= 0.8-46),
     rbugs (>= 0.5-7),
-    digest
+    digest,
+    car,
+    doBy
 Suggests:
     lme4 (>= 0.999999-0)
 Description: R2MLwiN is an R command interface to the MLwiN multilevel

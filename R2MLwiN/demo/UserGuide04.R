@@ -1,0 +1,93 @@
+############################################################################
+#     MLwiN User Manual
+#
+# 4   Random Intercept and Random Slope Models . . . . . . . . . . . . . .47
+#
+#     Rasbash, J., Steele, F., Browne, W. J. and Goldstein, H. (2012).
+#     A User’s Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
+#     University of Bristol.
+############################################################################
+#     R script to replicate all analyses using R2MLwiN
+#
+#     Zhang, Z., Charlton, C., Parker, R, Leckie, G., and Browne, W.J.
+#     Centre for Multilevel Modelling, 2012
+#     http://www.bristol.ac.uk/cmm/software/R2MLwiN/
+############################################################################
+
+library(R2MLwiN)
+## Input the MLwiN tutorial data set
+# MLwiN folder
+mlwin <- getOption("MLwiN_path")
+while (!file.access(mlwin, mode=1)==0) {
+  cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
+  mlwin=scan(what=character(0),sep ="\n")
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
+}
+options(MLwiN_path=mlwin)
+
+# Double return HERE
+# User's input if necessary
+
+# 4.1 Random intercept models . . . . . . . . . . . . . . . . . . . . . . 47
+
+data(tutorial)
+
+plot(tutorial$standlrt, tutorial$normexam, asp=1)
+
+(mymodel1 <- runMLwiN(normexam~(0|cons+standlrt)+(1|cons), levID=c("student"), data=tutorial))
+
+(mymodel2 <- runMLwiN(normexam~(0|cons+standlrt)+(1|cons)+(2|cons), levID=c("school", "student"), estoptions=list(resi.store=TRUE), data=tutorial))
+
+# 4.2 Graphing predicted school lines from a random intercept model . . . 51
+
+xbu <- as.matrix(tutorial[,c("cons", "standlrt")]) %*% as.matrix(mymodel2@FP)
+
+plot(tutorial$standlrt, xbu, type="l")
+
+u0 <- na.omit(mymodel2@residual$lev_2_resi_est_cons)
+
+xbu <- xbu + u0[tutorial$school]
+
+head(u0)
+
+plot(tutorial$standlrt, xbu, type="l")
+
+pred <- as.data.frame(cbind(tutorial$school, tutorial$standlrt, xbu)[order(tutorial$school, tutorial$standlrt), ])
+
+colnames(pred) <- c("school", "standlrt", "xbu")
+
+xyplot(xbu~standlrt, type="l", group=school, data=pred)
+
+# 4.3 The effect of clustering on the standard errors of coeficients . . .58
+
+tutorial <- cbind(tutorial,Untoggle(tutorial[["schgend"]],"schgend"))
+
+(mymodel3 <- runMLwiN(normexam~(0|cons+standlrt+schgend_boysch+schgend_girlsch)+(1|cons)+(2|cons), levID=c("school", "student"), data=tutorial))
+
+(mymodel4 <- runMLwiN(normexam~(0|cons+standlrt+schgend_boysch+schgend_girlsch)+(1|cons)+(2|cons), levID=c("student"), data=tutorial))
+
+# 4.4 Does the coeficient of standlrt vary across schools? Introducing a 
+#     random slope . . . . . . . . . . . . . . . . . . . . . . . . . . . .59
+
+(mymodel5 <- runMLwiN(normexam~(0|cons+standlrt)+(1|cons)+(2|cons+standlrt), levID=c("school", "student"), estoptions=list(resi.store=TRUE), data=tutorial))
+
+# 4.5 Graphing predicted school lines from a random slope model . . . . . 62
+
+xb <- as.matrix(tutorial[,c("cons", "standlrt")]) %*% as.matrix(mymodel5@FP)
+
+u <- cbind(na.omit(mymodel5@residual$lev_2_resi_est_cons), na.omit(mymodel5@residual$lev_2_resi_est_standlrt))
+
+rphat <- rowSums(as.matrix(tutorial[,c("cons", "standlrt")]) * as.matrix(u[tutorial$school,]))
+
+xbu = xb + rphat
+
+pred <- as.data.frame(cbind(tutorial$school, tutorial$standlrt, xbu)[order(tutorial$school, tutorial$standlrt), ])
+
+colnames(pred) <- c("school", "standlrt", "xbu")
+
+xyplot(xbu~standlrt, type="l", group=school, data=pred)
+
+
+#     Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . 64
+
+############################################################################

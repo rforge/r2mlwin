@@ -9,6 +9,7 @@ Mon Jun 30 2014
    * Enabled use of the coef, vcov and logLik functions
    * Added stubs for predict, residuals, df.residual and fitted
    * Added further example data
+   * Added examples to replicate the MLwiN User's guide
 
 Fri Jun 20 2014
 1. Bug fixing
