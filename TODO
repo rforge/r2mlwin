@@ -15,7 +15,6 @@ Add an option to allow the model to be set up but not run, useful for example if
 Allow smat option to apply to more than one level
 Make offset optional for Poisson and Negative-binomial
 Add implementation for predict, residuals, df.residual and fitted methods
-Fix output when as S.E. is zero (for example colinear parameters)
 
 Not currently implemented:
 Multinomial proportions - need manual calculation/reshaping

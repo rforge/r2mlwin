@@ -159,8 +159,8 @@ printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   }
   
   signifstar <- function(pval){
-    starstr="Error"
-    if (pval>=0&&pval<=1){
+    starstr="N/A"
+    if (!is.na(pval) && pval>=0&&pval<=1){
       if(pval<0.001){
         starstr='***'
       }
