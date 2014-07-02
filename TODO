@@ -21,6 +21,7 @@ Multinomial proportions - need manual calculation/reshaping
 Allow user specified design matrix (IGLS) - SETD command
 Debugging option to extract internal model matrices (IGLS) - XSS/VMAT/ZMAT/YRES/YMAT/XMAT commands
 Allow maximum IGLS iterations to be specified (and report in the output along with convergence indicator)
+Allow (R)IGLS tolerance to be specified
 
 Extra checks required:
 
