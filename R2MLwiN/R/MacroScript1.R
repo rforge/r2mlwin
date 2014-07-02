@@ -1091,6 +1091,8 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
   
   wrt("NOTE   Fit the model")
   wrt("ECHO 1")
+  wrt("BATC 1")
+  wrt("MAXI 2")
   wrt("STAR")
 
   wrt("NAME   c1098 '_FP_b'")
@@ -1099,6 +1101,7 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
   wrt("NAME   c1097 '_RP_v'")
 
   if (!is.null(startval)){
+    wrt("ITNU 1 0")
     if (!is.null(startval$FP.b)){
       wrt(paste("JOIN ",paste(startval$FP.b, collapse=" "), " '_FP_b'",sep=""))
     }
@@ -1120,7 +1123,7 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
     wrt("PAUS")
   }
 
-  wrt("BATC 1")
+  wrt("MAXI 20")
   wrt("NEXT")
   wrt("ECHO 0")
   wrt("MONI 1")
