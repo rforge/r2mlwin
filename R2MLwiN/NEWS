@@ -11,6 +11,8 @@ Mon Jun 30 2014
    * Added stubs for predict, residuals, df.residual and fitted
    * Added further example data
    * Added examples to replicate the MLwiN User's guide
+   * Added option to control the maximum number of iterations for (R)IGLS
+   * Added option to control the (R)IGLS convergence tolerance
 
 Fri Jun 20 2014
 1. Bug fixing

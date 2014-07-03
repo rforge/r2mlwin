@@ -1,4 +1,4 @@
-MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonlinear=c(0,1), categ=NULL,notation=NULL, nonfp=NA, clre,smat, Meth=1, extra=F,reset,rcon,fcon,
+MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonlinear=c(0,1), categ=NULL,notation=NULL, nonfp=NA, clre,smat, Meth=1, extra=F,reset,rcon,fcon,maxiter,convtol,
                          BUGO=NULL,mem.init="default", optimat=F, weighting=NULL,modelfile=modelfile,initfile=initfile,datafile=datafile,
                          macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode,startval=startval){
   
@@ -1123,7 +1123,8 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
     wrt("PAUS")
   }
 
-  wrt("MAXI 20")
+  wrt(paste("TOLE", convtol))
+  wrt(paste("MAXI", maxiter))
   wrt("NEXT")
   wrt("ECHO 0")
   wrt("MONI 1")

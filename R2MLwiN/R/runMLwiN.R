@@ -307,6 +307,12 @@ version:date:md5:filename:x64:trial
   optimat=estoptions$optimat
   if(is.null(optimat)) optimat=F
 
+  maxiter=estoptions$maxiter
+  if(is.null(maxiter)) maxiter=20
+
+  convtol=estoptions$tol
+  if(is.null(convtol)) convtol=2
+
   extra=estoptions$extra
   if(is.null(extra)) extra=F
   if (extra == TRUE) {
@@ -1145,7 +1151,7 @@ version:date:md5:filename:x64:trial
     } 
   }
   if (EstM==0){
-    MacroScript1(outdata, dtafile,resp, levID, expl, rp, D, nonlinear, categ,notation, nonfp, clre,smat,Meth,extra,reset,rcon,fcon,
+    MacroScript1(outdata, dtafile,resp, levID, expl, rp, D, nonlinear, categ,notation, nonfp, clre,smat,Meth,extra,reset,rcon,fcon,maxiter,convtol,
                  BUGO,mem.init, optimat, weighting,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,
                  IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode,startval=startval)
     iterations=estoptions$mcmcMeth$iterations
@@ -1197,7 +1203,7 @@ version:date:md5:filename:x64:trial
   
   # MCMC algorithm (using the starting values obtain from IGLS algorithm)
   if (EstM==1){
-    MacroScript2(outdata, dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,smat,Meth,merr,carcentre,
+    MacroScript2(outdata, dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,smat,Meth,merr,carcentre,maxiter,convtol,
                  seed,iterations,burnin,scale,thinning,priorParam,refresh,fixM,residM,Lev1VarM, 
                  OtherVarM,adaption,priorcode,rate, tol,lclo,mcmcOptions,fact,xclass,BUGO,mem.init,optimat,
                  nopause,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,MCMCfile=MCMCfile,
