@@ -1101,7 +1101,6 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
   wrt("NAME   c1097 '_RP_v'")
 
   if (!is.null(startval)){
-    wrt("ITNU 1 0")
     if (!is.null(startval$FP.b)){
       wrt(paste("JOIN ",paste(startval$FP.b, collapse=" "), " '_FP_b'",sep=""))
     }
