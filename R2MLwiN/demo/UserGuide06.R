@@ -58,11 +58,9 @@ tutorial["standlrtXhigh"] <- tutorial$standlrt*tutorial$high
 
 hilovars = c("high", "standlrtXhigh")
 hilopars = c("FP_high", "FP_standlrtXhigh")
-library(Matrix)
-FP.cov <- forceSymmetric(mymodel5@FP.cov, "L")
 
 hilodiff <- as.matrix(tutorial[,hilovars]) %*% as.matrix(mymodel5@FP[hilopars])
-hilodiff_se <- sqrt(diag(as.matrix(tutorial[,hilovars]) %*% FP.cov[hilopars, hilopars] %*% t(as.matrix(tutorial[,hilovars]))))
+hilodiff_se <- sqrt(diag(as.matrix(tutorial[,hilovars]) %*% mymodel5@FP.cov[hilopars, hilopars] %*% t(as.matrix(tutorial[,hilovars]))))
 
 hilodiff_lo <- hilodiff - 1.96*hilodiff_se
 hilodiff_hi <- hilodiff + 1.96*hilodiff_se
