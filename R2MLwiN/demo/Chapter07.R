@@ -60,11 +60,11 @@ sixway(mymodel1[[1]][,"beta[2]"])
 # 7.3 t distributed school residuals . . . . . . . . . . . . . . . . . . .92
 
 ## Download the model, initial, data files
-download.file("http://www.bristol.ac.uk/cmm/media/runmlwin/tutorial1_model.txt", paste(tempdir(),"/tutorial1_model.txt",sep=""), method="auto")
+download.file("http://www.bristol.ac.uk/cmm/media/r2mlwin/tutorial1_model.txt", paste(tempdir(),"/tutorial1_model.txt",sep=""), method="auto")
 file.show(paste(tempdir(),"/tutorial1_model.txt",sep="")); modelfile=paste(tempdir(),"/tutorial1_model.txt",sep="")
-download.file("http://www.bristol.ac.uk/cmm/media/runmlwin/tutorial1_inits.txt", paste(tempdir(),"/tutorial1_inits.txt",sep=""), method="auto")
+download.file("http://www.bristol.ac.uk/cmm/media/r2mlwin/tutorial1_inits.txt", paste(tempdir(),"/tutorial1_inits.txt",sep=""), method="auto")
 file.show(paste(tempdir(),"/tutorial1_inits.txt",sep="")); initfile=paste(tempdir(),"/tutorial1_inits.txt",sep="")
-download.file("http://www.bristol.ac.uk/cmm/media/runmlwin/tutorial1_data.txt", paste(tempdir(),"/tutorial1_data.txt",sep=""), method="auto")
+download.file("http://www.bristol.ac.uk/cmm/media/r2mlwin/tutorial1_data.txt", paste(tempdir(),"/tutorial1_data.txt",sep=""), method="auto")
 datafile=paste(tempdir(),"/tutorial1_data.txt",sep="")
 bugEst=paste(tempdir(),"/tutorial1_log.txt",sep="")
 
