@@ -16,6 +16,7 @@ Mon Jun 30 2014
    * Added option to control the maximum number of iterations for (R)IGLS
    * Added option to control the (R)IGLS convergence tolerance
    * (R)IGLS convergence is now reported in the output
+   * Added Log-likelihood to the output for (R)IGLS models
 
 Fri Jun 20 2014
 1. Bug fixing

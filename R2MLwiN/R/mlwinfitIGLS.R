@@ -207,6 +207,7 @@ printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   } else {
     cat("        The model did not converge after", object@Iterations, "iterations.\n")
   }
+  cat(paste("Log likelihood:     ", round(-0.5*object@LIKE,1)),"\n")
   cat(paste("Deviance statistic: ", round(object@LIKE,1)),"\n")
   cat(paste(rep("-",50),collapse="-"),"\n")
   cat("The model formula:\n")
