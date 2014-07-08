@@ -4,7 +4,7 @@
 setClass(Class = "mlwinfitIGLS", representation = representation(Nobs="numeric",DataLength="numeric",
                                                                  D="ANY", Formula="ANY", levID="character", estIGLS ="data.frame",
                                                                  FP="numeric", RP="numeric", RP.cov="matrix", FP.cov="matrix", LIKE="ANY",
-                                                                 elapsed.time="numeric", call="ANY",residual="data.frame"))
+                                                                 elapsed.time="numeric", call="ANY",residual="data.frame", Converged="logical", Iterations="numeric"))
 
 # extract parts of mlwinfitIGLS
 #
@@ -30,6 +30,8 @@ setMethod(
     if(i=="elapsed.time"){return(x@elapsed.time)}else {}
     if(i=="call"){return(x@call)}else {}
     if(i=="LIKE"){return(x@LIKE)}else {}
+    if(i=="Converged"){return(x@Converged)}else {}
+    if(i=="Iterations"){return(x@Iterations)}else {}
     #                if(i=="chains.bugs"){return(x@chains.bugs)}else {}
     if(i=="residual"){return(x@residual)}else {}
   }
@@ -58,6 +60,8 @@ setMethod(
     if(i=="elapsed.time"){return(x@elapsed.time)}else {}
     if(i=="call"){return(x@call)}else {}
     if(i=="LIKE"){return(x@LIKE)}else {}
+    if(i=="Converged"){return(x@Converged)}else {}
+    if(i=="Iterations"){return(x@Iterations)}else {}
     if(i=="residual"){return(x@residual)}else {}
   }
 )
@@ -85,6 +89,8 @@ setReplaceMethod(
     if(i=="elapsed.time"){x@elapsed.time<-value}else {}
     if(i=="call"){x@call<-value}else {}
     if(i=="LIKE"){x@LIKE<-value}else {}
+    if(i=="Converged"){x@Converged<-value}else {}
+    if(i=="Iterations"){x@Iterations<-value}else {}
     if(i=="residual"){x@residual<-value}else {}
     validObject(x)
     return (x)
@@ -113,6 +119,8 @@ setReplaceMethod(
     if(i=="elapsed.time"){x@elapsed.time<-value}else {}
     if(i=="call"){x@call<-value}else {}
     if(i=="LIKE"){x@LIKE<-value}else {}
+    if(i=="Converged"){x@Converged<-value}else {}
+    if(i=="Iterations"){x@Iterations<-value}else {}
     if(i=="residual"){x@residual<-value}else {}
     validObject(x)
     return (x)
@@ -183,7 +191,12 @@ printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   cat(paste(rep("-",50),collapse="*"),"\n")
   cat("MLwiN multilevel model",paste("(",object@D[1],")",sep=""),"\n")
   cat("Estimation algorithm:  IGLS        Elapsed time :",paste(round(object@elapsed.time,2),"s",sep=""), "\n")
-  cat("Number of obs: ",object@Nobs,"(from total",object@DataLength,")\n")
+  cat("Number of obs: ",object@Nobs,"(from total",object@DataLength,")")
+  if (object@Converged) {
+    cat("        The model converged after", object@Iterations, "iterations.\n")
+  } else {
+    cat("        The model did not converge after", object@Iterations, "iterations.\n")
+  }
   cat(paste("Deviance statistic: ", round(object@LIKE,1)),"\n")
   cat(paste(rep("-",50),collapse="-"),"\n")
   cat("The model formula:\n")

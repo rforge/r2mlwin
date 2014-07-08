@@ -1200,6 +1200,14 @@ version:date:md5:filename:x64:trial
 
     NTotal <- estIGLS[,dim(estIGLS)[2]][1]
     NUsed <- estIGLS[,dim(estIGLS)[2]][2]
+
+    if (estIGLS[,dim(estIGLS)[2]][8] == 1) {
+      Converged <- TRUE
+    } else {
+      Converged <- FALSE
+    }
+
+    Iterations <-  estIGLS[,dim(estIGLS)[2]][7]
   }
   
   # MCMC algorithm (using the starting values obtain from IGLS algorithm)
@@ -1445,6 +1453,8 @@ version:date:md5:filename:x64:trial
       outIGLS["FP.cov"]=FP.cov
       outIGLS["RP.cov"]=RP.cov
       outIGLS["LIKE"]=LIKE
+      outIGLS["Converged"]=Converged
+      outIGLS["Iterations"]=Iterations
       outIGLS["elapsed.time"]=time2[3]
       outIGLS["call"]=cl
       

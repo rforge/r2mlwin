@@ -14,6 +14,7 @@ Mon Jun 30 2014
    * Added examples to replicate the MLwiN User's guide
    * Added option to control the maximum number of iterations for (R)IGLS
    * Added option to control the (R)IGLS convergence tolerance
+   * (R)IGLS convergence is now reported in the output
 
 Fri Jun 20 2014
 1. Bug fixing
