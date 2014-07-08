@@ -19,7 +19,6 @@ Not currently implemented:
 Multinomial proportions - need manual calculation/reshaping
 Allow user specified design matrix (IGLS) - SETD command
 Debugging option to extract internal model matrices (IGLS) - XSS/VMAT/ZMAT/YRES/YMAT/XMAT commands
-Report estimation options (e.g. number of iterations) in output
 
 Extra checks required:
 
