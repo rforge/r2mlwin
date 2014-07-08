@@ -4,6 +4,7 @@ Mon Jun 30 2014
    * Fix level numbers in residual names for Multivariate/Multinomial models
    * Allow single-level binomial/Poisson/negative binomial models to be fitted
    * Fix output when Std. Err. is zero (for example if a parameter is collinear)
+   * Fix reported number of observations and observations in use
 
 2. Changes
    * Enabled matching starting values on parameter names (allowing subsets of parameters to be specified)

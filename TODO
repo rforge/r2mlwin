@@ -8,7 +8,6 @@ Allow specification of all ID/Weight columns instead of assuming they are consec
 Display hierarchy information in the model output
 Check all variables in the model actually exist in the data
 Fix CAR model example when running in OpenBUGS
-Fix negative reported observations for some multivariate models
 Add checking for mixed response models (MLwiN allows Normals plus binaries OR Poissons, all discrete responses must use the same link function)
 Revisit interactions, e.g. the following doesn't work: formula=log(obs,logexp)~(0|nation[]+nation[]:uvbi)+(2|cons)
 Add an option to allow the model to be set up but not run, useful for example if we just want to run a BUGS model or see the MLwiN syntax

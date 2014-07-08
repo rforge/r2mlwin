@@ -1145,6 +1145,13 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
   wrt("NOTE    *****************************************************************")
   wrt("LINK 1 G21")
   wrt("NAME   G21[1] '_Stats'")
+  if (D[1]=="Multivariate Normal" || D[1]=="Multinomial") {
+    wrt("NOBS 2 b31 b32")
+  } else {
+    wrt("NOBS 1 b31 b32")
+  }
+  wrt("EDIT 1 '_Stats' b31")
+  wrt("EDIT 2 '_Stats' b32")
   if (D[1]=="Normal" || D[1]=="Multivariate Normal"){
     wrt("LIKE   b100")
   }

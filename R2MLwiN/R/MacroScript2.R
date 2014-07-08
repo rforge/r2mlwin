@@ -1076,6 +1076,13 @@ MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, cate
 
   wrt("LINK 1 G30")
   wrt("NAME   G30[1] '_Stats'")
+  if (D[1]=="Multivariate Normal" || D[1]=="Multinomial") {
+    wrt("NOBS 2 b31 b32")
+  } else {
+    wrt("NOBS 1 b31 b32")
+  }
+  wrt("EDIT 1 '_Stats' b31")
+  wrt("EDIT 2 '_Stats' b32")
   if (D[1]=="Normal" || D[1]=="Multivariate Normal"){
     wrt("LIKE   b100")
   }
@@ -1326,6 +1333,13 @@ MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, cate
     wrt("NOTE    *****************************************************************")
     wrt("NOTE       Export the model results to R")
     wrt("NOTE    *****************************************************************")
+    if (D[1]=="Multivariate Normal" || D[1]=="Multinomial") {
+      wrt("NOBS 2 b31 b32")
+    } else {
+      wrt("NOBS 1 b31 b32")
+    }
+    wrt("EDIT 1 '_Stats' b31")
+    wrt("EDIT 2 '_Stats' b32")
     if (!(D[1]=="Mixed")&&is.null(merr)&&is.null(fact)){
       wrt("BDIC b1 b2 b3 b4")
       wrt("EDIT 3 '_Stats' b1")

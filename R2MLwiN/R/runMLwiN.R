@@ -1198,7 +1198,8 @@ version:date:md5:filename:x64:trial
         LIKE <- NA
     }
 
-    Missing <- estIGLS[,dim(estIGLS)[2]][9]
+    NTotal <- estIGLS[,dim(estIGLS)[2]][1]
+    NUsed <- estIGLS[,dim(estIGLS)[2]][2]
   }
   
   # MCMC algorithm (using the starting values obtain from IGLS algorithm)
@@ -1266,7 +1267,8 @@ version:date:md5:filename:x64:trial
         }
       }
 
-      Missing <- estMCMC[,dim(estMCMC)[2]][9]
+      NTotal <- estMCMC[,dim(estMCMC)[2]][1]
+      NUsed <- estMCMC[,dim(estMCMC)[2]][2]
       levID.display=""
       if (is.na(levID0[length(levID0)])){
         levID0=levID0[-length(levID0)]
@@ -1432,8 +1434,8 @@ version:date:md5:filename:x64:trial
   if (EstM==0){
     if (is.null(BUGO)){
       outIGLS=new("mlwinfitIGLS")
-      outIGLS["Nobs"]=nrow(indata)-Missing
-      outIGLS["DataLength"]=nrow(indata)
+      outIGLS["Nobs"]=NUsed
+      outIGLS["DataLength"]=NTotal
       outIGLS["D"]=D
       outIGLS["Formula"]=Formula
       outIGLS["levID"]=levID
@@ -1466,8 +1468,8 @@ version:date:md5:filename:x64:trial
   if (EstM==1){
     if (is.null(BUGO)){
       outMCMC=new("mlwinfitMCMC")
-      outMCMC["Nobs"]=nrow(indata)-Missing
-      outMCMC["DataLength"]=nrow(indata)
+      outMCMC["Nobs"]=NUsed
+      outMCMC["DataLength"]=NTotal
       outMCMC["burnin"]=burnin
       outMCMC["iterations"]=iterations
       outMCMC["D"]=D
