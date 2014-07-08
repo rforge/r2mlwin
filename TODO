@@ -1,37 +1,35 @@
-Allow omission of 0| for the fixed part in model formula
-Allow use of attach() -ed data
-
-Automatic calculation of VPC?
-
-Check MM/CAR ids/weights to ensure they are valid before running MLwiN
-Allow specification of all ID/Weight columns instead of assuming they are consecutive
-Display hierarchy information in the model output
-Check all variables in the model actually exist in the data
-Fix CAR model example when running in OpenBUGS
-Add checking for mixed response models (MLwiN allows Normals plus binaries OR Poissons, all discrete responses must use the same link function)
-Revisit interactions, e.g. the following doesn't work: formula=log(obs,logexp)~(0|nation[]+nation[]:uvbi)+(2|cons)
-Add an option to allow the model to be set up but not run, useful for example if we just want to run a BUGS model or see the MLwiN syntax
+Changes/Bug fixes
 Allow smat option to apply to more than one level
 Make offset optional for Poisson and Negative-binomial
 Add implementation for predict, residuals, df.residual and fitted methods
+Display hierarchy information in the model output
+Revisit interactions, e.g. the following doesn't work: formula=log(obs,logexp)~(0|nation[]+nation[]:uvbi)+(2|cons)
+Allow specification of all ID/Weight columns instead of assuming they are consecutive
+Fix CAR model example when running in OpenBUGS
 
-Not currently implemented:
-Multinomial proportions - need manual calculation/reshaping
-Allow user specified design matrix (IGLS) - SETD command
-Debugging option to extract internal model matrices (IGLS) - XSS/VMAT/ZMAT/YRES/YMAT/XMAT commands
+Data Checks:
+Check all variables in the model actually exist in the data
+(MCMC) Check MM/CAR ids/weights to ensure they are valid before running MLwiN
 
-Extra checks required:
-
-IGLS:
-Check lower levels are non-equal standardised weights if standardised weights are specified
-
-All:
-Check model has more than one level if > MQL1 specified
+Model Specification Checks:
 Check denom has been specified with binomial models
 Check model is Poisson/Negbinom if offset is specified
 Check there are no variables random at level 1 if model is discrete
 Check multinomial models have >=3 responses
 Check base category is defined (and exists in the data) for multinomial models
-Check hierarchical centring level is >=2
 Check ordered multinomial base is either the highest or lowest value
 Check no level-1 random variables are defined for binomial responses
+Check response types for mixed response models (MLwiN allows Normals plus binaries OR Poissons, all discrete responses must use the same link function)
+(IGLS) Check model has more than one level if > MQL1 specified
+(IGLS) Check lower levels are non-equal standardised weights if standardised weights are specified
+(MCMC) Check hierarchical centring level is >=2
+
+Additional Functionality:
+Allow omission of 0| for the fixed part in model formula
+Allow use of attach() -ed data
+Allow optional specification of the level IDs in the formula, e.g. (student|cons+standlrt) instead of (1|cons+standlrt), levID="student"
+Automatic calculation of VPC?
+Debugging option to extract internal model matrices (IGLS) - XSS/VMAT/ZMAT/YRES/YMAT/XMAT commands
+Allow user specified design matrix (IGLS) - SETD command
+Multinomial proportions - need manual calculation/reshaping
+Add an option to allow the model to be set up but not run, useful for example if we just want to run a BUGS model or see the MLwiN syntax
