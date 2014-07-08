@@ -996,17 +996,13 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
   wrt("")
 
   if (!is.null(fcon)) {
-    wrt("LINK 1 G21")
-    wrt(paste("JOIN", paste(as.vector(fcon), collapse=" "), "G21[1]"))
-    wrt("FCON G21[1]")
-    wrt("LINK 0 G21")
+    wrt("FCON b1001")
+    wrt(paste("JOIN cb1001", paste(as.vector(fcon), collapse=" "), "cb1001"))
   }
 
   if (!is.null(rcon)) {
-    wrt("LINK 1 G21")
-    wrt(paste("JOIN", paste(as.vector(rcon), collapse=" "), "G21[1]"))
-    wrt("RCON G21[1]")
-    wrt("LINK 0 G21")
+    wrt("RCON b1002")
+    wrt(paste("JOIN cb1002", paste(as.vector(rcon), collapse=" "), "cb1002"))
   }
   
   wrt("NOTE   Set estimation method")
