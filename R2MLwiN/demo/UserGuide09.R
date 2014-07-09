@@ -66,7 +66,8 @@ linearHypothesis(mymodel1, "FP_lc1 = FP_lc2")
 
 (mymodel4 <- runMLwiN(logit(use, cons)~(0|cons+lc1+lc2+lc3plus+age)+(2|cons), levID=c("district", "woman"), D="Binomial", data=bang))
 
-(mymodel5 <- runMLwiN(logit(use, cons)~(0|cons+lc1+lc2+lc3plus+age)+(2|cons), levID=c("district", "woman"), D="Binomial", estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel4@FP, FP.v=mymodel4@FP.cov, RP.b=mymodel4@RP, RP.v=mymodel4@RP.cov)), data=bang))
+(mymodel5 <- runMLwiN(logit(use, cons)~(0|cons+lc1+lc2+lc3plus+age)+(2|cons), levID=c("district", "woman"), D="Binomial",
+ estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel4@FP, FP.v=mymodel4@FP.cov, RP.b=mymodel4@RP, RP.v=mymodel4@RP.cov)), data=bang))
 
 linearHypothesis(mymodel5, "RP2_var_cons = 0")
 
@@ -110,17 +111,20 @@ bang["ed_lprim"] <- as.integer(bang$educ == "ed_lprim")
 bang["ed_uprim"] <- as.integer(bang$educ == "ed_uprim")
 bang["ed_secplus"] <- as.integer(bang$educ == "ed_secplus")
 
-(mymodel6 <- runMLwiN(logit(use, cons)~(0|cons+lc1+lc2+lc3plus+age+urban+ed_lprim+ed_uprim+ed_secplus+hindu)+(2|cons), levID=c("district", "woman"), D="Binomial", estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel5@FP, FP.v=mymodel5@FP.cov, RP.b=mymodel5@RP, RP.v=mymodel5@RP.cov)), data=bang))
+(mymodel6 <- runMLwiN(logit(use, cons)~(0|cons+lc1+lc2+lc3plus+age+urban+ed_lprim+ed_uprim+ed_secplus+hindu)+(2|cons), levID=c("district", "woman"), D="Binomial",
+ estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel5@FP, FP.v=mymodel5@FP.cov, RP.b=mymodel5@RP, RP.v=mymodel5@RP.cov)), data=bang))
 
 # 9.4 A two-level random coeficient model . . . . . . . . . . . . . . . .135
 
-(mymodel7 <- runMLwiN(logit(use, cons)~(0|cons+lc1+lc2+lc3plus+age+urban+ed_lprim+ed_uprim+ed_secplus+hindu)+(2|cons+urban), levID=c("district", "woman"), D="Binomial", estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel6@FP, FP.v=mymodel6@FP.cov, RP.b=mymodel6@RP, RP.v=mymodel6@RP.cov)), data=bang))
+(mymodel7 <- runMLwiN(logit(use, cons)~(0|cons+lc1+lc2+lc3plus+age+urban+ed_lprim+ed_uprim+ed_secplus+hindu)+(2|cons+urban), levID=c("district", "woman"), D="Binomial",
+ estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel6@FP, FP.v=mymodel6@FP.cov, RP.b=mymodel6@RP, RP.v=mymodel6@RP.cov)), data=bang))
 
 linearHypothesis(mymodel7, "RP2_cov_cons_urban = 0")
 linearHypothesis(mymodel7, "RP2_var_urban = 0")
 linearHypothesis(mymodel7, c("RP2_cov_cons_urban = 0", "RP2_var_urban = 0"))
 
-(mymodel8 <- runMLwiN(logit(use, cons)~(0|cons+lc1+lc2+lc3plus+age+urban+ed_lprim+ed_uprim+ed_secplus+hindu+d_lit+d_pray)+(2|cons+urban), levID=c("district", "woman"), D="Binomial", estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel7@FP, FP.v=mymodel7@FP.cov, RP.b=mymodel7@RP, RP.v=mymodel7@RP.cov)), data=bang))
+(mymodel8 <- runMLwiN(logit(use, cons)~(0|cons+lc1+lc2+lc3plus+age+urban+ed_lprim+ed_uprim+ed_secplus+hindu+d_lit+d_pray)+(2|cons+urban), levID=c("district", "woman"), D="Binomial",
+ estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel7@FP, FP.v=mymodel7@FP.cov, RP.b=mymodel7@RP, RP.v=mymodel7@RP.cov)), data=bang))
 
 # 9.5 Modelling binomial data . . . . . . . . . . . . . . . . . . . . . .139
 
@@ -136,6 +140,7 @@ colnames(bangshort) <- c("district", "d_lit", "d_pray", "use", "cons", "denom")
 
 (mymodel9 <- runMLwiN(logit(use, denom)~(0|cons+d_lit+d_pray)+(2|cons), levID=c("district", "district"), D="Binomial", data=bangshort))
 
-(mymodel10 <- runMLwiN(logit(use, denom)~(0|cons+d_lit+d_pray)+(2|cons), levID=c("district", "district"), D="Binomial", estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel9@FP, FP.v=mymodel9@FP.cov, RP.b=mymodel9@RP, RP.v=mymodel9@RP.cov)), data=bangshort))
+(mymodel10 <- runMLwiN(logit(use, denom)~(0|cons+d_lit+d_pray)+(2|cons), levID=c("district", "district"), D="Binomial",
+ estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel9@FP, FP.v=mymodel9@FP.cov, RP.b=mymodel9@RP, RP.v=mymodel9@RP.cov)), data=bangshort))
 
 ############################################################################

@@ -71,7 +71,8 @@ mmmec$irelandXuvbi <- mmmec$ireland * mmmec$uvbi
 mmmec$luxembourgXuvbi <- mmmec$luxembourg * mmmec$uvbi
 mmmec$netherlandsXuvbi <- mmmec$netherlands * mmmec$uvbi
 
-(mymodel5 <- runMLwiN(log(obs, logexp)~(0|belgium+wgermany+denmark+france+uk+italy+ireland+luxembourg+netherlands+belgiumXuvbi+wgermanyXuvbi+denmarkXuvbi+franceXuvbi+ukXuvbi+italyXuvbi+irelandXuvbi+luxembourgXuvbi+netherlandsXuvbi)+(2|cons), levID=c("region", "county"), D="Poisson", estoptions=list(Meth=0, nonlinear=c(N=1,M=2)), data=mmmec))
+(mymodel5 <- runMLwiN(log(obs, logexp)~(0|belgium+wgermany+denmark+france+uk+italy+ireland+luxembourg+netherlands+belgiumXuvbi+wgermanyXuvbi+denmarkXuvbi+franceXuvbi+ukXuvbi+italyXuvbi+irelandXuvbi+luxembourgXuvbi+netherlandsXuvbi)+(2|cons),
+ levID=c("region", "county"), D="Poisson", estoptions=list(Meth=0, nonlinear=c(N=1,M=2)), data=mmmec))
 
 xb <- as.matrix(mmmec[,c("belgium", "wgermany", "denmark", "france", "uk", "italy", "ireland", "luxembourg", "netherlands", "belgiumXuvbi", "wgermanyXuvbi", "denmarkXuvbi", "franceXuvbi", "ukXuvbi", "italyXuvbi", "irelandXuvbi", "luxembourgXuvbi", "netherlandsXuvbi")]) %*% as.matrix(mymodel5@FP)
 

@@ -33,7 +33,8 @@ options(MLwiN_path=mlwin)
 data(diag1)
 summary(diag1)
 
-(mymodel1 <- runMLwiN(n_ilea~(0|cons+n_vrq)+(1|cons)+(2|cons+n_vrq), levID=c("school", "pupil"), estoptions=list(resi.store=TRUE, resioptions=c("standardised", "leverage", "influence", "deletion")), data=diag1))
+(mymodel1 <- runMLwiN(n_ilea~(0|cons+n_vrq)+(1|cons)+(2|cons+n_vrq), levID=c("school", "pupil"),
+ estoptions=list(resi.store=TRUE, resioptions=c("standardised", "leverage", "influence", "deletion")), data=diag1))
 
 xb <- as.matrix(diag1[,c("cons", "n_vrq")]) %*% as.matrix(mymodel1@FP)
 
@@ -134,7 +135,8 @@ diag1[order(e0)[1], c("school", "pupil", "pupilnumber")]
 
 diag1$s17p22 <- as.integer(diag1$school==17 & diag1$pupilnumber==22)
 
-(mymodel2 <- runMLwiN(n_ilea~(0|cons+n_vrq+s17p22)+(1|cons)+(2|cons+n_vrq), levID=c("school", "pupil"), estoptions=list(resi.store=TRUE, startval=list(FP.b=mymodel1@FP, FP.v=mymodel1@FP.cov, RP.b=mymodel1@RP, RP.v=mymodel1@RP.cov)), data=diag1))
+(mymodel2 <- runMLwiN(n_ilea~(0|cons+n_vrq+s17p22)+(1|cons)+(2|cons+n_vrq), levID=c("school", "pupil"),
+ estoptions=list(resi.store=TRUE, startval=list(FP.b=mymodel1@FP, FP.v=mymodel1@FP.cov, RP.b=mymodel1@RP, RP.v=mymodel1@RP.cov)), data=diag1))
 
 u0 <- na.omit(mymodel2@residual$lev_2_resi_est_cons)
 u1 <- na.omit(mymodel2@residual$lev_2_resi_est_n_vrq)
@@ -167,9 +169,11 @@ points(x=which(u1rankno==sch17),y=u1[u1rankno[which(u1rankno==sch17)]],pch=22,bg
 diag1$s17 <- as.integer(diag1$school == 17)
 diag1$s17Xn_vrq <- diag1$s17*diag1$n_vrq
 
-(mymodel3 <- runMLwiN(n_ilea~(0|cons+n_vrq+s17p22+s17+s17Xn_vrq)+(1|cons)+(2|cons+n_vrq), levID=c("school", "pupil"), estoptions=list(startval=list(FP.b=mymodel2@FP, FP.v=mymodel2@FP.cov, RP.b=mymodel2@RP, RP.v=mymodel2@RP.cov)), data=diag1))
+(mymodel3 <- runMLwiN(n_ilea~(0|cons+n_vrq+s17p22+s17+s17Xn_vrq)+(1|cons)+(2|cons+n_vrq), levID=c("school", "pupil"),
+ estoptions=list(startval=list(FP.b=mymodel2@FP, FP.v=mymodel2@FP.cov, RP.b=mymodel2@RP, RP.v=mymodel2@RP.cov)), data=diag1))
 
-(mymodel4 <- runMLwiN(n_ilea~(0|cons+n_vrq+s17p22+s17)+(1|cons)+(2|cons+n_vrq), levID=c("school", "pupil"), estoptions=list(resi.store=TRUE, startval=list(FP.b=mymodel3@FP, FP.v=mymodel3@FP.cov, RP.b=mymodel3@RP, RP.v=mymodel3@RP.cov)), data=diag1))
+(mymodel4 <- runMLwiN(n_ilea~(0|cons+n_vrq+s17p22+s17)+(1|cons)+(2|cons+n_vrq), levID=c("school", "pupil"),
+ estoptions=list(resi.store=TRUE, startval=list(FP.b=mymodel3@FP, FP.v=mymodel3@FP.cov, RP.b=mymodel3@RP, RP.v=mymodel3@RP.cov)), data=diag1))
 
 xb <- as.matrix(diag1[,c("cons", "n_vrq", "s17p22", "s17")]) %*% as.matrix(mymodel4@FP)
 

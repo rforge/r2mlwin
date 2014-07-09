@@ -78,15 +78,20 @@ alevchem$school <- as.numeric(factor(paste0(alevchem$lea, alevchem$estab)))
 
 (mymodel7 <- runMLwiN(logit(a_point, cons, A)~(0|cons)+(1|cons)+(`2c`|cons), levID=c("school", "pupil"), D="Ordered Multinomial", data=alevchem))
 
-(mymodel8 <- runMLwiN(logit(a_point, cons, A)~(0|cons)+(1|cons)+(`2c`|cons), levID=c("school", "pupil"), D="Ordered Multinomial", estoptions=list(nonlinear=c(N=1,M=2)), data=alevchem))
+(mymodel8 <- runMLwiN(logit(a_point, cons, A)~(0|cons)+(1|cons)+(`2c`|cons), levID=c("school", "pupil"), D="Ordered Multinomial",
+ estoptions=list(nonlinear=c(N=1,M=2)), data=alevchem))
 
-(mymodel9 <- runMLwiN(logit(a_point, cons, A)~(0|cons)+(`0c`|gcseavnormal)+(`2c`|cons), levID=c("school", "pupil"), D="Ordered Multinomial", estoptions=list(nonlinear=c(N=1,M=2)), data=alevchem))
+(mymodel9 <- runMLwiN(logit(a_point, cons, A)~(0|cons)+(`0c`|gcseavnormal)+(`2c`|cons), levID=c("school", "pupil"), D="Ordered Multinomial",
+ estoptions=list(nonlinear=c(N=1,M=2)), data=alevchem))
 
-(mymodel10 <- runMLwiN(logit(a_point, cons, A)~(0|cons+gcseavnormal)+(`2c`|cons), levID=c("school", "pupil"), D="Ordered Multinomial", estoptions=list(nonlinear=c(N=1,M=2)), data=alevchem))
+(mymodel10 <- runMLwiN(logit(a_point, cons, A)~(0|cons+gcseavnormal)+(`2c`|cons), levID=c("school", "pupil"), D="Ordered Multinomial",
+ estoptions=list(nonlinear=c(N=1,M=2)), data=alevchem))
 
-(mymodel11 <- runMLwiN(logit(a_point, cons, A)~(0|cons)+(`0c`|gcseavnormal+female+gcse2)+(`2c`|cons), levID=c("school", "pupil"), D="Ordered Multinomial", estoptions=list(nonlinear=c(N=1,M=2)), data=alevchem))
+(mymodel11 <- runMLwiN(logit(a_point, cons, A)~(0|cons)+(`0c`|gcseavnormal+female+gcse2)+(`2c`|cons), levID=c("school", "pupil"), D="Ordered Multinomial",
+ estoptions=list(nonlinear=c(N=1,M=2)), data=alevchem))
 
-(mymodel12 <- runMLwiN(logit(a_point, cons, A)~(0|cons)+(`0c`|gcseavnormal+female+gcse2)+(`2c`|cons+gcseavnormal), levID=c("school", "pupil"), D="Ordered Multinomial", estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel11@FP, FP.v=mymodel11@FP.cov, RP.b=mymodel11@RP, RP.v=mymodel11@RP.cov)), data=alevchem))
+(mymodel12 <- runMLwiN(logit(a_point, cons, A)~(0|cons)+(`0c`|gcseavnormal+female+gcse2)+(`2c`|cons+gcseavnormal), levID=c("school", "pupil"), D="Ordered Multinomial",
+ estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel11@FP, FP.v=mymodel11@FP.cov, RP.b=mymodel11@RP, RP.v=mymodel11@RP.cov)), data=alevchem))
 
 invlogit <- function(x) exp(x)/(1+exp(x))
 
@@ -110,7 +115,8 @@ invlogit(mymodel12@FP["FP_cons_C"]+mymodel12@FP["FP_gcseavnormal"])
 
 invlogit(mymodel12@FP["FP_cons_B"]+mymodel12@FP["FP_gcseavnormal"])
 
-(mymodel13 <- runMLwiN(logit(a_point, cons, A)~(0|cons)+(`0c`|gcseavnormal+female+gcse2)+(`2c`|cons+gcseavnormal+female), levID=c("school", "pupil"), D="Ordered Multinomial", estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel12@FP, FP.v=mymodel12@FP.cov, RP.b=mymodel12@RP, RP.v=mymodel12@RP.cov)), data=alevchem))
+(mymodel13 <- runMLwiN(logit(a_point, cons, A)~(0|cons)+(`0c`|gcseavnormal+female+gcse2)+(`2c`|cons+gcseavnormal+female), levID=c("school", "pupil"), D="Ordered Multinomial",
+ estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel12@FP, FP.v=mymodel12@FP.cov, RP.b=mymodel12@RP, RP.v=mymodel12@RP.cov)), data=alevchem))
 
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .180

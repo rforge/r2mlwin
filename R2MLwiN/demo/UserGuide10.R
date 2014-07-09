@@ -60,7 +60,8 @@ cat(paste("Pr(y = 4) =", round(1/(1+exp(mymodel1@FP["FP_cons_ster"])+exp(mymodel
 
 (mymodel2 <- (runMLwiN(log(use4,cons,none)~(0|cons+lc1+lc2+lc3plus)+(2|cons), levID=c("district", "woman"), D="Unordered Multinomial", data=bang)))
 
-(mymodel3 <- (runMLwiN(log(use4,cons,none)~(0|cons+lc1+lc2+lc3plus)+(2|cons), levID=c("district", "woman"), D="Unordered Multinomial", estoptions=list(nonlinear=c(1,2), startval=list(FP.b=mymodel2@FP, FP.v=mymodel2@FP.cov, RP.b=mymodel2@RP, RP.v=mymodel2@RP.cov), resi.store=TRUE), data=bang)))
+(mymodel3 <- (runMLwiN(log(use4,cons,none)~(0|cons+lc1+lc2+lc3plus)+(2|cons), levID=c("district", "woman"), D="Unordered Multinomial",
+ estoptions=list(nonlinear=c(1,2), startval=list(FP.b=mymodel2@FP, FP.v=mymodel2@FP.cov, RP.b=mymodel2@RP, RP.v=mymodel2@RP.cov), resi.store=TRUE), data=bang)))
 
 
 mymodel3@RP["RP2_cov_cons_ster_cons_mod"]/sqrt(mymodel3@RP["RP2_var_cons_ster"]*mymodel3@RP["RP2_var_cons_mod"])

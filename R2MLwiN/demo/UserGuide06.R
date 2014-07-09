@@ -41,7 +41,8 @@ tutorial <- cbind(tutorial,Untoggle(tutorial[["schgend"]],"schgend"))
 tutorial["boyschXstandlrt"] <- tutorial$schgend_boysch * tutorial$standlrt
 tutorial["girlschXstandlrt"] <- tutorial$schgend_girlsch * tutorial$standlrt
 
-(mymodel3 <- runMLwiN(normexam~(0|cons+standlrt+sex+schgend_boysch+schgend_girlsch+boyschXstandlrt+girlschXstandlrt)+(1|cons)+(2|cons+standlrt), levID=c("school", "student"), estoptions=list(startval=list(FP.b=mymodel2@FP, FP.v=mymodel2@FP.cov, RP.b=mymodel2@RP, RP.v=mymodel2@RP.cov)), data=tutorial))
+(mymodel3 <- runMLwiN(normexam~(0|cons+standlrt+sex+schgend_boysch+schgend_girlsch+boyschXstandlrt+girlschXstandlrt)+(1|cons)+(2|cons+standlrt),
+ levID=c("school", "student"), estoptions=list(startval=list(FP.b=mymodel2@FP, FP.v=mymodel2@FP.cov, RP.b=mymodel2@RP, RP.v=mymodel2@RP.cov)), data=tutorial))
 
 
 # 6.2 Contextual effects of school intake ability averages . . . . . . . .83

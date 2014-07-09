@@ -77,9 +77,11 @@ reading$cons <- rep(1, nrow(reading))
 
 # 13.3 A linear growth curve model . . . . . . . . . . . . . . . . . . . 201
 
-(mymodel2 <- runMLwiN(reading~(0|cons+age)+(1|cons)+(2|cons), levID=c("student", "occasion"), estoptions=list(startval=list(FP.b=mymodel1@FP, FP.v=mymodel1@FP.cov, RP.b=mymodel1@RP, RP.v=mymodel1@RP.cov)), data=reading))
+(mymodel2 <- runMLwiN(reading~(0|cons+age)+(1|cons)+(2|cons), levID=c("student", "occasion"),
+ estoptions=list(startval=list(FP.b=mymodel1@FP, FP.v=mymodel1@FP.cov, RP.b=mymodel1@RP, RP.v=mymodel1@RP.cov)), data=reading))
 
-(mymodel3 <- runMLwiN(reading~(0|cons+age)+(1|cons)+(2|cons+age), levID=c("student", "occasion"), estoptions=list(resi.store=TRUE, startval=list(FP.b=mymodel2@FP, FP.v=mymodel2@FP.cov, RP.b=mymodel2@RP, RP.v=mymodel2@RP.cov)), data=reading))
+(mymodel3 <- runMLwiN(reading~(0|cons+age)+(1|cons)+(2|cons+age), levID=c("student", "occasion"),
+ estoptions=list(resi.store=TRUE, startval=list(FP.b=mymodel2@FP, FP.v=mymodel2@FP.cov, RP.b=mymodel2@RP, RP.v=mymodel2@RP.cov)), data=reading))
 
 u0 <- na.omit(mymodel3@residual[,"lev_2_resi_est_cons"])
 u0std <- (u0 - mean(u0))/sd(u0)
@@ -105,7 +107,8 @@ plot(e0std, e0nscore, asp=1)
 
 reading$agesq <- reading$age^2
 
-(mymodel5 <- runMLwiN(reading~(0|cons+age+agesq)+(1|cons+age)+(2|cons+age+agesq), levID=c("student", "occasion"), estoptions=list(resi.store=TRUE), data=reading))
+(mymodel5 <- runMLwiN(reading~(0|cons+age+agesq)+(1|cons+age)+(2|cons+age+agesq), levID=c("student", "occasion"),
+ estoptions=list(resi.store=TRUE), data=reading))
 
 l2varfn <- mymodel5@RP["RP2_var_cons"] + 2*mymodel5@RP["RP2_cov_cons_age"]*reading$age + mymodel5@RP["RP2_var_age"]*reading$age^2 + 2*mymodel5@RP["RP2_cov_cons_agesq"]*reading$agesq + 2*mymodel5@RP["RP2_cov_age_agesq"]*reading$age*reading$agesq + mymodel5@RP["RP2_var_agesq"]*reading$agesq^2
 
