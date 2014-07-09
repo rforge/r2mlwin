@@ -1090,6 +1090,22 @@ version:date:md5:filename:x64:trial
     }
   }
 
+  hierarchy <- NULL
+  shortID <- na.omit(rev(levID))
+  if (length(shortID) > 1) {
+    for (lev in length(shortID):2) {
+      if (!is.null(xclass)) {
+        groupsize <- by(outdata, outdata[,shortID[lev]], nrow)
+      } else {
+        groupsize <- na.omit(as.vector(by(outdata, outdata[,shortID[lev:length(shortID)]], nrow)))
+      }
+      groupinfo <- cbind(length(groupsize), min(groupsize), mean(groupsize), max(groupsize))
+      colnames(groupinfo) <- c("N", "min", "mean", "max")
+      rownames(groupinfo) <- shortID[lev]
+      hierarchy <- rbind(hierarchy, groupinfo)
+    }
+  }
+
   if (!file.access(workdir)==0) dir.create(workdir)
   
   dtafile = gsub("\\", "/", tempfile("dtafile_",tmpdir =workdir, fileext=".dta"), fixed=TRUE)
@@ -1445,6 +1461,7 @@ version:date:md5:filename:x64:trial
       outIGLS=new("mlwinfitIGLS")
       outIGLS["Nobs"]=NUsed
       outIGLS["DataLength"]=NTotal
+      outIGLS["Hierarchy"]=hierarchy
       outIGLS["D"]=D
       outIGLS["Formula"]=Formula
       outIGLS["levID"]=levID
@@ -1482,6 +1499,7 @@ version:date:md5:filename:x64:trial
       outMCMC=new("mlwinfitMCMC")
       outMCMC["Nobs"]=NUsed
       outMCMC["DataLength"]=NTotal
+      outMCMC["Hierarchy"]=hierarchy
       outMCMC["burnin"]=burnin
       outMCMC["iterations"]=iterations
       outMCMC["D"]=D

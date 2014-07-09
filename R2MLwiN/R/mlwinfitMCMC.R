@@ -1,4 +1,4 @@
-setClass(Class = "mlwinfitMCMC", representation = representation(Nobs="numeric",DataLength="numeric",burnin="numeric",iterations="numeric",
+setClass(Class = "mlwinfitMCMC", representation = representation(Nobs="numeric",DataLength="numeric",Hierarchy="ANY",burnin="numeric",iterations="numeric",
                                                                  D="ANY", Formula="ANY", levID="character", merr="ANY", fact="ANY", xclass="ANY", estMCMC ="data.frame",
                                                                  FP="numeric", RP="numeric", RP.cov="matrix", FP.cov="matrix", chains="ANY",
                                                                  elapsed.time="numeric", call="ANY",BDIC="numeric",LIKE="ANY",fact.loadings="numeric",fact.loadings.sd="numeric",
@@ -10,6 +10,7 @@ setMethod(
   definition=function(x,i,j,drop){
     if(i=="Nobs"){return(x@Nobs)}else {}
     if(i=="DataLength"){return(x@DataLength)}else {}                
+    if(i=="Hierarchy"){return(x@Hierarchy)}else {}        
     if(i=="burnin"){return(x@burnin)}else {}
     if(i=="iterations"){return(x@iterations)}else {}
     if(i=="D"){return(x@D)}else {}
@@ -45,6 +46,7 @@ setReplaceMethod(
   definition=function(x,i,j,value){
     if(i=="Nobs"){x@Nobs<-value}else {}
     if(i=="DataLength"){x@DataLength<-value}else {}                                           
+    if(i=="Hierarchy"){x@Hierarchy<-value}else {} 
     if(i=="burnin"){x@burnin<-value}else {}
     if(i=="iterations"){x@iterations<-value}else {}
     if(i=="D"){x@D<-value}else {}
@@ -82,6 +84,7 @@ setMethod(
   definition=function(x,i,j,drop){
     if(i=="Nobs"){return(x@Nobs)}else {}
     if(i=="DataLength"){return(x@DataLength)}else {}
+    if(i=="Hierarchy"){return(x@Hierarchy)}else {}
     if(i=="burnin"){return(x@burnin)}else {}
     if(i=="iterations"){return(x@iterations)}else {}
     if(i=="D"){return(x@D)}else {}
@@ -117,6 +120,7 @@ setReplaceMethod(
   definition=function(x,i,j,value){
     if(i=="Nobs"){x@Nobs<-value}else {}
     if(i=="DataLength"){x@DataLength<-value}else {}
+    if(i=="Hierarchy"){x@Hierarchy<-value}else {}
     if(i=="burnin"){x@burnin<-value}else {}
     if(i=="iterations"){x@iterations<-value}else {}
     if(i=="D"){x@D<-value}else {}
@@ -215,6 +219,7 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   cat("\n")
   cat(paste(rep("-",50),collapse="*"),"\n")
   cat("MLwiN multilevel model",paste("(",object@D[1],")",sep=""),"\n")
+  if (!is.null(object@Hierarchy)) print(object@Hierarchy)
   if (is.null(object@xclass)){
     cat("Estimation algorithm:  MCMC      Elapsed time :",paste(round(object@elapsed.time,2),"s",sep=""), "\n")
   }else{

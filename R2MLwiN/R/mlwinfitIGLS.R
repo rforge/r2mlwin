@@ -1,7 +1,7 @@
 # An S4 class that stores the outputs of the fitted model.
 # @slot a contains an R object
 # @export
-setClass(Class = "mlwinfitIGLS", representation = representation(Nobs="numeric",DataLength="numeric",
+setClass(Class = "mlwinfitIGLS", representation = representation(Nobs="numeric",DataLength="numeric",Hierarchy="ANY",
                                                                  D="ANY", Formula="ANY", levID="character", estIGLS ="data.frame",
                                                                  FP="numeric", RP="numeric", RP.cov="matrix", FP.cov="matrix", LIKE="ANY",
                                                                  elapsed.time="numeric", call="ANY",residual="data.frame", Converged="logical", Iterations="numeric", Meth="numeric"))
@@ -19,6 +19,7 @@ setMethod(
   definition=function(x,i,j,drop){
     if(i=="Nobs"){return(x@Nobs)}else {}
     if(i=="DataLength"){return(x@DataLength)}else {}
+    if(i=="Hierarchy"){return(x@Hierarchy)}else {}
     if(i=="D"){return(x@D)}else {}
     if(i=="Formula"){return(x@Formula)}else {}
     if(i=="levID"){return(x@levID)}else {}
@@ -50,6 +51,7 @@ setMethod(
   definition=function(x,i,j,drop){
     if(i=="Nobs"){return(x@Nobs)}else {}  
     if(i=="DataLength"){return(x@DataLength)}else {}
+    if(i=="Hierarchy"){return(x@Hierarchy)}else {}
     if(i=="D"){return(x@D)}else {}
     if(i=="Formula"){return(x@Formula)}else {}
     if(i=="levID"){return(x@levID)}else {}
@@ -80,6 +82,7 @@ setReplaceMethod(
   definition=function(x,i,j,value){
     if(i=="Nobs"){x@Nobs<-value}else {}
     if(i=="DataLength"){x@DataLength<-value}else {}
+    if(i=="Hierarchy"){x@Hierarchy<-value}else {}
     if(i=="D"){x@D<-value}else {}
     if(i=="Formula"){x@Formula<-value}else {}
     if(i=="levID"){x@levID<-value}else {}
@@ -111,6 +114,7 @@ setReplaceMethod(
   definition=function(x,i,j,value){
     if(i=="Nobs"){x@Nobs<-value}else {}
     if(i=="DataLength"){x@DataLength<-value}else {}
+    if(i=="Hierarchy"){x@Hierarchy<-value}else {}
     if(i=="D"){x@D<-value}else {}
     if(i=="Formula"){x@Formula<-value}else {}
     if(i=="levID"){x@levID<-value}else {}
@@ -194,6 +198,7 @@ printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   cat("\n")
   cat(paste(rep("-",50),collapse="*"),"\n")
   cat("MLwiN multilevel model",paste("(",object@D[1],")",sep=""),"\n")
+  if (!is.null(object@Hierarchy)) print(object@Hierarchy)
   cat("Estimation algorithm:  ")
   if (object@Meth==1) {
     cat("IGLS")

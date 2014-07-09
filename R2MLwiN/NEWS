@@ -18,6 +18,7 @@ Mon Jun 30 2014
    * (R)IGLS convergence is now reported in the output
    * Added Log-likelihood to the output for (R)IGLS models
    * prior2macro will automatically be called from runMLwiN if priorParam is specified as a list
+   * Added hierarchy information to the model output
 
 Fri Jun 20 2014
 1. Bug fixing
