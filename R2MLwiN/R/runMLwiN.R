@@ -835,6 +835,7 @@ version:date:md5:filename:x64:trial
     thinning=mcmcMeth$thinning
     if(is.null(thinning)) thinning=1
     priorParam=mcmcMeth$priorParam
+    if(is.list(priorParam)) priorParam=prior2macro(priorParam, Formula, levID, D, indata)
     if(is.null(priorParam)) priorParam="default"
     scale =mcmcMeth$scale
     if(is.null(scale)) scale=5.8

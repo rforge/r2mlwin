@@ -57,28 +57,25 @@ rm(list=c("mymodel1", "mymodel2", "mymodel3"))
 # 5.3 Using informative priors . . . . . . . . . . . . . . . . . . . . . .62
 
 ## Informative normal prior for beta_1
-prior <- prior2macro(list(fixe=list(standlrt=c(1,.01))), normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), D='Normal', indata=tutorial)
 ## Fit the model
 (mymodel4 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
- estoptions=list(EstM=1, mcmcMeth=list(priorParam=prior)), data=tutorial))
+ estoptions=list(EstM=1, mcmcMeth=list(priorParam=list(fixe=list(standlrt=c(1,.01))))), data=tutorial))
 
 sixway(mymodel4["chains"][,"FP_standlrt"],"beta_1")
 
 ## Informative normal prior for beta_1
-prior <- prior2macro(list(fixe=list(standlrt=c(1,.1))),normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), D='Normal', indata=tutorial)
 ## Fit the model
 (mymodel5 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
- estoptions=list(EstM=1, mcmcMeth=list(priorParam=prior)), data=tutorial))
+ estoptions=list(EstM=1, mcmcMeth=list(priorParam=list(fixe=list(standlrt=c(1,.1))))), data=tutorial))
 
 sixway(mymodel5["chains"][,"FP_standlrt"],"beta_1")
 
 # 5.4 Specifying an informative prior for a random parameter . . . . . . .65
 
 ## Specifies an ingormative prior for sigma2u
-prior <- prior2macro(list(rp2=list(estimates=.2,size=100)),normexam~(0|cons+standlrt)+(2|cons)+(1|cons),levID=c('school','student'),D='Normal', indata=tutorial)
 ## Fit the model
 (mymodel6 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
- estoptions=list(EstM=1, mcmcMeth=list(priorParam=prior)), data=tutorial))
+ estoptions=list(EstM=1, mcmcMeth=list(priorParam=list(rp2=list(estimates=.2,size=100)))), data=tutorial))
 
 sixway(mymodel6["chains"][,"RP2_var_cons"],"sigma^2_u0")
 

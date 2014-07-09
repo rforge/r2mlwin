@@ -79,10 +79,9 @@ names(RP.b) <- c("RP2_var_cons", "RP2_cov_cons_standlrt", "RP2_var_standlrt", "R
 # 6.5 Informative prior . . . . . . . . . . . . . . . . . . . . . . . . . 80
 
 ## Informative normal prior for Sigma_u
-prior <- prior2macro(list(rp2=list(estimate=matrix(c(.09,.018,.09,.015),2,2),size=65)), normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons), levID=c('school','student'), D='Normal', indata=tutorial)
 ## Fit the model
 (mymodel3 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons), levID=c('school','student'),
- estoptions=list(EstM=1,mcmcMeth=list(priorParam=prior)), data=tutorial))
+ estoptions=list(EstM=1,mcmcMeth=list(priorParam=list(rp2=list(estimate=matrix(c(.09,.018,.09,.015),2,2),size=65)))), data=tutorial))
 
 # 6.6 Results . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 81
 
