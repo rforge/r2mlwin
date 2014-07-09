@@ -215,9 +215,6 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   cat("Number of obs: ",object@Nobs,"(from total",object@DataLength,")        Number of iter.:",object@iterations,"         Burn-in:", object@burnin , "\n")
     
   if (!(object@D[1]=="Mixed")&&is.null(object@merr)&&is.null(object@fact)){
-    object@BDIC=na.omit(object@estMCMC[,dim(object@estMCMC)[2]])[c(3,4,2,1)]
-    BDIC.names=c("Dbar", "D(thetabar)",  "pD", "DIC")
-    names(object@BDIC)=BDIC.names
     cat("Bayesian Deviance Information Criterion (DIC)\n")
     cat("Dbar      D(thetabar)    pD      DIC\n")
     cat(formatC(object@BDIC,format="f",digits=3,width=-10),"\n")
