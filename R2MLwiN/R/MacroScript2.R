@@ -1191,48 +1191,50 @@ MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, cate
     wrt("POST   0")
   }
   
-  wrt("MISR   0")
-  wrt("LINK 2 G30")
-  if (D[1]=="Multinomial"&& as.numeric(D[4])==0){
-    len.rpx=2
-    wrt(paste0("LINK ", len.rpx, " G27"))
-    wrt("LINK 1 G28")
-    wrt("NOTE Calculate MCMC starting values for level 2 residuals")
-    wrt("RLEV 2")
-    wrt("RFUN")
-    wrt("RCOV 2")
-    wrt("ROUT G27 G28")
-    wrt("RESI")
-    wrt("JOIN G30[1] G27 G30[1]")
-    wrt("JOIN G30[2] G28 G30[2]")
-    wrt("ERAS G27")
-    wrt("ERAS G28")
-    wrt("LINK 0 G27")
-    wrt("LINK 0 G28")
-  }
-  if (nrp>0){
-    for (j in nrp:1){
-      if (as.numeric(sub("rp","",rp.names[j]))!=1){
-        rpx=rp[[j]]
-        len.rpx = length(rpx)
-        wrt(paste0("LINK ", len.rpx, " G27"))
-        wrt("LINK 1 G28")
-        wrt(paste("NOTE Calculate MCMC starting values for level ",as.numeric(sub("rp","",rp.names[j]))," residuals",sep=""))
-        wrt(paste("RLEV   ",as.numeric(sub("rp","",rp.names[j])),sep=""))
-        wrt("RFUN")
-        wrt("RCOV   2")
-        wrt("ROUT G27 G28")
-        wrt("RESI")
-        wrt("JOIN G30[1] G27 G30[1]")
-        wrt("JOIN G30[2] G28 G30[2]")
-        wrt("ERAS G27")
-        wrt("ERAS G28")
-        wrt("LINK 0 G27")
-        wrt("LINK 0 G28")
+  if (is.null(xclass)){
+    wrt("MISR   0")
+    wrt("LINK 2 G30")
+    if (D[1]=="Multinomial"&& as.numeric(D[4])==0){
+      len.rpx=2
+      wrt(paste0("LINK ", len.rpx, " G27"))
+      wrt("LINK 1 G28")
+      wrt("NOTE Calculate MCMC starting values for level 2 residuals")
+      wrt("RLEV 2")
+      wrt("RFUN")
+      wrt("RCOV 2")
+      wrt("ROUT G27 G28")
+      wrt("RESI")
+      wrt("JOIN G30[1] G27 G30[1]")
+      wrt("JOIN G30[2] G28 G30[2]")
+      wrt("ERAS G27")
+      wrt("ERAS G28")
+      wrt("LINK 0 G27")
+      wrt("LINK 0 G28")
+    }
+    if (nrp>0){
+      for (j in nrp:1){
+        if (as.numeric(sub("rp","",rp.names[j]))!=1){
+          rpx=rp[[j]]
+          len.rpx = length(rpx)
+          wrt(paste0("LINK ", len.rpx, " G27"))
+          wrt("LINK 1 G28")
+          wrt(paste("NOTE Calculate MCMC starting values for level ",as.numeric(sub("rp","",rp.names[j]))," residuals",sep=""))
+          wrt(paste("RLEV   ",as.numeric(sub("rp","",rp.names[j])),sep=""))
+          wrt("RFUN")
+          wrt("RCOV   2")
+          wrt("ROUT G27 G28")
+          wrt("RESI")
+          wrt("JOIN G30[1] G27 G30[1]")
+          wrt("JOIN G30[2] G28 G30[2]")
+          wrt("ERAS G27")
+          wrt("ERAS G28")
+          wrt("LINK 0 G27")
+          wrt("LINK 0 G28")
+        }
       }
     }
+    wrt("MISR   1")
   }
-  wrt("MISR   1")
   
   if(D[1]=="Normal") DD=1
   if(D[1]=="Binomial") DD=2
@@ -1251,27 +1253,36 @@ MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, cate
     wrt("PAUS")
   }
 
+  priorcol <- ""
+  if (priorParam[1]!="default") {
+    priorcol <- "c1092"
+  }
+
   if ((!is.null(BUGO))&&!(D[1]=="Mixed")&&nrp>0){
     version=as.numeric(BUGO["version"])
     if(D[1]=='Normal'||D[1]=='Multivariate Normal') DD2=0
-    wrt(paste("BUGO 6 ",DD," ",DD2, " G30[1] ","'",modelfile,"' ","'",initfile,"' ","'",datafile,"'",sep=""))
-    wrt("ERAS   G30")
-    wrt("LINK 0 G30")
+    if (is.null(xclass)){
+      wrt(paste("BUGO 6 ",DD," ",DD2, " G30[1] ","'",modelfile,"' ","'",initfile,"' ","'",datafile,"'",sep=""))
+      wrt("ERAS   G30")
+      wrt("LINK 0 G30")
+    } else {
+      wrt(paste("BUGO 6 ",DD," ",DD2, " ","'",modelfile,"' ","'",initfile,"' ","'",datafile,"'",sep=""))
+    }
   }else{
     wrt("NOTE   fit the model in MCMC")
     wrt(paste("MTOT   ",iterations,sep=""))
     wrt("ECHO 1")
-    if (!is.null(xclass)&&length(xclass)>=4){
-      wrt(paste("MCMC   0 ", burnin," ",adaption," ",scale," ",rate," ", tol," ",fixM," ",residM," ", Lev1VarM, " ", OtherVarM," ",priorcode," ",DD,sep=""))
-    }else{
-      if (priorParam[1]!="default"){
-        wrt(paste("MCMC   0 ", burnin," ",adaption," ",scale," ",rate," ", tol," G30[1] G30[2] c1092 ",fixM," ",residM," ", Lev1VarM, " ", OtherVarM," ",priorcode," ",DD,sep=""))
-      }else{
-        wrt(paste("MCMC   0 ", burnin," ",adaption," ",scale," ",rate," ", tol," G30[1] G30[2] ",fixM," ",residM," ", Lev1VarM, " ", OtherVarM," ",priorcode," ",DD,sep=""))
-      }
+
+    residcols <- ""
+    if (is.null(xclass)){
+      residcols <- "G30[1] G30[2]"
     }
-    wrt("ERAS G30")
-    wrt("LINK 0 G30")
+    wrt(paste("MCMC   0", burnin, adaption, scale, rate, tol, residcols, priorcol, fixM, residM, Lev1VarM, OtherVarM, priorcode, DD))
+ 
+    if (is.null(xclass)){
+      wrt("ERAS G30")
+      wrt("LINK 0 G30")
+    }
     wrt("ERAS  c1090 c1091")
     wrt("")
     if (!is.null(dami)&&dami[1]==0&&length(dami)>1){

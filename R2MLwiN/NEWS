@@ -6,6 +6,7 @@ Mon Jun 30 2014
    * Fix output when Std. Err. is zero (for example if a parameter is collinear)
    * Fix reported number of observations and observations in use
    * If RIGLS is specified as the estimation method correctly reflect this in the model output
+   * Don't calculate starting residuals for cross-classified models
 
 2. Changes
    * Enabled matching starting values on parameter names (allowing subsets of parameters to be specified)
