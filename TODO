@@ -6,6 +6,8 @@ Display hierarchy information in the model output
 Revisit interactions, e.g. the following doesn't work: formula=log(obs,logexp)~(0|nation[]+nation[]:uvbi)+(2|cons)
 Allow specification of all ID/Weight columns instead of assuming they are consecutive
 Fix CAR model example when running in OpenBUGS
+Don't generate starting residuals for cross-classified models
+Automatically switch equation display for cross-classified models
 
 Data Checks:
 Check all variables in the model actually exist in the data
