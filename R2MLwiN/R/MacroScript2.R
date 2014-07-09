@@ -1262,7 +1262,7 @@ MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, cate
     version=as.numeric(BUGO["version"])
     if(D[1]=='Normal'||D[1]=='Multivariate Normal') DD2=0
     if (is.null(xclass)){
-      wrt(paste("BUGO 6 ",DD," ",DD2, " G30[1] ","'",modelfile,"' ","'",initfile,"' ","'",datafile,"'",sep=""))
+      wrt(paste("BUGO 6 ",DD," ",DD2, " G30[1] ", priorcol," '",modelfile,"' ","'",initfile,"' ","'",datafile,"'",sep=""))
       wrt("ERAS   G30")
       wrt("LINK 0 G30")
     } else {
