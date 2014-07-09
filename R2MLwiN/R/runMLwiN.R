@@ -1295,10 +1295,8 @@ version:date:md5:filename:x64:trial
           }
         }
         loadings.sd=na.omit(estMCMC[,6])
-        qt025=loadings-qnorm(.975)*loadings.sd
-        qt975=loadings+qnorm(.975)*loadings.sd
-        loads=rbind(loadings,loadings.sd,qt025,qt975)
-        colnames(loads)=load.names
+        names(loadings) <- load.names
+        names(loadings.sd) <- load.names
         
         fact.cov=fact.cov.names=na.omit(estMCMC[,7])
         fact.cov.sd=na.omit(estMCMC[,8])
@@ -1313,6 +1311,8 @@ version:date:md5:filename:x64:trial
             k=k+1
           }
         }
+        names(fact.cov) <- fact.cov.names
+        names(fact.cov.sd) <- fact.cov.names
         
         factchains=read.dta(FACTchainfile)
         factscores=matrix(na.omit(factchains[,"_FACT_value_b"]), ncol=fact$nfact, byrow=FALSE)
@@ -1504,7 +1504,9 @@ version:date:md5:filename:x64:trial
       }
       if (!is.null(fact)){
         outMCMC["fact.loadings"]=loadings
+        outMCMC["fact.loadings.sd"]=loadings.sd
         outMCMC["fact.cov"]=fact.cov
+        outMCMC["fact.cov.sd"]=fact.cov.sd
         outMCMC["fact.chains"]=factChains
       }
       if (!is.null(resi.store.levs)){

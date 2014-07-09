@@ -1,8 +1,8 @@
 setClass(Class = "mlwinfitMCMC", representation = representation(Nobs="numeric",DataLength="numeric",burnin="numeric",iterations="numeric",
                                                                  D="ANY", Formula="ANY", levID="character", merr="ANY", fact="ANY", xclass="ANY", estMCMC ="data.frame",
                                                                  FP="numeric", RP="numeric", RP.cov="matrix", FP.cov="matrix", chains="ANY",
-                                                                 elapsed.time="numeric", call="ANY",BDIC="numeric",LIKE="ANY",fact.loadings="numeric",
-                                                                 fact.cov="numeric",fact.chains="ANY",MIdata="data.frame",residual="data.frame",resi.chains="ANY"))
+                                                                 elapsed.time="numeric", call="ANY",BDIC="numeric",LIKE="ANY",fact.loadings="numeric",fact.loadings.sd="numeric",
+                                                                 fact.cov="numeric",fact.cov.sd="numeric",fact.chains="ANY",MIdata="data.frame",residual="data.frame",resi.chains="ANY"))
 
 setMethod(
   f= "[",
@@ -29,7 +29,9 @@ setMethod(
     if(i=="call"){return(x@call)}else {}
     if(i=="LIKE"){return(x@LIKE)}else {}
     if(i=="fact.loadings"){return(x@fact.loadings)}else {}
+    if(i=="fact.loadings.sd"){return(x@fact.loadings.sd)}else {}
     if(i=="fact.cov"){return(x@fact.cov)}else {}
+    if(i=="fact.cov.sd"){return(x@fact.cov.sd)}else {}
     if(i=="fact.chains"){return(x@fact.chains)}else {}
     if(i=="MIdata"){return(x@MIdata)}else {}
     if(i=="residual"){return(x@residual)}else {}
@@ -62,7 +64,9 @@ setReplaceMethod(
     if(i=="call"){x@call<-value}else {}
     if(i=="LIKE"){x@LIKE<-value}else {}
     if(i=="fact.loadings"){x@fact.loadings<-value}else {}
+    if(i=="fact.loadings.sd"){x@fact.loadings.sd<-value}else {}
     if(i=="fact.cov"){x@fact.cov<-value}else {}
+    if(i=="fact.cov.sd"){x@fact.cov.sd<-value}else {}
     if(i=="fact.chains"){x@fact.chains<-value}else {}
     if(i=="MIdata"){x@MIdata<-value}else {}
     if(i=="residual"){x@residual<-value}else {}
@@ -97,7 +101,9 @@ setMethod(
     if(i=="call"){return(x@call)}else {}
     if(i=="LIKE"){return(x@LIKE)}else {}
     if(i=="fact.loadings"){return(x@fact.loadings)}else {}
+    if(i=="fact.loadings.sd"){return(x@fact.loadings.sd)}else {}
     if(i=="fact.cov"){return(x@fact.cov)}else {}
+    if(i=="fact.cov.sd"){return(x@fact.cov.sd)}else {}
     if(i=="fact.chains"){return(x@fact.chains)}else {}
     if(i=="MIdata"){return(x@MIdata)}else {}
     if(i=="residual"){return(x@residual)}else {}
@@ -130,7 +136,9 @@ setReplaceMethod(
     if(i=="call"){x@call<-value}else {}
     if(i=="LIKE"){x@LIKE<-value}else {}
     if(i=="fact.loadings"){x@fact.loadings<-value}else {}
+    if(i=="fact.loadings.sd"){x@fact.loadings.sd<-value}else {}
     if(i=="fact.cov"){x@fact.cov<-value}else {}
+    if(i=="fact.cov.sd"){x@fact.cov.sd<-value}else {}
     if(i=="fact.chains"){x@fact.chains<-value}else {}
     if(i=="MIdata"){x@MIdata<-value}else {}
     if(i=="residual"){x@residual<-value}else {}
@@ -237,38 +245,13 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   cat(paste(rep("-",50),collapse="-"),"\n")
   
   if (!is.null(object@fact)&&object@D[1]=='Multivariate Normal'){
-    loadings=na.omit(object@estMCMC[,5])
-    load.names=rep(NA,length(loadings))
-    
-    if (is.character(object@Formula)){
-      Formula1=strsplit(object@Formula,"~")[[1]]
-      resp=Formula1[1]
-    }else{
-      tterms <- terms(object@Formula)
-      resp=rownames(attr(tterms,"factors"))[attr(tterms,"response")]
-    }
-    
-    resp=sub("c\\(","",resp)
-    resp=sub("\\)","",resp)
-    resp=strsplit(resp,",")[[1]]
-    resp=gsub("^\\s+|\\s+$", "", resp)
-    
-    k=1
-    for (i in 1:object@fact$nfact){
-      for (j in resp){
-        load.names[k]=paste("load",i,"_",j,sep="")
-        k=k+1
-      }
-    }
-    loadings.sd=na.omit(object@estMCMC[,6])
-    qt025=loadings-qnorm(.975)*loadings.sd
-    qt975=loadings+qnorm(.975)*loadings.sd
-    loads=rbind(loadings,loadings.sd,qt025,qt975)
-    colnames(loads)=load.names
+    qt025=object@fact.loadings-qnorm(.975)*object@fact.loadings.sd
+    qt975=object@fact.loadings+qnorm(.975)*object@fact.loadings.sd
+    loads=rbind(object@fact.loadings,object@fact.loadings.sd,qt025,qt975)
     
     for (j in 1:object@fact$nfact){
       cat("The estimates of factor",j,"loadings:\n")
-      loadx.names=load.names[grep(paste("load+",j,"+\\_",sep=""),load.names)]
+      loadx.names=colnames(loads)[grep(paste0("load+",j,"+\\_"),colnames(loads))]
       loadx=loads[,loadx.names]
       printcol0=align2left("        ",loadx.names)
       printcol1=align2right("Coef.",format(round(loadx[1,],digits),nsmall = digits))
@@ -281,26 +264,12 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
       cat(paste(rep("-",50),collapse="-"),"\n")
     }
     
-    object@fact.cov=fact.cov.names=na.omit(object@estMCMC[,7])
-    fact.cov.sd=na.omit(object@estMCMC[,8])
-    k=1
-    for (i in 1:object@fact$nfact){
-      for(j in 1:i){
-        if(i==j){
-          fact.cov.names[k]=paste("var_fact",i,sep="")
-        }else{
-          fact.cov.names[k]=paste("cov_fact",i,"_fact",j,sep="")
-        }
-        k=k+1
-      }
-    }
-    qt025=object@fact.cov-qnorm(.975)*fact.cov.sd
-    qt975=object@fact.cov+qnorm(.975)*fact.cov.sd
-    fcov=rbind(object@fact.cov,fact.cov.sd,qt025,qt975)
-    colnames(fcov)=fact.cov.names
+    qt025=object@fact.cov-qnorm(.975)*object@fact.cov.sd
+    qt975=object@fact.cov+qnorm(.975)*object@fact.cov.sd
+    fcov=rbind(object@fact.cov,object@fact.cov.sd,qt025,qt975)
     
     cat("The estimates of factor covariances:\n")
-    printcol0=align2left("        ",fact.cov.names)
+    printcol0=align2left("        ",colnames(fcov))
     printcol1=align2right("Coef.",format(round(fcov[1,],digits),nsmall = digits))
     printcol2=align2right("Std. Err.",format(round(fcov[2,],digits),nsmall = digits))
     printcol3=align2right("[95% Conf.",format(round(fcov[3,],digits),nsmall = digits))
