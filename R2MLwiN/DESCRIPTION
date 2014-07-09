@@ -7,7 +7,7 @@ Authors@R: c(person("Zhengzheng", "Zhang", role = c("aut", "cre"),email =
     person("Richard", "Parker", role = "aut"), person("George", "Leckie", role
     = "aut"), person("William", "Browne", role = "aut"))
 Depends:
-    R (>=  2.14.0),
+    R (>=  2.15.0),
     methods,
     lattice,
     coda (>= 0.16-1),
