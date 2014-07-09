@@ -45,14 +45,12 @@ while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file
 #winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
 
 ## Define the model
-formula=normexam~(0|cons+standlrt)+(2|cons)+(1|cons)
 ## The highest level comes first, then the second highest and so on
-levID=c('school','student')
-
 ## Uses the results from IGLS to create initial values for bugs
-estoptions= list(EstM=1, show.file=T)
 ## Fit the model by calling openbugs using the rbugs package
-mymodel1=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions,BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=openbugs, OpenBugs = T))
+mymodel1 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
+ estoptions=list(EstM=1, show.file=T), BUGO=c(version=4,n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=tutorial)
+
 summary(mymodel1[[1]][,"beta[2]"])
 sixway(mymodel1[[1]][,"beta[2]"])
 
@@ -60,21 +58,27 @@ sixway(mymodel1[[1]][,"beta[2]"])
 # 7.3 t distributed school residuals . . . . . . . . . . . . . . . . . . .92
 
 ## Download the model, initial, data files
-download.file("http://www.bristol.ac.uk/cmm/media/r2mlwin/tutorial1_model.txt", paste(tempdir(),"/tutorial1_model.txt",sep=""), method="auto")
-file.show(paste(tempdir(),"/tutorial1_model.txt",sep="")); modelfile=paste(tempdir(),"/tutorial1_model.txt",sep="")
-download.file("http://www.bristol.ac.uk/cmm/media/r2mlwin/tutorial1_inits.txt", paste(tempdir(),"/tutorial1_inits.txt",sep=""), method="auto")
-file.show(paste(tempdir(),"/tutorial1_inits.txt",sep="")); initfile=paste(tempdir(),"/tutorial1_inits.txt",sep="")
-download.file("http://www.bristol.ac.uk/cmm/media/r2mlwin/tutorial1_data.txt", paste(tempdir(),"/tutorial1_data.txt",sep=""), method="auto")
-datafile=paste(tempdir(),"/tutorial1_data.txt",sep="")
-bugEst=paste(tempdir(),"/tutorial1_log.txt",sep="")
+modelfile <- paste0(tempdir(),"/tutorial1_model.txt")
+download.file("http://www.bristol.ac.uk/cmm/media/r2mlwin/tutorial1_model.txt", modelfile, method="auto")
+file.show(modelfile)
 
-chains.bugs1=mlwin2bugs(D="t",levID, datafile, initfile, modelfile, bugEst, fact=NULL, addmore=NULL, n.chains = 1, n.iter = 5500, n.burnin=500, n.thin=1, debug=T, bugs=openbugs,
+initfile <- paste0(tempdir(),"/tutorial1_inits.txt")
+download.file("http://www.bristol.ac.uk/cmm/media/r2mlwin/tutorial1_inits.txt", initfile, method="auto")
+file.show(initfile)
+
+datafile <- paste0(tempdir(),"/tutorial1_data.txt")
+download.file("http://www.bristol.ac.uk/cmm/media/r2mlwin/tutorial1_data.txt", datafile, method="auto")
+
+bugEst <- paste0(tempdir(),"/tutorial1_log.txt")
+
+
+chains.bugs1 <- mlwin2bugs(D="t", levID=c('school','student'), datafile, initfile, modelfile, bugEst, fact=NULL, addmore=NULL, n.chains = 1, n.iter = 5500, n.burnin=500, n.thin=1, debug=T, bugs=openbugs,
         bugsWorkingDir=tempdir(), OpenBugs = T)
 ## Close winbugs manually
 summary(chains.bugs1)
 sixway(chains.bugs1[[1]][,"df"],"df")
 
-chains.bugs2=mlwin2bugs(D="t",levID, datafile, initfile, modelfile, bugEst, fact=NULL, addmore=NULL, n.chains = 1, n.iter = 12000, n.burnin=2000, n.thin=1, debug=T, bugs=openbugs,
+chains.bugs2 <- mlwin2bugs(D="t", levID=c('school','student'), datafile, initfile, modelfile, bugEst, fact=NULL, addmore=NULL, n.chains = 1, n.iter = 12000, n.burnin=2000, n.thin=1, debug=T, bugs=openbugs,
         bugsWorkingDir=tempdir(), OpenBugs = T)
 ## Close winbugs manually
 summary(chains.bugs2)

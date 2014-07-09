@@ -32,34 +32,26 @@ data(tutorial)
 tutorial=cbind(tutorial,Untoggle(tutorial[["school"]],"school"))
 
 ## Define the model
-tempstr1=paste("+",names(tutorial)[12:75],collapse="")
-tempstr2=paste("+",names(tutorial)[12:75],":standlrt",collapse="")
-formula=paste("normexam~(0|cons+standlrt",tempstr1,tempstr2,")+(1|cons)",sep="")
-levID='student'
+formula <- as.formula(paste0("normexam~(0|cons+standlrt+",paste0("school_", 1:64, collapse="+"),"+",paste0("school_", 1:64, ":standlrt", collapse="+"),")+(1|cons)"))
 ## Choose MCMC algoritm for estimation (IGLS will be used to obtain starting values for MCMC)
-estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel <- runMLwiN(formula, levID='student', estoptions=list(EstM=1), data=tutorial))
 
 ## Define the model
-formula=normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)
-levID=c('school','student')
-
 ## Choose IGLS algoritm for estimation
 ## Fit the model
-(mymodel0a=runMLwiN(formula, levID, indata=tutorial))
+(mymodel0a <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons), levID=c('school','student'), data=tutorial))
 
 ## Choose MCMC algoritm for estimation (IGLS will be used to obtain starting values for MCMC)
-estoptions= list(EstM=1)
 ## Fit the model
-(mymodel0=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel0 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1), data=tutorial))
 
 # 6.1 Prediction intervals for a random slopes regression model . . . . . 75
 
 ## Save level 2 residual chains
-estoptions= list(EstM=1, mcmcMeth=list(iterations=5001),resi.store.levs=2)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons), levID=c('school','student'),
+ estoptions=list(EstM=1, mcmcMeth=list(iterations=5001), resi.store.levs=2), data=tutorial))
 
 predLines(mymodel, indata=tutorial, xname="standlrt", lev = 2, selected =NULL, probs=c(.025,.975), legend.space="right", legend.ncol=2)
 dev.new()
@@ -70,42 +62,42 @@ predLines(mymodel, indata=tutorial, xname="standlrt", lev = 2, selected =c(30,44
 # 6.3 WinBUGS priors (Prior 2) . . . . . . . . . . . . . . . . . . . . . .78
 
 ## Change the starting values for Level 2 variance matrix to .1 on diagonal 0 otherwise.
-RP.b=c(.1,0,.1,.554)
+RP.b <- c(.1,0,.1,.554)
 names(RP.b) <- c("RP2_var_cons", "RP2_cov_cons_standlrt", "RP2_var_standlrt", "RP1_var_cons")
-estoptions= list(EstM=1, startval=list(RP.b=RP.b))
+
 ## Fit the model
-(mymodel1=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel1 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons), levID=c('school','student'),
+ estoptions=list(EstM=1, startval=list(RP.b=RP.b)), data=tutorial))
 
 # 6.4 Uniform prior . . . . . . . . . . . . . . . . . . . . . . . . . . . 79
 
 ## Diffuse priors (Uniform priors)
-estoptions= list(EstM=1,mcmcMeth=list(priorcode=0))
 ## Fit the model
-(mymodel2=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel2 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons), levID=c('school','student'),
+ estoptions=list(EstM=1, mcmcMeth=list(priorcode=0)), data=tutorial))
 
 # 6.5 Informative prior . . . . . . . . . . . . . . . . . . . . . . . . . 80
 
 ## Informative normal prior for Sigma_u
-prior=list(rp2=list(estimate=matrix(c(.09,.018,.09,.015),2,2),size=65))
-prior=prior2macro(prior,formula,levID,D='Normal', indata=tutorial)
-estoptions= list(EstM=1,mcmcMeth=list(priorParam=prior))
+prior <- prior2macro(list(rp2=list(estimate=matrix(c(.09,.018,.09,.015),2,2),size=65)), normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons), levID=c('school','student'), D='Normal', indata=tutorial)
 ## Fit the model
-(mymodel3=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel3 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons), levID=c('school','student'),
+ estoptions=list(EstM=1,mcmcMeth=list(priorParam=prior)), data=tutorial))
 
 # 6.6 Results . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 81
 
 cat("The mean parameter estimates\n")
-aa=cbind(mymodel0a["FP"],mymodel0["FP"],mymodel1["FP"],mymodel2["FP"],mymodel3["FP"])
-bb=cbind(mymodel0a["RP"],mymodel0["RP"],mymodel1["RP"],mymodel2["RP"],mymodel3["RP"])
-ctable=round(rbind(aa,bb),3)
-colnames(ctable)=c("IGLS","default","prior 2", "uniform", "prior 4")
+aa <- cbind(mymodel0a["FP"],mymodel0["FP"],mymodel1["FP"],mymodel2["FP"],mymodel3["FP"])
+bb <- cbind(mymodel0a["RP"],mymodel0["RP"],mymodel1["RP"],mymodel2["RP"],mymodel3["RP"])
+ctable <- round(rbind(aa,bb),3)
+colnames(ctable) <- c("IGLS","default","prior 2", "uniform", "prior 4")
 print(ctable)
 
 cat("The standard errors of parameter estimates\n")
-cc=cbind(sqrt(diag(mymodel0a["FP.cov"])),sqrt(diag(mymodel0["FP.cov"])),sqrt(diag(mymodel1["FP.cov"])),sqrt(diag(mymodel2["FP.cov"])),sqrt(diag(mymodel3["FP.cov"])))
-dd=cbind(sqrt(diag(mymodel0a["RP.cov"])),sqrt(diag(mymodel0["RP.cov"])),sqrt(diag(mymodel1["RP.cov"])),sqrt(diag(mymodel2["RP.cov"])),sqrt(diag(mymodel3["RP.cov"])))
-sdtable=round(rbind(cc,dd),3)
-colnames(sdtable)=c("IGLS","default","prior 2", "uniform", "prior 4")
+cc <- cbind(sqrt(diag(mymodel0a["FP.cov"])),sqrt(diag(mymodel0["FP.cov"])),sqrt(diag(mymodel1["FP.cov"])),sqrt(diag(mymodel2["FP.cov"])),sqrt(diag(mymodel3["FP.cov"])))
+dd <- cbind(sqrt(diag(mymodel0a["RP.cov"])),sqrt(diag(mymodel0["RP.cov"])),sqrt(diag(mymodel1["RP.cov"])),sqrt(diag(mymodel2["RP.cov"])),sqrt(diag(mymodel3["RP.cov"])))
+sdtable <- round(rbind(cc,dd),3)
+colnames(sdtable) <- c("IGLS","default","prior 2", "uniform", "prior 4")
 print(sdtable)
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . . 81

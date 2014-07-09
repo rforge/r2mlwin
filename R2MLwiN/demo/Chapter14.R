@@ -31,41 +31,25 @@ data(tutorial)
 
 # 14.1 Effects of measurement error on predictors . . . . . . . . . . . .200
 set.seed(1)
-error=double2singlePrecision(rnorm(length(tutorial[,"standlrt"]),0,sqrt(.2)))
-obslrt=double2singlePrecision(tutorial[,"standlrt"]+error)
-tutorial=cbind(tutorial,error,obslrt)
+error <- double2singlePrecision(rnorm(length(tutorial$standlrt),0,sqrt(.2)))
+obslrt <- double2singlePrecision(tutorial$standlrt+error)
+tutorial <- cbind(tutorial,error,obslrt)
 
-formula=normexam~(0|cons+standlrt)+(1|cons)
-levID='student'
-(mymodel=runMLwiN(formula, levID, indata=tutorial))
+(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(1|cons), levID="student", data=tutorial))
 
+(mymodel <- runMLwiN(normexam~(0|cons+error)+(1|cons), levID="student", data=tutorial))
 
-formula=normexam~(0|cons+error)+(1|cons)
-levID='student'
-(mymodel=runMLwiN(formula, levID, indata=tutorial))
+(mymodel <- runMLwiN(normexam~(0|cons+obslrt)+(1|cons), levID="student", data=tutorial))
 
-formula=normexam~(0|cons+obslrt)+(1|cons)
-levID='student'
-(mymodel=runMLwiN(formula, levID, indata=tutorial))
-estoptions= list(EstM=1,merr=c(N=1,"obslrt",.2))
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel <- runMLwiN(normexam~(0|cons+obslrt)+(1|cons), levID="student", estoptions=list(EstM=1,merr=c(N=1,"obslrt",.2)), data=tutorial))
 
 # 14.2 Measurement error modelling in multilevel models . . . . . . . . .205
 
-formula=normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)
-levID=c('school','student')
-estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1), data=tutorial))
 
-formula=normexam~(0|cons+obslrt)+(2|cons+obslrt)+(1|cons)
-levID=c('school','student')
-estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel <- runMLwiN(normexam~(0|cons+obslrt)+(2|cons+obslrt)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1), data=tutorial))
 
-formula=normexam~(0|cons+obslrt)+(2|cons+obslrt)+(1|cons)
-levID=c('school','student')
-estoptions= list(EstM=1,merr=c(N=1,"obslrt",.2))
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel <- runMLwiN(normexam~(0|cons+obslrt)+(2|cons+obslrt)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1,merr=c(N=1,"obslrt",.2)), data=tutorial))
 
 # 14.3 Measurement errors in binomial models . . . . . . . . . . . . . . 208
 
@@ -73,25 +57,19 @@ estoptions= list(EstM=1,merr=c(N=1,"obslrt",.2))
 ## Read bang1 data
 data(bang1)
 
-bang1[["denomb"]] <- bang1[["cons"]]
-bang1[["use"]] <- as.integer(bang1[["use"]]) - 1
+bang1$denomb <- bang1$cons
+bang1$use <- as.integer(bang1$use) - 1
 
 set.seed(1)
-obsage=double2singlePrecision(bang1[["age"]]+rnorm(length(bang1[["age"]]),0,5))
-bang1=cbind(bang1,obsage)
+obsage <- double2singlePrecision(bang1[["age"]]+rnorm(length(bang1[["age"]]),0,5))
+bang1 <- cbind(bang1,obsage)
 
-formula=logit(use,denomb)~(0|cons+age)
-levID=c('district','woman')
-estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, D="Binomial", indata=bang1, estoptions=estoptions))
+(mymodel <- runMLwiN(logit(use,denomb)~(0|cons+age), levID=c('district','woman'), D="Binomial", estoptions=list(EstM=1), data=bang1))
 
-formula=logit(use,denomb)~(0|cons+obsage)
-levID=c('district','woman')
-estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, D="Binomial", indata=bang1, estoptions=estoptions))
+(mymodel <- runMLwiN(logit(use,denomb)~(0|cons+obsage), levID=c('district','woman'), D="Binomial", estoptions=list(EstM=1), data=bang1))
+
 ## Adjust for the measurement errors
-estoptions= list(EstM=1,merr=c(N=1,"obsage",25))
-(mymodel=runMLwiN(formula, levID, D="Binomial", indata=bang1, estoptions=estoptions))
+(mymodel <- runMLwiN(logit(use,denomb)~(0|cons+obsage), levID=c('district','woman'), D="Binomial", estoptions=list(EstM=1, merr=c(N=1, "obsage", 25)), data=bang1))
 
 # 14.4 Measurement errors in more than one variable and
 #      misclassifications . . . . . . . . . . . . . . . . . . . . . . . .211

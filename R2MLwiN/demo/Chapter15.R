@@ -34,84 +34,70 @@ options(MLwiN_path=mlwin)
 ## Read xc1 data
 data(xc1)
 
-formula=attain~(0|cons)+(3|cons)+(1|cons)
-levID=c('sid','pid','pupil')
-estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, indata=xc1, estoptions=estoptions))
+(mymodel <- runMLwiN(attain~(0|cons)+(3|cons)+(1|cons), levID=c('sid','pid','pupil'), estoptions=list(EstM=1), data=xc1))
 
 # 15.4 A Cross-classified model . . . . . . . . . . . . . . . . . . . . .220
 
-formula=attain~(0|cons)+(3|cons)+(2|cons)+(1|cons)
-levID=c('sid','pid','pupil')
-xclass=list("classes"=c(2,3),"N1"=c(1,1))
-estoptions= list(xclass=xclass,EstM=1,notation='class',resi.store=T,resi.store.levs=c(2,3))
-(mymodel=runMLwiN(formula, levID, indata=xc1, estoptions=estoptions))
+(mymodel <- runMLwiN(attain~(0|cons)+(3|cons)+(2|cons)+(1|cons), levID=c('sid','pid','pupil'),
+ estoptions=list(xclass=list("classes"=c(2,3),"N1"=c(1,1)), EstM=1, notation='class', resi.store=T, resi.store.levs=c(2,3)), data=xc1))
 
 # 15.5 Residuals . . . . . . . . . . . . . . . . . . . . . . . . . . . . 223
 
-lencateg = length(unique(xc1[["sid"]]))
-resi.chain0=mymodel["resi.chains"]$resi_lev3
-residual0 = apply(resi.chain0,2,mean)
-rankno=order(residual0)
+lencateg <- length(unique(xc1[["sid"]]))
+resi.chain0 <- mymodel["resi.chains"]$resi_lev3
+residual0 <- apply(resi.chain0,2,mean)
+rankno <- order(residual0)
 plot(x=1:lencateg,y=residual0[rankno],pch=24,bg="black",xlab="rank",ylab="cons")
 abline(h=0,lty="dotted")
 
 ## Common caterpillar
-#lencateg = length(unique(xc1[["sid"]]))
-#resi.chain0=mymodel["resi.chains"]$resi_lev3
-#u0rank = apply(resi.chain0,1,rank)
-#u0rankmn = apply(u0rank, 1,mean)
-#u0ranklo = apply(u0rank, 1, function(x) quantile(x,.025))
-#u0rankmd = apply(u0rank, 1,median)
-#u0rankhi = apply(u0rank, 1, function(x) quantile(x,.975))
-#rankno = order(u0rankmn)
+#lencateg <- length(unique(xc1[["sid"]]))
+#resi.chain0 <- mymodel["resi.chains"]$resi_lev3
+#u0rank <- apply(resi.chain0,1,rank)
+#u0rankmn <- apply(u0rank, 1,mean)
+#u0ranklo <- apply(u0rank, 1, function(x) quantile(x,.025))
+#u0rankmd <- apply(u0rank, 1,median)
+#u0rankhi <- apply(u0rank, 1, function(x) quantile(x,.975))
+#rankno <- order(u0rankmn)
 #caterpillar(y=u0rankmn[rankno],x=1:lencateg,qtlow=u0ranklo[rankno],qtup=u0rankhi[rankno]],ylim=c(0,20))
 
-lencateg = length(unique(xc1[["pid"]]))
-resi.chain1=mymodel["resi.chains"]$resi_lev2
-residual1 = apply(resi.chain1,2,mean)
-rankno=order(residual1)
+lencateg <- length(unique(xc1[["pid"]]))
+resi.chain1 <- mymodel["resi.chains"]$resi_lev2
+residual1 <- apply(resi.chain1,2,mean)
+rankno <- order(residual1)
 plot(x=1:length(residual1),y=residual1[rankno],pch=24,bg="black",xlab="rank",ylab="cons")
 abline(h=0,lty="dotted")
 
 ## Common caterpillar
-#lencateg = length(unique(xc1[["pid"]]))
-#resi.chain1=mymodel["resi.chains"]$resi_lev2
-#u0rank = apply(resi.chain1,1,rank)
-#u0rankmn = apply(u0rank, 1,mean)
-#u0ranklo = apply(u0rank, 1, function(x) quantile(x,.025))
-#u0rankmd = apply(u0rank, 1,median)
-#u0rankhi = apply(u0rank, 1, function(x) quantile(x,.975))
-#rankno = order(u0rankmn)
+#lencateg <- length(unique(xc1[["pid"]]))
+#resi.chain1 <- mymodel["resi.chains"]$resi_lev2
+#u0rank <- apply(resi.chain1,1,rank)
+#u0rankmn <- apply(u0rank, 1,mean)
+#u0ranklo <- apply(u0rank, 1, function(x) quantile(x,.025))
+#u0rankmd <- apply(u0rank, 1,median)
+#u0rankhi <- apply(u0rank, 1, function(x) quantile(x,.975))
+#rankno <- order(u0rankmn)
 #caterpillar(y=u0rankmn[rankno],x=1:lencateg,qtlow=u0ranklo[rankno],qtup=u0rankhi[rankno],ylim=c(0,150))
 
 # 15.6 Adding predictors to the model . . . . . . . . . . . . . . . . . .225
 
-formula=attain~(0|cons+vrq)+(3|cons)+(2|cons)+(1|cons)
-levID=c('sid','pid','pupil')
-xclass=list("classes"=c(2,3),"N1"=c(1,1))
-estoptions= list(xclass=xclass,EstM=1,notation='class',resi.store=T,resi.store.levs=c(2,3))
-(mymodel=runMLwiN(formula, levID, indata=xc1, estoptions=estoptions))
+(mymodel <- runMLwiN(attain~(0|cons+vrq)+(3|cons)+(2|cons)+(1|cons), levID=c('sid','pid','pupil'),
+ estoptions=list(xclass=list("classes"=c(2,3), "N1"=c(1,1)), EstM=1, notation='class', resi.store=T, resi.store.levs=c(2,3)), data=xc1))
 
-formula=attain~(0|cons+vrq+sc+fed+med+choice)+(3|cons)+(2|cons)+(1|cons)
-levID=c('sid','pid','pupil')
-xclass=list("classes"=c(2,3),"N1"=c(1,1))
-estoptions= list(xclass=xclass,EstM=1,notation='class',resi.store=T,resi.store.levs=c(2,3))
-(mymodel=runMLwiN(formula, levID, indata=xc1, estoptions=estoptions))
+(mymodel <- runMLwiN(attain~(0|cons+vrq+sc+fed+med+choice)+(3|cons)+(2|cons)+(1|cons), levID=c('sid','pid','pupil'),
+ estoptions=list(xclass=list("classes"=c(2,3), "N1"=c(1,1)), EstM=1, notation='class', resi.store=T, resi.store.levs=c(2,3)), data=xc1))
 
-lencateg = length(unique(xc1[["sid"]]))
-resi.chain0=mymodel["resi.chains"]$resi_lev3
-residual0 = apply(resi.chain0,2,mean)
-rankno=order(residual0)
+lencateg <- length(unique(xc1[["sid"]]))
+resi.chain0 <- mymodel["resi.chains"]$resi_lev3
+residual0 <- apply(resi.chain0,2,mean)
+rankno <- order(residual0)
 plot(x=1:lencateg,y=residual0[rankno],pch=24,bg="black",xlab="rank",ylab="cons")
 abline(h=0,lty="dotted")
 
-xc1[["school19"]]=as.integer(xc1[["sid"]]==19)
-formula=attain~(0|cons+vrq+sc+fed+med+choice+school19)+(2|cons)+(1|cons)
-levID=c('sid','pid','pupil')
-xclass=list("classes"=c(2,3),"N1"=c(1,1))
-estoptions= list(xclass=xclass,EstM=1,notation='class')
-(mymodel=runMLwiN(formula, levID, indata=xc1, estoptions=estoptions))
+xc1$school19=as.integer(xc1$sid==19)
+
+(mymodel=runMLwiN(attain~(0|cons+vrq+sc+fed+med+choice+school19)+(2|cons)+(1|cons), levID=c('sid','pid','pupil'),
+ estoptions=list(xclass=list("classes"=c(2,3), "N1"=c(1,1)), EstM=1, notation='class'), data=xc1))
 
 # 15.7 Current restrictions for cross-classified models . . . . . . . . .229
 

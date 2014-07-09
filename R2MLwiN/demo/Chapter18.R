@@ -35,61 +35,52 @@ data(gcsecomp1)
 
 # 18.2 Fitting single level multivariate models . . . . . . . . . . . . .265
 
-formula=c(written,csework)~(0|cons)+(1|cons)
-levID='student'
 ##IGLS
-estoptions= list(sort.ignore=TRUE)
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=gcsecomp1, estoptions=estoptions))
+(mymodel <- runMLwiN(c(written,csework)~(0|cons)+(1|cons), levID="student", D='Multivariate Normal', estoptions=list(sort.ignore=TRUE), data=gcsecomp1))
 ##MCMC
-estoptions= list(EstM=1, sort.ignore=TRUE)
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=gcsecomp1, estoptions=estoptions))
+(mymodel <- runMLwiN(c(written,csework)~(0|cons)+(1|cons), levID="student", D='Multivariate Normal', estoptions=list(EstM=1, sort.ignore=TRUE), data=gcsecomp1))
 
 # 18.3 Adding predictor variables . . . . . . . . . . . . . . . . . . . .270
 
-formula=c(written,csework)~(0|cons+female)+(1|cons)
-levID='student'
-estoptions= list(EstM=1, sort.ignore=TRUE)
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=gcsecomp1, estoptions=estoptions))
+(mymodel <- runMLwiN(c(written,csework)~(0|cons+female)+(1|cons), levID="student", D='Multivariate Normal', estoptions=list(EstM=1, sort.ignore=TRUE), data=gcsecomp1))
 
 # 18.4 A multilevel multivariate model . . . . . . . . . . . . . . . . . 271
 
-formula=c(written,csework)~(0|cons+female)+(2|cons)+(1|cons)
-levID=c('school','student')
 ##Store residual chain at level 3: school
-estoptions= list(EstM=1,resi.store=T,resi.store.levs=3)
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=gcsecomp1, estoptions=estoptions))
+(mymodel <- runMLwiN(c(written,csework)~(0|cons+female)+(2|cons)+(1|cons), levID=c('school','student'), D='Multivariate Normal',
+ estoptions=list(EstM=1, resi.store=T, resi.store.levs=3), data=gcsecomp1))
 
-resi=mymodel["resi.chains"]$resi_lev3
-label=1:ncol(resi)
+resi <- mymodel["resi.chains"]$resi_lev3
+label <- 1:ncol(resi)
 
 ##highlight
-hipos=rep(0,6)
-hipos[1]=which(levels(as.factor(gcsecomp1[["school"]]))==68137)
-hipos[2]=which(levels(as.factor(gcsecomp1[["school"]]))==68201)
-hipos[3]=which(levels(as.factor(gcsecomp1[["school"]]))==68711)
-hipos[4]=which(levels(as.factor(gcsecomp1[["school"]]))==60427)
-hipos[5]=which(levels(as.factor(gcsecomp1[["school"]]))==22710)
-hipos[6]=which(levels(as.factor(gcsecomp1[["school"]]))==67105)
+hipos <- rep(0,6)
+hipos[1] <- which(levels(as.factor(gcsecomp1$school))==68137)
+hipos[2] <- which(levels(as.factor(gcsecomp1$school))==68201)
+hipos[3] <- which(levels(as.factor(gcsecomp1$school))==68711)
+hipos[4] <- which(levels(as.factor(gcsecomp1$school))==60427)
+hipos[5] <- which(levels(as.factor(gcsecomp1$school))==22710)
+hipos[6] <- which(levels(as.factor(gcsecomp1$school))==67105)
 
 par(mfrow=c(2,1))
 ##Select u0
-resi0=resi[, label[which(label%%2==1)]]
-resi0mean = apply(resi0,2,mean)
-resi0sd = apply(resi0,2,sd)
-rankno0=order(resi0mean)
-resi0.lo=resi0mean-1.4*resi0sd
-resi0.hi=resi0mean+1.4*resi0sd
+resi0 <- resi[, label[which(label%%2==1)]]
+resi0mean <- apply(resi0,2,mean)
+resi0sd <- apply(resi0,2,sd)
+rankno0 <- order(resi0mean)
+resi0.lo <- resi0mean-1.4*resi0sd
+resi0.hi <- resi0mean+1.4*resi0sd
 caterpillar(y=resi0mean[rankno0],x=1:length(resi0mean),qtlow=resi0.lo[rankno0],qtup=resi0.hi[rankno0],ylim=c(-24,21),ylab="cons.written",xlab="rank")
 abline(h=0,lty="dotted")
 for(i in 1:6) points(x=which(rankno0==hipos[i]),y=resi0mean[rankno0[which(rankno0==hipos[i])]],pch=22,bg=i+1)
 
 ##Select u1
-resi1=resi[, label[which(label%%2==0)]]
-resi1mean = apply(resi1,2,mean)
-resi1sd = apply(resi1,2,sd)
-rankno1=order(resi1mean)
-resi1.lo=resi1mean-1.4*resi1sd
-resi1.hi=resi1mean+1.4*resi1sd
+resi1 <- resi[, label[which(label%%2==0)]]
+resi1mean <- apply(resi1,2,mean)
+resi1sd <- apply(resi1,2,sd)
+rankno1 <- order(resi1mean)
+resi1.lo <- resi1mean-1.4*resi1sd
+resi1.hi <- resi1mean+1.4*resi1sd
 caterpillar(y=resi1mean[rankno1],x=1:length(resi1mean),qtlow=resi1.lo[rankno1],qtup=resi1.hi[rankno1],ylim=c(-24,21),ylab="cons.csework",xlab="rank")
 abline(h=0,lty="dotted")
 for(i in 1:6) points(x=which(rankno1==hipos[i]),y=resi1mean[rankno1[which(rankno1==hipos[i])]],pch=22,bg=i+1)
@@ -104,16 +95,9 @@ library(R2MLwiN)
 ## Read gcsemv1 data
 data(gcsemv1)
 
-formula=c(written,csework)~(0|cons+female)+(1|cons)
-levID='student'
-estoptions= list(EstM=1, sort.ignore=TRUE)
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=gcsemv1, estoptions=estoptions))
+(mymodel <- runMLwiN(c(written,csework)~(0|cons+female)+(1|cons), levID="student", D='Multivariate Normal', estoptions=list(EstM=1, sort.ignore=TRUE), data=gcsemv1))
 
-formula=c(written,csework)~(0|cons+female)+(2|cons)+(1|cons)
-levID=c('school','student')
-estoptions= list(EstM=1,mcmcMeth=list(dami=2))
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=gcsemv1, estoptions=estoptions))
-
+(mymodel <- runMLwiN(c(written,csework)~(0|cons+female)+(2|cons)+(1|cons), levID=c('school','student'), D='Multivariate Normal', estoptions=list(EstM=1, mcmcMeth=list(dami=2)), data=gcsemv1))
 
 # 18.6 Imputation methods for missing data . . . . . . . . . . . . . . . 280
 
@@ -136,12 +120,11 @@ options(MLwiN_path=mlwin)
 data(hungary1)
 summary(hungary1)
 
-formula=c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2)~(0|cons+female)+(2|cons)+(1|cons)
-levID=c('school','student')
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=hungary1))
+(mymodel <- runMLwiN(c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2)~(0|cons+female)+(2|cons)+(1|cons), levID=c('school','student'), D='Multivariate Normal', data=hungary1))
 
-estoptions= list(EstM=1,mcmcMeth=list(dami=c(0,1000,2000,3000,4000,5000)))
-(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata=hungary1, estoptions=estoptions))
+(mymodel <- runMLwiN(c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2)~(0|cons+female)+(2|cons)+(1|cons), levID=c('school','student'), D='Multivariate Normal',
+ estoptions=list(EstM=1,mcmcMeth=list(dami=c(0,1000,2000,3000,4000,5000))), data=hungary1))
+
 head(mymodel["MIdata"])
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .128

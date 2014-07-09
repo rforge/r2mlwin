@@ -33,74 +33,60 @@ options(MLwiN_path=mlwin)
 ## Read wage1 data
 data(wage1)
 
-wage1[["parttime"]] <- as.integer(wage1[["parttime"]])-1
-wage1[["sex"]] <- as.integer(wage1[["sex"]])-1
+wage1$parttime <- as.integer(wage1$parttime)-1
+wage1$sex <- as.integer(wage1$sex)-1
 
 summary(wage1)
-hist(wage1[["earnings"]])
-hist(wage1[["logearn"]],breaks=20)
+hist(wage1$earnings)
+hist(wage1$logearn, breaks=20)
 
-formula=logearn~(0|cons+age_40+numjobs)+(1|cons)
-levID='id'
-estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, indata=wage1, estoptions=estoptions))
+(mymodel <- runMLwiN(logearn~(0|cons+age_40+numjobs)+(1|cons), levID="id", estoptions=list(EstM=1), data=wage1))
 
-formula=logearn~(0|cons+age_40+numjobs+sex+parttime)+(1|cons)
-levID='id'
-estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, indata=wage1, estoptions=estoptions))
+(mymodel <- runMLwiN(logearn~(0|cons+age_40+numjobs+sex+parttime)+(1|cons), levID="id", estoptions=list(EstM=1), data=wage1))
+
 round(cor(wage1[,c("parttime","sex","numjobs")]),4)
 
 # 16.4 Fitting multiple membership models to the dataset . . . . . . . . 237
 
 tabulate(wage1[["numjobs"]])
 
-formula=logearn~(0|cons+age_40+sex+parttime)+(2|cons)+(1|cons)
-levID=c('company','id')
-estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, indata=wage1, estoptions=estoptions))
+(mymodel <- runMLwiN(logearn~(0|cons+age_40+sex+parttime)+(2|cons)+(1|cons), levID=c('company','id'), estoptions=list(EstM=1), data=wage1))
 
 ##Multiple membership
-xclass=list("class"=2,"N1"=4,"weight"='weight1',"id"=NA)
-estoptions= list(EstM=1,xclass=xclass,notation='class',resi.store=T,resi.store.levs=2)
-(mymodel=runMLwiN(formula, levID, indata=wage1, estoptions=estoptions))
+(mymodel <- runMLwiN(logearn~(0|cons+age_40+sex+parttime)+(2|cons)+(1|cons), levID=c('company','id'),
+ estoptions=list(EstM=1, xclass=list("class"=2, "N1"=4, "weight"='weight1', "id"=NA), notation='class', resi.store=T, resi.store.levs=2), data=wage1))
 
 # 16.5 Residuals in multiple membership models . . . . . . . . . . . . . 240
 
-lencateg = length(unique(wage1[["company"]]))
-resi0=mymodel["resi.chains"]$resi_lev2
-resi0mean = apply(resi0,2,mean)
-resi0sd = apply(resi0,2,sd)
+lencateg <- length(unique(wage1[["company"]]))
+resi0 <- mymodel["resi.chains"]$resi_lev2
+resi0mean <- apply(resi0,2,mean)
+resi0sd <- apply(resi0,2,sd)
 
-rankno=order(resi0mean)
-resi0.lo=resi0mean-1.4*resi0sd
-resi0.hi=resi0mean+1.4*resi0sd
+rankno <- order(resi0mean)
+resi0.lo <- resi0mean-1.4*resi0sd
+resi0.hi <- resi0mean+1.4*resi0sd
 caterpillar(y=resi0mean[rankno],x=1:length(resi0mean),qtlow=resi0.lo[rankno],qtup=resi0.hi[rankno],ylim=c(-1,1.3))
 abline(h=0,lty="dotted")
 
-aa=qqnorm(resi0mean,plot.it=F)
+aa <- qqnorm(resi0mean,plot.it=F)
 plot(x=aa$x[rankno],y=resi0mean[rankno],pch=24,bg="black",xlab="nscore",ylab="cons")
 abline(h=0,lty="dotted")
 
-wage1[["companyno54"]]=(wage1[["company"]]==54)+(wage1[["company2"]]==54)+(wage1[["company3"]]==54)+(wage1[["company4"]]==54)
-wage1[["companyno67"]]=(wage1[["company"]]==67)+(wage1[["company2"]]==67)+(wage1[["company3"]]==67)+(wage1[["company4"]]==67)
+wage1$companyno54 <- (wage1$company==54)+(wage1$company2==54)+(wage1$company3==54)+(wage1$company4==54)
+wage1$companyno67 <- (wage1$company==67)+(wage1$company2==67)+(wage1$company3==67)+(wage1$company4==67)
 
 ##New model
-formula=logearn~(0|cons+age_40+sex+parttime+companyno54+companyno67)+(2|cons)+(1|cons)
-levID=c('company','id')
-
 ##Multiple membership
-xclass=list("class"=2,"N1"=4,"weight"='weight1',"id"=NA)
-estoptions= list(EstM=1,xclass=xclass,notation='class')
-(mymodel=runMLwiN(formula, levID, indata=wage1, estoptions=estoptions))
+(mymodel <- runMLwiN(logearn~(0|cons+age_40+sex+parttime+companyno54+companyno67)+(2|cons)+(1|cons), levID=c('company','id'),
+ estoptions=list(EstM=1, xclass=list("class"=2, "N1"=4, "weight"='weight1', "id"=NA), notation='class'), data=wage1))
 
 #  16.6 Alternative weights for multiple membership models . . . . . . . .243
 
 
 ## New weights
-xclass=list("class"=2,"N1"=4,"weight"='ew1',"id"=NA)
-estoptions= list(EstM=1,xclass=xclass,notation='class')
-(mymodel=runMLwiN(formula, levID, indata=wage1, estoptions=estoptions))
+(mymodel <- runMLwiN(logearn~(0|cons+age_40+sex+parttime+companyno54+companyno67)+(2|cons)+(1|cons), levID=c('company','id'),
+ estoptions=list(EstM=1,xclass=list("class"=2,"N1"=4,"weight"='ew1',"id"=NA),notation='class'), data=wage1))
 
 # 16.7 Multiple membership multiple classification (MMMC) models . . . . 244
 

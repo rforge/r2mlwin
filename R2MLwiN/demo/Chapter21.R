@@ -34,31 +34,30 @@ options(MLwiN_path=mlwin)
 data(tutorial)
 
 ## Define the model
-formula=normexam~(0|cons)+(2|cons)+(1|cons)
-levID=c('school','student')
-estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+
+(mymodel <- runMLwiN(normexam~(0|cons)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1), data=tutorial))
+
 summary(mymodel["chains"][,"FP_cons"])
 sixway(mymodel["chains"][,"FP_cons"],"beta_0")
 
 ## Structured MCMC
-estoptions= list(EstM=1, mcmcOptions=list(smcm=1))
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+
+(mymodel <- runMLwiN(normexam~(0|cons)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1, mcmcOptions=list(smcm=1)), data=tutorial))
+
 summary(mymodel["chains"][,"FP_cons"])
 sixway(mymodel["chains"][,"FP_cons"],"beta_0")
 
 # 21.3 A random intercepts model . . . . . . . . . . . . . . . . . . . . 334
 
-formula=normexam~(0|cons+standlrt)+(2|cons)+(1|cons)
-levID=c('school','student')
-estoptions= list(EstM=1, mcmcOptions=list(smcm=1))
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1, mcmcOptions=list(smcm=1)), data=tutorial))
+
 trajectories(mymodel["chains"],Range=c(1,500))
 
 # 21.4 Examining the residual chains . . . . . . . . . . . . . . . . . . 335
 
-estoptions= list(EstM=1, resi.store=T, resi.store.levs=2,mcmcMeth=list(iterations=5001),mcmcOptions=list(smcm=1))
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), 
+ estoptions=list(EstM=1, resi.store=T, resi.store.levs=2, mcmcMeth=list(iterations=5001), mcmcOptions=list(smcm=1)), data=tutorial))
+
 ## Each row represents each iteration
 sixway(mymodel["resi.chains"]$resi_lev2[,1], name="school1")
 
@@ -66,10 +65,7 @@ sixway(mymodel["resi.chains"]$resi_lev2[,1], name="school1")
 
 # 21.6 Random Slopes model practice . . . . . . . . . . . . . . . . . . .338
 
-formula=normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)
-levID=c('school','student')
-estoptions= list(EstM=1, mcmcOptions=list(smcm=1))
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1, mcmcOptions=list(smcm=1)), data=tutorial))
 
 sixway(mymodel["chains"][,"FP_cons"],"beta_0")
 sixway(mymodel["chains"][,"FP_standlrt"],"beta_1")

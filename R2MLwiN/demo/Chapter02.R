@@ -28,62 +28,49 @@ options(MLwiN_path=mlwin)
 data(tutorial)
 
 ## Define the model
-formula=normexam~(0|cons+standlrt)+(1|cons)
-levID='student'
 ## Choose IGLS algoritm for estimation
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, indata=tutorial))
+(mymodel1 <- runMLwiN(normexam~(0|cons+standlrt)+(1|cons), levID='student', data=tutorial))
 
 # 2.1 Running the Gibbs Sampler . . . . . . . . . . . . . . . . . . . . . 26
 
 ## Choose MCMC algoritm for estimation
-estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel2 <- runMLwiN(normexam~(0|cons+standlrt)+(1|cons), levID='student', estoptions=list(EstM=1), data=tutorial))
 
-estimates=mymodel["chains"]
+estimates <- mymodel2["chains"]
 par(mfrow=c(2,2))
-plot(1:nrow(estimates),estimates[,"deviance"],xlab="iteration",
-ylab=expression(paste("Est. of deviance")),type="l")
-plot(1:nrow(estimates),estimates[,"FP_cons"],xlab="iteration",
-ylab=expression(paste("Est. of ",beta[0])),type="l")
-plot(1:nrow(estimates),estimates[,"FP_standlrt"],xlab="iteration",
-ylab=expression(paste("Est. of ",beta[1])),type="l")
-plot(1:nrow(estimates),estimates[,"RP1_var_cons"],xlab="iteration",
-ylab=expression(paste("Est. of ",sigma[e0]^2)),type="l")
+plot(1:nrow(estimates),estimates[,"deviance"],xlab="iteration", ylab=expression(paste("Est. of deviance")),type="l")
+plot(1:nrow(estimates),estimates[,"FP_cons"],xlab="iteration", ylab=expression(paste("Est. of ",beta[0])),type="l")
+plot(1:nrow(estimates),estimates[,"FP_standlrt"],xlab="iteration", ylab=expression(paste("Est. of ",beta[1])),type="l")
+plot(1:nrow(estimates),estimates[,"RP1_var_cons"],xlab="iteration", ylab=expression(paste("Est. of ",sigma[e0]^2)),type="l")
 
 # 2.2 Deviance statistic and the DIC diagnostic . . . . . . . . . . . . . 28
 
 # 2.3 Adding more predictors . . . . . . . . . . . . . . . . . . . . . . .29
 
-tutorial[["boysch"]]=as.integer(tutorial[["schgend"]]=="boysch")
-tutorial[["girlsch"]]=as.integer(tutorial[["schgend"]]=="girlsch")
-tutorial[["girl"]]=as.integer(tutorial[["sex"]]) -1
+tutorial$boysch <- as.integer(tutorial$schgend=="boysch")
+tutorial$girlsch <- as.integer(tutorial$schgend=="girlsch")
+tutorial$girl <- as.integer(tutorial$sex) -1
 
 ## Define the model
-formula=normexam~(0|cons+standlrt+girl+boysch+girlsch)+(1|cons)
-levID='student'
 ## Choose IGLS algoritm for estimation
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, indata=tutorial))
+(mymodel3 <- runMLwiN(normexam~(0|cons+standlrt+girl+boysch+girlsch)+(1|cons), levID='student', data=tutorial))
 
 ## Choose MCMC algoritm for estimation
-estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel4 <- runMLwiN(normexam~(0|cons+standlrt+girl+boysch+girlsch)+(1|cons), levID='student', estoptions=list(EstM=1), data=tutorial))
 
 # 2.4 Fitting school effects as fixed parameters . . . . . . . . . . . . .32
 
-tutorial=cbind(tutorial,Untoggle(tutorial[["school"]],"school"))
+tutorial <- cbind(tutorial,Untoggle(tutorial[["school"]],"school"))
 
 ## Define the model
-tempstr=paste("+",names(tutorial)[14:77],collapse="")
-formula=paste("normexam~(0|cons+standlrt+girl",tempstr,")+(1|cons)",sep="")
-levID='student'
+formula <- as.formula(paste0("normexam~(0|cons+standlrt+girl+",paste0("school_", 1:64, collapse="+"),")+(1|cons)"))
 ## Choose MCMC algoritm for estimation (IGLS will be used to obtain starting values for MCMC)
-estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel5 <- runMLwiN(formula, levID='student', estoptions=list(EstM=1), data=tutorial))
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . . 33
 

@@ -34,55 +34,50 @@ options(MLwiN_path=mlwin)
 data(tutorial)
 
 ## Define the model
-formula=normexam~(0|cons)+(2|cons)+(1|cons)
-levID=c('school','student')
-estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+
+(mymodel <- runMLwiN(normexam~(0|cons)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1), data=tutorial))
 
 
 ## Structured MVN
-estoptions= list(EstM=1, mcmcOptions=list(smvn=1))
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+
+(mymodel <- runMLwiN(normexam~(0|cons)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1, mcmcOptions=list(smvn=1)), data=tutorial))
 
 # 22.3 Model Comparison and structured MVN models . . . . . . . . . . . .349
 
 ## Define the model
-formula=normexam~(0|cons+standlrt)+(2|cons)+(1|cons)
-levID=c('school','student')
 
 ## Gibbs
-estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+
+(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1), data=tutorial))
 
 ## SMCMC
-estoptions= list(EstM=1, mcmcOptions=list(smcm=1))
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+
+(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1, mcmcOptions=list(smcm=1)), data=tutorial))
 
 ## Structured MVN
-estoptions= list(EstM=1, mcmcOptions=list(smvn=1))
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+
+(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1, mcmcOptions=list(smvn=1)), data=tutorial))
 
 # 22.4 Assessing the need for the level 2 variance . . . . . . . . . . . 350
 
 sixway(mymodel["chains"][,"RP2_var_cons"],"sigma2u0")
 
 set.seed(1)
-tutorial[["temp"]]=double2singlePrecision(rnorm(4059))
+tutorial$temp <- double2singlePrecision(rnorm(4059))
 
 ## Define the model
-formula=temp~(0|cons+standlrt)+(2|cons)+(1|cons)
-levID=c('school','student')
 
 ##IGLS
-(mymodel=runMLwiN(formula, levID, indata=tutorial))
+
+(mymodel <- runMLwiN(temp~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), data=tutorial))
 
 ## Gibbs
-estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+
+(mymodel <- runMLwiN(temp~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1), data=tutorial))
 
 ## Structured MVN
-estoptions= list(EstM=1, mcmcOptions=list(smvn=1))
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+
+(mymodel <- runMLwiN(temp~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1, mcmcOptions=list(smvn=1)), data=tutorial))
 
 summary(mymodel["chains"][,"RP2_var_cons"])
 sixway(mymodel["chains"][,"RP2_var_cons"],"sigma2u0")

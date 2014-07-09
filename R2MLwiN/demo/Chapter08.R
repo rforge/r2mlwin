@@ -35,14 +35,12 @@ options(MLwiN_path=mlwin)
 # 8.4 Fitting the model to the simulated datasets . . . . . . . . . . . .106
 
 set.seed(1)
-pupil = 1:108
-school = c(rep(1, 18), rep(2, 18), rep(3, 18), rep(4, 18), rep(5, 18), rep(6, 18))
-cons = rep(1, 108)
-levID = c("school", "pupil")
-formula = resp ~ (0|cons) + (2|cons) + (1|cons)
+pupil <- 1:108
+school <- c(rep(1, 18), rep(2, 18), rep(3, 18), rep(4, 18), rep(5, 18), rep(6, 18))
+cons <- rep(1, 108)
 
 ns <- 100
-IGLS_array = MCMC_array = array(, c(9, 5, ns))
+IGLS_array <- MCMC_array <- array(, c(9, 5, ns))
 MCMC_median <- data.frame(RP2_var_cons = rep(0, ns), RP1_var_cons = rep(0, ns))
 CounterMCMC <- rep(0, 3)
 Actual <- c(30, 10, 40)
@@ -51,10 +49,10 @@ for(i in 1:ns){
   u <- rep(u_short, each = 18, len = 108)
   e <- rnorm(108, 0, sqrt(Actual[3]))
   resp <- Actual[1] * cons + u + e
-  indata = data.frame(cbind(pupil, school, cons, resp))
-  simModelIGLS <- runMLwiN(formula, levID, indata=indata)
+  indata <- data.frame(cbind(pupil, school, cons, resp))
+  simModelIGLS <- runMLwiN(resp ~ (0|cons) + (2|cons) + (1|cons), levID = c("school", "pupil"), data=indata)
   IGLS_array[,,i] <- as.matrix(simModelIGLS["estIGLS"])
-  simModelMCMC <- runMLwiN(formula, levID, indata=indata, estoptions = list(EstM = 1))
+  simModelMCMC <- runMLwiN(resp ~ (0|cons) + (2|cons) + (1|cons), levID = c("school", "pupil"), estoptions = list(EstM = 1), data=indata)
   MCMC_array[,,i] <- as.matrix(simModelMCMC["estMCMC"])
   MCMC_median[i, ] <- c(median(simModelMCMC["chains"][,"RP2_var_cons"]), median(simModelMCMC["chains"][,"RP1_var_cons"]))
   if (Actual[1] > quantile(simModelMCMC["chains"][,"FP_cons"], 0.025) & Actual[1] < quantile(simModelMCMC["chains"][,"FP_cons"], 0.975)) {
@@ -85,13 +83,13 @@ Percent_interval_coverage <- (counterIGLS / ns) * 100
 Mean_across_simus <- round(c(mean(aa[1,]), mean(aa[3,]), mean(aa[4,])), 2)
 Percent_bias <- round(-100 * (1 - Mean_across_simus / Actual), 2)
 IGLS_results <- cbind(Mean_across_simus, Actual, Percent_bias, Percent_interval_coverage)
-rownames(IGLS_results) = c("beta0", "sigma2_u", "sigma2_e")
+rownames(IGLS_results) <- c("beta0", "sigma2_u", "sigma2_e")
 Percent_interval_coverage <- (CounterMCMC / ns) * 100
 bb <- sapply(1:ns, function(x) na.omit(stack(as.data.frame(MCMC_array[,,x])))$values)
 Mean_across_simus <- round(c(mean(bb[1,]), mean(bb[3,]), mean(bb[4,])), 2)
 Percent_bias <- round(-100 * (1 - Mean_across_simus / Actual), 2)
 MCMC_results <- cbind(Mean_across_simus, Actual, Percent_bias, Percent_interval_coverage)
-rownames(MCMC_results) = c("beta0", "sigma2_u", "sigma2_e")
+rownames(MCMC_results) <- c("beta0", "sigma2_u", "sigma2_e")
 
 # 8.5 Analysing the simulation results . . . . . . . . . . . . . . . . . 109
 

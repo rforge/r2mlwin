@@ -22,7 +22,7 @@ mlwin <- getOption("MLwiN_path")
 while (!file.access(mlwin, mode=1)==0) {
   cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
   mlwin=scan(what=character(0),sep ="\n")
-  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
 }
 options(MLwiN_path=mlwin)
 
@@ -36,30 +36,19 @@ summary(lips1)
 
 lips1<- lips1[with(lips1, order(neigh1,area,area)), ]
 
-formula=log(obs,offs)~(0|cons)
-levID=c('neigh1','area','area')
-estoptions= list(EstM=1,notation="class")
-(mymodel=runMLwiN(formula, levID, D='Poisson', indata=lips1, estoptions=estoptions))
+(mymodel <- runMLwiN(log(obs,offs)~(0|cons), levID=c('neigh1','area','area'), D='Poisson', estoptions=list(EstM=1,notation="class"), data=lips1))
 
-formula=log(obs,offs)~(0|cons+perc_aff)
-levID=c('neigh1','area','area')
-estoptions= list(EstM=1,notation="class")
-(mymodel=runMLwiN(formula, levID, D='Poisson', indata=lips1, estoptions=estoptions))
+(mymodel <- runMLwiN(log(obs,offs)~(0|cons+perc_aff), levID=c('neigh1','area','area'), D='Poisson', estoptions=list(EstM=1,notation="class"), data=lips1))
 
 # 17.3 Random effects models . . . . . . . . . . . . . . . . . . . . . . 251
 
-formula=log(obs,offs)~(0|cons+perc_aff)+(2|cons)
-levID=c('neigh1','area','area')
-estoptions= list(EstM=1,notation="class",mcmcMeth=list(iterations=50000))
-(mymodel=runMLwiN(formula, levID, D='Poisson', indata=lips1, estoptions=estoptions))
+(mymodel <- runMLwiN(log(obs,offs)~(0|cons+perc_aff)+(2|cons), levID=c('neigh1','area','area'), D='Poisson',
+ estoptions=list(EstM=1, notation="class", mcmcMeth=list(iterations=50000)), data=lips1))
 
 # 17.4 A spatial multiple-membership (MM) model . . . . . . . . . . . . .252
 
-formula=log(obs,offs)~(0|cons+perc_aff)+(2|cons)+(3|cons)
-levID=c('neigh1','area','area')
-xclass=list("class"=3,"N1"=11,"weight"='weight1',"id"=NA)
-estoptions= list(xclass=xclass,EstM=1,notation="class",mcmcMeth=list(iterations=50000))
-(mymodel=runMLwiN(formula, levID, D='Poisson', indata=lips1, estoptions=estoptions))
+(mymodel <- runMLwiN(log(obs,offs)~(0|cons+perc_aff)+(2|cons)+(3|cons), levID=c('neigh1','area','area'), D='Poisson',
+ estoptions=list(xclass=list("class"=3, "N1"=11, "weight"='weight1', "id"=NA), EstM=1, notation="class", mcmcMeth=list(iterations=50000)), data=lips1))
 
 # 17.5 Other spatial models . . . . . . . . . . . . . . . . . . . . . . .255
 
@@ -78,20 +67,14 @@ while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file
 ## winbugs executable
 #winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
 
-formula=log(obs,offs)~(0|perc_aff)+(3|cons)
-levID=c('area','area','area')
-xclass=list("class"=3,"N1"=11,"weight"='wcar1',"id"='neigh1',"car"=TRUE)
-estoptions= list(xclass=xclass,EstM=1,notation="class",mcmcMeth=list(iterations=50000))
-(mymodel=runMLwiN(formula, levID, D='Poisson', indata=lips1, estoptions=estoptions, BUGO=c(version=4,n.chains=1,bugs=openbugs, OpenBugs = T)))
-
+(mymodel <- runMLwiN(log(obs,offs)~(0|perc_aff)+(3|cons), levID=c('area','area','area'), D='Poisson',
+ estoptions=list(xclass=list("class"=3, "N1"=11, "weight"='wcar1', "id"='neigh1', "car"=TRUE), EstM=1, notation="class", mcmcMeth=list(iterations=50000)),
+ BUGO=c(version=4, n.chains=1, bugs=openbugs, OpenBugs = T), data=lips1))
 
 # 17.7 Including exchangeable random effects . . . . . . . . . . . . . . 259
 
-formula=log(obs,offs)~(0|perc_aff)+(2|cons)+(3|cons)
-levID=c('area','area','area')
-xclass=list("class"=3,"N1"=11,"weight"='wcar1',"id"='neigh1',"car"=TRUE)
-estoptions= list(xclass=xclass,EstM=1,notation="class",mcmcMeth=list(iterations=50000))
-(mymodel=runMLwiN(formula, levID, D='Poisson', indata=lips1, estoptions=estoptions))
+(mymodel <- runMLwiN(log(obs,offs)~(0|perc_aff)+(2|cons)+(3|cons), levID=c('area','area','area'), D='Poisson',
+ estoptions=list(xclass=list("class"=3, "N1"=11, "weight"='wcar1', "id"='neigh1', "car"=TRUE), EstM=1, notation="class", mcmcMeth=list(iterations=50000)), data=lips1))
 
 # 17.8 Further reading on spatial modelling . . . . . . . . . . . . . . .260
 

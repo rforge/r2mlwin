@@ -32,43 +32,32 @@ options(MLwiN_path=mlwin)
 data(tutorial)
 
 ## Define the model
-formula=normexam~(0|cons+standlrt)+(2|cons)+(1|cons)
 ## The highest level comes first, then the second highest and so on
-levID=c('school','student')
 ## Choose option(s) for inference
-estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel1 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1), data=tutorial))
 
-estimates=mymodel["chains"]
+estimates <- mymodel1["chains"]
 par(mfrow=c(3,2))
-plot(4501:nrow(estimates),estimates[4501:nrow(estimates),"deviance"],xlab="iteration",
-ylab=expression(paste("Est. of deviance")),type="l")
-plot(4501:nrow(estimates),estimates[4501:nrow(estimates),"FP_cons"],xlab="iteration",
-ylab=expression(paste("Est. of ",beta[0])),type="l")
-plot(4501:nrow(estimates),estimates[4501:nrow(estimates),"FP_standlrt"],xlab="iteration",
-ylab=expression(paste("Est. of ",beta[1])),type="l")
-plot(4501:nrow(estimates),estimates[4501:nrow(estimates),"RP2_var_cons"],xlab="iteration",
-ylab=expression(paste("Est. of ",sigma[u0]^2)),type="l")
-plot(4501:nrow(estimates),estimates[4501:nrow(estimates),"RP1_var_cons"],xlab="iteration",
-ylab=expression(paste("Est. of ",sigma[e0]^2)),type="l")
+plot(4501:nrow(estimates), estimates[4501:nrow(estimates),"deviance"],xlab="iteration", ylab=expression(paste("Est. of deviance")),type="l")
+plot(4501:nrow(estimates), estimates[4501:nrow(estimates),"FP_cons"],xlab="iteration", ylab=expression(paste("Est. of ",beta[0])),type="l")
+plot(4501:nrow(estimates), estimates[4501:nrow(estimates),"FP_standlrt"],xlab="iteration", ylab=expression(paste("Est. of ",beta[1])),type="l")
+plot(4501:nrow(estimates), estimates[4501:nrow(estimates),"RP2_var_cons"],xlab="iteration", ylab=expression(paste("Est. of ",sigma[u0]^2)),type="l")
+plot(4501:nrow(estimates), estimates[4501:nrow(estimates),"RP1_var_cons"],xlab="iteration", ylab=expression(paste("Est. of ",sigma[e0]^2)),type="l")
 
-sixway(mymodel["chains"][,"FP_standlrt"],"beta_1")
-sixway(mymodel["chains"][,"RP2_var_cons"],"sigma2u0")
+sixway(mymodel1["chains"][,"FP_standlrt"],"beta_1")
+sixway(mymodel1["chains"][,"RP2_var_cons"],"sigma2u0")
 
 # 3.2 DIC and multilevel models . . . . . . . . . . . . . . . . . . . . . 41
 
 # 3.3 Comparison between fixed and random school effects . . . . . . . . .41
 
-tutorial[["girl"]]=as.integer(tutorial[["sex"]]) -1
+tutorial$girl <- as.integer(tutorial$sex) -1
 
 ## Define the model
-formula=normexam~(0|cons+standlrt+girl)+(2|cons)+(1|cons)
-levID=c('school','student')
 ## Choose option(s) for inference
-estoptions= list(EstM=1)
 ## Fit the model
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel2 <- runMLwiN(normexam~(0|cons+standlrt+girl)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1), data=tutorial))
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . . 43
 

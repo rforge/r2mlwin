@@ -33,16 +33,16 @@ options(MLwiN_path=mlwin)
 data(tutorial)
 
 ## Define the model
-formula=normexam~(0|cons+standlrt)+(2|cons)+(1|cons)
-levID=c('school','student')
-estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+
+(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1), data=tutorial))
+
 summary(mymodel["chains"][,"RP2_var_cons"])
 sixway(mymodel["chains"][,"RP2_var_cons"],"sigma2u2")
 
 ## Parameter expansion at level 2
-estoptions= list(EstM=1, mcmcOptions=list(paex=c(2,1)))
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+
+(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1, mcmcOptions=list(paex=c(2,1))), data=tutorial))
+
 sixway(mymodel["chains"][,"RP2_var_cons"],"sigma2u0")
 
 # 24.3 Binary responses - Voting example . . . . . . . . . . . . . . . . 386
@@ -52,22 +52,25 @@ sixway(mymodel["chains"][,"RP2_var_cons"],"sigma2u0")
 data(bes83)
 
 ## Define the model
-formula=logit(votecons,cons)~(0|cons+defence+ unemp+ taxes+ privat)+(2|cons)
-levID=c('area','voter')
-estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, D="Binomial", indata=bes83, estoptions=estoptions))
+
+(mymodel <- runMLwiN(logit(votecons,cons)~(0|cons+defence+unemp+taxes+privat)+(2|cons), levID=c('area','voter'), D="Binomial", estoptions=list(EstM=1), data=bes83))
+
 sixway(mymodel["chains"][,"RP2_var_cons"],acf.maxlag=500,"sigma2u0")
 
 ## Parameter expansion at level 2
-estoptions= list(EstM=1, mcmcOptions=list(paex=c(2,1)))
-(mymodel=runMLwiN(formula, levID, D="Binomial", indata=bes83, estoptions=estoptions))
+
+(mymodel <- runMLwiN(logit(votecons,cons)~(0|cons+defence+unemp+taxes+privat)+(2|cons), levID=c('area','voter'), D="Binomial",
+ estoptions=list(EstM=1, mcmcOptions=list(paex=c(2,1))), data=bes83))
+
 sixway(mymodel["chains"][,"RP2_var_cons"],acf.maxlag=500,"sigma2u0")
 
 # 24.4 The choice of prior distribution . . . . . . . . . . . . . . . . .390
 
 ## Uniform on the variance scale priors+Parameter expansion at level 2
-estoptions= list(EstM=1, mcmcMeth=list(priorcode=0),mcmcOptions=list(paex=c(2,1)))
-(mymodel=runMLwiN(formula, levID, D="Binomial", indata=bes83, estoptions=estoptions))
+
+(mymodel <- runMLwiN(logit(votecons,cons)~(0|cons+defence+unemp+taxes+privat)+(2|cons), levID=c('area','voter'), D="Binomial",
+ estoptions=list(EstM=1, mcmcMeth=list(priorcode=0), mcmcOptions=list(paex=c(2,1))), data=bes83))
+
 sixway(mymodel["chains"][,"RP2_var_cons"],acf.maxlag=100,"sigma2u0")
 
 # 24.5 Parameter expansion and WinBUGS . . . . . . . . . . . . . . . . . 391
@@ -85,8 +88,10 @@ while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file
 ## winbugs executable
 # winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
 
-estoptions= list(EstM=1,mcmcMeth=list(priorcode=0),mcmcOptions=list(paex=c(2,1)),show.file=T)
-mymodel=runMLwiN(formula, levID, D="Binomial", indata=bes83, estoptions=estoptions,BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=openbugs, OpenBugs = T))
+mymodel <- runMLwiN(logit(votecons,cons)~(0|cons+defence+unemp+taxes+privat)+(2|cons), levID=c('area','voter'), D="Binomial",
+ estoptions=list(EstM=1, mcmcMeth=list(priorcode=0), mcmcOptions=list(paex=c(2,1)), show.file=T),
+ BUGO=c(version=4, n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=bes83)
+
 apply(mymodel[[1]],2,effectiveSize)
 sixway(mymodel[[1]][,"sigma2.u2"],acf.maxlag=250,"sigma2.u2")
 sixway(mymodel[[1]][,"sigma2.v2"],acf.maxlag=100,"sigma2.v2")
@@ -97,15 +102,12 @@ sixway(mymodel[[1]][,"sigma2.v2"],acf.maxlag=100,"sigma2.v2")
 data(tutorial)
 
 ## Define the model
-formula=normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)
-levID=c('school','student')
-estoptions= list(EstM=1)
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
 
+(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1), data=tutorial))
 
 ## Parameter expansion at level 2
-estoptions= list(EstM=1, mcmcOptions=list(paex=c(2,1)))
-(mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons), levID=c('school','student'),
+ estoptions=list(EstM=1, mcmcOptions=list(paex=c(2,1))), data=tutorial))
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .399
 

@@ -34,91 +34,88 @@ options(MLwiN_path=mlwin)
 data(tutorial)
 
 ## Define the model
-formula=normexam~(0|cons+standlrt)+(2|cons)+(1|cons)
-levID=c('school','student')
-
 ## IGLS
 ## Fit the model
-(mymodel1=runMLwiN(formula, levID, indata=tutorial))
+(mymodel1 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), data=tutorial))
 
 ## Diffuse priors (Gamma priors)
-estoptions= list(EstM=1)
 ## Fit the model
-(mymodel2=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel2 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1), data=tutorial))
 
 ## Diffuse priors (Uniform priors)
-estoptions= list(EstM=1,mcmcMeth=list(priorcode=0))
 ## Fit the model
-(mymodel3=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel3 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
+ estoptions=list(EstM=1, mcmcMeth=list(priorcode=0)), data=tutorial))
 
-aa=cbind(mymodel1["FP"],mymodel2["FP"],mymodel3["FP"])
-bb=cbind(mymodel1["RP"],mymodel2["RP"],mymodel3["RP"])
-ctable=round(rbind(aa,bb),3)
-colnames(ctable)=c("IGLS","Gibbs1", "Gibbs2")
+aa <- cbind(mymodel1["FP"],mymodel2["FP"],mymodel3["FP"])
+bb <- cbind(mymodel1["RP"],mymodel2["RP"],mymodel3["RP"])
+ctable <- round(rbind(aa,bb),3)
+colnames(ctable) <- c("IGLS","Gibbs1", "Gibbs2")
 print(ctable)
-rm(list=c("mymodel1","mymodel2","mymodel3"))
+rm(list=c("mymodel1", "mymodel2", "mymodel3"))
 
 # 5.3 Using informative priors . . . . . . . . . . . . . . . . . . . . . .62
 
 ## Informative normal prior for beta_1
-prior=list(fixe=list(standlrt=c(1,.01)))
-prior=prior2macro(prior,formula,levID,D='Normal', indata=tutorial)
-estoptions= list(EstM=1,mcmcMeth=list(priorParam=prior))
+prior <- prior2macro(list(fixe=list(standlrt=c(1,.01))), normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), D='Normal', indata=tutorial)
 ## Fit the model
-(mymodel4=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel4 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
+ estoptions=list(EstM=1, mcmcMeth=list(priorParam=prior)), data=tutorial))
+
 sixway(mymodel4["chains"][,"FP_standlrt"],"beta_1")
 
 ## Informative normal prior for beta_1
-prior=list(fixe=list(standlrt=c(1,.1)))
-prior=prior2macro(prior,formula,levID,D='Normal', indata=tutorial)
-estoptions= list(EstM=1,mcmcMeth=list(priorParam=prior))
+prior <- prior2macro(list(fixe=list(standlrt=c(1,.1))),normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), D='Normal', indata=tutorial)
 ## Fit the model
-(mymodel5=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel5 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
+ estoptions=list(EstM=1, mcmcMeth=list(priorParam=prior)), data=tutorial))
+
 sixway(mymodel5["chains"][,"FP_standlrt"],"beta_1")
 
 # 5.4 Specifying an informative prior for a random parameter . . . . . . .65
 
 ## Specifies an ingormative prior for sigma2u
-prior=list(rp2=list(estimates=.2,size=100))
-prior=prior2macro(prior,formula,levID,D='Normal', indata=tutorial)
-estoptions= list(EstM=1,mcmcMeth=list(priorParam=prior))
+prior <- prior2macro(list(rp2=list(estimates=.2,size=100)),normexam~(0|cons+standlrt)+(2|cons)+(1|cons),levID=c('school','student'),D='Normal', indata=tutorial)
 ## Fit the model
-(mymodel6=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel6 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
+ estoptions=list(EstM=1, mcmcMeth=list(priorParam=prior)), data=tutorial))
+
 sixway(mymodel6["chains"][,"RP2_var_cons"],"sigma^2_u0")
 
 # 5.5 Changing the random number seed and the parameter starting values  .66
 
 ## Set starting values for random and fixed parameter estimates
-FP.b=c(-2,5)
-names(FP.b)=c("FP_cons","FP_standlrt")
-RP.b=c(2,4)
-names(RP.b)=c("RP2_var_cons","RP1_var_cons")
-startval=list(FP.b=FP.b,RP.b=RP.b)
-estoptions= list(EstM=1,mcmcMeth=list(burnin=0, iterations=500),startval=startval)
-## Fit the model
-(mymodel7=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+FP.b <- c(-2,5)
+names(FP.b) <- c("FP_cons","FP_standlrt")
+RP.b <- c(2,4)
+names(RP.b) <- c("RP2_var_cons","RP1_var_cons")
+startval <- list(FP.b=FP.b,RP.b=RP.b)
 
-rm(list=c("mymodel4","mymodel5","mymodel6","mymodel7"))
+## Fit the model
+(mymodel7 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
+ estoptions=list(EstM=1, mcmcMeth=list(burnin=0, iterations=500), startval=startval), data=tutorial))
+
+rm(list=c("mymodel4", "mymodel5", "mymodel6", "mymodel7"))
 
 ##Use different seeds
-estoptions= list(EstM=1,mcmcMeth=list(seed=1))
-(mymodel8=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel8 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
+ estoptions=list(EstM=1, mcmcMeth=list(seed=1)), data=tutorial))
 
-estoptions= list(EstM=1,mcmcMeth=list(seed=2))
-(mymodel9=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel9 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
+ estoptions=list(EstM=1, mcmcMeth=list(seed=2)), data=tutorial))
 
-estoptions= list(EstM=1,mcmcMeth=list(seed=3))
-(mymodel10=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel10 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
+ estoptions=list(EstM=1, mcmcMeth=list(seed=3)), data=tutorial))
 
-estoptions= list(EstM=1,mcmcMeth=list(seed=4))
-(mymodel11=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions))
+(mymodel11 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
+ estoptions=list(EstM=1, mcmcMeth=list(seed=4)), data=tutorial))
 
-aa=cbind(mymodel8["FP"],mymodel9["FP"],mymodel10["FP"],mymodel11["FP"])
-bb=cbind(mymodel8["RP"],mymodel9["RP"],mymodel10["RP"],mymodel11["RP"])
-ctable=round(rbind(aa,bb),3)
-colnames(ctable)=c("Seed1","Seed2", "Seed3","Seed4")
+aa <- cbind(mymodel8["FP"],mymodel9["FP"],mymodel10["FP"],mymodel11["FP"])
+bb <- cbind(mymodel8["RP"],mymodel9["RP"],mymodel10["RP"],mymodel11["RP"])
+ctable <- round(rbind(aa,bb),3)
+colnames(ctable) <- c("Seed1","Seed2", "Seed3","Seed4")
 print(ctable)
-rm(list=c("mymodel8","mymodel9","mymodel10","mymodel11"))
+rm(list=c("mymodel8", "mymodel9", "mymodel10", "mymodel11"))
 
 # 5.6 Improving the speed of MCMC Estimation . . . . . . . . . . . . . . .69
 
