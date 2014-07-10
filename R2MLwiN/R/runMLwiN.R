@@ -996,6 +996,23 @@ version:date:md5:filename:x64:trial
     }
   }
 
+  if (D[1] == "Multinomial") {
+    if (length(unique(indata[[resp]])) < 2) {
+      stop("Responses must have at least two categories for multinomial models")
+    }
+    if (!is.factor(indata[[resp]])) {
+      indata[[resp]] <- as.factor(indata[[resp]])
+    }
+    if (is.na(D[5])) {
+      stop("Invalid reference category")
+    }
+    if (D[4] == 1) { # Ordered multinomial
+      if (D[5] != min(levels(indata[[resp]])) && D[5] != max(levels(indata[[resp]]))) {
+        stop("Invalid reference category")
+      }
+    }
+  }
+
   needsint <- FALSE
   if (is.list(expl)){
     if ("1" %in% expl$sep.coeff || "1" %in% nonfp$common.coeff) {

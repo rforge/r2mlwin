@@ -56,7 +56,9 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
       names(D)[3]="offset"
       D[4]=0
       names(D)[4]="mode"
-      D[5]=which(resp[3]==levels(indata[[resp[1]]]))
+      if (resp[3] %in% indata[[resp[1]]]) {
+        D[5]=which(resp[3]==levels(indata[[resp[1]]]))
+      }
       names(D)[5]="ref.cat"
       resp=resp[1]
     }
@@ -86,7 +88,9 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
       names(D)[3]="offset"
       D[4]=1
       names(D)[4]="mode"
-      D[5]=which(resp[3]==levels(indata[[resp[1]]]))
+      if (resp[3] %in% indata[[resp[1]]]) {
+        D[5]=which(resp[3]==levels(indata[[resp[1]]]))
+      }
       names(D)[5]="ref.cat"
       resp=resp[1]
     }
@@ -273,7 +277,11 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
           names.resp=levels(indata[[resp]])
           names.resp=names.resp[-as.numeric(D["ref.cat"])]
           refcatint=as.numeric(D["ref.cat"])
-          if (refcatint==1) usign=">" else usign="<"
+          if (!is.na(refcatint)) {
+            if (refcatint==1) usign=">" else usign="<"
+          } else {
+            usign=""
+          }
         }else{
           names.resp=resp
         }
@@ -322,7 +330,11 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
             names.resp=levels(indata[[resp]])
             names.resp=names.resp[-as.numeric(D["ref.cat"])]
             refcatint=as.numeric(D["ref.cat"])
-            if (refcatint==1) usign=">" else usign="<"
+            if (!is.na(refcatint)) {
+              if (refcatint==1) usign=">" else usign="<"
+            } else {
+              usign=""
+            }
           }else{
             names.resp=resp
           }
@@ -389,7 +401,9 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
         for (i in 1:length(tt.id)){
           if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial') refcatint=as.numeric(D["ref.cat"])
           nonrefcatpos=as.numeric(unlist(strsplit(tt.id[i],",")))
-          if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial') nonrefcatpos[which(nonrefcatpos>refcatint)]=nonrefcatpos[which(nonrefcatpos>refcatint)]-1
+          if (!is.na(refcatint)) {
+            if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial') nonrefcatpos[which(nonrefcatpos>refcatint)]=nonrefcatpos[which(nonrefcatpos>refcatint)]-1
+          }
           ccid.mat[i,nonrefcatpos]=1
         }
         
@@ -428,7 +442,9 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
           }
           
           nonrefcatpos=as.numeric(unlist(strsplit(cidmat[i,2],",")))
-          if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial') nonrefcatpos[which(nonrefcatpos>refcatint)]=nonrefcatpos[which(nonrefcatpos>refcatint)]-1
+          if (!is.na(refcatint)) {
+            if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial') nonrefcatpos[which(nonrefcatpos>refcatint)]=nonrefcatpos[which(nonrefcatpos>refcatint)]-1
+          }
           ccid.mat[i,nonrefcatpos]=1
         }
       }
@@ -458,7 +474,11 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
               names.resp=resp
             }
             if(D[1]=='Ordered Multinomial'){
-              if (refcatint==1) usign=">" else usign="<"
+              if (!is.na(refcatint)) {
+                if (refcatint==1) usign=">" else usign="<"
+              } else {
+                usign=""
+              }
               if(sum(grepl("\\.",rands[[i]][j]))==0){
                 rptemp=c(rptemp,sapply(names.resp,function(x) paste(rands[[i]][j],".(",usign,"=",x,")",sep="")))
               }else{
@@ -531,7 +551,9 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
           }
           
           nonrefcatpos=as.numeric(unlist(strsplit(cidmat[i,2],",")))
-          if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial') nonrefcatpos[which(nonrefcatpos>refcatint)]=nonrefcatpos[which(nonrefcatpos>refcatint)]-1
+          if (!is.na(refcatint)) {
+            if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial') nonrefcatpos[which(nonrefcatpos>refcatint)]=nonrefcatpos[which(nonrefcatpos>refcatint)]-1
+          }
           ccid.mat[i,nonrefcatpos]=1
         }
       }else{
