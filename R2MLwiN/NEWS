@@ -13,6 +13,7 @@ Mon Jun 30 2014
    * Added check that response variables for multinomial models have at least two categories
    * Added check that the reference category is valid for multinomial models
    * Added check that the levels for hierarchical centring and parameter expansion are valid
+   * Added check that nonlinear options are valid
 
 2. Changes
    * Enabled matching starting values on parameter names (allowing subsets of parameters to be specified)

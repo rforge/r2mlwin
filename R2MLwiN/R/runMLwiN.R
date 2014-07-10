@@ -359,7 +359,23 @@ version:date:md5:filename:x64:trial
   }
   
   nonlinear=estoptions$nonlinear
+  if (!is.null(nonlinear)) {
+    if (D[1] == "Normal" || D[1] == "Multivariate Normal") {
+      stop("Nonlinear options are not valid for normal models")
+    }
+  }
   if (is.null(nonlinear)) nonlinear=c(0,1)
+  if (length(na.omit(levID)) == 1 && any(nonlinear != c(0,1))) {
+    stop("Only MQL1 is valid for one-level discrete models")
+  }
+
+  if (nonlinear[1] < 0 || nonlinear[1] > 1) {
+    stop("Invalid nonlinear option")
+  }
+
+  if (nonlinear[2] < 1 || nonlinear[2] > 2) {
+    stop("Invalid nonlinear option")
+  }
   
   Meth=estoptions$Meth
   if(is.null(Meth)) Meth=1
