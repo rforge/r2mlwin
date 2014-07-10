@@ -13,7 +13,6 @@ Check all variables in the model actually exist in the data
 (MCMC) Check MM/CAR ids/weights to ensure they are valid before running MLwiN
 
 Model Specification Checks:
-Check response types for mixed response models (MLwiN allows Normals plus binaries OR Poissons, all discrete responses must use the same link function)
 (IGLS) Check lower levels are non-equal standardised weights if standardised weights are specified
 
 Additional Functionality:

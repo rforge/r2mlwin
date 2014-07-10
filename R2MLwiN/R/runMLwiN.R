@@ -1019,18 +1019,30 @@ version:date:md5:filename:x64:trial
   }
 
   if (D[1] == "Mixed") {
+    mixlink <- NULL
+    discreteresp <- NULL
     for (i in 2:length(D)) {
       if (D[[i]][1] == "Binomial") {
         if (!all(indata[[resp[i-1]]] >= 0 && indata[[resp[i-1]]] <= 1)) {
           stop("All values for a binomial response must lie between zero and one")
         }
+        discreteresp <- union(discreteresp, D[[i]][1])
+        mixlink <- union(mixlink, D[[i]][2])
       }
 
       if (D[[i]][1] == "Poisson") {
         if (!all(indata[[resp[i-1]]] >= 0) && all(as.integer(indata[[resp[i-1]]]) == indata[[resp]])) {
           stop("All values for a Poisson response must be positive integers")
         }
+        discreteresp <- union(discreteresp, D[[i]][1])
+        mixlink <- union(mixlink, D[[i]][2])
       }
+    }
+    if (length(discreteresp) > 1) {
+      stop("Mixed response models cannot contain both Binomial and Poisson responses")
+    }
+    if (length(mixlink) > 1) {
+      stop("Only one link type can be specified for mixed models")
     }
   }
 
