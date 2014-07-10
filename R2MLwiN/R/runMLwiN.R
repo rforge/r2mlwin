@@ -168,6 +168,9 @@ version:date:md5:filename:x64:trial
       if (!is.element(D[2], c("logit", "probit", "cloglog"))) {
         stop(cat("Invalid link function specified", D[2]))
       }
+      if (is.na(D[3])) {
+        stop("A denominator must be specified for a Binomial response")
+      }
     }
     if (D[1] == "Mixed") {
       for (i in 2:length(D)) {
@@ -177,6 +180,9 @@ version:date:md5:filename:x64:trial
         if (D[[i]][[1]] == "Binomial") {
           if (!is.element(D[[i]][[2]], c("logit", "probit", "cloglog"))) {
             stop(cat("Invalid link function specified", D[[i]][[2]]))
+          }
+          if (is.na(D[[i]][[3]])) {
+            stop("A denominator must be specified for Binomial responses")
           }
         }
       }
