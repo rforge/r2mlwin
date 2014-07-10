@@ -399,10 +399,12 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
         rownames(ccid.mat)=tt.names
         
         for (i in 1:length(tt.id)){
-          if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial') refcatint=as.numeric(D["ref.cat"])
           nonrefcatpos=as.numeric(unlist(strsplit(tt.id[i],",")))
-          if (!is.na(refcatint)) {
-            if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial') nonrefcatpos[which(nonrefcatpos>refcatint)]=nonrefcatpos[which(nonrefcatpos>refcatint)]-1
+          if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial') {
+            refcatint=as.numeric(D["ref.cat"])
+            if (!is.na(refcatint)) {
+              nonrefcatpos[which(nonrefcatpos>refcatint)]=nonrefcatpos[which(nonrefcatpos>refcatint)]-1
+            }
           }
           ccid.mat[i,nonrefcatpos]=1
         }
@@ -430,7 +432,6 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
         if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial') lencol=nresp-1 else lencol=nresp
         ccid.mat=matrix(0,nrow=lenfixc,ncol=lencol)
         rownames(ccid.mat)=fixc
-        if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial') refcatint=as.numeric(D["ref.cat"])
         
         for (i in 1:lenfixc){
           if(is.na(cidmat[i,2])){
@@ -442,8 +443,11 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
           }
           
           nonrefcatpos=as.numeric(unlist(strsplit(cidmat[i,2],",")))
-          if (!is.na(refcatint)) {
-            if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial') nonrefcatpos[which(nonrefcatpos>refcatint)]=nonrefcatpos[which(nonrefcatpos>refcatint)]-1
+          if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial') {
+            refcatint=as.numeric(D["ref.cat"])
+            if (!is.na(refcatint)) {
+              nonrefcatpos[which(nonrefcatpos>refcatint)]=nonrefcatpos[which(nonrefcatpos>refcatint)]-1
+            }
           }
           ccid.mat[i,nonrefcatpos]=1
         }
@@ -539,7 +543,6 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
         if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial') lencol=nresp-1 else lencol=nresp
         ccid.mat=matrix(0,nrow=lenfixc,ncol=lencol)
         rownames(ccid.mat)=fixc
-        if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial') refcatint=as.numeric(D["ref.cat"])
         
         for (i in 1:lenfixc){
           if(is.na(cidmat[i,2])){
@@ -551,8 +554,11 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
           }
           
           nonrefcatpos=as.numeric(unlist(strsplit(cidmat[i,2],",")))
-          if (!is.na(refcatint)) {
-            if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial') nonrefcatpos[which(nonrefcatpos>refcatint)]=nonrefcatpos[which(nonrefcatpos>refcatint)]-1
+          if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial') {
+            refcatint=as.numeric(D["ref.cat"])
+            if (!is.na(refcatint)) {
+              nonrefcatpos[which(nonrefcatpos>refcatint)]=nonrefcatpos[which(nonrefcatpos>refcatint)]-1
+              }
           }
           ccid.mat[i,nonrefcatpos]=1
         }
