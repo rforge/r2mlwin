@@ -215,14 +215,9 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
       fixs=unlist(strsplit(fixs,"\\|"))
       fixs=unlist(strsplit(fixs[2],"\\+"))
     }
-    if(D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial') nlev=nlev-1
     rands.no=rep(NA,nlev)
     randc.no=rep(NA,nlev)
-    if(D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial'){
-      effect.lev=(nlev+1):2
-    }else{
-      effect.lev=nlev:1
-    }
+    effect.lev=nlev:1
     for (i in 1:(nlev)){
       t1=grep(paste(effect.lev[i],"s+\\|",sep=""),left)
       if(length(t1)!=0) rands.no[i]=t1
@@ -632,51 +627,47 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
     rp=list()
     rp[["rp1"]] = "bcons.1"
 
-    if(nlev>1){
-      effect.lev=nlev:2
-      rands.no=rep(NA,nlev-1)
-      for (i in 1:(nlev-1)){
-        t1=grep(paste(effect.lev[i],"+\\|",sep=""),left)
-        if(length(t1)!=0) rands.no[i]=t1
-      }
-      randS=left[rands.no]
-      rands=list()
+    effect.lev=nlev:1
+    rands.no=rep(NA,nlev)
+    for (i in 1:nlev){
+      t1=grep(paste(effect.lev[i],"+\\|",sep=""),left)
+      if(length(t1)!=0) rands.no[i]=t1
+    }
+    randS=left[rands.no]
+    rands=list()
       
-      for (i in 1:(nlev-1)){
-        if(length(randS[i])!=0) {
-          rands[[i]]=unlist(strsplit(randS[[i]],"\\|"))
-          rands[[i]]=unlist(strsplit(rands[[i]][2],"\\+"))
-        }
+    for (i in 1:nlev){
+      if(length(randS[i])!=0) {
+        rands[[i]]=unlist(strsplit(randS[[i]],"\\|"))
+        rands[[i]]=unlist(strsplit(rands[[i]][2],"\\+"))
       }
-      randS=unique(na.omit(unlist(rands)))
-      if (length(fixs)==0){
-        nonfps=randS
-        fixs=randS
-      }else{
-        temps=randS[!(randS %in% fixs)]
-        if (length(temps)!=0){
-          nonfps=temps
-          fixs=c(fixs,temps)
-        }else{
-          nonfps=character(0)
-        }
-      }
-      
-      rp.names=NULL
-      for (i in 1:length(rands)){
-        if (!is.na(rands[[i]][1])){
-          rp.name=paste("rp",effect.lev[i],sep="")
-          rp.names=c(rp.names,rp.name)
-          rptemp=NULL
-          
-          for (j in 1:length(rands[[i]])){
-            rptemp=c(rptemp,rands[[i]][j])
-          }
-          rp[[rp.name]]=rptemp
-        }
-      }
+    }
+    randS=unique(na.omit(unlist(rands)))
+    if (length(fixs)==0){
+      nonfps=randS
+      fixs=randS
     }else{
-      nonfps=NULL
+      temps=randS[!(randS %in% fixs)]
+      if (length(temps)!=0){
+        nonfps=temps
+        fixs=c(fixs,temps)
+      }else{
+        nonfps=character(0)
+      }
+    }
+      
+    rp.names=NULL
+    for (i in 1:length(rands)){
+      if (!is.na(rands[[i]][1])){
+        rp.name=paste("rp",effect.lev[i],sep="")
+        rp.names=c(rp.names,rp.name)
+        rptemp=rp[[rp.name]]
+          
+        for (j in 1:length(rands[[i]])){
+          rptemp=c(rptemp,rands[[i]][j])
+        }
+        rp[[rp.name]]=rptemp
+      }
     }
     
     invars <-new.env()
@@ -744,52 +735,47 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
       rp[["rp1"]] = c("bcons.1", "bcons2.1")
     }
 
-    if(nlev>1){
-      effect.lev=nlev:2
-      rands.no=rep(NA,nlev-1)
-      for (i in 1:(nlev-1)){
-        t1=grep(paste(effect.lev[i],"+\\|",sep=""),left)
-        if(length(t1)!=0) rands.no[i]=t1
-        
-      }
-      randS=left[rands.no]
-      rands=list()
+    effect.lev=nlev:1
+    rands.no=rep(NA,nlev)
+    for (i in 1:nlev){
+      t1=grep(paste(effect.lev[i],"+\\|",sep=""),left)
+      if(length(t1)!=0) rands.no[i]=t1
+    }
+    randS=left[rands.no]
+    rands=list()
       
-      for (i in 1:(nlev-1)){
-        if(length(randS[i])!=0) {
-          rands[[i]]=unlist(strsplit(randS[[i]],"\\|"))
-          rands[[i]]=unlist(strsplit(rands[[i]][2],"\\+"))
-        }
+    for (i in 1:nlev){
+      if(length(randS[i])!=0) {
+        rands[[i]]=unlist(strsplit(randS[[i]],"\\|"))
+        rands[[i]]=unlist(strsplit(rands[[i]][2],"\\+"))
       }
-      randS=unique(na.omit(unlist(rands)))
-      if (length(fixs)==0){
-        nonfps=randS
-        fixs=randS
-      }else{
-        temps=randS[!(randS %in% fixs)]
-        if (length(temps)!=0){
-          nonfps=temps
-          fixs=c(fixs,temps)
-        }else{
-          nonfps=character(0)
-        }
-      }
-      
-      rp.names=NULL
-      for (i in 1:length(rands)){
-        if (!is.na(rands[[i]][1])){
-          rp.name=paste("rp",effect.lev[i],sep="")
-          rp.names=c(rp.names,rp.name)
-          rptemp=NULL
-          
-          for (j in 1:length(rands[[i]])){
-            rptemp=c(rptemp,rands[[i]][j])
-          }
-          rp[[rp.name]]=rptemp
-        }
-      }
+    }
+    randS=unique(na.omit(unlist(rands)))
+    if (length(fixs)==0){
+      nonfps=randS
+      fixs=randS
     }else{
-      nonfps=NULL
+      temps=randS[!(randS %in% fixs)]
+      if (length(temps)!=0){
+        nonfps=temps
+        fixs=c(fixs,temps)
+      }else{
+        nonfps=character(0)
+      }
+    }
+      
+    rp.names=NULL
+    for (i in 1:length(rands)){
+      if (!is.na(rands[[i]][1])){
+        rp.name=paste("rp",effect.lev[i],sep="")
+        rp.names=c(rp.names,rp.name)
+        rptemp=rp[[rp.name]]
+          
+        for (j in 1:length(rands[[i]])){
+          rptemp=c(rptemp,rands[[i]][j])
+        }
+        rp[[rp.name]]=rptemp
+      }
     }
     
     invars <-new.env()

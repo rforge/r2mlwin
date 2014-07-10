@@ -235,6 +235,34 @@ version:date:md5:filename:x64:trial
   }
 
   rp = invars$rp
+  if (D[1] != "Normal" || D[1] != "Mixed") {
+    if (D[1] == "Binomial") {
+      if (any(rp$rp1 != "bcons.1")) stop("Variables cannot be made random at level one in Binomial models")
+    }
+    if (D[1] == "Poisson") {
+      if (any(rp$rp1 != "bcons.1")) stop("Variables cannot be made random at level one in Poisson models")
+    }
+    if (D[1] == "Negbinom") {
+      if (suppressWarnings(any(rp$rp1 != c("bcons.1", "bcons2.1")))) stop("Variables cannot be made random at level one in Negative-binomial models")
+    }
+    if (D[1] == "Mixed") {
+      for (i in 2:length(D)) {
+        if (D[[i]][[1]] == "Binomial") {
+          rp1 <- rp$rp1[names(rp$rp1) == resp[i-1]]
+          if (length(rp1) > 0) stop("Variables cannot be made random at level one for Binomial responses")
+        }
+        if (D[[i]][[1]] == "Poisson") {
+          rp1 <- rp$rp1[names(rp$rp1) == resp[i-1]]
+          if (length(rp1) > 0) stop("Variables cannot be made random at level one for Poisson responses")
+        }
+      }
+    }
+    if (D[1] == "Multinomial") {
+      if (!is.null(rp$rp1)) {
+        stop("Variables cannot be made random at level one in multinomial models")
+      }
+    }
+  }
   nonfp = invars$nonfp
   if(is.null(nonfp)) {
     if(is.list(expl)){

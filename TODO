@@ -13,13 +13,9 @@ Check all variables in the model actually exist in the data
 (MCMC) Check MM/CAR ids/weights to ensure they are valid before running MLwiN
 
 Model Specification Checks:
-Check denom has been specified with binomial models
-Check model is Poisson/Negbinom if offset is specified
-Check there are no variables random at level 1 if model is discrete
 Check multinomial models have >=3 responses
 Check base category is defined (and exists in the data) for multinomial models
 Check ordered multinomial base is either the highest or lowest value
-Check no level-1 random variables are defined for binomial responses
 Check response types for mixed response models (MLwiN allows Normals plus binaries OR Poissons, all discrete responses must use the same link function)
 (IGLS) Check model has more than one level if > MQL1 specified
 (IGLS) Check lower levels are non-equal standardised weights if standardised weights are specified

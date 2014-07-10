@@ -8,6 +8,8 @@ Mon Jun 30 2014
    * If RIGLS is specified as the estimation method correctly reflect this in the model output
    * Don't calculate starting residuals for cross-classified models
    * BUGS output should now make use of prior specification for non-cross-classified models
+   * Added check that a denominator has been specified for Binomial models
+   * Added check that no variables are made random at level-one in discrete response models
 
 2. Changes
    * Enabled matching starting values on parameter names (allowing subsets of parameters to be specified)
