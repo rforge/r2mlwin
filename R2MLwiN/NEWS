@@ -12,6 +12,7 @@ Mon Jun 30 2014
    * Added check that no variables are made random at level-one in discrete response models
    * Added check that response variables for multinomial models have at least two categories
    * Added check that the reference category is valid for multinomial models
+   * Added check that the levels for hierarchical centring and parameter expansion are valid
 
 2. Changes
    * Enabled matching starting values on parameter names (allowing subsets of parameters to be specified)

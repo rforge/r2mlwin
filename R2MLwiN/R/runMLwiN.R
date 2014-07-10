@@ -939,6 +939,28 @@ version:date:md5:filename:x64:trial
         mcmcOptions=list(orth=0,hcen=0, smcm=0,smvn=0, paex=c(2,0))
       }
     }
+    if (mcmcOptions$hcen > 0) {
+      if (mcmcOptions$hcen < 2 || mcmcOptions$hcen > length(na.omit(levID))) {
+        stop("Invalid level for hierarchical centring")
+      }
+    }
+    if (is.matrix(mcmcOptions$paex)) {
+      for (i in 1:nrow(mcmcOptions$paex)) {
+        if (mcmcOptions$paex[i, 2] == 1) {
+          pelev <- mcmcOptions$paex[i, 1]
+          if (pelev < 2 || pelev > length(na.omit(levID))) {
+            stop("Invalid level for parameter expansion")
+          }
+        }
+      }
+    } else {
+      if (mcmcOptions$paex[2] == 1) {
+        pelev <- mcmcOptions$paex[1]
+        if (pelev < 2 || pelev > length(na.omit(levID))) {
+          stop("Invalid level for parameter expansion")
+        }
+      }
+    }
   }
 
   if (EstM == 0 && !is.null(BUGO)) {
