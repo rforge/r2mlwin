@@ -13,7 +13,6 @@ Check all variables in the model actually exist in the data
 (MCMC) Check MM/CAR ids/weights to ensure they are valid before running MLwiN
 
 Model Specification Checks:
-Check chosen distribution is valid
 Check chosen link function is valid for the chosen distribution
 (IGLS) Check lower levels are non-equal standardised weights if standardised weights are specified
 

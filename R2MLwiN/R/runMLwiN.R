@@ -8,6 +8,28 @@ runMLwiN <- function(Formula, levID, D="Normal", data=NULL, estoptions=list(EstM
   if (is.null(indata)) {
     stop("Using the currently attached data is not yet implemented")
   }
+
+  if (length(D) == 1) {
+    if (!(D %in% c("Normal", "Binomial", "Poisson", "Negbinom", "Multivariate Normal", "Ordered Multinomial", "Unordered Multinomial"))) {
+      stop("Invalid distribution specified")
+    }
+  } else {
+    if (D[1] != "Mixed") {
+      stop("Invalid distribution specified")
+    } else {
+      for (i in 2:length(D)) {
+        if (estoptions$EstM == 0) {
+          if (!(D[i] %in% c("Normal", "Binomial", "Poisson"))) {
+            stop("Invalid distribution specified")
+          }
+        } else {
+          if (!(D[i] %in% c("Normal", "Binomial"))) {
+            stop("Invalid distribution specified")
+          }
+        }
+      }
+    }
+  }
   
   # Check MLwiNPath is usable and set command/args
   debugmode=estoptions$debugmode

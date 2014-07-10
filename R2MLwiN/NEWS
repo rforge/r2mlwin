@@ -15,6 +15,7 @@ Mon Jun 30 2014
    * Added check that the levels for hierarchical centring and parameter expansion are valid
    * Added check that nonlinear options are valid
    * Added check for the response type and link function in Mixed response models
+   * Added chcek that the specified distribution is valid
 
 2. Changes
    * Enabled matching starting values on parameter names (allowing subsets of parameters to be specified)
