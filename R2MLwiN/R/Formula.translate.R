@@ -57,7 +57,11 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
       D[4]=0
       names(D)[4]="mode"
       if (resp[3] %in% indata[[resp[1]]]) {
-        D[5]=which(resp[3]==levels(indata[[resp[1]]]))
+        if (is.factor(indata[[resp[1]]])) {
+          D[5]=which(resp[3]==levels(indata[[resp[1]]]))
+        } else {
+          D[5]=which(resp[3]==sort(unique(indata[[resp[1]]])))
+        }
       }
       names(D)[5]="ref.cat"
       resp=resp[1]
@@ -89,7 +93,11 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
       D[4]=1
       names(D)[4]="mode"
       if (resp[3] %in% indata[[resp[1]]]) {
-        D[5]=which(resp[3]==levels(indata[[resp[1]]]))
+        if (is.factor(indata[[resp[1]]])) {
+          D[5]=which(resp[3]==levels(indata[[resp[1]]]))
+        } else {
+          D[5]=which(resp[3]==sort(unique(indata[[resp[1]]])))
+        }
       }
       names(D)[5]="ref.cat"
       resp=resp[1]
@@ -274,7 +282,11 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
         temps=randS
         nonfps=NULL
         if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial'){
-          names.resp=levels(indata[[resp]])
+          if (is.factor(indata[[resp]])) {
+            names.resp=levels(indata[[resp]])
+          } else {
+            names.resp=as.character(sort(unique(indata[[resp]])))
+          }
           names.resp=names.resp[-as.numeric(D["ref.cat"])]
           refcatint=as.numeric(D["ref.cat"])
           if (!is.na(refcatint)) {
@@ -327,7 +339,11 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
         if (length(temps)!=0){
           nonfps=NULL
           if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial'){
-            names.resp=levels(indata[[resp]])
+            if (is.factor(indata[[resp]])) {
+              names.resp=levels(indata[[resp]])
+            } else {
+              names.resp=as.character(sort(unique(indata[[resp]])))
+            }
             names.resp=names.resp[-as.numeric(D["ref.cat"])]
             refcatint=as.numeric(D["ref.cat"])
             if (!is.na(refcatint)) {
@@ -471,7 +487,11 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
             rp.name=paste("rp",effect.lev[i],sep="")
             rp.names=c(rp.names,rp.name)
             if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial'){
-              names.resp=levels(indata[[resp]])
+              if (is.factor(indata[[resp]])) {
+                names.resp=levels(indata[[resp]])
+              } else {
+                names.resp=as.character(sort(unique(indata[[resp]])))
+              }
               names.resp=names.resp[-as.numeric(D["ref.cat"])]
               if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial') refcatint=as.numeric(D["ref.cat"])
             }else{
