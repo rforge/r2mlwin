@@ -16,6 +16,7 @@ Mon Jun 30 2014
    * Added check that nonlinear options are valid
    * Added check for the response type and link function in Mixed response models
    * Added chcek that the specified distribution is valid
+   * Fixed macro generation for Poisson responses in mixed models
 
 2. Changes
    * Enabled matching starting values on parameter names (allowing subsets of parameters to be specified)
@@ -29,7 +30,7 @@ Mon Jun 30 2014
    * Added Log-likelihood to the output for (R)IGLS models
    * prior2macro will automatically be called from runMLwiN if priorParam is specified as a list
    * Added hierarchy information to the model output
-   * Allow non-factor variables as the respone for multinomial models
+   * Allow non-factor variables as the response for multinomial models
 
 Fri Jun 20 2014
 1. Bug fixing

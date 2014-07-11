@@ -209,8 +209,8 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
         wrt(paste("RDISt ",jj," 1",sep=""))
         wrt('LFUN 3');DD2=3
         DD2=3
-        if (as.logical(D[[jj]][2])) {
-          wrt(paste("DOFFs 1 '",D[[jj]][3],"'",sep=""))
+        if (as.logical(D[[ii]][2])) {
+          wrt(paste("DOFFs 1 '",D[[ii]][3],"'",sep=""))
         }
       }
       jj=jj+1
