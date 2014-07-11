@@ -66,7 +66,7 @@ alevchem$female <- as.integer(alevchem$gender == "female")
 
 # 11.3 A single-level model with an ordered categorical response variable 166
 
-(mymodel6 <- runMLwiN(logit(a_point, cons, A)~(0|cons)+(1|cons), levID="pupil", D="Ordered Multinomial", data=alevchem))
+(mymodel6 <- runMLwiN(logit(a_point, cons, A)~(0|cons), levID="pupil", D="Ordered Multinomial", data=alevchem))
 
 # 11.4 A two-level model . . . . . . . . . . . . . . . . . . . . . . . . 171
 
@@ -76,9 +76,9 @@ alevchem$female <- as.integer(alevchem$gender == "female")
 
 alevchem$school <- as.numeric(factor(paste0(alevchem$lea, alevchem$estab)))
 
-(mymodel7 <- runMLwiN(logit(a_point, cons, A)~(0|cons)+(1|cons)+(`2c`|cons), levID=c("school", "pupil"), D="Ordered Multinomial", data=alevchem))
+(mymodel7 <- runMLwiN(logit(a_point, cons, A)~(0|cons)+(`2c`|cons), levID=c("school", "pupil"), D="Ordered Multinomial", data=alevchem))
 
-(mymodel8 <- runMLwiN(logit(a_point, cons, A)~(0|cons)+(1|cons)+(`2c`|cons), levID=c("school", "pupil"), D="Ordered Multinomial",
+(mymodel8 <- runMLwiN(logit(a_point, cons, A)~(0|cons)+(`2c`|cons), levID=c("school", "pupil"), D="Ordered Multinomial",
  estoptions=list(nonlinear=c(N=1,M=2)), data=alevchem))
 
 (mymodel9 <- runMLwiN(logit(a_point, cons, A)~(0|cons)+(`0c`|gcseavnormal)+(`2c`|cons), levID=c("school", "pupil"), D="Ordered Multinomial",
