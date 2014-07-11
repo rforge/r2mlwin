@@ -117,8 +117,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
         respx=resp[i]
         if (D[[i+1]]=="Normal"){
           resp[i]=respx
-        }
-        if (D[[i+1]]=="Binomial"){
+        } else if (D[[i+1]]=="Binomial"){
           D[[i+1]]=rep(NA,3)
           respx=regmatches(respx, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", respx))[[1]]
           link=respx[2]
@@ -127,8 +126,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
           respx=strsplit(respx[3],",")[[1]]
           D[[i+1]][3]=respx[2]
           resp[i]=respx[1]
-        }
-        if (D[[i+1]]=='Poisson'){
+        } else if (D[[i+1]]=='Poisson'){
           respx=regmatches(respx, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", respx))[[1]]
           link=respx[2]
           respx=strsplit(respx[3],",")[[1]]
