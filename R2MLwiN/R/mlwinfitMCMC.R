@@ -384,15 +384,15 @@ setMethod("print", "mlwinfitMCMC", printMCMC)
 setMethod("show",  "mlwinfitMCMC", function(object) printMCMC(object))
 setMethod("update", "mlwinfitMCMC", updateMLwiN)
 
-setMethod("coef", "mlwinfitIGLS", function (object,  ...) {
+setMethod("coef", "mlwinfitMCMC", function (object,  ...) {
   c(object@FP, object@RP)           
 })
 
-setMethod("coefficients", "mlwinfitIGLS", function (object,  ...) {
+setMethod("coefficients", "mlwinfitMCMC", function (object,  ...) {
   coef(object)
 })
 
-setMethod("vcov", "mlwinfitIGLS", function (object,  ...) {
+setMethod("vcov", "mlwinfitMCMC", function (object,  ...) {
   m <- matrix(0, nrow(object@FP.cov)+nrow(object@RP.cov), ncol(object@FP.cov)+ncol(object@RP.cov))
   colnames(m) <- c(colnames(object@FP.cov), colnames(object@RP.cov))
   rownames(m) <- c(rownames(object@FP.cov), rownames(object@RP.cov))
@@ -401,26 +401,26 @@ setMethod("vcov", "mlwinfitIGLS", function (object,  ...) {
   m
 })
 
-setMethod("df.residual", "mlwinfitIGLS", function (object,  ...) {
+setMethod("df.residual", "mlwinfitMCMC", function (object,  ...) {
   NULL
 })
 
-setMethod("fitted", "mlwinfitIGLS", function (object,  ...) {
+setMethod("fitted", "mlwinfitMCMC", function (object,  ...) {
   NULL
 })
 
-setMethod("fitted.values", "mlwinfitIGLS", function (object,  ...) {
+setMethod("fitted.values", "mlwinfitMCMC", function (object,  ...) {
   fitted(object)
 })
 
-setMethod("residuals", "mlwinfitIGLS", function (object,  ...) {
+setMethod("residuals", "mlwinfitMCMC", function (object,  ...) {
   NULL
 })
 
-setMethod("resid", "mlwinfitIGLS", function (object,  ...) {
+setMethod("resid", "mlwinfitMCMC", function (object,  ...) {
   residuals(object)
 })
 
-setMethod("predict", "mlwinfitIGLS", function (object,  ...) {
+setMethod("predict", "mlwinfitMCMC", function (object,  ...) {
   NULL
 })
