@@ -45,15 +45,15 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
     }
     if (D[1]=="Unordered Multinomial"){
       D=rep(NA,5)
-      resp=sub("log\\(","",resp)
-      resp=sub("\\)","",resp)
-      resp=strsplit(resp,",")[[1]]
+      resp=regmatches(resp, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", resp))[[1]]
+      link=resp[2]
+      resp=strsplit(resp[3],",")[[1]]
       D[1]='Unordered Multinomial'
       names(D)[1]="distr"
-      D[2]='logit'
+      D[2]=link
       names(D)[2]="link"
       D[3]=resp[2]
-      names(D)[3]="offset"
+      names(D)[3]="denominator"
       D[4]=0
       names(D)[4]="mode"
       if (resp[3] %in% indata[[resp[1]]]) {
@@ -68,28 +68,15 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
     }
     if (D[1]=="Ordered Multinomial"){
       D=rep(NA,5)
-      if ((grepl("logit",resp))){
-        D[2]="logit"
-        resp=sub("logit\\(","",resp)
-        resp=sub("\\)","",resp)
-      }
-      
-      if ((grepl("probit",resp))){
-        D[2]="probit"
-        resp=sub("probit\\(","",resp)
-        resp=sub("\\)","",resp)
-      }
-      if ((grepl("cloglog",resp))){
-        D[2]="cloglog"
-        resp=sub("cloglog\\(","",resp)
-        resp=sub("\\)","",resp)
-      }
-      resp=strsplit(resp,",")[[1]]
+      resp=regmatches(resp, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", resp))[[1]]
+      link=resp[2]
+      resp=strsplit(resp[3],",")[[1]]
       D[1]='Ordered Multinomial'
       names(D)[1]="distr"
+      D[2]=link
       names(D)[2]="link"
       D[3]=resp[2]
-      names(D)[3]="offset"
+      names(D)[3]="denominator"
       D[4]=1
       names(D)[4]="mode"
       if (resp[3] %in% indata[[resp[1]]]) {
@@ -133,47 +120,23 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
         }
         if (D[[i+1]]=="Binomial"){
           D[[i+1]]=rep(NA,3)
-          if ((grepl("logit",respx))){
-            D[[i+1]][1]="Binomial"
-            D[[i+1]][2]="logit"
-            respx=sub("logit\\(","",respx)
-            respx=sub("\\)","",respx)
-          }
-          if ((grepl("logit",respx))){
-            D[[i+1]][1]="Binomial"
-            D[[i+1]][2]="logit"
-            respx=sub("logit\\(","",respx)
-            respx=sub("\\)","",respx)
-          }
-          if ((grepl("probit",respx))){
-            D[[i+1]][1]="Binomial"
-            D[[i+1]][2]="probit"
-            respx=sub("probit\\(","",respx)
-            respx=sub("\\)","",respx)
-          }
-          if ((grepl("cloglog",respx))){
-            D[[i+1]][1]="Binomial"
-            D[[i+1]][2]="cloglog"
-            respx=sub("cloglog\\(","",respx)
-            respx=sub("\\)","",respx)
-          }
-          respx=strsplit(respx,",")[[1]]
+          respx=regmatches(respx, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", respx))[[1]]
+          link=respx[2]
+          D[[i+1]][1]="Binomial"
+          D[[i+1]][2]=link
+          respx=strsplit(respx[3],",")[[1]]
           D[[i+1]][3]=respx[2]
           resp[i]=respx[1]
         }
-        if (D[[i+1]]=='Poisson'|| D[[i+1]]=='Negbinom'){
-          respx=sub("log\\(","",respx)
-          respx=sub("\\)","",respx)
-          respx=strsplit(respx,",")[[1]]
-          Distr=D[[i+1]]
+        if (D[[i+1]]=='Poisson'){
+          respx=regmatches(respx, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", respx))[[1]]
+          link=respx[2]
+          respx=strsplit(respx[3],",")[[1]]
           D[[i+1]]=rep(NA,3)
+          D[[i+1]][1]="Poisson"
+          D[[i+1]][2]=link
           if (length(respx)==2){
-            D[[i+1]][1]=Distr
-            D[[i+1]][2]=T
             D[[i+1]][3]=respx[2]
-          }else{
-            D[[i+1]][1]=Distr
-            D[[i+1]][2]=F
           }
           resp[i]=respx[1]
         }
@@ -614,32 +577,14 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
   }
   if (D[1]=='Binomial'){
     D=rep(NA,3)
-    names(D)=c("Distr","link","offset")
+    names(D)=c("Distr","link","denominator")
     D[1]='Binomial'
     nlev=length(levID)
-    
-    if ((grepl("logit",resp))){
-      D[2]="logit"
-      resp=sub("logit\\(","",resp)
-      resp=sub("\\)","",resp)
-    }
-    if ((grepl("logit",resp))){
-      D[2]="logit"
-      resp=sub("logit\\(","",resp)
-      resp=sub("\\)","",resp)
-    }
-    if ((grepl("probit",resp))){
-      D[2]="probit"
-      resp=sub("probit\\(","",resp)
-      resp=sub("\\)","",resp)
-    }
-    if ((grepl("cloglog",resp))){
-      D[2]="cloglog"
-      resp=sub("cloglog\\(","",resp)
-      resp=sub("\\)","",resp)
-    }
-    
-    resp=strsplit(resp,",")[[1]]
+
+    resp=regmatches(resp, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", resp))[[1]]
+    link=resp[2]
+    D[2]=link    
+    resp=strsplit(resp[3],",")[[1]]
     D[3]=resp[2]
     resp=resp[-2]
     
@@ -731,21 +676,16 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
   
   if (D[1]=='Poisson'|| D[1]=='Negbinom'){
     nlev=length(levID)
-    resp=sub("log\\(","",resp)
-    resp=sub("\\)","",resp)
-    resp=strsplit(resp,",")[[1]]
+    resp=regmatches(resp, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", resp))[[1]]
+    link=resp[2]
+    resp=strsplit(resp[3],",")[[1]]
     DD=D[1]
-    
+    D=rep(NA,3)
+    D[1]=DD
+    D[2]=link
     if (length(resp)==2){
-      D=rep(NA,3)
-      D[1]=DD
-      D[2]=T
       D[3]=resp[2]
       resp=resp[-2]
-    }else{
-      D=rep(NA,2)
-      D[1]=DD
-      D[2]=F
     }
     
     nleft=length(left)

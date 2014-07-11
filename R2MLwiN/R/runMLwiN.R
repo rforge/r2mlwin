@@ -9,6 +9,12 @@ runMLwiN <- function(Formula, levID, D="Normal", data=NULL, estoptions=list(EstM
     stop("Using the currently attached data is not yet implemented")
   }
 
+  EstM=estoptions$EstM
+  if (is.null(EstM)) EstM=0
+  if (EstM != 0 && EstM != 1) {
+    stop("Invalid EstM option (can be zero or one)")
+  }
+
   if (length(D) == 1) {
     if (!(D %in% c("Normal", "Binomial", "Poisson", "Negbinom", "Multivariate Normal", "Ordered Multinomial", "Unordered Multinomial"))) {
       stop("Invalid distribution specified")
@@ -18,7 +24,7 @@ runMLwiN <- function(Formula, levID, D="Normal", data=NULL, estoptions=list(EstM
       stop("Invalid distribution specified")
     } else {
       for (i in 2:length(D)) {
-        if (estoptions$EstM == 0) {
+        if (EstM == 0) {
           if (!(D[i] %in% c("Normal", "Binomial", "Poisson"))) {
             stop("Invalid distribution specified")
           }
@@ -146,7 +152,7 @@ version:date:md5:filename:x64:trial
 2.29:Dec 2013:5f0a87e6cb7198d796f9664a05d5031a:mlwin.exe:FALSE:FALSE
 2.29:Dec 2013:5afdf13c0406202aaf308b569052dd20:mlwin.exe:FALSE:TRUE
 2.29:Dec 2013:47fbc35bf375d56d2291a3f85d2d838c:mlnscript.exe:FALSE:FALSE
-2.29:Dev 2013:4d39f330c201e7614df17150f8aab74f:mlnscript.exe:TRUE:FALSE
+2.29:Dec 2013:4d39f330c201e7614df17150f8aab74f:mlnscript.exe:TRUE:FALSE
 2.30:Feb 2014:869c73b95daf1ec92c2b22277bd94724:mlwin.exe:FALSE:FALSE
 2.30:Feb 2014:022ba981c2bf8751dad35c041f5f7db3:mlwin.exe:FALSE:TRUE
 2.30:Feb 2014:b0f739262853e594242a6d4dad296eb6:mlnscript.exe:FALSE:FALSE
@@ -172,12 +178,6 @@ version:date:md5:filename:x64:trial
 
   invars = Formula.translate(Formula, levID, D, indata)
 
-  EstM=estoptions$EstM
-  if (is.null(EstM)) EstM=0
-  if (EstM != 0 && EstM != 1) {
-    stop("Invalid EstM option (can be zero or one)")
-  }
-
   resp = invars$resp
 
   if (D[1] == "Ordered Multinomial" || D[1] == "Unordered Multinomial") {
@@ -191,11 +191,19 @@ version:date:md5:filename:x64:trial
   D = invars$D
   if (EstM == 0) {
     if (!is.element(D[1], c("Normal", "Binomial", "Poisson", "Negbinom", "Multivariate Normal", "Mixed", "Multinomial"))) {
-      stop(cat("Invalid distribution specified", D[1]))
+      stop(cat("Invalid distribution specified:", D[1], "\n"))
     }
     if (D[1] == "Binomial") {
       if (!is.element(D[2], c("logit", "probit", "cloglog"))) {
-        stop(cat("Invalid link function specified", D[2]))
+        stop(cat("Invalid link function specified:", D[2], "\n"))
+      }
+      if (is.na(D[3])) {
+        stop("A denominator must be specified for a Binomial response")
+      }
+    }
+    if (D[1] == "Poisson") {
+      if (!is.element(D[2], c("log"))) {
+        stop(cat("Invalid link function specified:", D[2], "\n"))
       }
       if (is.na(D[3])) {
         stop("A denominator must be specified for a Binomial response")
@@ -204,60 +212,72 @@ version:date:md5:filename:x64:trial
     if (D[1] == "Mixed") {
       for (i in 2:length(D)) {
         if (!is.element(D[[i]][[1]], c("Normal", "Binomial", "Poisson"))) {
-          stop(cat("Invalid distribution specified", D[[i]][[1]]))
+          stop(cat("Invalid distribution specified:", D[[i]][[1]],"\n"))
         }
         if (D[[i]][[1]] == "Binomial") {
           if (!is.element(D[[i]][[2]], c("logit", "probit", "cloglog"))) {
-            stop(cat("Invalid link function specified", D[[i]][[2]]))
+            stop(cat("Invalid link function specified:", D[[i]][[2]],"\n"))
           }
           if (is.na(D[[i]][[3]])) {
             stop("A denominator must be specified for Binomial responses")
           }
         }
-      }
-    }
-    if (D[1] == "Multinomial") {
-      if (D[4] == 1) { # Unordered
-        if (D[2] != "logit") {
-          stop("Invalid link function specified")
-        }
-      }
-      if (D[4] == 0) { # Ordered
-        if (!is.element(D[2], c("logit", "probit", "cloglog"))) {
-          stop(cat("Invalid link function specified", D[2]))
-        }
-      }
-    }
-  } else {
-    if (!is.element(D[1], c("Normal", "Binomial", "Poisson", "Multivariate Normal", "Mixed", "Multinomial"))) {
-      stop(cat("Invalid distribution specified", D[1]))
-    }
-    if (D[1] == "Binomial") {
-      if (!is.element(D[2], c("logit", "probit", "cloglog"))) {
-          stop(cat("Invalid link function specified", D[2]))
-      }
-    }
-    if (D[1] == "Mixed") {
-      for (i in 2:length(D)) {
-        if (!is.element(D[[i]][[1]], c("Normal", "Binomial"))) {
-          stop(cat("Invalid distribution specified", D[[i]][[1]]))
-        }
-        if (D[[i]][[1]] == "Binomial") {
-          if (!D[[i]][[2]] == "probit") {
-            stop(cat("Invalid link function specified", D[[i]][[2]]))
+        if (D[[i]][[1]] == "Poisson") {
+          if (!is.element(D[[i]][[2]], c("log"))) {
+            stop(cat("Invalid link function specified:", D[[i]][[2]],"\n"))
           }
         }
       }
     }
     if (D[1] == "Multinomial") {
-      if (D[4] == 1) { # Unordered
+      if (D[4] == 0) { # Unordered
+        if (D[2] == "log") D[2] = "logit" # Backward compatibilty fix
         if (D[2] != "logit") {
-          stop("Invalid link function specified")
+          stop("Invalid link function specified:", D[2])
         }
       }
-      if (D[4] == 0) { # Ordered
+      if (D[4] == 1) { # Ordered
         if (!is.element(D[2], c("logit", "probit", "cloglog"))) {
-          stop(cat("Invalid link function specified", D[2]))
+          stop(cat("Invalid link function specified:", D[2], "\n"))
+        }
+      }
+    }
+  } else {
+    if (!is.element(D[1], c("Normal", "Binomial", "Poisson", "Multivariate Normal", "Mixed", "Multinomial"))) {
+      stop(cat("Invalid distribution specified:", D[1], "\n"))
+    }
+    if (D[1] == "Binomial") {
+      if (!is.element(D[2], c("logit", "probit", "cloglog"))) {
+          stop(cat("Invalid link function specified", D[2], "\n"))
+      }
+    }
+    if (D[1] == "Poisson") {
+      if (!is.element(D[2], c("log"))) {
+          stop(cat("Invalid link function specified:", D[2], "\n"))
+      }
+    }
+    if (D[1] == "Mixed") {
+      for (i in 2:length(D)) {
+        if (!is.element(D[[i]][[1]], c("Normal", "Binomial"))) {
+          stop(cat("Invalid distribution specified:", D[[i]][[1]], "\n"))
+        }
+        if (D[[i]][[1]] == "Binomial") {
+          if (!D[[i]][[2]] == "probit") {
+            stop(cat("Invalid link function specified:", D[[i]][[2]], "\n"))
+          }
+        }
+      }
+    }
+    if (D[1] == "Multinomial") {
+      if (D[4] == 0) { # Unordered
+        if (D[2] == "log") D[2] = "logit" # Backward compatibilty fix
+        if (D[2] != "logit") {
+          stop("Invalid link function specified", D[2], "\n")
+        }
+      }
+      if (D[4] == 1) { # Ordered
+        if (!is.element(D[2], c("logit", "probit", "cloglog"))) {
+          stop(cat("Invalid link function specified", D[2], "\n"))
         }
       }
     }
@@ -1136,8 +1156,8 @@ version:date:md5:filename:x64:trial
       stop("Invalid reference category")
     }
     if (D[4] == 1) { # Ordered multinomial
-      if (D[5] != min(levels(indata[[resp]])) && D[5] != max(levels(indata[[resp]]))) {
-        stop("Invalid reference category")
+      if (as.integer(D[5]) != which(min(levels(indata[[resp]])) == levels(indata[[resp]])) && as.integer(D[5]) != which(max(levels(indata[[resp]])) == levels(indata[[resp]]))) {
+        stop(paste("Invalid reference category:", D[5]))
       }
     }
   }

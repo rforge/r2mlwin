@@ -1,5 +1,4 @@
 Changes/Bug fixes
-Make offset optional for Poisson and Negative-binomial
 Add implementation for predict, residuals, df.residual and fitted methods
 Revisit interactions, e.g. the following doesn't work: formula=log(obs,logexp)~(0|nation[]+nation[]:uvbi)+(2|cons)
 Revisit cross-classification specification as this should apply to the whole model, rather than level by level
@@ -11,7 +10,6 @@ Data Checks:
 Check all variables in the model actually exist in the data
 
 Model Specification Checks:
-Check chosen link function is valid for the chosen distribution
 (IGLS) Check lower levels are non-equal standardised weights if standardised weights are specified
 
 Additional Functionality:

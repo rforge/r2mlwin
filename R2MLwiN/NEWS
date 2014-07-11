@@ -20,6 +20,8 @@ Mon Jun 30 2014
    * smat option can now apply to more than one level
    * Added check that the IDs and weights are valid for multiple membership models
    * Removed redundant estIGLS/estMCMC outputs
+   * Make offset optional for Poisson/Negative binomial models
+   * Display error message if invalid link function is specified
 
 2. Changes
    * Enabled matching starting values on parameter names (allowing subsets of parameters to be specified)

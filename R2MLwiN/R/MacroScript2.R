@@ -211,7 +211,7 @@ MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, cate
         wrt(paste("RDISt ",jj," 1",sep=""))
         wrt('LFUN 3');DD2=3
         DD2=3
-        if (as.logical(D[[jj]][2])) {
+        if (!is.na(D[[jj]][3])) {
           wrt(paste("DOFFs 1 '",D[[jj]][3],"'",sep=""))
         }
       }
@@ -825,7 +825,7 @@ MacroScript2 <- function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, cate
     wrt('RDISt 1 1')
     wrt('LFUN 3')
     DD2=3
-    if (as.logical(D[2])) {
+    if (!is.na(D[3])) {
       wrt(paste("DOFFs 1 '",D[3],"'",sep=""))
     }
     interpos=grep("\\:",expl)

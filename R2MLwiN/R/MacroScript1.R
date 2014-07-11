@@ -209,7 +209,7 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
         wrt(paste("RDISt ",jj," 1",sep=""))
         wrt('LFUN 3');DD2=3
         DD2=3
-        if (as.logical(D[[ii]][2])) {
+        if (!is.na(D[[ii]][3])) {
           wrt(paste("DOFFs 1 '",D[[ii]][3],"'",sep=""))
         }
       }
@@ -818,7 +818,7 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
     wrt('RDISt 1 1')
     wrt('LFUN 3')
     DD2=3
-    if (as.logical(D[2])) {
+    if (!is.na(D[3])) {
       wrt(paste("DOFFs 1 '",D[3],"'",sep=""))
     }
     interpos=grep("\\:",expl)
