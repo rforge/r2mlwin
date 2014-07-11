@@ -350,10 +350,23 @@ version:date:md5:filename:x64:trial
   clre=estoptions$clre
   smat=estoptions$smat
 
-  if (!is.null(smat) && !is.null(clre)) {
-    stop("clre and smat cannot current both be specified at once")
+  if (!is.null(smat)) {
+    if (!is.matrix(smat)) {
+      smat <- as.matrix(smat)
+    }
+    for (i in 1:ncol(smat)) {
+      if (smat[2, i] == 1) {
+        lev <- smat[1, i]
+        for (j in 1:length(rp[[paste0("rp", lev)]])) {
+          for (k in 1:j) {
+            if (j != k) clre <- cbind(clre, c(lev, rp[[paste0("rp", lev)]][j], rp[[paste0("rp", lev)]][k]))
+          }
+        }
+      }
+    }
+    smat <- NULL
   }
-  
+
   notation=estoptions$notation
   if(is.null(notation)) notation="level"
   
@@ -1291,7 +1304,7 @@ version:date:md5:filename:x64:trial
     } 
   }
   if (EstM==0){
-    MacroScript1(outdata, dtafile,resp, levID, expl, rp, D, nonlinear, categ,notation, nonfp, clre,smat,Meth,extra,reset,rcon,fcon,maxiter,convtol,
+    MacroScript1(outdata, dtafile,resp, levID, expl, rp, D, nonlinear, categ,notation, nonfp, clre,Meth,extra,reset,rcon,fcon,maxiter,convtol,
                  BUGO,mem.init, optimat, weighting,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,
                  IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode,startval=startval)
     iterations=estoptions$mcmcMeth$iterations
@@ -1352,7 +1365,7 @@ version:date:md5:filename:x64:trial
   
   # MCMC algorithm (using the starting values obtain from IGLS algorithm)
   if (EstM==1){
-    MacroScript2(outdata, dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,smat,Meth,merr,carcentre,maxiter,convtol,
+    MacroScript2(outdata, dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,Meth,merr,carcentre,maxiter,convtol,
                  seed,iterations,burnin,scale,thinning,priorParam,refresh,fixM,residM,Lev1VarM, 
                  OtherVarM,adaption,priorcode,rate, tol,lclo,mcmcOptions,fact,xclass,BUGO,mem.init,optimat,
                  nopause,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,MCMCfile=MCMCfile,

@@ -17,6 +17,7 @@ Mon Jun 30 2014
    * Added check for the response type and link function in Mixed response models
    * Added chcek that the specified distribution is valid
    * Fixed macro generation for Poisson responses in mixed models
+   * smat option can now apply to more than one level
 
 2. Changes
    * Enabled matching starting values on parameter names (allowing subsets of parameters to be specified)
