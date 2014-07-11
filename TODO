@@ -1,5 +1,4 @@
 Changes/Bug fixes
-Allow smat option to apply to more than one level
 Make offset optional for Poisson and Negative-binomial
 Add implementation for predict, residuals, df.residual and fitted methods
 Revisit interactions, e.g. the following doesn't work: formula=log(obs,logexp)~(0|nation[]+nation[]:uvbi)+(2|cons)
