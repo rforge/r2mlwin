@@ -179,6 +179,13 @@ version:date:md5:filename:x64:trial
   }
 
   resp = invars$resp
+
+  if (D[1] == "Ordered Multinomial" || D[1] == "Unordered Multinomial") {
+    if (!is.factor(indata[[resp]])) {
+      indata[[resp]] <- as.factor(indata[[resp]])
+    }
+  }
+
   expl = invars$expl
 
   D = invars$D
@@ -1124,9 +1131,6 @@ version:date:md5:filename:x64:trial
   if (D[1] == "Multinomial") {
     if (length(unique(indata[[resp]])) < 2) {
       stop("Responses must have at least two categories for multinomial models")
-    }
-    if (!is.factor(indata[[resp]])) {
-      indata[[resp]] <- as.factor(indata[[resp]])
     }
     if (is.na(D[5])) {
       stop("Invalid reference category")
