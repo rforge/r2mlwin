@@ -518,6 +518,46 @@ version:date:md5:filename:x64:trial
     stop("Cross-classification is not available with (R)IGLS estimation")
   }
 
+  if (!is.null(xclass)) {
+    for (i in 1:length(as.numeric(xclass$class))) {
+      lev <- as.numeric(xclass$class[i])
+      num <- as.numeric(xclass$N1[i])
+      weightcol <- xclass$weight[i]
+      idcol <- xclass$id[i]
+      if (is.null(idcol) || is.na(idcol)) {
+        idcol <- rev(na.omit(levID))[lev]
+      }
+      idstart = which(colnames(indata) == idcol)
+      idend = idstart+(num-1)
+      idmat <- indata[, colnames(indata)[idstart:idend]]
+        
+      if (!is.null(weightcol)) {
+        weightstart = which(colnames(indata) == weightcol)
+        weightend = weightstart+(num-1)
+        weightmat <- indata[, colnames(indata)[weightstart:weightend]]
+
+        # NOTE: These checks could probably be vectorised
+        for (i in 1:nrow(idmat)) {
+          for (j in 1:ncol(idmat)) {
+            if (idmat[i, j] != 0 && weightmat[i, j] == 0) {
+              stop(paste("The MM ID variable", j, "for observation", i, "is present but a zero MM weight has been specified for it"))
+            }
+            if (idmat[i, j] == 0 && weightmat[i, j] != 0) {
+              stop(paste("The MM ID variable", j, "for observation", i, "is absent but a positive MM weight has been specified for it"))
+            }
+            for (k in 1:j) {
+              if (k != j) {
+                if (idmat[i, j] == idmat[i, k] && idmat[i, j] != 0) {
+                  stop(paste("The MM ID variable", j, "for observation", i, "is duplicated in ID variable", k))
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   carcentre=estoptions$carcentre
   if (is.null(carcentre)) {
     carcentre <- FALSE

@@ -9,7 +9,6 @@ Automatically switch equation display for cross-classified models
 
 Data Checks:
 Check all variables in the model actually exist in the data
-(MCMC) Check MM/CAR ids/weights to ensure they are valid before running MLwiN
 
 Model Specification Checks:
 Check chosen link function is valid for the chosen distribution
