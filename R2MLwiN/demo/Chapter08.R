@@ -40,7 +40,7 @@ school <- c(rep(1, 18), rep(2, 18), rep(3, 18), rep(4, 18), rep(5, 18), rep(6, 1
 cons <- rep(1, 108)
 
 ns <- 100
-IGLS_array <- MCMC_array <- array(, c(9, 5, ns))
+IGLS_array <- MCMC_array <- array(, c(3, 2, ns))
 MCMC_median <- data.frame(RP2_var_cons = rep(0, ns), RP1_var_cons = rep(0, ns))
 CounterMCMC <- rep(0, 3)
 Actual <- c(30, 10, 40)
@@ -51,9 +51,9 @@ for(i in 1:ns){
   resp <- Actual[1] * cons + u + e
   indata <- data.frame(cbind(pupil, school, cons, resp))
   simModelIGLS <- runMLwiN(resp ~ (0|cons) + (2|cons) + (1|cons), levID = c("school", "pupil"), data=indata)
-  IGLS_array[,,i] <- as.matrix(simModelIGLS["estIGLS"])
+  IGLS_array[,,i] <- cbind(coef(simModelIGLS), diag(vcov(simModelIGLS)))
   simModelMCMC <- runMLwiN(resp ~ (0|cons) + (2|cons) + (1|cons), levID = c("school", "pupil"), estoptions = list(EstM = 1), data=indata)
-  MCMC_array[,,i] <- as.matrix(simModelMCMC["estMCMC"])
+  MCMC_array[,,i] <- cbind(coef(simModelMCMC), diag(vcov(simModelMCMC)))
   MCMC_median[i, ] <- c(median(simModelMCMC["chains"][,"RP2_var_cons"]), median(simModelMCMC["chains"][,"RP1_var_cons"]))
   if (Actual[1] > quantile(simModelMCMC["chains"][,"FP_cons"], 0.025) & Actual[1] < quantile(simModelMCMC["chains"][,"FP_cons"], 0.975)) {
     CounterMCMC[1] <- CounterMCMC[1] + 1
@@ -69,24 +69,24 @@ for(i in 1:ns){
 aa <- sapply(1:ns, function(x) na.omit(stack(as.data.frame(IGLS_array[,,x])))$values)
 counterIGLS <- rep(0,3)
 for (i in 1:ns) {
-  if (Actual[1] > aa[1,i] - 1.96 * sqrt(aa[2,i]) & Actual[1] < aa[1,i] + 1.96 * sqrt(aa[2,i])) {
+  if (Actual[1] > aa[1,i] - 1.96 * sqrt(aa[4,i]) & Actual[1] < aa[1,i] + 1.96 * sqrt(aa[4,i])) {
     counterIGLS[1] <- counterIGLS[1] + 1
   }
-  if (Actual[2] > aa[3,i] - 1.96 * sqrt(aa[5,i]) & Actual[2] < aa[3,i] + 1.96 * sqrt(aa[5,i])) {
+  if (Actual[2] > aa[2,i] - 1.96 * sqrt(aa[5,i]) & Actual[2] < aa[2,i] + 1.96 * sqrt(aa[5,i])) {
     counterIGLS[2] <- counterIGLS[2] + 1
   }
-  if (Actual[3] > aa[4,i] - 1.96 * sqrt(aa[7,i]) & Actual[3] < aa[4,i] + 1.96 * sqrt(aa[7,i])) {
+  if (Actual[3] > aa[3,i] - 1.96 * sqrt(aa[6,i]) & Actual[3] < aa[3,i] + 1.96 * sqrt(aa[6,i])) {
     counterIGLS[3] <- counterIGLS[3] + 1
   }
 }
 Percent_interval_coverage <- (counterIGLS / ns) * 100
-Mean_across_simus <- round(c(mean(aa[1,]), mean(aa[3,]), mean(aa[4,])), 2)
+Mean_across_simus <- round(c(mean(aa[1,]), mean(aa[2,]), mean(aa[3,])), 2)
 Percent_bias <- round(-100 * (1 - Mean_across_simus / Actual), 2)
 IGLS_results <- cbind(Mean_across_simus, Actual, Percent_bias, Percent_interval_coverage)
 rownames(IGLS_results) <- c("beta0", "sigma2_u", "sigma2_e")
 Percent_interval_coverage <- (CounterMCMC / ns) * 100
 bb <- sapply(1:ns, function(x) na.omit(stack(as.data.frame(MCMC_array[,,x])))$values)
-Mean_across_simus <- round(c(mean(bb[1,]), mean(bb[3,]), mean(bb[4,])), 2)
+Mean_across_simus <- round(c(mean(bb[1,]), mean(bb[2,]), mean(bb[3,])), 2)
 Percent_bias <- round(-100 * (1 - Mean_across_simus / Actual), 2)
 MCMC_results <- cbind(Mean_across_simus, Actual, Percent_bias, Percent_interval_coverage)
 rownames(MCMC_results) <- c("beta0", "sigma2_u", "sigma2_e")
