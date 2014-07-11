@@ -1641,7 +1641,6 @@ version:date:md5:filename:x64:trial
       outIGLS["D"]=D
       outIGLS["Formula"]=Formula
       outIGLS["levID"]=levID
-      outIGLS["estIGLS"]=estIGLS
       outIGLS["FP"]=FP
       outIGLS["RP"]=RP
       outIGLS["FP.cov"]=FP.cov
@@ -1684,7 +1683,6 @@ version:date:md5:filename:x64:trial
       outMCMC["merr"]=merr
       outMCMC["fact"]=fact
       outMCMC["xclass"]=xclass
-      outMCMC["estMCMC"]=estMCMC
       outMCMC["FP"]=FP
       outMCMC["RP"]=RP
       outMCMC["FP.cov"]=FP.cov

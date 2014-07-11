@@ -1,5 +1,5 @@
 setClass(Class = "mlwinfitMCMC", representation = representation(Nobs="numeric",DataLength="numeric",Hierarchy="ANY",burnin="numeric",iterations="numeric",
-                                                                 D="ANY", Formula="ANY", levID="character", merr="ANY", fact="ANY", xclass="ANY", estMCMC ="data.frame",
+                                                                 D="ANY", Formula="ANY", levID="character", merr="ANY", fact="ANY", xclass="ANY",
                                                                  FP="numeric", RP="numeric", RP.cov="matrix", FP.cov="matrix", chains="ANY",
                                                                  elapsed.time="numeric", call="ANY",BDIC="numeric",LIKE="ANY",fact.loadings="numeric",fact.loadings.sd="numeric",
                                                                  fact.cov="numeric",fact.cov.sd="numeric",fact.chains="ANY",MIdata="data.frame",residual="data.frame",resi.chains="ANY"))
@@ -19,7 +19,6 @@ setMethod(
     if(i=="merr"){return(x@merr)}else {}
     if(i=="fact"){return(x@fact)}else {}
     if(i=="xclass"){return(x@xclass)}else {}
-    if(i=="estMCMC"){return(x@estMCMC)}else {}
     if(i=="FP"){return(x@FP)}else {}
     if(i=="RP"){return(x@RP)}else {}
     if(i=="FP.cov"){return(x@FP.cov)}else {}
@@ -55,7 +54,6 @@ setReplaceMethod(
     if(i=="merr"){x@merr<-value}else {}
     if(i=="fact"){x@fact<-value}else {}
     if(i=="xclass"){x@xclass<-value}else {}
-    if(i=="estMCMC"){x@estMCMC<-value}else {}
     if(i=="FP"){x@FP<-value}else {}
     if(i=="RP"){x@RP<-value}else {}
     if(i=="FP.cov"){x@FP.cov<-value}else {}
@@ -93,7 +91,6 @@ setMethod(
     if(i=="merr"){return(x@merr)}else {}
     if(i=="fact"){return(x@fact)}else {}
     if(i=="xclass"){return(x@xclass)}else {}
-    if(i=="estMCMC"){return(x@estMCMC)}else {}
     if(i=="FP"){return(x@FP)}else {}
     if(i=="RP"){return(x@RP)}else {}
     if(i=="FP.cov"){return(x@FP.cov)}else {}
@@ -129,7 +126,6 @@ setReplaceMethod(
     if(i=="merr"){x@merr<-value}else {}
     if(i=="fact"){x@fact<-value}else {}
     if(i=="xclass"){x@xclass<-value}else {}
-    if(i=="estMCMC"){x@estMCMC<-value}else {}
     if(i=="FP"){x@FP<-value}else {}
     if(i=="RP"){x@RP<-value}else {}
     if(i=="FP.cov"){x@FP.cov<-value}else {}

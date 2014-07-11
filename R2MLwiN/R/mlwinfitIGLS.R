@@ -2,7 +2,7 @@
 # @slot a contains an R object
 # @export
 setClass(Class = "mlwinfitIGLS", representation = representation(Nobs="numeric",DataLength="numeric",Hierarchy="ANY",
-                                                                 D="ANY", Formula="ANY", levID="character", estIGLS ="data.frame",
+                                                                 D="ANY", Formula="ANY", levID="character",
                                                                  FP="numeric", RP="numeric", RP.cov="matrix", FP.cov="matrix", LIKE="ANY",
                                                                  elapsed.time="numeric", call="ANY",residual="data.frame", Converged="logical", Iterations="numeric", Meth="numeric"))
 
@@ -23,7 +23,6 @@ setMethod(
     if(i=="D"){return(x@D)}else {}
     if(i=="Formula"){return(x@Formula)}else {}
     if(i=="levID"){return(x@levID)}else {}
-    if(i=="estIGLS"){return(x@estIGLS)}else {}
     if(i=="FP"){return(x@FP)}else {}
     if(i=="RP"){return(x@RP)}else {}
     if(i=="FP.cov"){return(x@FP.cov)}else {}
@@ -55,7 +54,6 @@ setMethod(
     if(i=="D"){return(x@D)}else {}
     if(i=="Formula"){return(x@Formula)}else {}
     if(i=="levID"){return(x@levID)}else {}
-    if(i=="estIGLS"){return(x@estIGLS)}else {}
     if(i=="FP"){return(x@FP)}else {}
     if(i=="RP"){return(x@RP)}else {}
     if(i=="FP.cov"){return(x@FP.cov)}else {}
@@ -86,7 +84,6 @@ setReplaceMethod(
     if(i=="D"){x@D<-value}else {}
     if(i=="Formula"){x@Formula<-value}else {}
     if(i=="levID"){x@levID<-value}else {}
-    if(i=="estIGLS"){x@estIGLS<-value}else {}
     if(i=="FP"){x@FP<-value}else {}
     if(i=="RP"){x@RP<-value}else {}
     if(i=="FP.cov"){x@FP.cov<-value}else {}
@@ -118,7 +115,6 @@ setReplaceMethod(
     if(i=="D"){x@D<-value}else {}
     if(i=="Formula"){x@Formula<-value}else {}
     if(i=="levID"){x@levID<-value}else {}
-    if(i=="estIGLS"){x@estIGLS<-value}else {}
     if(i=="FP"){x@FP<-value}else {}
     if(i=="RP"){x@RP<-value}else {}
     if(i=="FP.cov"){x@FP.cov<-value}else {}
