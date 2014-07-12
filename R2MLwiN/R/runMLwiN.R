@@ -205,9 +205,6 @@ version:date:md5:filename:x64:trial
       if (!is.element(D[2], c("log"))) {
         stop(cat("Invalid link function specified:", D[2], "\n"))
       }
-      if (is.na(D[3])) {
-        stop("A denominator must be specified for a Binomial response")
-      }
     }
     if (D[1] == "Mixed") {
       for (i in 2:length(D)) {
@@ -250,6 +247,9 @@ version:date:md5:filename:x64:trial
       if (!is.element(D[2], c("logit", "probit", "cloglog"))) {
           stop(cat("Invalid link function specified", D[2], "\n"))
       }
+      if (is.na(D[3])) {
+        stop("A denominator must be specified for a Binomial response")
+      }
     }
     if (D[1] == "Poisson") {
       if (!is.element(D[2], c("log"))) {
@@ -264,6 +264,9 @@ version:date:md5:filename:x64:trial
         if (D[[i]][[1]] == "Binomial") {
           if (!D[[i]][[2]] == "probit") {
             stop(cat("Invalid link function specified:", D[[i]][[2]], "\n"))
+          }
+          if (is.na(D[[i]][[3]])) {
+            stop("A denominator must be specified for Binomial responses")
           }
         }
       }
@@ -1243,12 +1246,16 @@ version:date:md5:filename:x64:trial
     
     # Denominators/Offsets if applicable
     if (D[1] == 'Binomial' || D[1] == 'Poisson' || D[1] == 'Multinomial' || D[1] == 'Negbinom') {
-      outvars <- union(outvars, D[[3]])
+      if (!is.na(D[[3]])) {
+        outvars <- union(outvars, D[[3]])
+      }
     }
     if (D[1] == 'Mixed') {
       for (i in 2:length(D)) {
         if (D[[i]][1] == 'Binomial' || D[[i]][1] == 'Poisson')
-          outvars <- union(outvars, D[[i]][[3]])
+          if (!is.na(D[[i]][[3]])) {
+            outvars <- union(outvars, D[[i]][[3]])
+          }
       }
     }
     
