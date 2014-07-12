@@ -30,6 +30,22 @@ prior2macro <- function(prior,formula,levID,D, indata){
       left=sub(paste("\\`",i,"c`\\|",sep=""),paste(i,"c\\|",sep=""),left)
     }
   }
+  non0pos <- !grepl("\\|",left)
+  if (sum(non0pos)>0){
+    pos0s <- grepl("0s\\||0\\|", left)
+    if (sum(pos0s)==1){
+      left[pos0s] <- paste(c(left[pos0s],left[non0pos]), collapse="+")
+      left <- left[-which(non0pos)]
+    }
+    if(sum(pos0s)==0){
+      mergeterm <- paste0("0|",paste(left[non0pos], collapse="+"))
+      left <- left[-which(non0pos)]
+      left <- c(left, mergeterm)
+    }
+    if(sum(pos0s)>1){
+      stop("allow a 0s/0 term in the formula only")
+    }
+  }
   cflag=0
   if(sum(grepl("\\(+[[:digit:]]+[[:alpha:]]+\\|",left))>0) cflag=1
   

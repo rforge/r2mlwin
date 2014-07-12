@@ -26,7 +26,22 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
       left=sub(paste("\\`",i,"c`\\|",sep=""),paste(i,"c\\|",sep=""),left)
     }
   }
-  
+  non0pos <- !grepl("\\|",left)
+  if (sum(non0pos)>0){
+    pos0s <- grepl("0s\\||0\\|", left)
+    if (sum(pos0s)==1){
+      left[pos0s] <- paste(c(left[pos0s],left[non0pos]), collapse="+")
+      left <- left[-which(non0pos)]
+    }
+    if(sum(pos0s)==0){
+      mergeterm <- paste0("0|",paste(left[non0pos], collapse="+"))
+      left <- left[-which(non0pos)]
+      left <- c(left, mergeterm)
+    }
+    if(sum(pos0s)>1){
+      stop("allow a 0s/0 term in the formula only")
+    }
+  }
   if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial'||D[1]=='Multivariate Normal'||D[1]=='Mixed'){
     nlev=length(levID)
     cc=c(0:nlev)
