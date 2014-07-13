@@ -5,13 +5,13 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
     Formula <- gsub('\\{','\\(',Formula)
     Formula <- gsub('\\}','\\)',Formula)
     Formula <- gsub('[[:space:]]','',Formula)
-    if(sum(grepl("\\|{2}", Formula))>0){
+    if(sum(grepl("\\({1}[[:digit:]]+\\|{2}", Formula))>0){
       for (i in cc){
         Formula=sub(paste(i,"\\|{2}",sep=""),paste("\\`",i,"c`\\|",sep=""),Formula)
         Formula=sub(paste(i,"\\|",sep=""),paste("\\`",i,"s`\\|",sep=""),Formula)
       }
     }
-    if(sum(grepl("\\(+[[:digit:]]+[[:alpha:]]+\\|",Formula))>0){
+    if(sum(grepl("\\({1}[[:digit:]]+[[:alpha:]]{1}\\|",Formula))>0){
       for (i in cc){
         Formula=sub(paste(i,"s\\|",sep=""),paste("\\`",i,"s`\\|",sep=""),Formula)
         Formula=sub(paste(i,"c\\|",sep=""),paste("\\`",i,"c`\\|",sep=""),Formula)
@@ -26,13 +26,36 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
   left <- gsub('\\(','\\{', left)
   left <- gsub('\\)','\\}', left)
   left <- gsub('[[:space:]]','',left)
-  if(sum(grepl("\\|{2}", left))>0){
+  if (is.null(levID)){
+    charposlevID <- grepl("^[[:alpha:]]{1}[[:graph:]]*\\|",left)
+    vlpos <- grepl("\\|",left)
+    nonzeropos <- !grepl("^0{1}(s|c)*\\|", left)
+    vlpos <- vlpos&nonzeropos
+    if (any(charposlevID) && (sum(charposlevID)==sum(vlpos))){
+      levID <- sub("\\|{1,2}[[:graph:]]+","",left[which(vlpos)])
+      nlev=length(levID)
+      cc=c(0:nlev)
+      for (ii in 1:nlev){
+        left=sub(paste0("^",levID[ii]), c(nlev:1)[ii], left)
+      } 
+    }else{
+      stop("levID cannot be determined based on the formula")
+    }
+  }else{
+    charposlevID <- grepl("^[[:alpha:]]{1}[[:graph:]]*\\|",left)
+    if (any(charposlevID)){
+      for (ii in 1:nlev){
+        left=sub(paste0("^",levID[ii]), c(nlev:1)[ii], left)
+      }     
+    }
+  }
+  if(sum(grepl("^[[:digit:]]+\\|{2}", left))>0){
     for (i in cc){
       left=sub(paste(i,"\\|{2}",sep=""),paste("\\`",i,"c`\\|",sep=""),left)
       left=sub(paste(i,"\\|",sep=""),paste("\\`",i,"s`\\|",sep=""),left)
     }
   }
-  if(sum(grepl("\\`+[[:digit:]]+[[:alpha:]]+\\`+\\|",left))>0){
+  if(sum(grepl("^\\`{1}[[:digit:]]+[[:alpha:]]{1}\\`{1}\\|",left))>0){
     for (i in cc){
       left=sub(paste("\\`",i,"s`\\|",sep=""),paste(i,"s\\|",sep=""),left)
       left=sub(paste("\\`",i,"c`\\|",sep=""),paste(i,"c\\|",sep=""),left)
@@ -40,7 +63,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
   }
   non0pos <- !grepl("\\|",left)
   if (sum(non0pos)>0){
-    pos0s <- grepl("0s\\||0\\|", left)
+    pos0s <- grepl("^0s\\||0\\|", left)
     if (sum(pos0s)==1){
       left[pos0s] <- paste(c(left[pos0s],left[non0pos]), collapse="+")
       left <- left[-which(non0pos)]
@@ -876,6 +899,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
     }
     
     invars <-new.env()
+    invars$levID=levID
     invars$resp=resp
     invars$expl=fixs
     if (length(rp)!=0) rp <- rp[order(names(rp), decreasing=TRUE)]
