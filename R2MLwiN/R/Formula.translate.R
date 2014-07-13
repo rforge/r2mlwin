@@ -5,6 +5,12 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
     Formula <- gsub('\\{','\\(',Formula)
     Formula <- gsub('\\}','\\)',Formula)
     Formula <- gsub('[[:space:]]','',Formula)
+    if(sum(grepl("\\|{2}", Formula))>0){
+      for (i in cc){
+        Formula=sub(paste(i,"\\|{2}",sep=""),paste("\\`",i,"c`\\|",sep=""),Formula)
+        Formula=sub(paste(i,"\\|",sep=""),paste("\\`",i,"s`\\|",sep=""),Formula)
+      }
+    }
     if(sum(grepl("\\(+[[:digit:]]+[[:alpha:]]+\\|",Formula))>0){
       for (i in cc){
         Formula=sub(paste(i,"s\\|",sep=""),paste("\\`",i,"s`\\|",sep=""),Formula)
@@ -20,6 +26,12 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
   left <- gsub('\\(','\\{', left)
   left <- gsub('\\)','\\}', left)
   left <- gsub('[[:space:]]','',left)
+  if(sum(grepl("\\|{2}", left))>0){
+    for (i in cc){
+      left=sub(paste(i,"\\|{2}",sep=""),paste("\\`",i,"c`\\|",sep=""),left)
+      left=sub(paste(i,"\\|",sep=""),paste("\\`",i,"s`\\|",sep=""),left)
+    }
+  }
   if(sum(grepl("\\`+[[:digit:]]+[[:alpha:]]+\\`+\\|",left))>0){
     for (i in cc){
       left=sub(paste("\\`",i,"s`\\|",sep=""),paste(i,"s\\|",sep=""),left)

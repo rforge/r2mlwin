@@ -9,6 +9,12 @@ prior2macro <- function(prior,formula,levID,D, indata){
     formula <- gsub('\\{','\\(',formula)
     formula <- gsub('\\}','\\)',formula)
     formula <- gsub('[[:space:]]','',formula)
+    if(sum(grepl("\\|{2}", Formula))>0){
+      for (i in cc){
+        Formula=sub(paste(i,"\\|{2}",sep=""),paste("\\`",i,"c`\\|",sep=""),Formula)
+        Formula=sub(paste(i,"\\|",sep=""),paste("\\`",i,"s`\\|",sep=""),Formula)
+      }
+    }
     if(sum(grepl("\\(+[[:digit:]]+[[:alpha:]]+\\|",formula))>0){
       for (i in cc){
         formula=sub(paste(i,"s\\|",sep=""),paste("\\`",i,"s`\\|",sep=""),formula)
@@ -24,6 +30,12 @@ prior2macro <- function(prior,formula,levID,D, indata){
   left <- gsub('\\(','\\{', left)
   left <- gsub('\\)','\\}', left)
   left <- gsub('[[:space:]]','',left)
+  if(sum(grepl("\\|{2}", left))>0){
+    for (i in cc){
+      left=sub(paste(i,"\\|{2}",sep=""),paste("\\`",i,"c`\\|",sep=""),left)
+      left=sub(paste(i,"\\|",sep=""),paste("\\`",i,"s`\\|",sep=""),left)
+    }
+  }
   if(sum(grepl("\\`+[[:digit:]]+[[:alpha:]]+\\`+\\|",left))>0){
     for (i in cc){
       left=sub(paste("\\`",i,"s`\\|",sep=""),paste(i,"s\\|",sep=""),left)
