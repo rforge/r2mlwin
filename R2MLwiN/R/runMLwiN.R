@@ -1,9 +1,4 @@
 runMLwiN <- function(Formula, levID=NULL, D="Normal", data=NULL, estoptions=list(EstM=0), BUGO=NULL, MLwiNPath=NULL,stdout="",stderr="",workdir=tempdir(),checkversion=TRUE, indata=NULL) {
-  if (is.null(levID)) {
-    if (D[1] %in% c("Mixed", "Binomial", "Poisson", "Negbinom", "Ordered Multinomial", "Unordered Multinomial")) {
-      stop("Have to supply levID for ", D[1], " distribution model")
-    }
-  }
   if (!is.null(indata) && !is.null(data)) {
     stop("Only one of data and indata can be specified")
   }
