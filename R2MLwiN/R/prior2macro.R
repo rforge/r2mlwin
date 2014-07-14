@@ -67,6 +67,10 @@ prior2macro <- function(prior,formula,levID,D, indata){
   }
   non0pos <- !grepl("\\|",left)
   if (sum(non0pos)>0){
+    if(as.logical(attr(Terms,"intercept"))){
+      non0pos <- c(TRUE, non0pos)
+      left <- c("1", left)
+    }
     pos0s <- grepl("^0s\\||0\\|", left)
     if (sum(pos0s)==1){
       left[pos0s] <- paste(c(left[pos0s],left[non0pos]), collapse="+")
