@@ -3,7 +3,6 @@ Add implementation for predict, residuals, df.residual and fitted methods
 Revisit interactions, e.g. the following doesn't work: formula=log(obs,logexp)~(0|nation[]+nation[]:uvbi)+(2|cons)
 Revisit cross-classification specification as this should apply to the whole model, rather than level by level
 Allow specification of all ID/Weight columns instead of assuming they are consecutive
-Automatically switch equation display for cross-classified models
 
 Data Checks:
 Check all variables in the model actually exist in the data

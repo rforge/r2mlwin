@@ -5,6 +5,7 @@ Tue Jul 15 2014
    * Omit 0| for all the cases except for that both 0| and 0|| exists in the formula.
    * Allow attached data to be picked up when running a model
    * Automatically convert logical/factor variables used as the response for Binomial models
+   * Cross-classified notation is now used in the equation by default for cross-classified models
 
 Mon Jun 30 2014
 1. Bug fixing
@@ -23,7 +24,7 @@ Mon Jun 30 2014
    * Added check that the levels for hierarchical centring and parameter expansion are valid
    * Added check that nonlinear options are valid
    * Added check for the response type and link function in Mixed response models
-   * Added chcek that the specified distribution is valid
+   * Added check that the specified distribution is valid
    * Fixed macro generation for Poisson responses in mixed models
    * smat option can now apply to more than one level
    * Added check that the IDs and weights are valid for multiple membership models

@@ -469,8 +469,6 @@ version:date:md5:filename:x64:trial
     smat <- NULL
   }
 
-  notation=estoptions$notation
-  if(is.null(notation)) notation="level"
   
   mem.init=estoptions$mem.init
   if(is.null(mem.init)) mem.init="default"
@@ -657,6 +655,15 @@ version:date:md5:filename:x64:trial
           }
         }
       }
+    }
+  }
+
+  notation=estoptions$notation
+  if(is.null(notation)) {
+    if (is.null(xclass)) {
+      notation="level"
+    } else {
+      notation="class"
     }
   }
 
