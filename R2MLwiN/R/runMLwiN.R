@@ -214,6 +214,35 @@ version:date:md5:filename:x64:trial
     }
   }
 
+  if (D[1] == "Binomial") {
+    if (is.logical(indata[[resp]])) {
+      indata[[resp]] <- as.integer(indata[[resp]])
+    }
+    if (is.factor(indata[[resp]])) {
+      if (length(levels(indata[[resp]])) == 2) {
+        indata[[resp]] <- as.integer(indata[[resp]] == max(levels(indata[[resp]])))
+      } else {
+        stop("Binomial responses must have two unique values")
+      }
+    }
+  }
+  if (D[1] == "Mixed") {
+    for (i in 2:length(D)) {
+      if (D[[i]][[1]] == "Binomial") {
+        if (is.logical(indata[[resp[i-1]]])) {
+          indata[[resp[i-1]]] <- as.integer(indata[[resp[i-1]]])
+        }
+        if (is.factor(indata[[resp[i-1]]])) {
+          if (length(levels(indata[[resp[i-1]]])) == 2) {
+            indata[[resp[i-1]]] <- as.integer(indata[[resp[i-1]]] == max(levels(indata[[resp[i-1]]])))
+          } else {
+            stop("Binomial responses must have two unique values")
+          }
+        }
+      }
+    }
+  }
+
   expl = invars$expl
 
   D = invars$D
