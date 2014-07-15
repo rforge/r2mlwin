@@ -19,6 +19,15 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
     }
     Formula <- as.formula(Formula)
   }
+  
+  tempfstr <- as.character(Formula)[3]
+  tempfstr <- unlist(strsplit(tempfstr, "\\+"))
+  tempfstr <- gsub('[[:space:]]', '', tempfstr)
+  
+  if (any(D %in% c("Binomial", "Poisson", "Negbinom", "Ordered Multinomial", "Unordered Multinomial"))) {
+    Formula <- update(Formula, ~ . +(l1id|0))
+  }
+  
   Terms <- terms.formula(Formula, keep.order=TRUE)
   resp <- rownames(attr(Terms,"factors"))[attr(Terms,"response")]
   resp <- gsub('[[:space:]]','',resp)
@@ -26,6 +35,12 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
   left <- gsub('\\(','\\{', left)
   left <- gsub('\\)','\\}', left)
   left <- gsub('[[:space:]]','',left)
+  
+  if (any(tempfstr=="1")){
+  #if(!all(grepl("\\|", left)) && as.logical(attr(Terms,"intercept"))){
+    left = c("1", left)
+  }  
+  
   if (is.null(levID)){
     charposlevID <- grepl("^[[:alpha:]]{1}[[:graph:]]*\\|",left)
     vlpos <- grepl("\\|",left)
@@ -38,6 +53,10 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
       for (ii in 1:nlev){
         left=sub(paste0("^",levID[ii]), c(nlev:1)[ii], left)
       } 
+      onevlzero <- left=="1|0"
+      onevdlzero <- left=="1||0"
+      delpos <- onevlzero|onevdlzero
+      left <- left[!(delpos)]
     }else{
       stop("levID cannot be determined based on the formula")
     }
@@ -46,7 +65,11 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
     if (any(charposlevID)){
       for (ii in 1:nlev){
         left=sub(paste0("^",levID[ii]), c(nlev:1)[ii], left)
-      }     
+      }    
+      onevlzero <- left=="1|0"
+      onevdlzero <- left=="1||0"
+      delpos <- onevlzero|onevdlzero
+      left <- left[!(delpos)] 
     }
   }
   if(sum(grepl("^[[:digit:]]+\\|{2}", left))>0){
@@ -63,18 +86,14 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
   }
   non0pos <- !grepl("\\|",left)
   if (sum(non0pos)>0){
-    if(as.logical(attr(Terms,"intercept"))){
-      non0pos <- c(TRUE, non0pos)
-      left <- c("1", left)
-    }
     pos0s <- grepl("^0s\\||0\\|", left)
     if (sum(pos0s)==1){
       left[pos0s] <- paste(c(left[pos0s],left[non0pos]), collapse="+")
-      left <- left[-which(non0pos)]
+      left <- left[!(non0pos)]
     }
     if(sum(pos0s)==0){
       mergeterm <- paste0("0|",paste(left[non0pos], collapse="+"))
-      left <- left[-which(non0pos)]
+      left <- left[!(non0pos)]
       left <- c(left, mergeterm)
     }
     if(sum(pos0s)>1){
@@ -419,7 +438,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
             cidmat[i,2]=paste(tempid,collapse=",")
           }
         }
-        if(sum(is.na(cidmat[,1]))>0) cidmat=cidmat[-which(is.na(cidmat[,1])),]
+        if(sum(is.na(cidmat[,1]))>0) cidmat=cidmat[!(is.na(cidmat[,1])),]
         common.coeff=unique(paste(cidmat[,1],cidmat[,2],sep="@"))
         lencom=length(common.coeff)
         tt.id=unlist(strsplit(common.coeff,"\\@"))[(1:lencom)*2]
@@ -605,6 +624,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
     
     if(D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial') D[1]='Multinomial'
     invars <-new.env()
+    invars$levID=levID
     if (length(rp)!=0) rp <- rp[order(names(rp), decreasing=TRUE)]
     if(length(randC)==0&&length(fixc)==0){
       invars$resp=resp
@@ -716,6 +736,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
     }
     
     invars <-new.env()
+    invars$levID=levID
     invars$resp=resp
     invars$expl=fixs
     if (length(rp)!=0) rp <- rp[order(names(rp), decreasing=TRUE)]
@@ -819,6 +840,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
     }
     
     invars <-new.env()
+    invars$levID=levID
     invars$resp=resp
     invars$expl=fixs
     if (length(rp)!=0) rp <- rp[order(names(rp), decreasing=TRUE)]

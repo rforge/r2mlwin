@@ -12,9 +12,7 @@ Model Specification Checks:
 (IGLS) Check lower levels are non-equal standardised weights if standardised weights are specified
 
 Additional Functionality:
-Allow omission of 0| for the fixed part in model formula
 Allow use of attach() -ed data
-Allow optional specification of the level IDs in the formula, e.g. (student|cons+standlrt) instead of (1|cons+standlrt), levID="student"
 Automatic calculation of VPC?
 Debugging option to extract internal model matrices (IGLS) - XSS/VMAT/ZMAT/YRES/YMAT/XMAT commands
 Allow user specified design matrix (IGLS) - SETD command

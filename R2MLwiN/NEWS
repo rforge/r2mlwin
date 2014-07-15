@@ -1,3 +1,8 @@
+Tue Jul 15 2014
+1. Changes
+   * Replace 0s, 0c,... by 0|, 0||,..., respectively.
+   * Be able to specify the level name (e.g. school|cons + standlrt) instead of just the level number (e.g. 2|cons + standlrt)
+   * Omit 0| for all the cases except for that both 0| and 0|| exists in the formula.
 Mon Jun 30 2014
 1. Bug fixing
    * Return full covariance matrices in FP.cov and RP.cov
@@ -115,7 +120,7 @@ Mon May 12 2014
 Tue Apr 22 2014
 1. Bug fixing
    * Missing values are erroneously marked as 'infinite' when re-fitting non-Normal models in debugmode, thus resulting in errors
-   
+
 Fri Mar 28 2014
 1. Bug fixing
    * Fixed display when interaction terms involve

@@ -178,10 +178,6 @@ version:date:md5:filename:x64:trial
 
   invars = Formula.translate(Formula, levID, D, indata)
   
-  if (is.null(levID)) {
-    levID <- invars$levID
-  }
-
   resp = invars$resp
 
   if (D[1] == "Ordered Multinomial" || D[1] == "Unordered Multinomial") {
@@ -287,6 +283,21 @@ version:date:md5:filename:x64:trial
           stop(cat("Invalid link function specified", D[2], "\n"))
         }
       }
+    }
+  }
+
+  if (is.null(levID)) {
+    levID <- invars$levID
+    isdiscrete <- D[1] %in% c("Binomial", "Poisson", "Negbinom", "Multinomial")
+    if (D[1] == "Mixed") {
+      for (i in 2:length(D)) {
+        if (D[[i]][[1]] %in% c("Binomial", "Poisson")) {
+          isdiscrete <- TRUE
+        }
+      }
+    }
+    if (isdiscrete) {
+      indata[["l1id"]] <- 1:nrow(indata)
     }
   }
 

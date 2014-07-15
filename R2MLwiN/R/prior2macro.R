@@ -23,6 +23,16 @@ prior2macro <- function(prior,formula,levID,D, indata){
     }
     formula <- as.formula(formula)
   }
+  tempfstr <- as.character(formula)[3]
+  tempfstr <- unlist(strsplit(tempfstr, "\\+"))
+  tempfstr <- gsub('[[:space:]]', '', tempfstr)
+  if (any(D %in% c("Binomial", "Poisson", "Negbinom", "Ordered Multinomial", "Unordered Multinomial"))) {
+    formula <- update(formula, ~. +(l1id|0))
+  }
+  if (any(tempfstr=="1")){
+  #if(!all(grepl("\\|", left)) && as.logical(attr(Terms,"intercept"))){
+    left = c("1", left)
+  }
   Terms <- terms.formula(formula, keep.order=TRUE)
   resp <- rownames(attr(Terms,"factors"))[attr(Terms,"response")]
   resp <- gsub('[[:space:]]','',resp)
@@ -41,7 +51,11 @@ prior2macro <- function(prior,formula,levID,D, indata){
       cc=c(0:nlev)
       for (ii in 1:nlev){
         left=sub(paste0("^",levID[ii]), c(nlev:1)[ii], left)
-      } 
+      }
+      onevlzero <- left=="1|0"
+      onevdlzero <- left=="1||0"
+      delpos <- onevlzero|onevdlzero
+      left <- left[!(delpos)]
     }else{
       stop("levID cannot be determined based on the formula")
     }
@@ -50,7 +64,11 @@ prior2macro <- function(prior,formula,levID,D, indata){
     if (any(charposlevID)){
       for (ii in 1:nlev){
         left=sub(paste0("^",levID[ii]), c(nlev:1)[ii], left)
-      }     
+      }
+      onevlzero <- left=="1|0"
+      onevdlzero <- left=="1||0"
+      delpos <- onevlzero|onevdlzero
+      left <- left[!(delpos)]
     }
   }
   if(sum(grepl("^[[:digit:]]+\\|{2}", left))>0){
@@ -67,18 +85,14 @@ prior2macro <- function(prior,formula,levID,D, indata){
   }
   non0pos <- !grepl("\\|",left)
   if (sum(non0pos)>0){
-    if(as.logical(attr(Terms,"intercept"))){
-      non0pos <- c(TRUE, non0pos)
-      left <- c("1", left)
-    }
     pos0s <- grepl("^0s\\||0\\|", left)
     if (sum(pos0s)==1){
       left[pos0s] <- paste(c(left[pos0s],left[non0pos]), collapse="+")
-      left <- left[-which(non0pos)]
+      left <- left[!(non0pos)]
     }
     if(sum(pos0s)==0){
       mergeterm <- paste0("0|",paste(left[non0pos], collapse="+"))
-      left <- left[-which(non0pos)]
+      left <- left[!(non0pos)]
       left <- c(left, mergeterm)
     }
     if(sum(pos0s)>1){
@@ -247,7 +261,7 @@ prior2macro <- function(prior,formula,levID,D, indata){
         }else{
           refx=categ[2,pos]
           categx=levels(indata[[categ[1,pos]]])
-          categx=categx[-which(refx==categx)]
+          categx=categx[!(refx==categx)]
           fixs=c(fixsa,categx,fixsb)
         }
       }
@@ -314,7 +328,7 @@ prior2macro <- function(prior,formula,levID,D, indata){
         }else{
           refx=categ[2,pos]
           categx=levels(indata[[categ[1,pos]]])
-          categx=categx[-which(refx==categx)]
+          categx=categx[!(refx==categx)]
           fixs=c(fixsa,categx,fixsb)
         }
       }
