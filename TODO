@@ -12,7 +12,6 @@ Model Specification Checks:
 (IGLS) Check lower levels are non-equal standardised weights if standardised weights are specified
 
 Additional Functionality:
-Allow use of attach() -ed data
 Automatic calculation of VPC?
 Debugging option to extract internal model matrices (IGLS) - XSS/VMAT/ZMAT/YRES/YMAT/XMAT commands
 Allow user specified design matrix (IGLS) - SETD command

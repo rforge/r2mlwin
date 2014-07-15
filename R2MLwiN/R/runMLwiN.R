@@ -5,8 +5,36 @@ runMLwiN <- function(Formula, levID=NULL, D="Normal", data=NULL, estoptions=list
   if (!is.null(data)) {
     indata <- data
   }
-  if (is.null(indata)) {
-    stop("Using the currently attached data is not yet implemented")
+
+  drop.data=estoptions$drop.data
+  if (is.null(drop.data)) drop.data=T
+
+  cc=c(0:length(levID))
+  if(is.character(Formula)){
+    Formula <- gsub('\\{','\\(',Formula)
+    Formula <- gsub('\\}','\\)',Formula)
+    Formula <- gsub('[[:space:]]','',Formula)
+    if(sum(grepl("\\({1}[[:digit:]]+\\|{2}", Formula))>0){
+      for (i in cc){
+        Formula=sub(paste(i,"\\|{2}",sep=""),paste("\\`",i,"c`\\|",sep=""),Formula)
+        Formula=sub(paste(i,"\\|",sep=""),paste("\\`",i,"s`\\|",sep=""),Formula)
+      }
+    }
+    if(sum(grepl("\\({1}[[:digit:]]+[[:alpha:]]{1}\\|",Formula))>0){
+      for (i in cc){
+        Formula=sub(paste(i,"s\\|",sep=""),paste("\\`",i,"s`\\|",sep=""),Formula)
+        Formula=sub(paste(i,"c\\|",sep=""),paste("\\`",i,"c`\\|",sep=""),Formula)
+      }
+    }
+  }
+  if (drop.data) {
+    indata <- get_all_vars(Formula, indata)
+  } else {
+    newdata <- get_all_vars(Formula, indata)
+    newvars <- setdiff(colnames(newdata), colnames(indata))
+    for (var in newvars) {
+      indata[[var]] <- newdata[[var]]
+    }
   }
 
   EstM=estoptions$EstM
@@ -1139,9 +1167,6 @@ version:date:md5:filename:x64:trial
   if (EstM == 0 && !is.null(BUGO)) {
     stop("BUGO requires MCMC estimation to be selected")
   }
-
-  drop.data=estoptions$drop.data
-  if (is.null(drop.data)) drop.data=T
   
   sort.force=estoptions$sort.force
   if (is.null(sort.force)) sort.force = FALSE

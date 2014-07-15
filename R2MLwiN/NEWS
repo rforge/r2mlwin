@@ -3,6 +3,8 @@ Tue Jul 15 2014
    * Replace 0s, 0c,... by 0|, 0||,..., respectively.
    * Be able to specify the level name (e.g. school|cons + standlrt) instead of just the level number (e.g. 2|cons + standlrt)
    * Omit 0| for all the cases except for that both 0| and 0|| exists in the formula.
+   * Allow attached data to be picked up when running a model
+
 Mon Jun 30 2014
 1. Bug fixing
    * Return full covariance matrices in FP.cov and RP.cov
