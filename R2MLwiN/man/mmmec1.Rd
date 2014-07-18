@@ -2,7 +2,7 @@
 \name{mmmec1}
 \alias{mmmec1}
 \title{EC data on UV radiation exposure & malignant melanoma.}
-\format{A data frame with 354 observations on the following 8 variables:
+\format{A data frame with 354 observations on the following variables:
   \describe{
     \item{\code{nation}}{Nation ID, with levels corresponding to each country.}
     \item{\code{region}}{Region (within-nation) ID.}
@@ -16,10 +16,6 @@
 \source{
 Browne, W. J. (2012) \emph{MCMC Estimation in MLwiN Version 2.26.} University of Bristol: Centre for Multilevel Modelling.
 
-Langford, Ian H., Graham Bentham, and Anne-Lise McDonald. "Multi-level modelling of geographically aggregated health data: a case study on malignant melanoma mortality and UV exposure in the European Community." Statistics in Medicine 17.1 (1998): 41-57.
-
-Rasbash, J., Browne, W. J., Healy, M., Cameron, B., Charlton, C. M. J. (2013) MLwiN v2.27. University of Bristol: Centre for Multilevel Modelling.
-}
 Langford, I. H., Bentham, G., McDonald, A-L. (1998) Multi-level modelling of geographically aggregated health data: a case study on malignant melanoma mortality and UV exposure in the European Community. \emph{Statistics in Medicine} 17: 41-57.
 
 Rasbash, J., Browne, W. J., Healy, M., Cameron, B., Charlton, C. M. J. (2013) MLwiN v2.27. University of Bristol: Centre for Multilevel Modelling.
