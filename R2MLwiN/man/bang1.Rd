@@ -7,10 +7,10 @@
     \item{\code{woman}}{Identifying code for each woman (level 1 unit).}
     \item{\code{district}}{Identifying code for each district (level 2 unit).}
     \item{\code{use}}{Contraceptive use status at time of survey; levels are \code{Not using} and \code{Using}.}
-    \item{\code{lc}}{Number of living children at time of survey; levels correspond to none (\code{nokids}), one (\code{onekid}), two (\code{twokids}), or three or more children (\code{threeplus}).}
+    \item{\code{lc}}{Number of living children at time of survey; ordered levels are \code{None}, \code{One child}, \code{Two children}, \code{Three plus}.}
     \item{\code{age}}{Age of woman at time of survey (in years), centred on sample mean of 30 years.}
     \item{\code{urban}}{Type of region of residence; levels are \code{Rural} and \code{Urban}.}
-    \item{\code{educ}}{Woman's level of education (\code{1} = None, \code{2} = Lower primary, \code{3} = Upper primary, \code{4} = Secondary and above.}
+    \item{\code{educ}}{Woman's level of education; ordered levels are \code{None}, \code{Lower primary}, \code{Upper primary}, \code{Secondary and above}.}
     \item{\code{hindu}}{Woman's religion; levels are \code{Muslim} and \code{Hindu}.}
     \item{\code{d_illit}}{Proportion of women in district who are literate.}
     \item{\code{d_pray}}{Proportion of Muslim women in district who pray every day (a measure of religiosity).}    

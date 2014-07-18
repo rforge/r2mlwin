@@ -49,15 +49,15 @@
 \source{
 Browne, W. J. (2012) \emph{MCMC Estimation in MLwiN Version 2.26.} University of Bristol: Centre for Multilevel Modelling.
 
-Clayton, David, and John Kaldor. "Empirical Bayes estimates of age-standardized relative risks for use in disease mapping." Biometrics 43.3 (1987): 671-681.
+Clayton, D., Kaldor, J. (1987) Empirical Bayes estimates of age-standardized relative risks for use in disease mapping. \emph{Biometrics} 43: 671-681.
 
 Rasbash, J., Browne, W. J., Healy, M., Cameron, B., Charlton, C. M. J. (2013) MLwiN v2.27. University of Bristol: Centre for Multilevel Modelling.
 }
 
 \description{
-  Lips data, consisting of 56 observations across 56 districts.}
+  Observed counts of male lip cancer for the 56 regions of Scotland over the period 1975-1980.}
 \details{
-  The \code{lips1} dataset is one of the sample datasets provided with the multilevel-modelling software package MLwiN (Rasbash et al., 2013).}
+  The \code{lips1} dataset is one of the sample datasets provided with the multilevel-modelling software package MLwiN (Rasbash et al., 2013), and was analysed in Clayton & Kaldor (1987); see also Browne (2012) for more details.}
 
 \examples{
 \dontrun{

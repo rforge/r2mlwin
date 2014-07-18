@@ -1,28 +1,29 @@
 \docType{data}
 \name{alevchem}
 \alias{alevchem}
-\title{Chemistry A-level results from 1 exam board; subset from Yang & Woodhouse, 2001.}
+\title{Chemistry A-level results from one exam board}
 \format{A data frame with 2166 observations on the following 8 variables:
   \describe{
-    \item{\code{lea}}{LEA ID.}
-    \item{\code{estab}}{Establishment ID.}
+    \item{\code{lea}}{Local Education Authority ID.}
+    \item{\code{estab}}{Establishment (institution) ID.}
     \item{\code{pupil}}{Pupil ID.}
-    \item{\code{a_point}}{A-level point score (\code{1} = F, \code{2} = E, \code{3} = D, \code{4} = C, \code{5} = B, \code{6} = A).}
+    \item{\code{a_point}}{A-level point score (with levels: \code{F}, \code{E}, \code{D}, \code{C}, \code{B}, \code{A}).}
     \item{\code{gcse_tot}}{Total GCSE point score.}
     \item{\code{gcse_no}}{Number of GCSEs taken.}
-    \item{\code{cons}}{Constant (= 1)}
-    \item{\code{gender}}{Pupil's gender (\code{0} = male, code{1} = female).}
+    \item{\code{cons}}{Constant of ones}
+    \item{\code{gender}}{Pupil's gender (with levels: \code{male}, \code{female}).}
 }}
+
 \source{
 Browne, W. J. (2012) \emph{MCMC Estimation in MLwiN Version 2.26.} University of Bristol: Centre for Multilevel Modelling.
 
 Rasbash, J., Browne, W. J., Healy, M., Cameron, B., Charlton, C. M. J. (2013) MLwiN v2.27. University of Bristol: Centre for Multilevel Modelling.
 
-Yang, Min, and Geoffrey Woodhouse. "Progress from GCSE to A and AS level: institutional and gender differences, and trends over time." British Educational Research Journal 27.3 (2001): 245-267.
+Yang, M., Woodhouse, G. (2001) Progress from GCSE to A and AS level: institutional and gender differences, and trends over time. \emph{British Educational Research Journal} 27: 245-267.
 }
 
 \description{
-  Chemistry A-level results from 1 exam board; subset from Yang & Woodhouse, 2001.}
+  Chemistry A-level results from one exam board; subset from Yang & Woodhouse, 2001.}
 \details{
   The \code{alevchem} dataset is one of the sample datasets provided with the multilevel-modelling software package MLwiN (Rasbash et al., 2013).}
 

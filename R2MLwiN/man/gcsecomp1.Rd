@@ -1,12 +1,12 @@
 \docType{data}
 \name{gcsecomp1}
 \alias{gcsecomp1}
-\title{Pupils' marks from GCSE exams (UK, 1989); see MLwiN MCMC manual (Browne, 2012).}
+\title{Pupils' marks from GCSE exams (UK, 1989); complete cases only: see MLwiN MCMC manual (Browne, 2012).}
 \format{A data frame with 1523 observations on the following 6 variables:
   \describe{
     \item{\code{school}}{Identifying code for each school (level 2 unit).}
     \item{\code{student}}{Identifying code for each pupil (level 1 unit).}
-    \item{\code{female}}{Gender of pupil, \code{0} = Male \code{1} = Female}
+    \item{\code{female}}{Gender of pupil, with levels \code{Male} and \code{Female}.}
     \item{\code{written}}{Exam score.}
     \item{\code{csework}}{Coursework score.}
     \item{\code{cons}}{Constant (=1).}

@@ -1,12 +1,12 @@
 \docType{data}
 \name{gcsemv1}
 \alias{gcsemv1}
-\title{GCSE exam results, taken from 73 schools in England, 1989}
-\format{A data frame with 1934 observations on the following 11 variables:
+\title{Pupils' marks from GCSE exams (UK, 1989); see MLwiN MCMC manual (Browne, 2012).}
+\format{A data frame with 1905 observations on the following variables:
   \describe{
     \item{\code{school}}{School identification (level 2 unit).}
     \item{\code{student}}{Student identification (level 1 unit).}
-    \item{\code{female}}{\code{1} if female, \code{0} if male}
+    \item{\code{female}}{Gender, with levels \code{Female} and \code{Male}.}
     \item{\code{agemths}}{Age in months.}
     \item{\code{written}}{Score on the written component.}
     \item{\code{csework}}{Score on the coursework component.}
@@ -19,7 +19,7 @@ Rasbash, J., Browne, W. J., Healy, M., Cameron, B., Charlton, C. M. J. (2013) ML
 }
 
 \description{
-  GCSE exam results, taken from 73 schools in England, consisting of 1905 pupils across 73 districts.}
+  GCSE exam results, taken from 73 schools in England, consisting of 1905 pupils.}
 \details{
   The \code{bang1} dataset is one of the sample datasets provided with the multilevel-modelling software package MLwiN (Rasbash et al., 2013).}
 

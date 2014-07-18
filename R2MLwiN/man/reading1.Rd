@@ -22,13 +22,14 @@
 }}
 \source{
 Rasbash, J., Browne, W. J., Healy, M., Cameron, B., Charlton, C. M. J. (2013) MLwiN v2.27. University of Bristol: Centre for Multilevel Modelling.
+Rasbash, J., Steele, F., Browne, W.J., Goldstein, H. (2012) \emph{A User's Guide to MLwiN v2.26}. University of Bristol: Centre for Multilevel Modelling.
 Tizard, B., Blatchford, P., Burke, J. & Farquhar, C. (1988). Young children at school in the inner city. Hove, Sussex: Lawrence Erlbaum.
 }
 
 \description{
   Reading score data for 407 pupils across 6 occasions.}
 \details{
-  The \code{reading1} dataset is one of the sample datasets provided with the multilevel-modelling software package MLwiN (Rasbash et al., 2013), and was analysed in Tizard et al. (1988).}
+  The \code{reading1} dataset is one of the sample datasets provided with the multilevel-modelling software package MLwiN (Rasbash et al., 2013), and was analysed in Tizard et al. (1988); see also Rasbash et al. (2012) for further details.}
 
 \examples{
 \dontrun{

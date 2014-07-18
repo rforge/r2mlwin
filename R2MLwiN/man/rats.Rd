@@ -15,7 +15,7 @@
 \source{
 Browne, W. J. (2012) \emph{MCMC Estimation in MLwiN Version 2.26.} University of Bristol: Centre for Multilevel Modelling.
 
-Gelfand, Alan E., et al. "Illustration of Bayesian inference in normal data models using Gibbs sampling." Journal of the American Statistical Association 85.412 (1990): 972-985.
+Gelfand, A. E., Hills, S.E., Racine-Poon, A., Smith, A.F.M. (1990) Illustration of Bayesian inference in normal data models using Gibbs sampling. \emph{Journal of the American Statistical Association} 85: 972-985.
 
 Rasbash, J., Browne, W. J., Healy, M., Cameron, B., Charlton, C. M. J. (2013) MLwiN v2.27. University of Bristol: Centre for Multilevel Modelling.
 }
@@ -23,7 +23,7 @@ Rasbash, J., Browne, W. J., Healy, M., Cameron, B., Charlton, C. M. J. (2013) ML
 \description{
   Weights of 30 rats, measured weekly over 5 weeks.}
 \details{
-  The \code{rats} dataset is one of the sample datasets provided with the multilevel-modelling software package MLwiN (Rasbash et al., 2013).}
+  The \code{rats} dataset is one of the sample datasets provided with the multilevel-modelling software package MLwiN (Rasbash et al., 2013); see Browne (2012) and Gelfand (1990) for further details.}
 
 \examples{
 \dontrun{
