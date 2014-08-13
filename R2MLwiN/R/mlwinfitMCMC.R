@@ -420,3 +420,7 @@ setMethod("resid", "mlwinfitMCMC", function (object,  ...) {
 setMethod("predict", "mlwinfitMCMC", function (object,  ...) {
   NULL
 })
+
+setMethod("nobs", "mlwinfitMCMC", function (object,  ...) {
+  object@Nobs
+})

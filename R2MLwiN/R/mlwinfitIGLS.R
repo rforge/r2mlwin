@@ -373,3 +373,7 @@ setMethod("predict", "mlwinfitIGLS", function (object,  ...) {
 setMethod("logLik", "mlwinfitIGLS", function (object,  ...) {
   object@LIKE
 })
+
+setMethod("nobs", "mlwinfitIGLS", function (object,  ...) {
+  object@Nobs
+})
