@@ -2,44 +2,398 @@ prior2macro <- function(prior,formula,levID,D, indata){
   ## translation from prior information to MLwiN macro
   
   #fixed effect
+  get.terms <- function(fstr){
+    if (is.na(fstr)){
+      return(fstr)
+    }
+    anycurly <- any(grepl('\\{|\\}', fstr))
+    if (anycurly){
+      fstr <- gsub('\\{','\\[', fstr)
+      fstr <- gsub('\\}','\\]', fstr)
+    }
+    form <- as.formula(paste0("~", fstr))
+    Terms <- terms(form, keep.order = TRUE)
+    xterm <- attr(Terms, "term.labels")
+    fstr <- unlist(strsplit(fstr, "\\+"))
+    fstr <- gsub('[[:space:]]', '', fstr)
+    if (any(fstr=="1")){
+      xterm = c("1", xterm)
+    }
+    if (anycurly){
+      xterm <- gsub('\\[','\\{', xterm)
+      xterm <- gsub('\\]','\\}', xterm)
+    }
+    gsub('[[:space:]]','', xterm)
+  }
+
+  get.Idata <- function(left, indata){
+    anycurly <- any(grepl('\\{|\\}', left))
+    if (anycurly){
+      left <- gsub('\\{','\\[', left)
+      left <- gsub('\\}','\\]', left)
+    }
+    svec <- sapply(left, function(x) unlist(strsplit(x,"\\|"))[2])
+    nn <- length(svec)
+    Iterms <- character(0)
+    for (ii in 1:nn){
+      xform <- as.formula(paste0("~",svec[ii]))
+      tterms <- terms(xform, keep.order = TRUE)
+      ttermsLabs <-  unlist(sapply(attr(tterms,"term.labels"), function(x) unlist(strsplit(x,"\\:"))))
+      is_Ifunc <- grepl("I\\([[:print:]]+\\)", ttermsLabs)
+      if (any(is_Ifunc)){
+        Iterms <- c(Iterms, ttermsLabs[is_Ifunc])
+      }
+    }
+    if (length(Iterms)>0){
+      Iterms <- sapply(regmatches(Iterms, gregexpr("\\[{1}([[:digit:]]|\\,|[[:space:]])*\\]{1}", Iterms), invert = TRUE),
+                       function(x) paste(x, collapse=""))
+      tform <- as.formula(paste0("~0+",paste(Iterms, collapse="+")))
+      dataplus <- model.frame(formula=tform, data=indata)
+      dataplus.names <- names(dataplus)
+      if (anycurly){
+        dataplus.names <- gsub('\\[','\\{', dataplus.names)
+        dataplus.names <- gsub('\\]','\\}', dataplus.names)
+      }
+      names(dataplus) <- gsub('[[:space:]]','', dataplus.names)
+      indata <- cbind(indata, dataplus)
+    }
+    indata
+  }
+  
+  get.polydata <- function(left, indata){
+    is_polyfunc <- grepl("(poly|polym)\\([[:print:]]+\\)", left)
+    if (!any(is_polyfunc)){
+      return(list(newleft=character(0), indata=indata))
+    }
+    anycurly <- any(grepl('\\{|\\}', left))
+    if (anycurly){
+      left <- gsub('\\{','\\[', left)
+      left <- gsub('\\}','\\]', left)
+    }
+    lvec <- sapply(left, function(x) unlist(strsplit(x,"\\|"))[1])
+    svec <- sapply(left, function(x) unlist(strsplit(x,"\\|"))[2])
+    nn <- length(svec)
+    newleft <- rep(NA, nn)
+    newsvec <- rep(NA, nn)
+    polyterms <- character(0)
+    for (ii in 1:nn){
+      ttermsLabs <- get.terms(svec[ii])
+      is_polyfunc <- grepl("(poly|polym)\\([[:print:]]+\\)", ttermsLabs)
+      if (any(is_polyfunc)){
+        for (jj in 1:length(ttermsLabs)){
+          xlabs <- unlist(strsplit(ttermsLabs[jj],"\\:"))
+          pos_polyfunc <- grepl("(poly|polym)\\([[:print:]]+\\)", xlabs)
+          if (any(pos_polyfunc)){
+            xployterms <- xlabs[pos_polyfunc]
+            xployterms <- sapply(regmatches(xployterms, gregexpr("\\[{1}([[:digit:]]|\\,|[[:space:]])*\\]{1}", xployterms), invert = TRUE),
+                       function(x) paste(x, collapse=""))
+            labs.common <- sapply(regmatches(xployterms, gregexpr("\\[{1}([[:digit:]]|\\,|[[:space:]])*\\]{1}", xployterms)),
+                       function(x) paste(x, collapse=""))
+            is_labs.common <- !(labs.common=="")
+            otherterms <- xlabs[!pos_polyfunc]
+            for (kk in 1:length(xployterms)){
+              tform <- as.formula(paste0("~0+",paste(xployterms[kk], collapse="+")))
+              dataplus <- as.data.frame(model.frame(formula=tform, data=indata)[[1]])
+              dataplus.names <- paste(make.names(names(dataplus)),xployterms[kk], sep="_")
+              dataplus.names <- gsub('[[:space:]]','', dataplus.names)
+              ndp <- sapply(dataplus.names, nchar)
+              if (any(ndp>32)){
+                dataplus.names <- gsub('x\\=', '', dataplus.names)
+                dataplus.names <- gsub('degree\\=', '', dataplus.names)
+                dataplus.names <- gsub('coefs\\=', '', dataplus.names)
+                dataplus.names <- gsub('raw\\=', '', dataplus.names)
+                ndp <- sapply(dataplus.names, nchar)
+                if (any(ndp>32)){
+                  dataplus.names <- gsub('[[:punct:]]','_', dataplus.names)
+                  dataplus.names <- abbreviate(dataplus.names, minlength = 31)
+                }
+              }
+              if (anycurly){
+                dataplus.names <- gsub('\\[','\\{', dataplus.names)
+                dataplus.names <- gsub('\\]','\\}', dataplus.names)
+              }
+              names(dataplus) <- dataplus.names
+              if (is_labs.common[kk]){
+                tmpnames0 <- paste0(names(dataplus), labs.common[kk])
+                if(kk==1){
+                  dataplus.names0 <- tmpnames0
+                }else{
+                  dataplus.names0 <- paste(dataplus.names0, tmpnames0, sep=":")
+                }
+              }else{
+                if(kk==1){
+                  dataplus.names0 <- names(dataplus)
+                }else{
+                  dataplus.names0 <- paste(dataplus.names0, names(dataplus), sep=":")
+                }
+              }
+              indata <- cbind(indata, dataplus)
+            }
+            if (length(otherterms)>0){
+              otherTerms <- paste(otherterms, collapse=":")
+              ttermsLabs[jj] <- paste(otherTerms, dataplus.names0, sep=":")
+            }else{
+              ttermsLabs[jj] <- paste(dataplus.names0, collapse="+")
+            }
+          }
+        }
+      }
+      newsvec[ii] <- paste(ttermsLabs, collapse="+")
+      newleft[ii] <- paste(lvec[ii],newsvec[ii], sep="|")
+    }
+    if (anycurly){
+      newleft <- gsub('\\[','\\{', newleft)
+      newleft <- gsub('\\]','\\}', newleft)
+    }
+    list(newleft=newleft, indata=indata)
+  }
+  
+  get_categstr <- function(left, indata){
+    categstr0 <- NULL
+    categstr1 <- NULL
+    leftsplit <- strsplit(left, "\\|")
+    for (ii in 1:length(leftsplit)){
+      leftsplit[[ii]] <- get.terms(leftsplit[[ii]][2])
+    }
+    tmpcategstr <- unique(unlist(leftsplit))
+    tmpcategstr <- gsub("\\{{1}([[:digit:]]|\\,)*\\}{1}", "", tmpcategstr)
+    lfcol <- sapply(indata, is.factor)
+    for (ii in 1:length(tmpcategstr)){
+      ttcategstr <- unlist(strsplit(tmpcategstr[ii], "\\:"))
+      lttcateg <- ttcategstr %in% names(indata)[lfcol]
+      if (any(lttcateg)){
+        categstr0 <- c(categstr0, tmpcategstr[ii])
+        categstr1 <- c(categstr1, ttcategstr[lttcateg])
+      }
+    }
+    categstr0 <- unique(categstr0)
+    categstr1 <- unique(categstr1)
+    ncategstr0 <- length(categstr0)
+    ncategstr1 <- length(categstr1)
+    
+    categstr2 <- vector("list", ncategstr1)
+    names(categstr2) <- categstr1
+    categstr3 <- vector("list", ncategstr0)
+    names(categstr3) <- categstr0
+    
+    if (ncategstr0>0){
+      # extend data
+      for (ii in 1:ncategstr1){
+        f.ext <- as.formula(eval(paste("~0+",categstr1[ii])))
+        contrMat <- attr(indata[[categstr1[ii]]], "contrasts")
+        if(is.null(contrMat)){
+          data.ext <- model.matrix(f.ext, indata)[,-1, drop=F]
+          categstr2[[categstr1[ii]]] <- colnames(data.ext)
+        }else{
+          keeppos <- rowSums(contrMat)>0
+          data.ext <- model.matrix(f.ext, indata)[,keeppos, drop=F]
+          categstr2[[categstr1[ii]]] <- colnames(data.ext)
+        }
+        indata <- cbind(indata, as.data.frame(data.ext))
+      }
+      for (ii in 1:ncategstr0){
+        ttcategstr <- unlist(strsplit(categstr0[ii], "\\:"))
+        if (length(ttcategstr)==1){
+          categstr3[[categstr0[ii]]] <- categstr2[[ttcategstr]]
+        }else{
+          ttlist <- vector("list", length(ttcategstr))
+          names(ttlist) <- ttcategstr
+          for (jj in 1: length(ttcategstr)){
+            if(ttcategstr[jj]%in%categstr1){
+              ttlist[[ttcategstr[jj]]] <- categstr2[[ttcategstr[jj]]]
+            }else{
+              ttlist[[ttcategstr[jj]]] <- ttcategstr[jj]
+            }
+          }
+          ttcombs <- apply(expand.grid(ttlist), 1, function(x) paste(x, collapse=":"))
+          categstr3[[categstr0[ii]]] <- ttcombs
+        }
+      }
+    }
+    list(categstr=categstr3, indata=indata)
+  }
+  
+  left2leftsc <- function(left, nlev, nresp, D){
+    is_cvar <- grepl("(\\+|\\-|\\*|\\/|\\:|\\|){1}\\(*[[:alnum:]]{1}[[:graph:]]*\\[{1}(c\\(|\\)|\\,|\\:|[[:digit:]])*\\]{1}\\)*(\\+|\\-|\\*|\\/|\\:|$)", left)
+    if (!any(is_cvar)){
+      return(left)
+    }
+    cc=c(0:nlev)
+    respid <- 1:nresp
+    if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial'){
+      refcatint <- as.integer(D["ref.cat"])
+      respid <- respid[respid!=refcatint]
+    }
+    left <- sort(left)
+    nleft <- length(left)
+    newleft <- character(0)
+    for (ii in cc){
+      for (jj in 1:nleft){
+        lev_found <- grepl(paste0("^",ii,"\\|"),left[jj])
+        cvar_found <- grepl("(\\+|\\-|\\*|\\/|\\:|\\|){1}\\(*[[:alnum:]]{1}[[:graph:]]*\\[{1}(c\\(|\\)|\\,|\\:|[[:digit:]])*\\]{1}\\)*(\\+|\\-|\\*|\\/|\\:|$)", left[jj])
+        if (lev_found && cvar_found){
+          leftjj <- sub(paste0("^",ii,"\\|"), "", left[jj])
+          leftjj <- get.terms(leftjj)
+          is_cvar <-  grepl("^[[:alnum:]]{1}[[:graph:]]*\\[{1}(c\\(|\\)|\\,|\\:|[[:digit:]])*\\]{1}$", leftjj)
+          svar <- leftjj[!is_cvar]
+          if (length(svar)>0){
+            newsvarjj <- paste0(ii,"s|", paste(svar, collapse="+"))
+            newleft <- c(newleft, newsvarjj)
+          }
+          leftjj2 <- leftjj[is_cvar]
+          leftjj2 <- gsub("\\[{1}(c\\(|\\)|\\,|\\:|[[:digit:]])*\\]{1}\\:{1}", ":", leftjj2)
+          for (kk in 1:length(leftjj2)){
+            tmpstr <- unlist(strsplit(leftjj2[kk], "\\["))
+            tmpstr1 <- tmpstr[1]
+            tmpstr2 <- sub("\\]", "", tmpstr[2])
+            if (tmpstr2!=""){
+              tmpvec <- eval(parse(text=tmpstr2))
+              tmpstr2 <- paste(tmpvec[tmpvec%in%respid],collapse=",")
+            }
+            leftjj2[kk] <- paste0(tmpstr1, "[", tmpstr2, "]")
+          }
+          newcvarjj <-  paste0(ii,"c|", paste(leftjj2, collapse="+"))
+          newcvarjj <-  gsub("\\[\\]", "", newcvarjj)
+          newleft <- c(newleft, newcvarjj)
+        }else{
+          if (lev_found){
+            leftjj <- sub(paste0("^",ii,"\\|"), "", left[jj])
+            newsvarjj <- paste0(ii,"s|", leftjj)
+            newleft <- c(newleft, newsvarjj)
+          }
+        }
+      }
+    }
+    return(newleft)
+  }
+  
+  lefts2leftc <- function(left, nlev, nresp, D){
+    is_cvar <- grepl("^[[:digit:]]{1,2}c\\|", left)
+    if (!any(is_cvar)){
+      return(left)
+    }
+    cc=c(0:nlev)
+    respid <- 1:nresp
+    if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial'){
+      refcatint <- as.integer(D["ref.cat"])
+      respid <- respid[respid!=refcatint]
+    }
+    left <- sort(left)
+    nleft <- length(left)
+    
+    pos_svar <- grep("^[[:digit:]]{1,2}s\\|", left)
+    if (length(pos_svar)>0){
+      slist <- vector("list", length(pos_svar))
+      for (ii in 1:length(pos_svar)){
+        leftii <- unlist(strsplit(left[pos_svar[ii]], "\\|"))
+        names(slist)[ii] <- leftii[1]
+        slist[[ii]] <-  get.terms(leftii[2])
+      }
+    }else{
+      return(left)
+    }
+    slistnames <- names(slist)
+    targetnames <- gsub("s","c", slistnames)
+    pos_target <- sapply(targetnames, function(x) grep(paste0("^",x), left))
+    is_target_found <- as.logical(sapply(pos_target, length))
+    
+    newleft <- vector("list", sum(!is_target_found))
+    names(newleft) <- targetnames[!is_target_found]
+ 
+    for (ii in cc){
+      cvar_found <- grepl(paste0("^",ii,"c\\|"), left)
+      if (any(cvar_found)){
+        leftjj <- sub(paste0("^",ii,"c\\|"), "", left[cvar_found])
+        leftjj <- get.terms(leftjj)
+        if (length(pos_svar)>0){
+          for (kk in 1:length(leftjj)){
+            for (jj in 1:length(slist)){
+              ele <- leftjj[kk]
+              valid_ele <- grepl("\\[[[:digit:]]{1}\\]$", ele)
+              ele <- unlist(strsplit(ele, "\\["))[1]
+              is_match <- ele==slist[[jj]]
+              if (any(is_match) && valid_ele){
+                slist[[jj]] <- slist[[jj]][!is_match]
+                newele <- paste0(ele,"[", respid, "]")
+                if (length(pos_target[[jj]])>0){
+                  left[pos_target[[jj]]] <- paste(c(left[pos_target[[jj]]], newele), collapse="+")
+                }else{
+                  newleft[[targetnames[jj]]] <- paste(c(newleft[[targetnames[jj]]], newele), collapse="+")
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    for (ii in 1:length(slist)){
+      newele <- slist[[ii]]
+      if (length(newele)>0){
+        left[pos_svar[ii]] <- paste0(slistnames[ii],"|", paste(newele, collapse="+"))
+      }else{
+        left[pos_svar[ii]] <- paste0(targetnames[ii], "|", newleft[[targetnames[ii]]])
+      }
+    }
+    if (length(newleft)>0){
+      for (ii in 1:length(newleft)){
+        xcvar_found <- any(grepl(paste0("^", names(newleft)[ii], "\\|"), left))
+        xele <- newleft[[names(newleft)[ii]]]
+        if (!xcvar_found && length(xele)>0){
+          xele.add <- paste0(names(newleft)[ii], "|", xele)
+          left <- c(left, xele.add)
+        }
+      }
+    }
+    is_empty <- grepl("^[[:digit:]]+(c|s){1}\\|$", left)
+    left[!is_empty]
+  }
+  
   nlev=length(levID)
   cc=c(0:nlev)
-  
-  if(is.character(formula)){
-    formula <- gsub('\\{','\\(',formula)
-    formula <- gsub('\\}','\\)',formula)
-    formula <- gsub('[[:space:]]','',formula)
-    if(sum(grepl("\\({1}[[:digit:]]+\\|{2}", formula))>0){
+  Formula <- formula
+  is_str_form <- is.character(Formula)
+  if(is_str_form){
+    Formula <- gsub('\\{','\\(',Formula)
+    Formula <- gsub('\\}','\\)',Formula)
+    Formula <- gsub('[[:space:]]','',Formula)
+    if(sum(grepl("\\({1}[[:digit:]]+\\|{2}", Formula))>0){
       for (i in cc){
-        formula=sub(paste(i,"\\|{2}",sep=""),paste("\\`",i,"c`\\|",sep=""),formula)
-        formula=sub(paste(i,"\\|",sep=""),paste("\\`",i,"s`\\|",sep=""),formula)
+        Formula=sub(paste(i,"\\|{2}",sep=""),paste("\\`",i,"c`\\|",sep=""),Formula)
+        Formula=sub(paste(i,"\\|",sep=""),paste("\\`",i,"s`\\|",sep=""),Formula)
       }
     }
-    if(sum(grepl("\\({1}[[:digit:]]+[[:alpha:]]{1}\\|",formula))>0){
+    if(sum(grepl("\\({1}[[:digit:]]+[[:alpha:]]{1}\\|",Formula))>0){
       for (i in cc){
-        formula=sub(paste(i,"s\\|",sep=""),paste("\\`",i,"s`\\|",sep=""),formula)
-        formula=sub(paste(i,"c\\|",sep=""),paste("\\`",i,"c`\\|",sep=""),formula)
+        Formula=sub(paste(i,"s\\|",sep=""),paste("\\`",i,"s`\\|",sep=""),Formula)
+        Formula=sub(paste(i,"c\\|",sep=""),paste("\\`",i,"c`\\|",sep=""),Formula)
       }
     }
-    formula <- as.formula(formula)
+    Formula <- as.formula(Formula)
   }
-  tempfstr <- as.character(formula)[3]
+  
+  tempfstr <- as.character(Formula)[3]
   tempfstr <- unlist(strsplit(tempfstr, "\\+"))
   tempfstr <- gsub('[[:space:]]', '', tempfstr)
-  if (any(D %in% c("Binomial", "Poisson", "Negbinom", "Ordered Multinomial", "Unordered Multinomial"))) {
-    formula <- update(formula, ~. +(l1id|0))
+  
+  if (!any(D %in% c("Normal", "Multivariate Normal"))) {
+    Formula <- update(Formula, ~ . +(l1id|0))
   }
+  
+  Terms <- terms.formula(Formula, keep.order=TRUE)
+  resp <- rownames(attr(Terms,"factors"))[attr(Terms,"response")]
+  resp <- gsub('[[:space:]]','',resp)
+  left <- attr(Terms,"term.labels")
+  if (is_str_form){
+    left <- gsub('\\(','\\{', left)
+    left <- gsub('\\)','\\}', left)
+  }
+  left <- gsub('[[:space:]]','',left)
+  
   if (any(tempfstr=="1")){
   #if(!all(grepl("\\|", left)) && as.logical(attr(Terms,"intercept"))){
     left = c("1", left)
   }
-  Terms <- terms.formula(formula, keep.order=TRUE)
-  resp <- rownames(attr(Terms,"factors"))[attr(Terms,"response")]
-  resp <- gsub('[[:space:]]','',resp)
-  left <- attr(Terms,"term.labels")
-  left <- gsub('\\(','\\{', left)
-  left <- gsub('\\)','\\}', left)
-  left <- gsub('[[:space:]]','',left)
+  
   if (is.null(levID)){
     charposlevID <- grepl("^[[:alpha:]]{1}[[:graph:]]*\\|",left)
     vlpos <- grepl("\\|",left)
@@ -50,7 +404,7 @@ prior2macro <- function(prior,formula,levID,D, indata){
       nlev=length(levID)
       cc=c(0:nlev)
       for (ii in 1:nlev){
-        left=sub(paste0("^",levID[ii]), c(nlev:1)[ii], left)
+        left <- sub(paste0("^",levID[ii], "\\|"), paste0(c(nlev:1)[ii], "|"), left)
       }
       onevlzero <- left=="1|0"
       onevdlzero <- left=="1||0"
@@ -63,7 +417,7 @@ prior2macro <- function(prior,formula,levID,D, indata){
     charposlevID <- grepl("^[[:alpha:]]{1}[[:graph:]]*\\|",left)
     if (any(charposlevID)){
       for (ii in 1:nlev){
-        left=sub(paste0("^",levID[ii]), c(nlev:1)[ii], left)
+        left <- sub(paste0("^",levID[ii], "\\|"), paste0(c(nlev:1)[ii], "|"), left)
       }
       onevlzero <- left=="1|0"
       onevdlzero <- left=="1||0"
@@ -99,8 +453,6 @@ prior2macro <- function(prior,formula,levID,D, indata){
       stop("allow a 0s/0 term in the formula only")
     }
   }
-  cflag=0
-  if(sum(grepl("\\(+[[:digit:]]+[[:alpha:]]+\\|",left))>0) cflag=1
   
   if (D[1]=='Multivariate Normal'){
     resp=sub("c\\(","",resp)
@@ -109,59 +461,76 @@ prior2macro <- function(prior,formula,levID,D, indata){
   }
   if (D[1]=="Unordered Multinomial"){
     D=rep(NA,5)
-    resp=sub("log\\(","",resp)
-    resp=sub("\\)","",resp)
-    resp=strsplit(resp,",")[[1]]
+    resp=regmatches(resp, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", resp))[[1]]
+    link=resp[2]
+    resp=strsplit(resp[3],",")[[1]]
     D[1]='Unordered Multinomial'
     names(D)[1]="distr"
-    D[2]='logit'
+    D[2]=link
     names(D)[2]="link"
     D[3]=resp[2]
-    names(D)[3]="offset"
+    names(D)[3]="denominator"
     D[4]=0
     names(D)[4]="mode"
-    D[5]=which(resp[3]==levels(indata[[resp[1]]]))
+    if (is_str_form){
+      if (resp[3] %in% indata[[resp[1]]]) {
+        if (is.factor(indata[[resp[1]]])) {
+          D[5]=which(resp[3]==levels(indata[[resp[1]]]))
+        } else {
+          D[5]=which(resp[3]==sort(unique(indata[[resp[1]]])))
+        }
+      }
+    }else{
+      if (length(resp)==3){
+        D[5] <- as.integer(resp[3])
+      }else{
+        if (length(resp)==2){
+          #take the first category as base
+          D[5] <- 1
+        }
+      }
+    }
     names(D)[5]="ref.cat"
     resp=resp[1]
   }
   if (D[1]=="Ordered Multinomial"){
     D=rep(NA,5)
-    if ((grepl("logit",resp))){
-      D[2]="logit"
-      resp=sub("logit\\(","",resp)
-      resp=sub("\\)","",resp)
-    }
-    if ((grepl("logit",resp))){
-      D[2]="logit"
-      resp=sub("logit\\(","",resp)
-      resp=sub("\\)","",resp)
-    }
-    if ((grepl("probit",resp))){
-      D[2]="probit"
-      resp=sub("probit\\(","",resp)
-      resp=sub("\\)","",resp)
-    }
-    if ((grepl("cloglog",resp))){
-      D[2]="cloglog"
-      resp=sub("cloglog\\(","",resp)
-      resp=sub("\\)","",resp)
-    }
-    resp=strsplit(resp,",")[[1]]
+    resp=regmatches(resp, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", resp))[[1]]
+    link=resp[2]
+    resp=strsplit(resp[3],",")[[1]]
     D[1]='Ordered Multinomial'
     names(D)[1]="distr"
+    D[2]=link
     names(D)[2]="link"
     D[3]=resp[2]
-    names(D)[3]="offset"
+    names(D)[3]="denominator"
     D[4]=1
     names(D)[4]="mode"
-    D[5]=which(resp[3]==levels(indata[[resp[1]]]))
+    if(is_str_form){
+      if (resp[3] %in% indata[[resp[1]]]) {
+        if (is.factor(indata[[resp[1]]])) {
+          D[5]=which(resp[3]==levels(indata[[resp[1]]]))
+        } else {
+          D[5]=which(resp[3]==sort(unique(indata[[resp[1]]])))
+        }
+      }
+    }else{
+      if (length(resp)==3){
+        D[5] <- as.integer(resp[3])
+      }else{
+        if (length(resp)==2){
+          #take the first category as base
+          D[5] <- 1
+        }
+      }
+    }
     names(D)[5]="ref.cat"
     resp=resp[1]
   }
   if (D[1]=="Mixed") D=as.list(D)
   if (D[[1]]=="Mixed"){
-    resp=sub("c\\(","",resp)
-    resp=sub("\\)","",resp)
+    resp=sub("^c\\(","",resp)
+    resp=sub("\\)$","",resp)
     resp=strsplit(resp,",")[[1]]
     lenD=length(D)-1
     resp2=rep(NA,lenD)
@@ -180,74 +549,116 @@ prior2macro <- function(prior,formula,levID,D, indata){
           j=j+1
         }
       }
-      
     }
     resp=resp2
-    
     for (i in 1:length(resp)){
       respx=resp[i]
       if (D[[i+1]]=="Normal"){
         resp[i]=respx
-      }
-      if (D[[i+1]]=="Binomial"){
-        if ((grepl("logit",respx))){
-          respx=sub("logit\\(","",respx)
-          respx=sub("\\)","",respx)
-        }
-        if ((grepl("logit",respx))){
-          respx=sub("logit\\(","",respx)
-          respx=sub("\\)","",respx)
-        }
-        if ((grepl("probit",respx))){
-          respx=sub("probit\\(","",respx)
-          respx=sub("\\)","",respx)
-        }
-        if ((grepl("cloglog",respx))){
-          respx=sub("cloglog\\(","",respx)
-          respx=sub("\\)","",respx)
-        }
-        respx=strsplit(respx,",")[[1]]
+      } else if (D[[i+1]]=="Binomial"){
+        D[[i+1]]=rep(NA,3)
+        respx=regmatches(respx, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", respx))[[1]]
+        link=respx[2]
+        D[[i+1]][1]="Binomial"
+        D[[i+1]][2]=link
+        respx=strsplit(respx[3],",")[[1]]
+        D[[i+1]][3]=respx[2]
         resp[i]=respx[1]
-      }
-      if (D[[i+1]]=='Poisson'|| D[[i+1]]=='Negbinom'){
-        respx=sub("log\\(","",respx)
-        respx=sub("\\)","",respx)
-        respx=strsplit(respx,",")[[1]]
+      } else if (D[[i+1]]=='Poisson'){
+        respx=regmatches(respx, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", respx))[[1]]
+        link=respx[2]
+        respx=strsplit(respx[3],",")[[1]]
+        D[[i+1]]=rep(NA,3)
+        D[[i+1]][1]="Poisson"
+        D[[i+1]][2]=link
+        if (length(respx)==2){
+          D[[i+1]][3]=respx[2]
+        }
         resp[i]=respx[1]
       }
     }
   }
+     
   if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial'){
     names.resp=levels(indata[[resp]])
     names.resp=names.resp[-as.numeric(D["ref.cat"])]
   }else{
     names.resp=resp
   }
+
+  if (!is_str_form){
+    left <- left2leftsc(left, nlev, nresp, D)
+    left <- lefts2leftc(left, nlev, nresp, D)
+    left <- gsub('\\[','\\{', left)
+    left <- gsub('\\]','\\}', left)
+  }
+  cflag=0
+  if(sum(grepl("\\(+[[:digit:]]+[[:alpha:]]+\\|",left))>0) cflag=1
+  if(cflag==0){
+    for (i in cc){
+      left=sub(paste(i,"\\|",sep=""),paste(i,"s\\|",sep=""),left)
+    }
+  }
+  nleft=length(left)
   
   categ=NULL
-  categstr=unique(unlist(regmatches(left,gregexpr("[[:alnum:]]+\\[+[[:alnum:]]+\\]",left))))
-  regmatches(left,gregexpr("\\[+[[:alnum:]]+\\]",left))<-""
-  ncategstr=length(categstr)
-  if (ncategstr>0){
-    categ=matrix(,nrow=3,ncol=ncategstr)
-    rownames(categ)=c("var","ref","ncateg")
-    for (i in 1:ncategstr){
-      cvx=unlist(strsplit(categstr[i],"\\["))
-      categ[1,i]=cvx[1]
-      cvy=sub("\\]","",cvx[2])
-      if (cvy=="") cvy=NA
-      categ[2,i]=cvy
-      categ[3,i]=length(levels(indata[[categ[1,i]]]))
+  if (is_str_form){
+    leftsplit <- strsplit(left, "(\\+)|(\\|)")
+    categstr <- unique(unlist(sapply(leftsplit, function(x){unlist(regmatches(x, gregexpr("([[:alnum:]]*(\\_|\\-|\\^|\\&)*[[:alnum:]])+(\\[+\\]|\\[+[[:print:]]+\\])", x)))})))
+  
+    left = sapply(regmatches(left, gregexpr("\\[[^]]*\\]", left), invert = TRUE),function(x)paste(x, collapse=""))
+    
+    ncategstr=length(categstr)
+    if (ncategstr>0){
+      categ=matrix(,nrow=3,ncol=ncategstr)
+      rownames(categ)=c("var","ref","ncateg")
+      for (i in 1:ncategstr){
+        cvx=unlist(strsplit(categstr[i],"\\["))
+        categ[1,i]=cvx[1]
+        cvy=sub("\\]","",cvx[2])
+        if (cvy=="") cvy=NA
+        categ[2,i]=cvy
+        categ[3,i]=length(levels(indata[[categ[1,i]]]))
+      }
     }
+  }else{
+    indata <- get.Idata(left, indata)
+    xpoly <- get.polydata(left, indata)
+    if (length(xpoly$newleft)>0){
+      left <- xpoly$newleft
+      indata <- xpoly$indata
+    }
+    rm(xpoly)
+    categobj <- get_categstr(left, indata)
+    categstr3 <- categobj$categstr
+    categstr0 <- names(categstr3)
   }
   TT=NULL
   
   if(cflag==1){
-    fixs.no=grep("0s+\\|",left)
+    fixs.no=grep("0s\\|",left)
     fixs=left[fixs.no]
     if(length(fixs)!=0) {
       fixs=unlist(strsplit(fixs,"\\|"))
-      fixs=unlist(strsplit(fixs[2],"\\+"))
+      fixs=get.terms(fixs[2])
+    }
+    if (length(categstr3)!=0){
+      if (length(fixs)!=0){
+        delpos <- numeric(0)
+        addterms <- numeric(0)
+        for (ii in 1:length(fixs)){
+          replacepos <- fixs[ii]%in%categstr0
+          if (replacepos){
+            taddterms <- categstr3[[fixs[ii]]]
+            delpos <- c(delpos, ii)
+            addterms <- c(addterms, taddterms)
+          }
+        }
+        if (length(delpos)>0){
+          fixs <- fixs[-delpos]
+          fixs <- c(fixs, addterms)
+        }
+      }
     }
     for (i in 1:length(fixs)){
       if (fixs[i]%in%categ[1,]){
@@ -271,11 +682,11 @@ prior2macro <- function(prior,formula,levID,D, indata){
       fixS=c(fixS,paste(fixs,names.resp[i],sep="."))
     }
     fixs=fixS
-    fixc.no=grep("0c+\\|",left)
+    fixc.no=grep("0c\\|",left)
     fixc=left[fixc.no]
     if(length(fixc)!=0) {
       fixc=unlist(strsplit(fixc,"\\|"))
-      fixc=unlist(strsplit(fixc[2],"\\+"))
+      fixc=get.terms(fixc[2])
       fixcc=rep(NA,nrow=length(fixc))
       for (i in 1:length(fixc)){
         if(length(grep("\\{",fixc[i]))==0){
@@ -286,6 +697,24 @@ prior2macro <- function(prior,formula,levID,D, indata){
         }
       }
       fixc= fixcc
+    }
+    if (length(categstr3)!=0){
+      if (length(fixc)!=0){
+        delpos <- numeric(0)
+        addterms <- numeric(0)
+        for (ii in 1:length(fixc)){
+          replacepos <- fixc[ii]%in%categstr0
+          if (replacepos){
+            taddterms <- categstr3[[fixc[ii]]]
+            delpos <- c(delpos, ii)
+            addterms <- c(addterms, taddterms)
+          }
+        }
+        if (length(delpos)>0){
+          fixc <- fixc[-delpos]
+          fixc <- c(fixc, addterms)
+        }
+      }
     }
     if (length(fixs)>0){
       fpps=prior$fixe.sep
@@ -310,11 +739,29 @@ prior2macro <- function(prior,formula,levID,D, indata){
       }
     }
   }else{
-    fixs.no=grep("0+\\|",left)
+    fixs.no=grep("0s\\|",left)
     fixs=left[fixs.no]
     if(length(fixs)!=0) {
       fixs=unlist(strsplit(fixs,"\\|"))
-      fixs=unlist(strsplit(fixs[2],"\\+"))
+      fixs=get.terms(fixs[2])
+    }
+    if (length(categstr3)!=0){
+      if (length(fixs)!=0){
+        delpos <- numeric(0)
+        addterms <- numeric(0)
+        for (ii in 1:length(fixs)){
+          replacepos <- fixs[ii]%in%categstr0
+          if (replacepos){
+            taddterms <- categstr3[[fixs[ii]]]
+            delpos <- c(delpos, ii)
+            addterms <- c(addterms, taddterms)
+          }
+        }
+        if (length(delpos)>0){
+          fixs <- fixs[-delpos]
+          fixs <- c(fixs, addterms)
+        }
+      }
     }
     for (i in 1:length(fixs)){
       if (fixs[i]%in%categ[1,]){
