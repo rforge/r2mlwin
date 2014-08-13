@@ -402,7 +402,11 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
       nlev=length(levID)
       cc=c(0:nlev)
       for (ii in 1:nlev){
-        left <- sub(paste0("^",levID[ii], "\\|"), paste0(c(nlev:1)[ii], "|"), left)
+        pos_first <- grep(paste0("^",levID[ii], "\\|"), left)
+        if (length(pos_first)>0){
+          pos_first <- pos_first[1]
+          left[pos_first] <- sub(paste0("^",levID[ii], "\\|"), paste0(c(nlev:1)[ii], "|"), left[pos_first])
+        }
       } 
       onevlzero <- left=="1|0"
       onevdlzero <- left=="1||0"
@@ -415,8 +419,12 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
     charposlevID <- grepl("^[[:alpha:]]{1}[[:graph:]]*\\|",left)
     if (any(charposlevID)){
       for (ii in 1:nlev){
-        left <- sub(paste0("^",levID[ii], "\\|"), paste0(c(nlev:1)[ii], "|"), left)
-      }    
+        pos_first <- grep(paste0("^",levID[ii], "\\|"), left)
+        if (length(pos_first)>0){
+          pos_first <- pos_first[1]
+          left[pos_first] <- sub(paste0("^",levID[ii], "\\|"), paste0(c(nlev:1)[ii], "|"), left[pos_first])
+        }
+      }  
       onevlzero <- left=="1|0"
       onevdlzero <- left=="1||0"
       delpos <- onevlzero|onevdlzero
