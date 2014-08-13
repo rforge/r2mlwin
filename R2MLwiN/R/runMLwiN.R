@@ -1408,7 +1408,12 @@ version:date:md5:filename:x64:trial
       if (!is.null(xclass)) {
         groupsize <- by(outdata, outdata[,shortID[lev]], nrow)
       } else {
-        groupsize <- na.omit(as.vector(by(outdata, outdata[,shortID[lev:length(shortID)]], nrow)))
+        test <- require(reshape, quietly=TRUE)
+        if (test == TRUE) {
+          groupsize <- as.vector(sparseby(outdata, outdata[,shortID[lev:length(shortID)]], nrow, GROUPNAMES=FALSE))
+        } else {
+          groupsize <- na.omit(as.vector(by(outdata, outdata[,shortID[lev:length(shortID)]], nrow)))
+        }
       }
       groupinfo <- cbind(length(groupsize), min(groupsize), mean(groupsize), max(groupsize))
       colnames(groupinfo) <- c("N", "min", "mean", "max")
