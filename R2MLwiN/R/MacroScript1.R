@@ -49,7 +49,11 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
       nonfp.sep=nonfp$nonfp.sep
       nonfp.common=nonfp$nonfp.common
     }
-    num_vars=sum(sapply(sep.coeff, function(x) num.expl.init(x,nonfp.sep,categ)))
+    if (!is.na(sep.coeff[1])){
+      num_vars=sum(sapply(sep.coeff, function(x) num.expl.init(x,nonfp.sep,categ)))
+    }else{
+      num_vars=0
+    }
     
     if (D[1]=='Multinomial'){
       nresp=length(levels(indata[,resp]))-1
@@ -217,29 +221,11 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
     }
     wrt("")
     if(is.list(expl)){
-      interpos1=grep("\\:",sep.coeff)
-      if (length(interpos1)==0){
-        for (x in 1:length(sep.coeff)){
-          p=sep.coeff[x]
-          if (is.null(categ)){
-            wrt(paste("ADDT    '",p,"'",sep=""))
-          }else{
-            if (sum(p==categ["var",])!=0) {
-              if(is.na(categ["ref",which(p==categ["var",])])){
-                wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
-              }else{
-                wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
-              }
-            }else{
-              wrt(paste("ADDT    '",p,"'",sep=""))
-            }
-          }
-        }
-      }else{
-        exply=sep.coeff[interpos1]
-        explx=sep.coeff[-interpos1]
-        if (length(explx)>0){
-          for (p in explx){
+      if (!is.na(sep.coeff[1])){
+        interpos1=grep("\\:",sep.coeff)
+        if (length(interpos1)==0){
+          for (x in 1:length(sep.coeff)){
+            p=sep.coeff[x]
             if (is.null(categ)){
               wrt(paste("ADDT    '",p,"'",sep=""))
             }else{
@@ -254,16 +240,36 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
               }
             }
           }
-        }
-        for (i in 1:length(exply)){
-          TT=""
-          interx=unlist(strsplit(exply[i],"\\:"))
-          for (j in 1:length(interx)){
-            TT=paste(TT,"'",interx[j],"' ",sep="")
+        }else{
+          exply=sep.coeff[interpos1]
+          explx=sep.coeff[-interpos1]
+          if (length(explx)>0){
+            for (p in explx){
+              if (is.null(categ)){
+                wrt(paste("ADDT    '",p,"'",sep=""))
+              }else{
+                if (sum(p==categ["var",])!=0) {
+                  if(is.na(categ["ref",which(p==categ["var",])])){
+                    wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
+                  }else{
+                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                  }
+                }else{
+                  wrt(paste("ADDT    '",p,"'",sep=""))
+                }
+              }
+            }
           }
-          wrt(paste("ADDT    ",TT,sep=""))
+          for (i in 1:length(exply)){
+            TT=""
+            interx=unlist(strsplit(exply[i],"\\:"))
+            for (j in 1:length(interx)){
+              TT=paste(TT,"'",interx[j],"' ",sep="")
+            }
+            wrt(paste("ADDT    ",TT,sep=""))
+          }
+          sep.coeff <- c(explx, exply)
         }
-        sep.coeff <- c(explx, exply)
       }
       interpos2=grep("\\:",common.coeff)
       if (length(interpos2)==0){
@@ -395,29 +401,11 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
     wrt('LFUN 0')
     wrt("")
     if(is.list(expl)){
-      interpos1=grep("\\:",sep.coeff)
-      if (length(interpos1)==0){
-        for (x in 1:length(sep.coeff)){
-          p=sep.coeff[x]
-          if (is.null(categ)){
-            wrt(paste("ADDT    '",p,"'",sep=""))
-          }else{
-            if (sum(p==categ["var",])!=0) {
-              if(is.na(categ["ref",which(p==categ["var",])])){
-                wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
-              }else{
-                wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
-              }
-            }else{
-              wrt(paste("ADDT    '",p,"'",sep=""))
-            }
-          }
-        }
-      }else{
-        exply=sep.coeff[interpos1]
-        explx=sep.coeff[-interpos1]
-        if (length(explx)>0){
-          for (p in explx){
+      if (!is.na(sep.coeff[1])){
+        interpos1=grep("\\:",sep.coeff)
+        if (length(interpos1)==0){
+          for (x in 1:length(sep.coeff)){
+            p=sep.coeff[x]
             if (is.null(categ)){
               wrt(paste("ADDT    '",p,"'",sep=""))
             }else{
@@ -432,16 +420,36 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
               }
             }
           }
-        }
-        for (i in 1:length(exply)){
-          TT=""
-          interx=unlist(strsplit(exply[i],"\\:"))
-          for (j in 1:length(interx)){
-            TT=paste(TT,"'",interx[j],"' ",sep="")
+        }else{
+          exply=sep.coeff[interpos1]
+          explx=sep.coeff[-interpos1]
+          if (length(explx)>0){
+            for (p in explx){
+              if (is.null(categ)){
+                wrt(paste("ADDT    '",p,"'",sep=""))
+              }else{
+                if (sum(p==categ["var",])!=0) {
+                  if(is.na(categ["ref",which(p==categ["var",])])){
+                    wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
+                  }else{
+                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                  }
+                }else{
+                  wrt(paste("ADDT    '",p,"'",sep=""))
+                }
+              }
+            }
           }
-          wrt(paste("ADDT    ",TT,sep=""))
+          for (i in 1:length(exply)){
+            TT=""
+            interx=unlist(strsplit(exply[i],"\\:"))
+            for (j in 1:length(interx)){
+              TT=paste(TT,"'",interx[j],"' ",sep="")
+            }
+            wrt(paste("ADDT    ",TT,sep=""))
+          }
+          sep.coeff <- c(explx, exply)
         }
-        sep.coeff <- c(explx, exply)
       }
       interpos2=grep("\\:",common.coeff)
       if (length(interpos2)==0){
@@ -583,29 +591,11 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
     
     wrt("")
     if(is.list(expl)){
-      interpos1=grep("\\:",sep.coeff)
-      if (length(interpos1)==0){
-        for (x in 1:length(sep.coeff)){
-          p=sep.coeff[x]
-          if (is.null(categ)){
-            wrt(paste("ADDT    '",p,"'",sep=""))
-          }else{
-            if (sum(p==categ["var",])!=0) {
-              if(is.na(categ["ref",which(p==categ["var",])])){
-                wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
-              }else{
-                wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
-              }
-            }else{
-              wrt(paste("ADDT    '",p,"'",sep=""))
-            }
-          }
-        }
-      }else{
-        exply=sep.coeff[interpos1]
-        explx=sep.coeff[-interpos1]
-        if (length(explx)>0){
-          for (p in explx){
+      if (!is.na(sep.coeff[1])){
+        interpos1=grep("\\:",sep.coeff)
+        if (length(interpos1)==0){
+          for (x in 1:length(sep.coeff)){
+            p=sep.coeff[x]
             if (is.null(categ)){
               wrt(paste("ADDT    '",p,"'",sep=""))
             }else{
@@ -620,16 +610,36 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
               }
             }
           }
-        }
-        for (i in 1:length(exply)){
-          TT=""
-          interx=unlist(strsplit(exply[i],"\\:"))
-          for (j in 1:length(interx)){
-            TT=paste(TT,"'",interx[j],"' ",sep="")
+        }else{
+          exply=sep.coeff[interpos1]
+          explx=sep.coeff[-interpos1]
+          if (length(explx)>0){
+            for (p in explx){
+              if (is.null(categ)){
+                wrt(paste("ADDT    '",p,"'",sep=""))
+              }else{
+                if (sum(p==categ["var",])!=0) {
+                  if(is.na(categ["ref",which(p==categ["var",])])){
+                    wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
+                  }else{
+                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                  }
+                }else{
+                  wrt(paste("ADDT    '",p,"'",sep=""))
+                }
+              }
+            }
           }
-          wrt(paste("ADDT    ",TT,sep=""))
+          for (i in 1:length(exply)){
+            TT=""
+            interx=unlist(strsplit(exply[i],"\\:"))
+            for (j in 1:length(interx)){
+              TT=paste(TT,"'",interx[j],"' ",sep="")
+            }
+            wrt(paste("ADDT    ",TT,sep=""))
+          }
+          sep.coeff <- c(explx, exply)
         }
-        sep.coeff <- c(explx, exply)
       }
       interpos2=grep("\\:",common.coeff)
       if (length(interpos2)==0){

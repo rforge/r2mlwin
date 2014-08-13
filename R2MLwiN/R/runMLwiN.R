@@ -27,10 +27,12 @@ runMLwiN <- function(Formula, levID=NULL, D="Normal", data=NULL, estoptions=list
       }
     }
   }
+  tmpvarnames <- unique(unlist(strsplit(all.vars(Formula),"\\.")))
+  tForm <- as.formula(paste0("~",paste(tmpvarnames, collapse="+")))
   if (drop.data) {
-    indata <- get_all_vars(Formula, indata)
+    indata <- get_all_vars(tForm, indata)
   } else {
-    newdata <- get_all_vars(Formula, indata)
+    newdata <- get_all_vars(tForm, indata)
     newvars <- setdiff(colnames(newdata), colnames(indata))
     for (var in newvars) {
       indata[[var]] <- newdata[[var]]
@@ -205,6 +207,15 @@ version:date:md5:filename:x64:trial
   cl <- match.call()
 
   invars = Formula.translate(Formula, levID, D, indata)
+  newdata = invars$indata
+  invars$indata <- NULL
+  if (!is.null(newdata)){
+    newvars <- setdiff(colnames(newdata), colnames(indata))
+    for (var in newvars) {
+      indata[[var]] <- newdata[[var]]
+    }
+  }
+  rm(newdata)
   
   resp = invars$resp
 
@@ -407,7 +418,55 @@ version:date:md5:filename:x64:trial
   if (D[1]=='Multinomial'||D[1]=='Multivariate Normal'||D[1]=='Mixed'){
     levID=c(levID,NA)
   }
-   
+
+  needsint <- FALSE
+  if (is.list(expl)){
+    if ("1" %in% expl$sep.coeff || "1" %in% expl$common.coeff) {
+      needsint <- TRUE
+      expl$sep.coeff[expl$sep.coeff == "1"] <- "Intercept"
+      expl$common.coeff[expl$common.coeff == "1"] <- "Intercept"
+      rownames(expl$common.coeff.id) <- expl$common.coeff
+    }
+  } else {
+    if ("1" %in% expl) {
+      needsint <- TRUE
+      expl[expl == "1"] <- "Intercept"
+    }
+  }
+
+  if (is.list(nonfp)){
+    if ("1" %in% nonfp$nonfp.sep) {
+      needsint <- TRUE
+      nonfp$nonfp.sep[nonfp$nonfp.sep == "1"] <- "Intercept"
+    }
+    pos.cvar.one <- grepl("^1\\.{1}", nonfp$nonfp.common)
+    if (any(pos.cvar.one)){
+      needsint <- TRUE
+      nonfp$nonfp.common[pos.cvar.one] <- gsub("^1\\.", "Intercept.", nonfp$nonfp.common[pos.cvar.one])
+    }
+  } else {
+    if ("1" %in% nonfp) {
+      needsint <- TRUE
+      nonfp[nonfp == "1"] <- "Intercept"
+    }
+  }
+
+  for (ii in 1:length(rp)) {
+    pos.cvar.one <- grepl("^1\\.{1}", rp[[ii]])
+    if (any(pos.cvar.one)) {
+      needsint <- TRUE
+      rp[[ii]][pos.cvar.one] <- gsub("^1\\.", "Intercept.", rp[[ii]][pos.cvar.one])
+    }
+    if ("1" %in% rp[[ii]]) {
+      needsint <- TRUE
+      rp[[ii]][rp[[ii]] == "1"] <- "Intercept"
+    }
+  }
+
+  if (needsint == TRUE) {
+    indata[["Intercept"]] <- rep(1, nrow(indata))
+  }
+     
   show.file=estoptions$show.file
   if (is.null(show.file)) show.file = F
   
@@ -697,44 +756,6 @@ version:date:md5:filename:x64:trial
     stop("MCMC method options cannot be specified with (R)IGLS estimation")
   }
 
-  needsint <- FALSE
-  if (is.list(expl)){
-    if ("1" %in% expl$sep.coeff || "1" %in% nonfp$common.coeff) {
-      needsint <- TRUE
-      expl$sep.coeff[expl$sep.coeff == "1"] <- "Intercept"
-      expl$common.coeff[expl$common.coeff == "1"] <- "Intercept"
-    }
-  } else { 
-    if ("1" %in% expl) {
-      needsint <- TRUE
-      expl[expl == "1"] <- "Intercept"
-    }
-  }
-
-  if (is.list(nonfp)){
-    if ("1" %in% nonfp$nonfp.sep || "1" %in% nonfp$nonfp.common) {
-      needsint <- TRUE
-      nonfp$nonfp.sep[nonfp$nonfp.sep == "1"] <- "Intercept"
-      nonfp$nonfp.common[nonfp$nonfp.common == "1"] <- "Intercept"
-    }
-  } else { 
-    if ("1" %in% nonfp) {
-      needsint <- TRUE
-      nonfp[nonfp == "1"] <- "Intercept"
-    }
-  }
-
-  for (ii in 1:length(rp)) {
-    if ("1" %in% rp[[ii]]) {
-      needsint <- TRUE
-      rp[[ii]][rp[[ii]] == "1"] <- "Intercept"
-    }
-  }
-
-  if (needsint == TRUE) {
-    indata[["Intercept"]] <- rep(1, nrow(indata))
-  }
-
   FP.names=NULL
   
   if (D[1]=='Multinomial'){
@@ -780,15 +801,20 @@ version:date:md5:filename:x64:trial
           }
         }
       }
+      kk <- 1
+      tempid=1:(nresp+1)
+      tempid=tempid[-as.numeric(D["ref.cat"])]
       for (p in expl$common.coeff){
+        newp <- paste(p, paste(tempid[as.logical(expl$common.coeff.id[kk,])], collapse=""), sep=".")
+        kk <- kk + 1
         nonfp.common=nonfp$nonfp.common
         nonfp.c=nonfp.common
-        for (i in 1:length(nonfp.c)){
-          nonfp.c[i]=gsub("\\.*[[:digit:]]","",nonfp.c[i])
-        }
-        if (is.na(nonfp.common[1])||sum(p==nonfp.c)==0){
+#        for (i in 1:length(nonfp.c)){
+#          nonfp.c[i]=gsub("\\.[[:digit:]]+$","",nonfp.c[i])
+#        }
+        if (is.na(nonfp.common[1])||sum(newp==nonfp.c)==0){
           if (is.null(categ)|| sum(p==categ["var",])==0){
-            FP.names=c(FP.names, paste("FP_",chartr(".","_",p),sep=""))
+            FP.names=c(FP.names, paste("FP_",chartr(".","_",newp),sep=""))
           }else{
             if (is.na(categ["ref",which(p==categ["var",])])){
               categ.names=levels(indata[[p]])
@@ -885,15 +911,18 @@ version:date:md5:filename:x64:trial
             }
           }
         }
+        kk <- 1
         for (p in expl$common.coeff){
+          newp <- paste(p, paste(which(as.logical(expl$common.coeff.id[kk,])), collapse=""), sep=".")
+          kk <- kk + 1
           nonfp.common=nonfp$nonfp.common
           nonfp.c=nonfp.common
-          for (i in 1:length(nonfp.c)){
-            nonfp.c[i]=gsub("\\.*[[:digit:]]","",nonfp.c[i])
-          }
-          if (is.na(nonfp.common[1])||sum(p==nonfp.c)==0){
+#          for (i in 1:length(nonfp.c)){
+#            nonfp.c[i]=gsub("\\.[[:digit:]]+$","",nonfp.c[i])
+#          }
+          if (is.na(nonfp.common[1])||sum(newp==nonfp.c)==0){
             if (is.null(categ)|| sum(p==categ["var",])==0){
-              FP.names=c(FP.names, paste("FP_",chartr(".","_",p),sep=""))
+              FP.names=c(FP.names, paste("FP_",chartr(".","_",newp),sep=""))
             }else{
               if (is.na(categ["ref",which(p==categ["var",])])){
                 categ.names=levels(indata[[p]])

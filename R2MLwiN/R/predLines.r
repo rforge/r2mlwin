@@ -1,5 +1,5 @@
-predLines <- function(object, indata, xname, lev=2, selected=NULL, probs=c(.025,.975), 
-                      legend=TRUE, legend.space="top", legend.ncol=4, ...){ 
+predLines <- function(object, indata, xname, lev=2, selected=NULL, probs=c(.025,.975),
+                      legend=TRUE, legend.space="top", legend.ncol=4, ...){
   
   ## This function is to draw predicted lines at higher levels (level>=2)
   if (lev <2)
@@ -7,7 +7,9 @@ predLines <- function(object, indata, xname, lev=2, selected=NULL, probs=c(.025,
   cls <- class(object)
   if(!cls%in%c("mlwinfitIGLS", "mlwinfitMCMC"))
     stop('need a "mlwinfitIGLS" or "mlwinfitMCMC" class object')
-  
+  if (!("Intercept" %in% names(indata))){
+    indata[["Intercept"]] <- rep(1, nrow(indata))
+  }
   if (cls=="mlwinfitIGLS"){
     FP <- object["FP"]
     myresi <- object["residual"]
@@ -39,7 +41,7 @@ predLines <- function(object, indata, xname, lev=2, selected=NULL, probs=c(.025,
         colnames(est) <- sub("_resi_est","",est.names)
       }else{
         stop("The number of groups do not match the number of residual estimates.")
-      }   
+      }
     }
     
     rpx.names <- sub(paste("lev_",lev,"_",sep=""),"",colnames(est))
@@ -49,13 +51,13 @@ predLines <- function(object, indata, xname, lev=2, selected=NULL, probs=c(.025,
       if (is.factor(indata[[fp.names[i]]])){
         indata[[fp.names[i]]] <- as.integer(indata[[fp.names[i]]])-1
       }
-      tval <- tval+as.numeric(indata[[fp.names[i]]])*FP[i]  
+      tval <- tval+as.numeric(indata[[fp.names[i]]])*FP[i]
     }
     for (i in 1:length(rpx.names)){
       if (is.factor(indata[[rpx.names[i]]])){
         indata[[rpx.names[i]]] <- as.integer(indata[[rpx.names[i]]])-1
       }
-      tval <- tval+indata[[rpx.names[i]]]*est[,i]  
+      tval <- tval+indata[[rpx.names[i]]]*est[,i]
     }
     
     pred.min <- min(tval)
@@ -70,12 +72,12 @@ predLines <- function(object, indata, xname, lev=2, selected=NULL, probs=c(.025,
                text=list(lab= as.character(selected)), space=legend.space, columns=legend.ncol)
     }else{
       key <- NULL
-    }   
+    }
     
-    trellis.obj <- xyplot(tval~x, 
+    trellis.obj <- xyplot(tval~x,
                           prepanel = function(x,y,...){list(xlim=c(x.min, x.max), ylim=c(pred.min,pred.max))},
                           groups=categrv,
-                          panel= function(x,y, groups,...){  
+                          panel= function(x,y, groups,...){
                             col <- Rows(trellis.par.get("superpose.line"),1:length(selected))$col
                             j <- 1
                             for (i in selected){
@@ -85,10 +87,10 @@ predLines <- function(object, indata, xname, lev=2, selected=NULL, probs=c(.025,
                             }
                           },key=key, ylab="ypred", xlab=xname, ...)
     print(trellis.obj)
-  }  
+  }
   if (cls=="mlwinfitMCMC"){
     
-    ## This function is to draw predicted lines (medians, lower quantiles and upper quantiles) at higher levels (level>=2) 
+    ## This function is to draw predicted lines (medians, lower quantiles and upper quantiles) at higher levels (level>=2)
     resi.chains <- object["resi.chains"][[paste0("resi_lev", lev)]]
     chains <- object["chains"]
     levID <- object["levID"]
@@ -113,7 +115,7 @@ predLines <- function(object, indata, xname, lev=2, selected=NULL, probs=c(.025,
       tval=tval+fpxdata%o%chains[,FP.pos[i]]
     }
     
-    for (i in 1:length(rpx.names)){  
+    for (i in 1:length(rpx.names)){
       for (j in 1:lencateg) {
         rpxdata = indata[[rpx.names[i]]][categrv==j]
         if (is.factor(rpxdata)) {
@@ -128,7 +130,7 @@ predLines <- function(object, indata, xname, lev=2, selected=NULL, probs=c(.025,
     tval.up=apply(tval,1,function(x) quantile(x,probs[2]))
     pred.min=min(tval.low); pred.max=max(tval.up);pred.diff=pred.max-pred.min
     x=indata[[xname]]
-    x.min=min(x) 
+    x.min=min(x)
     x.max=max(x)
     
     if (legend){
@@ -136,12 +138,12 @@ predLines <- function(object, indata, xname, lev=2, selected=NULL, probs=c(.025,
                text=list(lab= as.character(selected)), space=legend.space, columns=legend.ncol)
     }else{
       key <- NULL
-    }   
+    }
     
-    trellis.obj <- xyplot(tval~x, 
+    trellis.obj <- xyplot(tval~x,
                           prepanel = function(x,y,...){list(xlim=c(x.min, x.max), ylim=c(pred.min,pred.max))},
                           groups=categrv,
-                          panel= function(x,y, groups,...){  
+                          panel= function(x,y, groups,...){
                             col <- Rows(trellis.par.get("superpose.line"),1:length(selected))$col
                             j <- 1
                             for (i in selected){

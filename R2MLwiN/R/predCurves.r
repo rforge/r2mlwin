@@ -1,7 +1,11 @@
-predCurves <- function(object, indata,xname, group=NULL, legend=T, legend.space="top", legend.ncol=2, ...){
+predCurves <- function(object, indata, xname, group=NULL, legend=T, legend.space="top", legend.ncol=2, ...){
   ## This function is to draw predicted lines using fixed part estimates
   
   FP <- object["FP"]
+  
+  if (!("Intercept" %in% names(indata))){
+    indata[["Intercept"]] <- rep(1, nrow(indata))
+  }
   
   if (!is.null(group)){
     if(is.character(group)) group <- indata[[group]]
@@ -20,7 +24,7 @@ predCurves <- function(object, indata,xname, group=NULL, legend=T, legend.space=
   pred.min <- min(tval)
   pred.max <- max(tval)
   x=indata[[xname]]
-  x.min=min(x) 
+  x.min=min(x)
   x.max=max(x)
   
   if (legend && length(group)){
@@ -32,10 +36,10 @@ predCurves <- function(object, indata,xname, group=NULL, legend=T, legend.space=
   
   if (!is.null(group)){
     levs=levels(group); nlev=length(levs)
-    trellis.obj <- xyplot(tval~x, 
+    trellis.obj <- xyplot(tval~x,
                           prepanel = function(x,y,...){list(xlim=c(x.min, x.max), ylim=c(pred.min,pred.max))},
                           groups=group,
-                          panel= function(x,y, groups,...){  
+                          panel= function(x,y, groups,...){
                             col <- Rows(trellis.par.get("superpose.line"),1:nlev)$col
                             for (i in 1:nlev){
                               ypred <- y[groups==levs[i]]
@@ -43,12 +47,12 @@ predCurves <- function(object, indata,xname, group=NULL, legend=T, legend.space=
                             }
                           },key=key, ylab="ypred", xlab=xname, ...)
   }else{
-    trellis.obj <- xyplot(tval~x, 
+    trellis.obj <- xyplot(tval~x,
                           prepanel = function(x,y,...){list(xlim=c(x.min, x.max), ylim=c(pred.min,pred.max))},
-                          panel= function(x,y,...){  
+                          panel= function(x,y,...){
                             panel.xyplot(x=sort(x),y=y[order(x)], type="l", ...)
                           }, ylab="ypred", xlab=xname, ...)
   }
   print(trellis.obj)
-  invisible(trellis.obj)  
+  invisible(trellis.obj)
 }
