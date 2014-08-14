@@ -23,7 +23,32 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
     }
     gsub('[[:space:]]','', xterm)
   }
+  
+  get.offset <- function(Formula, indata){
+    tterms <- terms.formula(Formula, keep.order=TRUE)
+    pos_offset <- attr(tterms,"offset")
+    if (length(pos_offset)>0){
+      tlabs <- as.character(attr(tterms,"variables"))[-1]
+      left0 <- tlabs[attr(tterms,"offset")]
+    }else{
+      return(list(offset.label=character(0), indata=indata))
+    }
+    is_num <- sapply(indata, is.numeric)
+    # use the first numeric column as the temporary response
+    trespname <- names(indata)[is_num]
+    trespname <- trespname[1]
 
+    tform <- as.formula(paste0(trespname,"~", paste(left0, collapse="+")))
+    tframe <- model.frame(formula=tform, data=indata)
+    myoffset <- model.offset(tframe)
+    if (is.null(myoffset)){
+      return(list(offset.label=character(0), indata=indata))
+    }else{
+      indata[["_OFFSET"]] <- myoffset
+      return(list(offset.label="_OFFSET", indata=indata))
+    }
+  }
+  
   get.Idata <- function(left, indata){
     anycurly <- any(grepl('\\{|\\}', left))
     if (anycurly){
@@ -37,7 +62,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
       xform <- as.formula(paste0("~",svec[ii]))
       tterms <- terms(xform, keep.order = TRUE)
       ttermsLabs <-  unlist(sapply(attr(tterms,"term.labels"), function(x) unlist(strsplit(x,"\\:"))))
-      is_Ifunc <- grepl("I\\([[:print:]]+\\)", ttermsLabs)
+      is_Ifunc <- grepl("^[[:alpha:]]{1}[[:alnum:]]*\\({1}[[:print:]]+\\)+", ttermsLabs)
       if (any(is_Ifunc)){
         Iterms <- c(Iterms, ttermsLabs[is_Ifunc])
       }
@@ -594,6 +619,18 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
       nresp=length(resp)
     }
     if (!is_str_form){
+      if (D[[i]]=="Mixed"){
+        for (i in 1:nresp){
+          if (D[[i+1]]=='Poisson' && is.na(D[[i+1]][3])){
+            myoffset <- get.offset(Formula, indata)
+            if (length(myoffset$offset.label)>0){
+              D[[i+1]][3] <- myoffset$offset.label
+              indata <- myoffset$indata
+            }
+          }
+        }
+      }
+      
       left <- left2leftsc(left, nlev, nresp, D)
       left <- lefts2leftc(left, nlev, nresp, D)
       left <- gsub('\\[','\\{', left)
@@ -1355,7 +1392,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
       D[3]=resp[2]
       resp=resp[-2]
     }
-    
+
     nleft=length(left)
 
     if (is_str_form){
@@ -1378,6 +1415,13 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
         }
       }
     }else{
+      if (D[1]=='Poisson' && is.na(D[3])){
+        myoffset <- get.offset(Formula, indata)
+        if (length(myoffset$offset.label)>0){
+          D[3] <- myoffset$offset.label
+          indata <- myoffset$indata
+        }
+      }
       indata <- get.Idata(left, indata) 
       xpoly <- get.polydata(left, indata)
       if (length(xpoly$newleft)>0){

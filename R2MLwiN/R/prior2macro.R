@@ -39,7 +39,7 @@ prior2macro <- function(prior,formula,levID,D, indata){
       xform <- as.formula(paste0("~",svec[ii]))
       tterms <- terms(xform, keep.order = TRUE)
       ttermsLabs <-  unlist(sapply(attr(tterms,"term.labels"), function(x) unlist(strsplit(x,"\\:"))))
-      is_Ifunc <- grepl("I\\([[:print:]]+\\)", ttermsLabs)
+      is_Ifunc <- grepl("^[[:alpha:]]{1}[[:alnum:]]*\\({1}[[:print:]]+\\)+", ttermsLabs)
       if (any(is_Ifunc)){
         Iterms <- c(Iterms, ttermsLabs[is_Ifunc])
       }
@@ -253,7 +253,8 @@ prior2macro <- function(prior,formula,levID,D, indata){
             leftjj2[kk] <- paste0(tmpstr1, "[", tmpstr2, "]")
           }
           newcvarjj <-  paste0(ii,"c|", paste(leftjj2, collapse="+"))
-          newcvarjj <-  gsub("\\[\\]", "", newcvarjj)
+          tmpstr2 <- paste(respid,collapse=",")
+          newcvarjj <-  gsub("\\[\\]", paste0("[", tmpstr2, "]"), newcvarjj)
           newleft <- c(newleft, newcvarjj)
         }else{
           if (lev_found){
