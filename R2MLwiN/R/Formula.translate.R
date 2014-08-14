@@ -619,7 +619,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
       nresp=length(resp)
     }
     if (!is_str_form){
-      if (D[[i]]=="Mixed"){
+      if (D[[1]]=="Mixed"){
         for (i in 1:nresp){
           if (D[[i+1]]=='Poisson' && is.na(D[[i+1]][3])){
             myoffset <- get.offset(Formula, indata)
