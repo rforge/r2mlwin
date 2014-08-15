@@ -48,7 +48,7 @@ prior2macro <- function(prior,formula,levID,D, indata){
       Iterms <- sapply(regmatches(Iterms, gregexpr("\\[{1}([[:digit:]]|\\,|[[:space:]])*\\]{1}", Iterms), invert = TRUE),
                        function(x) paste(x, collapse=""))
       tform <- as.formula(paste0("~0+",paste(Iterms, collapse="+")))
-      dataplus <- model.frame(formula=tform, data=indata)
+      dataplus <- model.frame(formula=tform, data=indata, na.action=NULL)
       dataplus.names <- names(dataplus)
       if (anycurly){
         dataplus.names <- gsub('\\[','\\{', dataplus.names)
@@ -93,7 +93,7 @@ prior2macro <- function(prior,formula,levID,D, indata){
             otherterms <- xlabs[!pos_polyfunc]
             for (kk in 1:length(xployterms)){
               tform <- as.formula(paste0("~0+",paste(xployterms[kk], collapse="+")))
-              dataplus <- as.data.frame(model.frame(formula=tform, data=indata)[[1]])
+              dataplus <- as.data.frame(model.frame(formula=tform, data=indata, na.action=NULL)[[1]])
               dataplus.names <- paste(make.names(names(dataplus)),xployterms[kk], sep="_")
               dataplus.names <- gsub('[[:space:]]','', dataplus.names)
               ndp <- sapply(dataplus.names, nchar)
