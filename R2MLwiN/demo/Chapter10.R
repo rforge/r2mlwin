@@ -61,31 +61,31 @@ sixway(mymodel1["chains"][,"FP_age"],"beta_1")
 
 ## Define the model
 ## Change to 5000 iterations by default
-(mymodel3 <- runMLwiN(logit(use,denomb)~(0|cons+age+lc[nokids]), levID=c('district','woman'), D="Binomial", estoptions=list(EstM=1), data=bang1))
+(mymodel3 <- runMLwiN(logit(use,denomb)~(0|cons+age+lc[None]), levID=c('district','woman'), D="Binomial", estoptions=list(EstM=1), data=bang1))
 
 # 10.2 Random effects logistic regression model . . . . . . . . . . . . .136
 
 ## Define the model
-(mymodel4 <- runMLwiN(logit(use,denomb)~(0|cons+age+lc[nokids])+(2|cons), c('district','woman'), D="Binomial", estoptions=list(EstM=1), data=bang1))
+(mymodel4 <- runMLwiN(logit(use,denomb)~(0|cons+age+lc[None])+(2|cons), c('district','woman'), D="Binomial", estoptions=list(EstM=1), data=bang1))
 summary(mymodel4["chains"][,"RP2_var_cons"])
 sixway(mymodel4["chains"][,"RP2_var_cons"],"sigma2u0")
 
 # 10.3 Random coefficients for area type . . . . . . . . . . . . . . . . 139
 
-(mymodel5 <- runMLwiN(logit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons), levID=c('district','woman'), D="Binomial", estoptions=list(EstM=1), data=bang1))
+(mymodel5 <- runMLwiN(logit(use,denomb)~(0|cons+age+lc[None]+urban)+(2|cons), levID=c('district','woman'), D="Binomial", estoptions=list(EstM=1), data=bang1))
 
-(mymodel6 <- runMLwiN(logit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons+urban), levID=c('district','woman'), D="Binomial", estoptions=list(EstM=1), data=bang1))
+(mymodel6 <- runMLwiN(logit(use,denomb)~(0|cons+age+lc[None]+urban)+(2|cons+urban), levID=c('district','woman'), D="Binomial", estoptions=list(EstM=1), data=bang1))
 
 # 10.4 Probit regression . . . . . . . . . . . . . . . . . . . . . . . . 141
 
 # 10.5 Running a probit regression in MLwiN . . . . . . . . . . . . . . .142
 
 ## Gibbs
-(mymodel7 <- runMLwiN(probit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons+urban), levID=c('district','woman'), D="Binomial",
+(mymodel7 <- runMLwiN(probit(use,denomb)~(0|cons+age+lc[None]+urban)+(2|cons+urban), levID=c('district','woman'), D="Binomial",
  estoptions=list(EstM=1, mcmcMeth=list(fixM=1,residM=1)), data=bang1))
 
 ## Univariate MH by default
-(mymodel8 <- runMLwiN(probit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons+urban), levID=c('district','woman'), D="Binomial", estoptions=list(EstM=1), data=bang1))
+(mymodel8 <- runMLwiN(probit(use,denomb)~(0|cons+age+lc[None]+urban)+(2|cons+urban), levID=c('district','woman'), D="Binomial", estoptions=list(EstM=1), data=bang1))
 
 cat("The mean parameter estimates\n")
 aa <- cbind(mymodel7["FP"],mymodel8["FP"])
