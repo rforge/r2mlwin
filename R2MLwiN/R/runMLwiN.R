@@ -774,27 +774,29 @@ version:date:md5:filename:x64:trial
         }
       }
       nonfp.s=unique(nonfp.s)
-      for (p in expl$sep.coeff){
-        if (is.na(nonfp.sep[1])||sum(p==nonfp.s)==0){
-          if (is.null(categ)|| sum(p==categ["var",])==0){
-            for (j in 1:nresp){
-              FP.names=c(FP.names, paste("FP_",chartr(".","_",p),"_",resp.names[j],sep=""))
-            }
-          }else{
-            if (is.na(categ["ref",which(p==categ["var",])])){
-              categ.names=levels(indata[[p]])
+      if (!is.na(expl$sep.coeff[1])){
+        for (p in expl$sep.coeff){
+          if (is.na(nonfp.sep[1])||sum(p==nonfp.s)==0){
+            if (is.null(categ)|| sum(p==categ["var",])==0){
               for (j in 1:nresp){
-                for (i in 1:as.numeric(categ["ncateg",which(p==categ["var",])])){
-                  FP.names=c(FP.names,  paste("FP_",chartr(".","_",categ.names[i]),"_",resp.names[j],sep=""))
-                }
+                FP.names=c(FP.names, paste("FP_",chartr(".","_",p),"_",resp.names[j],sep=""))
               }
             }else{
-              categ.names=levels(indata[[p]])
-              refx=categ["ref",which(p==categ["var",])]
-              categ.names=categ.names[-which(refx==categ.names)]
-              for (j in 1:nresp){
-                for (i in 1:(as.numeric(categ["ncateg",which(p==categ["var",])])-1)){
-                  FP.names=c(FP.names, paste("FP_",chartr(".","_",categ.names[i]),"_",resp.names[j],sep=""))
+              if (is.na(categ["ref",which(p==categ["var",])])){
+                categ.names=levels(indata[[p]])
+                for (j in 1:nresp){
+                  for (i in 1:as.numeric(categ["ncateg",which(p==categ["var",])])){
+                    FP.names=c(FP.names,  paste("FP_",chartr(".","_",categ.names[i]),"_",resp.names[j],sep=""))
+                  }
+                }
+              }else{
+                categ.names=levels(indata[[p]])
+                refx=categ["ref",which(p==categ["var",])]
+                categ.names=categ.names[-which(refx==categ.names)]
+                for (j in 1:nresp){
+                  for (i in 1:(as.numeric(categ["ncateg",which(p==categ["var",])])-1)){
+                    FP.names=c(FP.names, paste("FP_",chartr(".","_",categ.names[i]),"_",resp.names[j],sep=""))
+                  }
                 }
               }
             }
@@ -883,28 +885,30 @@ version:date:md5:filename:x64:trial
           nonfp.s=gsub(paste(".",resp[i],sep=""),"", nonfp.s)
         }
         nonfp.s=unique(nonfp.s)
-        for (p in expl$sep.coeff){
-          if (is.na(nonfp.sep[1])||sum(p==nonfp.s)==0){
-            if (is.null(categ)|| sum(p==categ["var",])==0){
-              for (j in 1:nresp){
-                FP.names=c(FP.names, paste("FP_",chartr(".","_",p),"_",resp[j],sep=""))
-              }
-            }else{
-              if (is.na(categ["ref",which(p==categ["var",])])){
-                categ.names=levels(indata[[p]])
+        if (!is.na(expl$sep.coeff[1])){
+          for (p in expl$sep.coeff){
+            if (is.na(nonfp.sep[1])||sum(p==nonfp.s)==0){
+              if (is.null(categ)|| sum(p==categ["var",])==0){
                 for (j in 1:nresp){
-                  for (i in 1:as.numeric(categ["ncateg",which(p==categ["var",])])){
-                    FP.names=c(FP.names,  paste("FP_",chartr(".","_",categ.names[i]),"_",resp.names[j],sep=""))
-                  }
+                  FP.names=c(FP.names, paste("FP_",chartr(".","_",p),"_",resp[j],sep=""))
                 }
-                
               }else{
-                categ.names=levels(indata[[p]])
-                refx=categ["ref",which(p==categ["var",])]
-                categ.names=categ.names[-which(refx==categ.names)]
-                for (j in 1:nresp){
-                  for (i in 1:(as.numeric(categ["ncateg",which(p==categ["var",])])-1)){
-                    FP.names=c(FP.names, paste("FP_",chartr(".","_",categ.names[i]),"_",resp.names[j],sep=""))
+                if (is.na(categ["ref",which(p==categ["var",])])){
+                  categ.names=levels(indata[[p]])
+                  for (j in 1:nresp){
+                    for (i in 1:as.numeric(categ["ncateg",which(p==categ["var",])])){
+                      FP.names=c(FP.names,  paste("FP_",chartr(".","_",categ.names[i]),"_",resp.names[j],sep=""))
+                    }
+                  }
+                  
+                }else{
+                  categ.names=levels(indata[[p]])
+                  refx=categ["ref",which(p==categ["var",])]
+                  categ.names=categ.names[-which(refx==categ.names)]
+                  for (j in 1:nresp){
+                    for (i in 1:(as.numeric(categ["ncateg",which(p==categ["var",])])-1)){
+                      FP.names=c(FP.names, paste("FP_",chartr(".","_",categ.names[i]),"_",resp.names[j],sep=""))
+                    }
                   }
                 }
               }
@@ -1333,7 +1337,12 @@ version:date:md5:filename:x64:trial
     }
     outvars <- union(outvars, na.omit(levID))
     if(is.list(expl)) {
-      xvars <- c(expl$sep.coeff, expl$common.coeff)
+      if (!is.na(expl$sep.coeff[1])){
+        tsep.coeff <- expl$sep.coeff
+      }else{
+        tsep.coeff <- NULL
+      }
+      xvars <- c(tsep.coeff, expl$common.coeff)
     } else {
       xvars <- expl
     }
