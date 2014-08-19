@@ -1800,6 +1800,7 @@ version:date:md5:filename:x64:trial
       outIGLS["Iterations"]=Iterations
       outIGLS["elapsed.time"]=time2[3]
       outIGLS["call"]=cl
+      outIGLS["data"]=outdata
       
       if (resi.store){
         if(length(residelpos)==0){
@@ -1839,6 +1840,7 @@ version:date:md5:filename:x64:trial
       outMCMC["chains"]=chains
       outMCMC["elapsed.time"]=time2[3]
       outMCMC["call"]=cl
+      outMCMC["data"]=outdata
       if (!(D[1]=="Mixed")&&is.null(merr)&&is.null(fact)){
         outMCMC["BDIC"]=BDIC
       }else{

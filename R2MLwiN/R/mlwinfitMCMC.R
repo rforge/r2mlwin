@@ -1,8 +1,9 @@
 setClass(Class = "mlwinfitMCMC", representation = representation(Nobs="numeric",DataLength="numeric",Hierarchy="ANY",burnin="numeric",iterations="numeric",
                                                                  D="ANY", Formula="ANY", levID="character", merr="ANY", fact="ANY", xclass="ANY",
                                                                  FP="numeric", RP="numeric", RP.cov="matrix", FP.cov="matrix", chains="ANY",
-                                                                 elapsed.time="numeric", call="ANY",BDIC="numeric",LIKE="ANY",fact.loadings="numeric",fact.loadings.sd="numeric",
-                                                                 fact.cov="numeric",fact.cov.sd="numeric",fact.chains="ANY",MIdata="data.frame",residual="data.frame",resi.chains="ANY"))
+                                                                 elapsed.time="numeric", call="ANY",BDIC="numeric", LIKE="ANY", fact.loadings="numeric",fact.loadings.sd="numeric",
+                                                                 fact.cov="numeric", fact.cov.sd="numeric", fact.chains="ANY", MIdata="data.frame",
+                                                                 residual="data.frame", resi.chains="ANY", data="data.frame"))
 
 setMethod(
   f= "[",
@@ -36,6 +37,7 @@ setMethod(
     if(i=="MIdata"){return(x@MIdata)}else {}
     if(i=="residual"){return(x@residual)}else {}
     if(i=="resi.chains"){return(x@resi.chains)}else {}
+    if(i=="data"){return(x@data)}else {}
   }
 )
 
@@ -71,6 +73,7 @@ setReplaceMethod(
     if(i=="MIdata"){x@MIdata<-value}else {}
     if(i=="residual"){x@residual<-value}else {}
     if(i=="resi.chains"){x@resi.chains<-value}else {}
+    if(i=="data"){x@data<-value}else {}
     validObject(x)
     return (x)
   }
@@ -108,6 +111,7 @@ setMethod(
     if(i=="MIdata"){return(x@MIdata)}else {}
     if(i=="residual"){return(x@residual)}else {}
     if(i=="resi.chains"){return(x@resi.chains)}else {}
+    if(i=="data"){return(x@data)}else {}
   }
 )
 
@@ -143,6 +147,7 @@ setReplaceMethod(
     if(i=="MIdata"){x@MIdata<-value}else {}
     if(i=="residual"){x@residual<-value}else {}
     if(i=="resi.chains"){x@resi.chains<-value}else {}
+    if(i=="data"){x@data<-value}else {}
     validObject(x)
     return (x)
   }

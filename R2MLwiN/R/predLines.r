@@ -1,4 +1,4 @@
-predLines <- function(object, indata, xname, lev=2, selected=NULL, probs=c(.025,.975),
+predLines <- function(object, indata=NULL, xname, lev=2, selected=NULL, probs=c(.025,.975),
                       legend=TRUE, legend.space="top", legend.ncol=4, ...){
   
   ## This function is to draw predicted lines at higher levels (level>=2)
@@ -7,8 +7,8 @@ predLines <- function(object, indata, xname, lev=2, selected=NULL, probs=c(.025,
   cls <- class(object)
   if(!cls%in%c("mlwinfitIGLS", "mlwinfitMCMC"))
     stop('need a "mlwinfitIGLS" or "mlwinfitMCMC" class object')
-  if (!("Intercept" %in% names(indata))){
-    indata[["Intercept"]] <- rep(1, nrow(indata))
+  if (is.null(indata)){
+    indata <- object[["data"]]
   }
   if (cls=="mlwinfitIGLS"){
     FP <- object["FP"]

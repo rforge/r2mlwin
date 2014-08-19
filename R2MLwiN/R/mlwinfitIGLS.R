@@ -4,7 +4,8 @@
 setClass(Class = "mlwinfitIGLS", representation = representation(Nobs="numeric",DataLength="numeric",Hierarchy="ANY",
                                                                  D="ANY", Formula="ANY", levID="character",
                                                                  FP="numeric", RP="numeric", RP.cov="matrix", FP.cov="matrix", LIKE="ANY",
-                                                                 elapsed.time="numeric", call="ANY",residual="data.frame", Converged="logical", Iterations="numeric", Meth="numeric"))
+                                                                 elapsed.time="numeric", call="ANY", residual="data.frame",
+                                                                 Converged="logical", Iterations="numeric", Meth="numeric", data="data.frame"))
 
 # extract parts of mlwinfitIGLS
 #
@@ -35,6 +36,7 @@ setMethod(
     if(i=="Meth"){return(x@Meth)}else {}
     #                if(i=="chains.bugs"){return(x@chains.bugs)}else {}
     if(i=="residual"){return(x@residual)}else {}
+    if(i=="data"){return(x@data)}else {}
   }
 )
 # extract parts of mlwinfitIGLS
@@ -48,7 +50,7 @@ setMethod(
   f= "[[",
   signature="mlwinfitIGLS",
   definition=function(x,i,j,drop){
-    if(i=="Nobs"){return(x@Nobs)}else {}  
+    if(i=="Nobs"){return(x@Nobs)}else {}
     if(i=="DataLength"){return(x@DataLength)}else {}
     if(i=="Hierarchy"){return(x@Hierarchy)}else {}
     if(i=="D"){return(x@D)}else {}
@@ -65,6 +67,7 @@ setMethod(
     if(i=="Iterations"){return(x@Iterations)}else {}
     if(i=="Meth"){return(x@Meth)}else {}
     if(i=="residual"){return(x@residual)}else {}
+    if(i=="data"){return(x@data)}else {}
   }
 )
 
@@ -95,6 +98,7 @@ setReplaceMethod(
     if(i=="Iterations"){x@Iterations<-value}else {}
     if(i=="Meth"){x@Meth<-value}else {}
     if(i=="residual"){x@residual<-value}else {}
+    if(i=="data"){x@data<-value}else {}
     validObject(x)
     return (x)
   }
@@ -126,6 +130,7 @@ setReplaceMethod(
     if(i=="Iterations"){x@Iterations<-value}else {}
     if(i=="Meth"){x@Meth<-value}else {}
     if(i=="residual"){x@residual<-value}else {}
+    if(i=="data"){x@data<-value}else {}
     validObject(x)
     return (x)
   }
@@ -274,7 +279,7 @@ printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
       printcol2=align2right("Std. Err.",format(round(RPx[2,],digits),nsmall = digits))
       cat("The random part estimates at the",levID2[i],"level:","\n")
       for (i in 1:(ncol(RPx)+1)){
-        cat(printcol0[i]," ",printcol1[i]," ",printcol2[i],"\n")                            
+        cat(printcol0[i]," ",printcol1[i]," ",printcol2[i],"\n")
       }
     }
   }
@@ -284,7 +289,7 @@ printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
 setMethod("print", "mlwinfitIGLS", printIGLS)
 setMethod("show",  "mlwinfitIGLS", function(object) printIGLS(object))
 
-updateMLwiN <- function (object, Formula., levID., estoptions., ..., 
+updateMLwiN <- function (object, Formula., levID., estoptions., ...,
                          keep.order = TRUE, evaluate = TRUE) {
   my.update.formula <- function(old, new, keep.order = TRUE, ...) {
     env <- environment(as.formula(old))
@@ -296,21 +301,21 @@ updateMLwiN <- function (object, Formula., levID., estoptions., ...,
   if (is.null(newcall <- getCall(object)))
     stop("need an object with call component")
   extras <- match.call(expand.dots = FALSE)$...
-  if (length(newcall$Formula)) 
-    newcall$Formula <- eval(newcall$Formula) 
+  if (length(newcall$Formula))
+    newcall$Formula <- eval(newcall$Formula)
   if (!missing(Formula.)) {
-    newcall$Formula <- my.update.formula(as.formula(newcall$Formula), Formula., keep.order = keep.order)        
+    newcall$Formula <- my.update.formula(as.formula(newcall$Formula), Formula., keep.order = keep.order)
   }
   if (!missing(levID.)) {
     newcall$levID <- {
-      if (length(newcall$levID)) 
+      if (length(newcall$levID))
         my.update.formula(as.formula(newcall$levID), levID., keep.order = keep.order)
       else levID.
     }
   }
   if (!missing(estoptions.)) {
     newcall$estoptions <- {
-      if (length(newcall$estoptions)) 
+      if (length(newcall$estoptions))
         my.update.formula(as.formula(newcall$estoptions), estoptions., keep.order = keep.order)
       else estoptions.
     }
@@ -330,7 +335,7 @@ updateMLwiN <- function (object, Formula., levID., estoptions., ...,
 setMethod("update", "mlwinfitIGLS", updateMLwiN)
 
 setMethod("coef", "mlwinfitIGLS", function (object,  ...) {
-  c(object@FP, object@RP)           
+  c(object@FP, object@RP)
 })
 
 setMethod("coefficients", "mlwinfitIGLS", function (object,  ...) {
@@ -341,7 +346,7 @@ setMethod("vcov", "mlwinfitIGLS", function (object,  ...) {
   m <- matrix(0, nrow(object@FP.cov)+nrow(object@RP.cov), ncol(object@FP.cov)+ncol(object@RP.cov))
   colnames(m) <- c(colnames(object@FP.cov), colnames(object@RP.cov))
   rownames(m) <- c(rownames(object@FP.cov), rownames(object@RP.cov))
-  m[colnames(object@FP.cov), rownames(object@FP.cov)] <- object@FP.cov  
+  m[colnames(object@FP.cov), rownames(object@FP.cov)] <- object@FP.cov
   m[colnames(object@RP.cov), rownames(object@RP.cov)] <- object@RP.cov
   m
 })

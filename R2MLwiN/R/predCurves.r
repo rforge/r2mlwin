@@ -1,12 +1,10 @@
-predCurves <- function(object, indata, xname, group=NULL, legend=T, legend.space="top", legend.ncol=2, ...){
+predCurves <- function(object, indata=NULL, xname, group=NULL, legend=T, legend.space="top", legend.ncol=2, ...){
   ## This function is to draw predicted lines using fixed part estimates
   
   FP <- object["FP"]
-  
-  if (!("Intercept" %in% names(indata))){
-    indata[["Intercept"]] <- rep(1, nrow(indata))
+  if (is.null(indata)){
+    indata <- object[["data"]]
   }
-  
   if (!is.null(group)){
     if(is.character(group)) group <- indata[[group]]
     if(!is.factor(group)) group <- as.factor(group)
