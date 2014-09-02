@@ -83,6 +83,40 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
     indata
   }
   
+  get.Interdata <- function(left, indata){
+    anycurly <- any(grepl('\\{|\\}', left))
+    if (anycurly){
+      left <- gsub('\\{','\\[', left)
+      left <- gsub('\\}','\\]', left)
+    }
+    svec <- sapply(left, function(x) unlist(strsplit(x,"\\|"))[2])
+    nn <- length(svec)
+    Iterms <- character(0)
+    for (ii in 1:nn){
+      xform <- as.formula(paste0("~",svec[ii]))
+      tterms <- terms(xform, keep.order = TRUE)
+      ttermsLabs <-  attr(tterms,"term.labels")
+      is_inter <- grepl("\\:", ttermsLabs)
+      if (any(is_inter)){
+        Iterms <- c(Iterms, ttermsLabs[is_inter])
+      }
+    }
+    if (length(Iterms)>0){
+      Iterms <- sapply(regmatches(Iterms, gregexpr("\\[{1}([[:digit:]]|\\,|[[:space:]])*\\]{1}", Iterms), invert = TRUE),
+                       function(x) paste(x, collapse=""))
+      tform <- as.formula(paste0("~0+",paste(Iterms, collapse="+")))
+      dataplus <- model.matrix(object=tform, data=indata)
+      dataplus <- as.data.frame(dataplus)
+      dataplus.names <- names(dataplus)
+      if (anycurly){
+        dataplus.names <- gsub('\\[','\\{', dataplus.names)
+        dataplus.names <- gsub('\\]','\\}', dataplus.names)
+      }
+      indata <- cbind(indata, dataplus)
+    }
+    indata
+  }
+
   get.polydata <- function(left, indata){
     is_polyfunc <- grepl("(poly|polym)\\([[:print:]]+\\)", left)
     if (!any(is_polyfunc)){
@@ -669,6 +703,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
       }
     }else{
       indata <- get.Idata(left, indata) 
+      indata <- get.Interdata(left, indata) 
       xpoly <- get.polydata(left, indata)
       if (length(xpoly$newleft)>0){
         left <- xpoly$newleft
@@ -1251,6 +1286,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
       }
     }else{
       indata <- get.Idata(left, indata) 
+      indata <- get.Interdata(left, indata) 
       xpoly <- get.polydata(left, indata)
       if (length(xpoly$newleft)>0){
         left <- xpoly$newleft
@@ -1425,6 +1461,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
         }
       }
       indata <- get.Idata(left, indata) 
+      indata <- get.Interdata(left, indata) 
       xpoly <- get.polydata(left, indata)
       if (length(xpoly$newleft)>0){
         left <- xpoly$newleft
@@ -1585,6 +1622,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
       }
     }else{
       indata <- get.Idata(left, indata) 
+      indata <- get.Interdata(left, indata) 
       xpoly <- get.polydata(left, indata)
       if (length(xpoly$newleft)>0){
         left <- xpoly$newleft
