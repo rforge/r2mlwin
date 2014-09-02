@@ -206,10 +206,12 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
         contrMat <- attr(indata[[categstr1[ii]]], "contrasts")
         if(is.null(contrMat)){
           data.ext <- model.matrix(f.ext, indata)[,-1, drop=F]
+          colnames(data.ext) <- gsub("\\.", "\\_", colnames(data.ext))
           categstr2[[categstr1[ii]]] <- colnames(data.ext)
         }else{
           keeppos <- rowSums(contrMat)>0
           data.ext <- model.matrix(f.ext, indata)[,keeppos, drop=F]
+          colnames(data.ext) <- gsub("\\.", "\\_", colnames(data.ext))
           categstr2[[categstr1[ii]]] <- colnames(data.ext)
         }
         indata <- cbind(indata, as.data.frame(data.ext))  
