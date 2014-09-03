@@ -112,6 +112,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
         dataplus.names <- gsub('\\[','\\{', dataplus.names)
         dataplus.names <- gsub('\\]','\\}', dataplus.names)
       }
+      names(dataplus) <- gsub('\\.','\\_', dataplus.names)
       indata <- cbind(indata, dataplus)
     }
     indata
