@@ -385,6 +385,10 @@ setMethod("print", "mlwinfitMCMC", printMCMC)
 setMethod("show",  "mlwinfitMCMC", function(object) printMCMC(object))
 setMethod("update", "mlwinfitMCMC", updateMLwiN)
 
+setMethod("formula", "mlwinfitMCMC", function(x, env = parent.frame(), ...) {
+  as.formula(x@Formula)
+})
+
 setMethod("coef", "mlwinfitMCMC", function (object,  ...) {
   c(object@FP, object@RP)           
 })

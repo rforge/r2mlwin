@@ -334,6 +334,10 @@ updateMLwiN <- function (object, Formula., levID., estoptions., ...,
 }
 setMethod("update", "mlwinfitIGLS", updateMLwiN)
 
+setMethod("formula", "mlwinfitIGLS", function(x, env = parent.frame(), ...) {
+  as.formula(x@Formula)
+})
+
 setMethod("coef", "mlwinfitIGLS", function (object,  ...) {
   c(object@FP, object@RP)
 })
@@ -376,6 +380,14 @@ setMethod("predict", "mlwinfitIGLS", function (object,  ...) {
 })
 
 setMethod("logLik", "mlwinfitIGLS", function (object,  ...) {
+  val <- -0.5*deviance(object)
+  attr(val, "df") <- length(coef(object))
+  attr(val, "nobs") <- nobs(object)
+  class(val) <- "logLik"
+  val
+})
+
+setMethod("deviance", "mlwinfitIGLS", function (object, ...) {
   object@LIKE
 })
 
