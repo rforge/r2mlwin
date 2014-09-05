@@ -1,4 +1,4 @@
-MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonlinear=c(0,1), categ=NULL,notation=NULL, nonfp=NA, clre, Meth=1, extra=F,reset,rcon,fcon,maxiter,convtol,
+MacroScript1 <- function(indata,dtafile,oldsyntax=FALSE,resp, levID, expl, rp, D='Normal', nonlinear=c(0,1), categ=NULL,notation=NULL, nonfp=NA, clre, Meth=1, extra=F,reset,rcon,fcon,maxiter,convtol,
                          BUGO=NULL,mem.init="default", optimat=F, weighting=NULL,modelfile=modelfile,initfile=initfile,datafile=datafile,
                          macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode,startval=startval){
   
@@ -142,7 +142,7 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
     if (D[2] == 'cloglog') {wrt('LFUN 2');DD2=2}
     
     interpos=grep("\\:",expl)
-    if (length(interpos)==0){
+    if (oldsyntax==FALSE || length(interpos)==0){
       for (p in expl){
         if (is.null(categ)){
           wrt(paste("ADDT    '",p,"'",sep=""))
@@ -223,7 +223,7 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
     if(is.list(expl)){
       if (!is.na(sep.coeff[1])){
         interpos1=grep("\\:",sep.coeff)
-        if (length(interpos1)==0){
+        if (oldsyntax==FALSE || length(interpos1)==0){
           for (x in 1:length(sep.coeff)){
             p=sep.coeff[x]
             if (is.null(categ)){
@@ -272,7 +272,7 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
         }
       }
       interpos2=grep("\\:",common.coeff)
-      if (length(interpos2)==0){
+      if (oldsyntax==FALSE || length(interpos2)==0){
         for (y in 1:length(common.coeff)){
           p=common.coeff[y]
           len.common.id=length(common.coeff.id[y,])
@@ -339,7 +339,7 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
       }
     }else{
       interpos=grep("\\:",expl)
-      if (length(interpos)==0){
+      if (oldsyntax==FALSE || length(interpos)==0){
         for (p in expl){
           if (is.null(categ)){
             wrt(paste("ADDT    '",p,"'",sep=""))
@@ -403,7 +403,7 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
     if(is.list(expl)){
       if (!is.na(sep.coeff[1])){
         interpos1=grep("\\:",sep.coeff)
-        if (length(interpos1)==0){
+        if (oldsyntax==FALSE || length(interpos1)==0){
           for (x in 1:length(sep.coeff)){
             p=sep.coeff[x]
             if (is.null(categ)){
@@ -452,7 +452,7 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
         }
       }
       interpos2=grep("\\:",common.coeff)
-      if (length(interpos2)==0){
+      if (oldsyntax==FALSE || length(interpos2)==0){
         for (y in 1:length(common.coeff)){
           p=common.coeff[y]
           len.common.id=length(common.coeff.id[y,])
@@ -519,7 +519,7 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
       }
     }else{
       interpos=grep("\\:",expl)
-      if (length(interpos)==0){
+      if (oldsyntax==FALSE || length(interpos)==0){
         for (p in expl){
           if (is.null(categ)){
             wrt(paste("ADDT    '",p,"'",sep=""))
@@ -593,7 +593,7 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
     if(is.list(expl)){
       if (!is.na(sep.coeff[1])){
         interpos1=grep("\\:",sep.coeff)
-        if (length(interpos1)==0){
+        if (oldsyntax==FALSE || length(interpos1)==0){
           for (x in 1:length(sep.coeff)){
             p=sep.coeff[x]
             if (is.null(categ)){
@@ -642,7 +642,7 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
         }
       }
       interpos2=grep("\\:",common.coeff)
-      if (length(interpos2)==0){
+      if (oldsyntax==FALSE || length(interpos2)==0){
         for (y in 1:length(common.coeff)){
           p=common.coeff[y]
           len.common.id=length(common.coeff.id[y,])
@@ -709,7 +709,7 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
       }
     }else{
       interpos=grep("\\:",expl)
-      if (length(interpos)==0){
+      if (oldsyntax==FALSE || length(interpos)==0){
         for (p in expl){
           if (is.null(categ)){
             wrt(paste("ADDT    '",p,"'",sep=""))
@@ -769,7 +769,7 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
     
     wrt("NOTE   Specify covariate(s) used anywhere in the model")
     interpos=grep("\\:",expl)
-    if (length(interpos)==0){
+    if (oldsyntax==FALSE || length(interpos)==0){
       for (p in expl){
         if (is.null(categ)){
           wrt(paste("ADDT    '",p,"'",sep=""))
@@ -832,7 +832,7 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
       wrt(paste("DOFFs 1 '",D[3],"'",sep=""))
     }
     interpos=grep("\\:",expl)
-    if (length(interpos)==0){
+    if (oldsyntax==FALSE || length(interpos)==0){
       for (p in expl){
         if (is.null(categ)){
           wrt(paste("ADDT    '",p,"'",sep=""))
@@ -897,7 +897,7 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
       wrt(paste("DOFFs 1 '",D[3],"'",sep=""))
     }
     interpos=grep("\\:",expl)
-    if (length(interpos)==0){
+    if (oldsyntax==FALSE || length(interpos)==0){
       for (p in expl){
         if (is.null(categ)){
           wrt(paste("ADDT    '",p,"'",sep=""))
@@ -952,7 +952,7 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
     nonfp.common=nonfp$nonfp.common
     if (!is.na(nonfp.sep[1])){
       interpos=grep("\\:",nonfp.sep)
-      if (length(interpos)==0){
+      if (oldsyntax==FALSE || length(interpos)==0){
         for (p in nonfp.sep) wrt(paste("FPAR 0  '",p,"'",sep=""))
       }else{
         for (i in 1:length(nonfp.sep)){
@@ -966,7 +966,7 @@ MacroScript1 <- function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonli
     }
     if (!is.na(nonfp.common[1])){
       interpos=grep("\\:",nonfp.common)
-      if (length(interpos)==0){
+      if (oldsyntax==FALSE || length(interpos)==0){
         for (p in nonfp.common) wrt(paste("FPAR 0  '",p,"'",sep=""))
       }else{
         for (i in 1:length(nonfp.common)){

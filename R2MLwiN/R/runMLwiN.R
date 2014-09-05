@@ -6,36 +6,53 @@ runMLwiN <- function(Formula, levID=NULL, D="Normal", data=NULL, estoptions=list
     indata <- data
   }
 
-  drop.data=estoptions$drop.data
-  if (is.null(drop.data)) drop.data=T
+  if (is.null(levID)) {
+    oldsyntax = FALSE
+  } else {
+    oldsyntax = TRUE
+    warning("This syntax has been superseded, see help for guidance on converting it.")
+  }
 
-  cc=c(0:length(levID))
-  if(is.character(Formula)){
-    Formula <- gsub('\\{','\\(',Formula)
-    Formula <- gsub('\\}','\\)',Formula)
-    Formula <- gsub('[[:space:]]','',Formula)
-    if(sum(grepl("\\({1}[[:digit:]]+\\|{2}", Formula))>0){
-      for (i in cc){
-        Formula=sub(paste(i,"\\|{2}",sep=""),paste("\\`",i,"c`\\|",sep=""),Formula)
-        Formula=sub(paste(i,"\\|",sep=""),paste("\\`",i,"s`\\|",sep=""),Formula)
-      }
-    }
-    if(sum(grepl("\\({1}[[:digit:]]+[[:alpha:]]{1}\\|",Formula))>0){
-      for (i in cc){
-        Formula=sub(paste(i,"s\\|",sep=""),paste("\\`",i,"s`\\|",sep=""),Formula)
-        Formula=sub(paste(i,"c\\|",sep=""),paste("\\`",i,"c`\\|",sep=""),Formula)
-      }
+  drop.data=estoptions$drop.data
+  if (is.null(drop.data)) {
+    if (oldsyntax) {
+      drop.data=FALSE
+    } else {
+      drop.data=TRUE
     }
   }
-  tmpvarnames <- unique(unlist(strsplit(all.vars(Formula),"\\.")))
-  tForm <- as.formula(paste0("~",paste(tmpvarnames, collapse="+")))
-  if (drop.data) {
-    indata <- get_all_vars(tForm, indata)
+
+  if (oldsyntax) {
+    if(is.character(Formula)){
+      Formula <- gsub('\\{','\\(',Formula)
+      Formula <- gsub('\\}','\\)',Formula)
+      Formula <- gsub('[[:space:]]','',Formula)
+      cc=c(0:length(levID))
+      if(sum(grepl("\\({1}[[:digit:]]+\\|{2}", Formula))>0){
+        for (i in cc){
+          Formula=sub(paste(i,"\\|{2}",sep=""),paste("\\`",i,"c`\\|",sep=""),Formula)
+          Formula=sub(paste(i,"\\|",sep=""),paste("\\`",i,"s`\\|",sep=""),Formula)
+        }
+      }
+      if(sum(grepl("\\({1}[[:digit:]]+[[:alpha:]]{1}\\|",Formula))>0){
+        for (i in cc){
+          Formula=sub(paste(i,"s\\|",sep=""),paste("\\`",i,"s`\\|",sep=""),Formula)
+          Formula=sub(paste(i,"c\\|",sep=""),paste("\\`",i,"c`\\|",sep=""),Formula)
+        }
+      }
+      Formula <- as.formula(Formula)
+    }
   } else {
-    newdata <- get_all_vars(tForm, indata)
-    newvars <- setdiff(colnames(newdata), colnames(indata))
-    for (var in newvars) {
-      indata[[var]] <- newdata[[var]]
+    tmpvarnames <- unique(unlist(strsplit(all.vars(Formula),"\\.")))
+    tForm <- as.formula(paste0("~",paste(tmpvarnames, collapse="+")))
+    if (drop.data) {
+      indata <- get_all_vars(tForm, indata)
+    } else {
+      newdata <- get_all_vars(tForm, indata)
+      newvars <- setdiff(colnames(newdata), colnames(indata))
+      for (var in newvars) {
+        indata[[var]] <- newdata[[var]]
+      }
     }
   }
 
@@ -206,16 +223,20 @@ version:date:md5:filename:x64:trial
   # the current function call
   cl <- match.call()
 
-  invars = Formula.translate(Formula, levID, D, indata)
-  newdata = invars$indata
-  invars$indata <- NULL
-  if (!is.null(newdata)){
-    newvars <- setdiff(colnames(newdata), colnames(indata))
-    for (var in newvars) {
-      indata[[var]] <- newdata[[var]]
+  if (oldsyntax) {
+    invars = Formula.translate.compat(Formula, levID, D, indata)
+  } else {
+    invars = Formula.translate(Formula, levID, D, indata)
+    newdata = invars$indata
+    invars$indata <- NULL
+    if (!is.null(newdata)){
+      newvars <- setdiff(colnames(newdata), colnames(indata))
+      for (var in newvars) {
+        indata[[var]] <- newdata[[var]]
+      }
     }
+    rm(newdata)
   }
-  rm(newdata)
   
   resp = invars$resp
 
@@ -1499,7 +1520,7 @@ version:date:md5:filename:x64:trial
     } 
   }
   if (EstM==0){
-    MacroScript1(outdata, dtafile,resp, levID, expl, rp, D, nonlinear, categ,notation, nonfp, clre,Meth,extra,reset,rcon,fcon,maxiter,convtol,
+    MacroScript1(outdata, dtafile,oldsyntax,resp, levID, expl, rp, D, nonlinear, categ,notation, nonfp, clre,Meth,extra,reset,rcon,fcon,maxiter,convtol,
                  BUGO,mem.init, optimat, weighting,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,
                  IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode,startval=startval)
     iterations=estoptions$mcmcMeth$iterations
@@ -1560,7 +1581,7 @@ version:date:md5:filename:x64:trial
   
   # MCMC algorithm (using the starting values obtain from IGLS algorithm)
   if (EstM==1){
-    MacroScript2(outdata, dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,Meth,merr,carcentre,maxiter,convtol,
+    MacroScript2(outdata, dtafile,oldsyntax,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,Meth,merr,carcentre,maxiter,convtol,
                  seed,iterations,burnin,scale,thinning,priorParam,refresh,fixM,residM,Lev1VarM, 
                  OtherVarM,adaption,priorcode,rate, tol,lclo,mcmcOptions,fact,xclass,BUGO,mem.init,optimat,
                  nopause,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,MCMCfile=MCMCfile,
