@@ -407,11 +407,11 @@ setMethod("vcov", "mlwinfitMCMC", function (object,  ...) {
 })
 
 setMethod("df.residual", "mlwinfitMCMC", function (object,  ...) {
-  NULL
+  nobs(object) - length(coef(object))
 })
 
 setMethod("fitted", "mlwinfitMCMC", function (object,  ...) {
-  NULL
+  predict(object, type="response")
 })
 
 setMethod("fitted.values", "mlwinfitMCMC", function (object,  ...) {
@@ -419,15 +419,87 @@ setMethod("fitted.values", "mlwinfitMCMC", function (object,  ...) {
 })
 
 setMethod("residuals", "mlwinfitMCMC", function (object,  ...) {
-  NULL
+  form <- Formula.translate(object@Formula, NULL, object@D, object@data)
+  if (!is.list(form$resp)) {
+    object@data[[form$resp]] - fitted(object)
+  } else {
+    warning("residuals only implemented for univariate models")
+    NULL
+  }
 })
 
 setMethod("resid", "mlwinfitMCMC", function (object,  ...) {
   residuals(object)
 })
 
-setMethod("predict", "mlwinfitMCMC", function (object,  ...) {
-  NULL
+setMethod("predict", "mlwinfitMCMC", function (object, newdata=NULL, params=NULL, type="link", se.fit=FALSE, terms=NULL,  ...) {
+  if (is.null(newdata)) {
+    indata <- object@data
+  } else {
+    indata <- Formula.translate(object@Formula, NULL, object@D, object@data)$indata
+  }
+  if (is.null(params)) {
+    fp.names <- names(FP <- object@FP)
+  } else {
+    fp.names <- params
+  }
+  x.names <- sub("FP_","",fp.names)
+  if (type=="link") {
+    tval <- as.vector(as.matrix(indata[x.names]) %*% as.matrix(object@FP[fp.names]))
+    if (se.fit) {
+      #seval <- as.vector(sqrt(diag(as.matrix(indata[x.names]) %*% as.matrix(object@FP.cov[fp.names, fp.names]) %*% t(as.matrix(indata[x.names])))))
+      seval <- as.vector(sqrt(rowSums(as.matrix(indata[x.names]) %*% as.matrix(object@FP.cov[fp.names, fp.names]) * indata[x.names])))
+      return(list(fit=tval, se.fit=seval))
+    } else {
+      return(tval)
+    }
+  }
+  if (type == "terms") {
+    if (is.null(terms)) {
+      terms <- fp.names
+    } else {
+      x.names <- sub("FP_","",terms)
+    }
+    tval <- as.matrix(t(t(indata[x.names]) * object@FP[fp.names]))
+    if (se.fit) {
+      seval <- as.matrix(sqrt(t(t(indata[x.names]^2) * diag(object@FP.cov[fp.names, fp.names]))))
+      return(list(fit=tval, se.fit=seval))
+    } else {
+      return(tval)
+    }
+  }
+  if (type == "response") {
+    tval <- as.vector(as.matrix(indata[x.names]) %*% as.matrix(object@FP[fp.names]))
+    D = object@D
+    if (D == "Normal" || D[1] == "Multivariate Normal") {
+      return(tval)
+    }
+    if (D[1] == "Binomial") {
+      if (D[2] == "logit") {
+        antilogit <- function(x) { exp(x) / (1 + exp(x) ) }
+        return(antilogit(tval))
+      }
+      if (D[2] == "probit") {
+        return(pnorm(tval))
+      }
+      if (D[2] == "cloglog") {
+        anticloglog <- function(x) { 1 - exp(-exp(x)) }
+        return(anticloglog(tval))
+      }
+    }
+    if (D[1] == "Poisson") {
+      return(exp(tval))
+    }
+    if (D[1] == "Negbinom") {
+      return(exp(tval))
+    }
+    if (D[1] == "Mixed") {
+    }
+    if (D[1] == "Multinomial") {
+    }
+    warning("link function transformation not yet implemented")
+    return(NULL)
+  }
 })
 
 setMethod("nobs", "mlwinfitMCMC", function (object,  ...) {
