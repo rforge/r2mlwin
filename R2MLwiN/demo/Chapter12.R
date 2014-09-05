@@ -34,31 +34,31 @@ data(bang)
 
 ## Define the model
 ## Fit the model
-(mymodel <- runMLwiN(log(use4,cons,use4_4)~(0|cons), levID="woman", D='Unordered Multinomial', estoptions=list(EstM=1), data=bang))
+(mymodel <- runMLwiN(log(use4,cons,4)~(0|cons), levID="woman", D='Unordered Multinomial', estoptions=list(EstM=1), data=bang))
 
-cat(paste("Pr(y = 1) =", round(exp(mymodel["FP"]["FP_cons_use4_1"])/(1+exp(mymodel["FP"]["FP_cons_use4_1"])+exp(mymodel["FP"]["FP_cons_use4_2"])+exp(mymodel["FP"]["FP_cons_use4_3"])),4),"\n"))
-cat(paste("Pr(y = 2) =", round(exp(mymodel["FP"]["FP_cons_use4_2"])/(1+exp(mymodel["FP"]["FP_cons_use4_1"])+exp(mymodel["FP"]["FP_cons_use4_2"])+exp(mymodel["FP"]["FP_cons_use4_3"])),4),"\n"))
-cat(paste("Pr(y = 3) =", round(exp(mymodel["FP"]["FP_cons_use4_3"])/(1+exp(mymodel["FP"]["FP_cons_use4_1"])+exp(mymodel["FP"]["FP_cons_use4_2"])+exp(mymodel["FP"]["FP_cons_use4_3"])),4),"\n"))
+cat(paste("Pr(y = 1) =", round(exp(mymodel["FP"]["FP_cons_1"])/(1+exp(mymodel["FP"]["FP_cons_1"])+exp(mymodel["FP"]["FP_cons_2"])+exp(mymodel["FP"]["FP_cons_3"])),4),"\n"))
+cat(paste("Pr(y = 2) =", round(exp(mymodel["FP"]["FP_cons_2"])/(1+exp(mymodel["FP"]["FP_cons_1"])+exp(mymodel["FP"]["FP_cons_2"])+exp(mymodel["FP"]["FP_cons_3"])),4),"\n"))
+cat(paste("Pr(y = 3) =", round(exp(mymodel["FP"]["FP_cons_3"])/(1+exp(mymodel["FP"]["FP_cons_1"])+exp(mymodel["FP"]["FP_cons_2"])+exp(mymodel["FP"]["FP_cons_3"])),4),"\n"))
 
 # 12.2 Adding predictor variables . . . . . . . . . . . . . . . . . . . .173
 
 ## Define the model
 ## Fit the model
-(mymodel <- runMLwiN(log(use4,cons,use4_4)~(0|cons+lc[lc0]), levID="woman", D='Unordered Multinomial', estoptions=list(EstM=1), data=bang))
+(mymodel <- runMLwiN(log(use4,cons,4)~(0|cons+lc[None]), levID="woman", D='Unordered Multinomial', estoptions=list(EstM=1), data=bang))
 
-cat(paste("Pr(y = 3) =", round(exp(mymodel["FP"]["FP_cons_use4_3"])/(1+exp(mymodel["FP"]["FP_cons_use4_1"])+exp(mymodel["FP"]["FP_cons_use4_2"])+exp(mymodel["FP"]["FP_cons_use4_3"])),4),"\n"))
-cat(paste("Pr(y = 3) =", round(exp(mymodel["FP"]["FP_cons_use4_3"]+mymodel["FP"]["FP_lc2_use4_3"])/(1+exp(mymodel["FP"]["FP_cons_use4_1"]+mymodel["FP"]["FP_lc2_use4_1"])+
-exp(mymodel["FP"]["FP_cons_use4_2"]+mymodel["FP"]["FP_lc2_use4_2"])+exp(mymodel["FP"]["FP_cons_use4_3"]+mymodel["FP"]["FP_lc2_use4_3"])),4),"\n"))
+cat(paste("Pr(y = 3) =", round(exp(mymodel["FP"]["FP_cons_3"])/(1+exp(mymodel["FP"]["FP_cons_1"])+exp(mymodel["FP"]["FP_cons_2"])+exp(mymodel["FP"]["FP_cons_3"])),4),"\n"))
+cat(paste("Pr(y = 3) =", round(exp(mymodel["FP"]["FP_cons_3"]+mymodel["FP"]["FP_Two children_3"])/(1+exp(mymodel["FP"]["FP_cons_1"]+mymodel["FP"]["FP_Two children_1"])+
+exp(mymodel["FP"]["FP_cons_2"]+mymodel["FP"]["FP_Two children_2"])+exp(mymodel["FP"]["FP_cons_3"]+mymodel["FP"]["FP_Two children_3"])),4),"\n"))
 
 # 12.3 Interval estimates for conditional probabilities . . . . . . . . .175
 
 chains <- mymodel["chains"]
-pred1 <- exp(chains[,"FP_cons_use4_3"])/(1+exp(chains[,"FP_cons_use4_1"])+exp(chains[,"FP_cons_use4_2"])+exp(chains[,"FP_cons_use4_3"]))
+pred1 <- exp(chains[,"FP_cons_3"])/(1+exp(chains[,"FP_cons_1"])+exp(chains[,"FP_cons_2"])+exp(chains[,"FP_cons_3"]))
 summary(pred1)
 sixway(pred1,"prob1")
 
-pred2 <- exp(chains[,"FP_cons_use4_3"]+chains[,"FP_lc2_use4_3"])/(1+exp(chains[,"FP_cons_use4_1"]+chains[,"FP_lc2_use4_1"])+
-exp(chains[,"FP_cons_use4_2"]+chains[,"FP_lc2_use4_2"])+exp(chains[,"FP_cons_use4_3"]+chains[,"FP_lc2_use4_3"]))
+pred2 <- exp(chains[,"FP_cons_3"]+chains[,"FP_Two children_3"])/(1+exp(chains[,"FP_cons_1"]+chains[,"FP_Two children_1"])+
+exp(chains[,"FP_cons_2"]+chains[,"FP_Two children_2"])+exp(chains[,"FP_cons_3"]+chains[,"FP_Two children_3"]))
 summary(pred2)
 sixway(pred2,"prob1")
 
@@ -67,12 +67,12 @@ sixway(pred2,"prob1")
 ## Define the model
 #Uses IGLS
 ## Fit the model
-(mymodel <- runMLwiN(log(use4,cons,use4_4)~(0|cons+lc[lc0])+(2|cons), levID=c('district','woman'), D='Unordered Multinomial', estoptions=list(EstM=0, nonlinear=c(1,2)), data=bang))
+(mymodel <- runMLwiN(log(use4,cons,4)~(0|cons+lc[None])+(2|cons), levID=c('district','woman'), D='Unordered Multinomial', estoptions=list(EstM=0, nonlinear=c(1,2)), data=bang))
 
 ## Uses MCMC
 ## Fit the model
-(mymodel <- runMLwiN(log(use4,cons,use4_4)~(0|cons+lc[lc0])+(2|cons), levID=c('district','woman'), D='Unordered Multinomial', estoptions=list(EstM=1, nonlinear=c(1,2)), data=bang))
-sixway(mymodel["chains"][,"RP2_var_cons_use4_1"],"sigma2v0")
+(mymodel <- runMLwiN(log(use4,cons,4)~(0|cons+lc[None])+(2|cons), levID=c('district','woman'), D='Unordered Multinomial', estoptions=list(EstM=1, nonlinear=c(1,2)), data=bang))
+sixway(mymodel["chains"][,"RP2_var_cons_1"],"sigma2v0")
 
 RP3.cons <- matrix(,3,3)
 RP3.cons[upper.tri(RP3.cons,diag=T)] <- mymodel["RP"][1:6]

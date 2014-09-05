@@ -84,17 +84,13 @@ while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file
 
 ## Hierarchical centring at level 2
 
-(mymodel <- runMLwiN(logit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons+urban), levID=c('district','woman'), D="Binomial",
+(mymodel <- runMLwiN(logit(use,denomb)~(0|cons+age+lc[None]+urban)+(2|cons+urban), levID=c('district','woman'), D="Binomial",
  estoptions=list(EstM=1, mcmcOptions=list(hcen=2)), data=bang1))
 
 trajectories(mymodel["chains"])
 
 ## Hierarchical centring at level 2 + Orthogonal updates
 
-(mymodel <- runMLwiN(logit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons+urban), levID=c('district','woman'), D="Binomial",
- estoptions=list(EstM=1, mcmcOptions=list(hcen=2, orth=1)), data=bang1))
-
-trajectories(mymodel["chains"])
 
 # 25.5 The Melanoma example . . . . . . . . . . . . . . . . . . . . . . .414
 

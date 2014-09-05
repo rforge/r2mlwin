@@ -54,13 +54,13 @@ bang1$use <- as.integer(bang1$use) - 1
 
 ## Define the model
 
-(mymodel <- runMLwiN(logit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons+urban), levID=c('district','woman'), D="Binomial", estoptions=list(EstM=1), data=bang1))
+(mymodel <- runMLwiN(logit(use,denomb)~(0|cons+age+lc[None]+urban)+(2|cons+urban), levID=c('district','woman'), D="Binomial", estoptions=list(EstM=1), data=bang1))
 
 trajectories(mymodel["chains"])
 
 ##Orthogonal update
 
-(mymodel <- runMLwiN(logit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons+urban), levID=c('district','woman'), D="Binomial", estoptions=list(EstM=1, mcmcOptions=list(orth=1)), data=bang1))
+(mymodel <- runMLwiN(logit(use,denomb)~(0|cons+age+lc[None]+urban)+(2|cons+urban), levID=c('district','woman'), D="Binomial", estoptions=list(EstM=1, mcmcOptions=list(orth=1)), data=bang1))
 
 trajectories(mymodel["chains"])
 

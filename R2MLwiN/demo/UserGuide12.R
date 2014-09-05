@@ -51,15 +51,15 @@ mmmec$logexp = log(mmmec$exp)
 
 addmargins(with(mmmec, table(nation)))
 
-mmmec$belgium <- as.integer(mmmec$nation == 1)
-mmmec$wgermany <- as.integer(mmmec$nation == 2)
-mmmec$denmark <- as.integer(mmmec$nation == 3)
-mmmec$france <- as.integer(mmmec$nation == 4)
-mmmec$uk <- as.integer(mmmec$nation == 5)
-mmmec$italy <- as.integer(mmmec$nation == 6)
-mmmec$ireland <- as.integer(mmmec$nation == 7)
-mmmec$luxembourg <- as.integer(mmmec$nation == 8)
-mmmec$netherlands <- as.integer(mmmec$nation == 9)
+mmmec$belgium <- as.integer(mmmec$nation == "Belgium")
+mmmec$wgermany <- as.integer(mmmec$nation == "W Germany")
+mmmec$denmark <- as.integer(mmmec$nation == "Denmark")
+mmmec$france <- as.integer(mmmec$nation == "France")
+mmmec$uk <- as.integer(mmmec$nation == "UK")
+mmmec$italy <- as.integer(mmmec$nation == "Italy")
+mmmec$ireland <- as.integer(mmmec$nation == "Ireland")
+mmmec$luxembourg <- as.integer(mmmec$nation == "Luxembourg")
+mmmec$netherlands <- as.integer(mmmec$nation == "Netherlands")
 
 mmmec$belgiumXuvbi <- mmmec$belgium * mmmec$uvbi
 mmmec$wgermanyXuvbi <- mmmec$wgermany * mmmec$uvbi

@@ -43,11 +43,11 @@ addmargins(with(bang, table(lc, use4)))
 
 levels(bang$use4) <- c("ster", "mod", "trad", "none")
 
-bang$lc1 <- as.integer(bang$lc == "lc1")
-bang$lc2 <- as.integer(bang$lc == "lc2")
-bang$lc3plus <- as.integer(bang$lc == "lc3plus")
+bang$One_child <- as.integer(bang$lc == "One child")
+bang$Two_children <- as.integer(bang$lc == "Two children")
+bang$Three_plus <- as.integer(bang$lc == "Three plus")
 
-(mymodel1 <- (runMLwiN(log(use4,cons,none)~(0|cons+lc1+lc2+lc3plus), levID="woman", D="Unordered Multinomial", data=bang)))
+(mymodel1 <- (runMLwiN(log(use4,cons,none)~(0|cons+One_child+Two_children+Three_plus), levID="woman", D="Unordered Multinomial", data=bang)))
 
 cat(paste("Pr(y = 1) =", round(exp(mymodel1@FP["FP_cons_ster"])/(1+exp(mymodel1@FP["FP_cons_ster"])+exp(mymodel1@FP["FP_cons_mod"])+exp(mymodel1@FP["FP_cons_trad"])),4),"\n"))
 cat(paste("Pr(y = 2) =", round(exp(mymodel1@FP["FP_cons_mod"])/(1+exp(mymodel1@FP["FP_cons_ster"])+exp(mymodel1@FP["FP_cons_mod"])+exp(mymodel1@FP["FP_cons_trad"])),4),"\n"))
@@ -58,9 +58,9 @@ cat(paste("Pr(y = 4) =", round(1/(1+exp(mymodel1@FP["FP_cons_ster"])+exp(mymodel
 
 # 10.5 Fitting a two-level random intercept model . . . . . . . . . . . .155
 
-(mymodel2 <- (runMLwiN(log(use4,cons,none)~(0|cons+lc1+lc2+lc3plus)+(2|cons), levID=c("district", "woman"), D="Unordered Multinomial", data=bang)))
+(mymodel2 <- (runMLwiN(log(use4,cons,none)~(0|cons+One_child+Two_children+Three_plus)+(2|cons), levID=c("district", "woman"), D="Unordered Multinomial", data=bang)))
 
-(mymodel3 <- (runMLwiN(log(use4,cons,none)~(0|cons+lc1+lc2+lc3plus)+(2|cons), levID=c("district", "woman"), D="Unordered Multinomial",
+(mymodel3 <- (runMLwiN(log(use4,cons,none)~(0|cons+One_child+Two_children+Three_plus)+(2|cons), levID=c("district", "woman"), D="Unordered Multinomial",
  estoptions=list(nonlinear=c(1,2), startval=list(FP.b=mymodel2@FP, FP.v=mymodel2@FP.cov, RP.b=mymodel2@RP, RP.v=mymodel2@RP.cov), resi.store=TRUE), data=bang)))
 
 
