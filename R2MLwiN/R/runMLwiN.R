@@ -1418,7 +1418,14 @@ version:date:md5:filename:x64:trial
       } else {
         test <- require(reshape, quietly=TRUE)
         if (test == TRUE) {
-          groupsize <- as.vector(sparseby(outdata, outdata[,shortID[lev:length(shortID)]], nrow, GROUPNAMES=FALSE))
+          # If the level identifiers are factors with string labels then the following can produce the warning
+          # "coercing argument of type 'list' to logical"
+          # from within cbind2 in the reshape package.
+          # This is due to the call:
+          # "all(lapply(list(...), is.numeric))"
+          # as the lapply returns a list which all doesn't like.
+          # As the result is still correct a suppressWarnings() call is added below to prevent this being passed onto the user
+          groupsize <- as.vector(suppressWarnings(sparseby(outdata, outdata[,shortID[lev:length(shortID)]], nrow, GROUPNAMES=FALSE)))
         } else {
           groupsize <- na.omit(as.vector(by(outdata, outdata[,shortID[lev:length(shortID)]], nrow)))
         }
