@@ -15,11 +15,12 @@ Depends:
     rbugs (>= 0.5-7),
     digest
 Suggests:
-    reshape,
     lme4 (>= 0.999999-0),
     doBy,
     car,
     lmtest
+Enhances:
+    reshape
 Description: R2MLwiN is an R command interface to the MLwiN multilevel
     modelling software package, allowing users to fit multilevel models using
     MLwiN from within the R environment.
