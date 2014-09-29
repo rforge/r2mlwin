@@ -204,12 +204,16 @@ version:date:md5:filename:x64:trial
 2.30:Feb 2014:022ba981c2bf8751dad35c041f5f7db3:mlwin.exe:FALSE:TRUE
 2.30:Feb 2014:b0f739262853e594242a6d4dad296eb6:mlnscript.exe:FALSE:FALSE
 2.30:Feb 2014:c964df5ff4011eae94419c2f815a9450:mlnscript.exe:TRUE:FALSE
+2.31:Sep 2014:befc087bb0e2b13ed01a57afa2d85bbe:mlwin.exe:FALSE:FALSE
+2.31:Sep 2014:6038ba228ddde891b4673cae4b7aaa0c:mlwin.exe:FALSE:TRUE
+2.31:Sep 2014:bfa10218aa4635ea2e5a4197faef98e7:mlnscript.exe:FALSE:FALSE
+2.31:Sep 2014:3a4c5904a21788262ef8244958eb5302:mlnscript.exe:TRUE:FALSE
 "
   versioninfo <- read.delim(textConnection(versioninfostr), header=TRUE, sep=":",strip.white=TRUE)
   if (checkversion == TRUE) { # Allow disabling the version check if it is slowing things down (e.g. in a simulation study)
     currentver = versioninfo[versioninfo$md5==digest(cmd, algo="md5", file=TRUE),]  
     if (nrow(currentver) == 0) {
-      versiontext = "MLwiN version unknown or >2.30"
+      versiontext = "MLwiN version unknown or >2.31"
     } else {
       if (currentver$version < 2.28) { # Block versions >year older than current release
         stop("The current version of MLwiN is too old, please update it from http://www.bris.ac.uk/cmm/software/mlwin/download/upgrades.html")
