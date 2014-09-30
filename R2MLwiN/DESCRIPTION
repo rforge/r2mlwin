@@ -8,6 +8,8 @@ Authors@R: c(person("Zhengzheng", "Zhang", role = c("aut", "cre"),email =
     = "aut"), person("William", "Browne", role = "aut"))
 Depends:
     R (>= 2.15.0),
+    stats,
+    stats4,
     methods,
     lattice,
     coda (>= 0.16-1),
