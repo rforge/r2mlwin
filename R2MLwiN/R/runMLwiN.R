@@ -1450,7 +1450,7 @@ version:date:md5:filename:x64:trial
           # "all(lapply(list(...), is.numeric))"
           # as the lapply returns a list which all doesn't like.
           # As the result is still correct a suppressWarnings() call is added below to prevent this being passed onto the user
-          groupsize <- as.vector(suppressWarnings(sparseby(outdata, outdata[,shortID[lev:length(shortID)]], nrow, GROUPNAMES=FALSE)))
+          groupsize <- as.vector(suppressWarnings(reshape::sparseby(outdata, outdata[,shortID[lev:length(shortID)]], nrow, GROUPNAMES=FALSE)))
         } else {
           groupsize <- na.omit(as.vector(by(outdata, outdata[,shortID[lev:length(shortID)]], nrow)))
         }

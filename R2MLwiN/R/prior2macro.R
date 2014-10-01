@@ -583,8 +583,10 @@ prior2macro <- function(prior,formula,levID,D, indata){
   if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial'){
     names.resp=levels(indata[[resp]])
     names.resp=names.resp[-as.numeric(D["ref.cat"])]
+    nresp=length(unique(indata[[resp]]))
   }else{
     names.resp=resp
+    nresp=length(resp)
   }
 
   if (!is_str_form){
