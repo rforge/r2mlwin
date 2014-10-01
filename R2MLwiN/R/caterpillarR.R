@@ -1,14 +1,53 @@
 caterpillarR <- function(resi, lev=2){
   ##produce caterpillar plots for the random effects(level>=2)
-  ##using qqmath() in the lme4 package
+  ##using qqmath() method in lme4 package
   ##Only work with full covariance specified
-  
-  PACKages<-as.character(as.data.frame(installed.packages())$Package)
-  packs.req= "lme4"
-  test<-( packs.req %in% PACKages)
-  if (!all(test))
-    install.packages(packs.req[!test],repos="http://cran.r-project.org")
-  require(lme4)
+  qqmath.ranef.mer <-  function (x, data, main = TRUE, ...) 
+  {
+      prepanel.ci <- function(x, y, se, subscripts, ...) {
+          x <- as.numeric(x)
+          se <- as.numeric(se[subscripts])
+          hw <- 1.96 * se
+          list(xlim = range(x - hw, x + hw, finite = TRUE))
+      }
+      panel.ci <- function(x, y, se, subscripts, pch = 16, ...) {
+          panel.grid(h = -1, v = -1)
+          panel.abline(v = 0)
+          x <- as.numeric(x)
+          y <- as.numeric(y)
+          se <- as.numeric(se[subscripts])
+          panel.segments(x - 1.96 * se, y, x + 1.96 * se, y, col = "black")
+          panel.xyplot(x, y, pch = pch, ...)
+      }
+      f <- function(nx) {
+          xt <- x[[nx]]
+          mtit <- if (main) 
+              nx
+          if (!is.null(pv <- attr(xt, "postVar"))) {
+              d <- dim(pv)
+              se <- vapply(seq_len(d[1]), function(i) sqrt(pv[i, 
+                  i, ]), numeric(d[3]))
+              nr <- nrow(xt)
+              nc <- ncol(xt)
+              ord <- unlist(lapply(xt, order)) + rep((0:(nc - 1)) * 
+                  nr, each = nr)
+              rr <- 1:nr
+              ind <- gl(nc, nr, labels = names(xt))
+              xyplot(rep(qnorm((rr - 0.5)/nr), nc) ~ unlist(xt)[ord] | 
+                  ind[ord], se = se[ord], prepanel = prepanel.ci, 
+                  panel = panel.ci, scales = list(x = list(relation = "free")), 
+                  ylab = "Standard normal quantiles", xlab = NULL, 
+                  main = mtit, ...)
+          }
+          else {
+              qqmath(~values | ind, stack(xt), scales = list(y = list(relation = "free")), 
+                  xlab = "Standard normal quantiles", ylab = NULL, 
+                  main = mtit, ...)
+          }
+      }
+      sapply(names(x), f, simplify = FALSE)
+  }
+
   if (is.character(resi)) myresi=read.dta(resi) else myresi=resi
   est.names=names(myresi)[grep(paste("lev_",lev,"_resi_est",sep=""),names(myresi))]
   if (length(est.names)==1){
@@ -61,5 +100,5 @@ caterpillarR <- function(resi, lev=2){
   rr$Subject=data.frame(est)
   attr(rr$Subject, "postVar")=tt
   class(rr)<- "ranef.mer"
-  qqmath(rr)
+  qqmath.ranef.mer(rr)
 }
