@@ -48,7 +48,9 @@ bang["Three_plus"] <- as.integer(bang$lc == "Three plus")
 
 (mymodel1 <- runMLwiN(logit(use, cons)~(0|cons + One_child + Two_children + Three_plus), levID="woman", D="Binomial", data=bang))
 
-linearHypothesis(mymodel1, "FP_One_child = FP_Two_children")
+if (require(car)){
+  linearHypothesis(mymodel1, "FP_One_child = FP_Two_children")
+}
 
 # A probit model . . . . . . . . . . . . . . . . . . . . . . . . . . . . 126
 
@@ -69,8 +71,9 @@ linearHypothesis(mymodel1, "FP_One_child = FP_Two_children")
 (mymodel5 <- runMLwiN(logit(use, cons)~(0|cons + One_child + Two_children + Three_plus + age)+(2|cons), levID=c("district", "woman"), D="Binomial",
  estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel4@FP, FP.v=mymodel4@FP.cov, RP.b=mymodel4@RP, RP.v=mymodel4@RP.cov)), data=bang))
 
-linearHypothesis(mymodel5, "RP2_var_cons = 0")
-
+if (require(car)){
+  linearHypothesis(mymodel5, "RP2_var_cons = 0")
+}
 # Variance partition coeficient . . . . . . . . . . . . . . . . . . . . .131
 
 set.seed(1)
@@ -124,11 +127,11 @@ bang$hindu<- bang$hindu - 1
 
 (mymodel7 <- runMLwiN(logit(use, cons)~(0|cons + One_child + Two_children + Three_plus + age + urban + Lower_primary + Upper_primary + Sec_and_above + hindu)+(2|cons+urban), levID=c("district", "woman"), D="Binomial",
  estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel6@FP, FP.v=mymodel6@FP.cov, RP.b=mymodel6@RP, RP.v=mymodel6@RP.cov)), data=bang))
-
-linearHypothesis(mymodel7, "RP2_cov_cons_urban = 0")
-linearHypothesis(mymodel7, "RP2_var_urban = 0")
-linearHypothesis(mymodel7, c("RP2_cov_cons_urban = 0", "RP2_var_urban = 0"))
-
+if (require(car)){
+  linearHypothesis(mymodel7, "RP2_cov_cons_urban = 0")
+  linearHypothesis(mymodel7, "RP2_var_urban = 0")
+  linearHypothesis(mymodel7, c("RP2_cov_cons_urban = 0", "RP2_var_urban = 0"))
+}
 (mymodel8 <- runMLwiN(logit(use, cons)~(0|cons + One_child + Two_children + Three_plus + age + urban + Lower_primary + Upper_primary + Sec_and_above + hindu + d_lit + d_pray)+(2|cons+urban), levID=c("district", "woman"), D="Binomial",
  estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel7@FP, FP.v=mymodel7@FP.cov, RP.b=mymodel7@RP, RP.v=mymodel7@RP.cov)), data=bang))
 
@@ -137,7 +140,7 @@ linearHypothesis(mymodel7, c("RP2_cov_cons_urban = 0", "RP2_var_urban = 0"))
 # Modelling district-level variation with district-level proportions . . 139
 
 # Creating a district-level data set . . . . . . . . . . . . . . . . . . 140
-
+library(doBy)
 bangshort <- summaryBy(use + cons ~ district + d_lit + d_pray, FUN=c(mean, sum), data=bang)
 bangshort$use.sum <- NULL
 colnames(bangshort) <- c("district", "d_lit", "d_pray", "use", "cons", "denom")

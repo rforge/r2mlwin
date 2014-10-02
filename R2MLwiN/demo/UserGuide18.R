@@ -139,6 +139,7 @@ data(xc)
 xc$region <- findClust(xc, "SID", "PID")
 xc$region <- NULL
 
+library(doBy)
 numchildren <- summaryBy(CONS~SID+PID, FUN=length, data=xc)
 colnames(numchildren) <- c("SID", "PID", "numchildren")
 xc <- merge(xc, numchildren, sort=FALSE)
