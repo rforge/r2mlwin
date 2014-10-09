@@ -21,7 +21,7 @@ mlwin <- getOption("MLwiN_path")
 while (!file.access(mlwin, mode=1)==0) {
   cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
   mlwin=scan(what=character(0),sep ="\n")
-  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
 }
 options(MLwiN_path=mlwin)
 
@@ -66,7 +66,7 @@ tutorial <- cbind(tutorial,Untoggle(tutorial[["schgend"]],"schgend"))
 
 (mymodel4 <- runMLwiN(normexam~(0|cons+standlrt+schgend_boysch+schgend_girlsch)+(1|cons)+(2|cons), levID=c("student"), data=tutorial))
 
-# 4.4 Does the coeficient of standlrt vary across schools? Introducing a 
+# 4.4 Does the coeficient of standlrt vary across schools? Introducing a
 #     random slope . . . . . . . . . . . . . . . . . . . . . . . . . . . .59
 
 (mymodel5 <- runMLwiN(normexam~(0|cons+standlrt)+(1|cons)+(2|cons+standlrt), levID=c("school", "student"), estoptions=list(resi.store=TRUE), data=tutorial))

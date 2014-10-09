@@ -21,7 +21,7 @@ mlwin <- getOption("MLwiN_path")
 while (!file.access(mlwin, mode=1)==0) {
   cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
   mlwin=scan(what=character(0),sep ="\n")
-  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
 }
 options(MLwiN_path=mlwin)
 
@@ -71,7 +71,7 @@ alevchem$female <- as.integer(alevchem$gender == "female")
 # 11.4 A two-level model . . . . . . . . . . . . . . . . . . . . . . . . 171
 
 # Note: Establishment codes on their own do not uniquely identify schools.
-# Schools are instead uniquely identified by LEA code, establishment ID 
+# Schools are instead uniquely identified by LEA code, establishment ID
 # combination. Thus, here we generated a unique school ID.
 
 alevchem$school <- as.numeric(factor(paste0(alevchem$lea, alevchem$estab)))

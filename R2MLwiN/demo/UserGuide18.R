@@ -21,7 +21,7 @@ mlwin <- getOption("MLwiN_path")
 while (!file.access(mlwin, mode=1)==0) {
   cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
   mlwin=scan(what=character(0),sep ="\n")
-  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
 }
 options(MLwiN_path=mlwin)
 
@@ -95,7 +95,7 @@ random.ci <- rep(0, 36)
 
 # Note: The final models in this section of the manual are for demonstration only.
 # The models presented in the manual do not converge with the current data.
-# We have therefore not given the R2MLwiN commands for these models. 
+# We have therefore not given the R2MLwiN commands for these models.
 
 # 18.6 Reducing storage overhead by grouping . . . . . . . . . . . . . . 279
 

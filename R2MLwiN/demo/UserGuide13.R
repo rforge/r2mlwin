@@ -21,7 +21,7 @@ mlwin <- getOption("MLwiN_path")
 while (!file.access(mlwin, mode=1)==0) {
   cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
   mlwin=scan(what=character(0),sep ="\n")
-  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
 }
 options(MLwiN_path=mlwin)
 
@@ -39,11 +39,11 @@ reading1[reading1==-10] <- NA
 
 summary(reading1)
 
-reading <- reshape(reading1, 
-  idvar="student", 
+reading <- reshape(reading1,
+  idvar="student",
   timevar="ID",
-  varying=c("READ1", "AGE1", "READ2", "AGE2", "READ3", "AGE3", "READ4", "AGE4", "READ5", "AGE5", "READ6", "AGE6"), 
-  sep="", 
+  varying=c("READ1", "AGE1", "READ2", "AGE2", "READ3", "AGE3", "READ4", "AGE4", "READ5", "AGE5", "READ6", "AGE6"),
+  sep="",
   direction="long"
 )
 

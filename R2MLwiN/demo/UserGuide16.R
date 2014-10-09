@@ -21,14 +21,14 @@ mlwin <- getOption("MLwiN_path")
 while (!file.access(mlwin, mode=1)==0) {
   cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
   mlwin=scan(what=character(0),sep ="\n")
-  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
+  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
 }
 options(MLwiN_path=mlwin)
 
 # Double return HERE
 # User's input if necessary
 
-# 16.1 An illustration of parameter estimation with Normally distributed . . 
+# 16.1 An illustration of parameter estimation with Normally distributed . .
 # . . .data . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .242
 
 data(height)
