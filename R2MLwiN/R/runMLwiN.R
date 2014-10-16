@@ -519,6 +519,9 @@ version:date:md5:filename:x64:trial
   if (EstM == 0 && !is.null(resi.store.levs)) {
     stop("resi.store.levs option is not valid for (R)IGLS estimation")
   }
+
+  fpsandwich = estoptions$fpsandwich
+  rpsandwich = estoptions$rpsandwich
   
   weighting = estoptions$weighting
   if (EstM == 1 && !is.null(weighting)) {
@@ -527,6 +530,51 @@ version:date:md5:filename:x64:trial
   if (!is.null(weighting) && (!is.element(D[1], c("Normal", "Poisson", "Binomial", "Negbinom")))) {
     stop("weighting can only be used in univariate models")
   }
+  # Convert old weight syntax
+  if (!is.null(weighting) && (!is.null(weighting$levels) || !is.null(weighting$weights) || !is.null(weighting$mode) || !is.null(weighting$FSDE) || !is.null(weighting$RSDE))) {
+    warning("Old IGLS weighting options specified, see the help file for new syntax")
+    if (weighting$FSDE == 2) fpsandwich = T
+    if (weighting$RSDE == 2) rpsandwich = T
+    if (weighting$mode == 2) weighting$standardised = T
+    if (!is.null(weighting$levels) && !is.null(weighting$weights)) {
+      if (length(weighting$levels)!=length(weighting$weights)){
+        stop("The length of levels does not match with the length of weights.")
+      }
+      numlev = length(levID)
+      #weighting$weightvar = rep(NA, numlev)
+      for (i in 1:length(weighting$levels)) {
+        weighting$weightvar[[(numlev - weighting$levels[i]) + 1]] = weighting$weights[i]
+      }
+    }
+  }
+  # Extract weights and add to output data
+  if (!is.null(weighting)) {
+    for (i in 1:length(weighting$weightvar)) {
+      if (!is.na(weighting$weightvar[i])) {
+        if (is.character(weighting$weightvar[[i]])) {
+            wtvar = model.frame(as.formula(paste0("~", weighting$weightvar[[i]])), data=data)
+            indata = cbind(indata, wtvar)
+        } else {
+          if (is.vector(weighting$weightvar[[i]])) {
+            indata = cbind(indata, weighting$weightvar[[i]])
+            wtname <- paste0("_WEIGHT", (length(weighting$weightvar) - i) + 1)
+            vnames <- colnames(indata)
+            vnames[length(vnames)] <- wtname
+            colnames(indata) <- vnames
+            weighting$weightvar[[i]] <- wtname
+          } else {
+            stop("Invalid weights specification")
+          }
+        }
+      }
+    }
+    if (is.null(fpsandwich)) fpsandwich = TRUE
+    if (is.null(rpsandwich)) rpsandwich = TRUE
+    if (is.null(weighting$standardised)) weighting$standardised = TRUE
+  }
+
+  if (is.null(fpsandwich)) fpsandwich = FALSE
+  if (is.null(rpsandwich)) rpsandwich = FALSE
   
   centring = estoptions$centring
   
@@ -1398,7 +1446,7 @@ version:date:md5:filename:x64:trial
     
     # (R)IGLS Weights if applicable
     if (!is.null(weighting)) {
-      for (w in weighting$weights) {
+      for (w in weighting$weightvar) {
         if (!is.na(w)) {
           outvars <- union(outvars, w)
         }
@@ -1525,7 +1573,7 @@ version:date:md5:filename:x64:trial
   }
   if (EstM==0){
     MacroScript1(outdata, dtafile,oldsyntax,resp, levID, expl, rp, D, nonlinear, categ,notation, nonfp, clre,Meth,extra,reset,rcon,fcon,maxiter,convtol,
-                 BUGO,mem.init, optimat, weighting,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,
+                 BUGO,mem.init, optimat, weighting, fpsandwich, rpsandwich, modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,
                  IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode,startval=startval)
     iterations=estoptions$mcmcMeth$iterations
     if(is.null(iterations)) iterations=5000

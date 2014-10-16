@@ -1,5 +1,5 @@
 MacroScript1 <- function(indata,dtafile,oldsyntax=FALSE,resp, levID, expl, rp, D='Normal', nonlinear=c(0,1), categ=NULL,notation=NULL, nonfp=NA, clre, Meth=1, extra=F,reset,rcon,fcon,maxiter,convtol,
-                         BUGO=NULL,mem.init="default", optimat=F, weighting=NULL,modelfile=modelfile,initfile=initfile,datafile=datafile,
+                         BUGO=NULL,mem.init="default", optimat=F, weighting=NULL, fpsandwich=F, rpsandwich=F,modelfile=modelfile,initfile=initfile,datafile=datafile,
                          macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode,startval=startval){
   
   nlev=length(levID)
@@ -1026,68 +1026,59 @@ MacroScript1 <- function(indata,dtafile,oldsyntax=FALSE,resp, levID, expl, rp, D
     wrt("EXTRa 1")
   }
   wrt("")
+
+  if (fpsandwich==TRUE) {
+    wrt("NOTE   Turn on sandwich estimators for the fixed part parameter standard errors")
+    wrt("FSDE 2")
+  } else {
+    wrt("FSDE 0")
+  }
+  wrt("")
+
+  if (rpsandwich==TRUE) {
+    wrt("NOTE   Turn on sandwich estimators for the random part parameter standard errors")
+    wrt("RSDE 2")
+  } else {
+    wrt("RSDE 0")
+  }
+  wrt("")
+
   if (!is.null(weighting)){
-    if (is.null(weighting$FSDE)) weighting$FSDE=2
-    if (is.null(weighting$RSDE)) weighting$RSDE=2
-    if(length(weighting$levels)==length(weighting$weights)){
-      for (i in 1:length(weighting$weights)){
-        if (!is.na(weighting$weights[i])){
-          wrt(paste("NOTE   Specify sampling weights at level", weighting$levels[i]))
-          wrt(paste("WEIG ", weighting$levels[i]," ", 1, " '",weighting$weights[i],"'",sep=""))
-          wrt("")
-        }else{
-          wrt(paste("NOTE   Specify equal weights at level", weighting$levels[i]))
-          wrt(paste("WEIG ", weighting$levels[i]," ", 1,sep=""))
-          wrt("")
-        }
-        if (as.integer(weighting$mode)==2){
+    for (i in 1:length(weighting$weightvar)) {
+      wtlev = (length(weighting$weightvar) - i) + 1
+      if (!is.na(weighting$weightvar[[i]])) {
+        wrt(paste("NOTE   Specify sampling weights at level", wtlev))
+        wrt(paste("WEIG ", wtlev," ", 1, " '",weighting$weightvar[[i]],"'",sep=""))
+      } else {
+        wrt(paste("NOTE   Specify equal weights at level", wtlev))
+        wrt(paste("WEIG ", wtlev," ", 1,sep=""))
+      }
+      wrt("")
+      if (weighting$standardised == TRUE) {
           wrt("NOTE   Standardised weighting")
           wrt("LINK 1 G21")
-          wrt(paste("WEIG ", weighting$levels[i]," ", 2, " G21[1]", sep=""))
+          wrt(paste("WEIG ", wtlev," ", 2, " G21[1]", sep=""))
           wrt("FILL G21")
           wrt("LINK 0 G21")
           wrt("WEIG 2")
           wrt("")
-        }
-        if (as.integer(weighting$mode)==1){
+      } else {
           wrt("NOTE   Raw weighting")
           wrt("LINK 1 G21")
-          wrt(paste("WEIG ", weighting$levels[i]," ", 2, " G21[1]", sep=""))
+          wrt(paste("WEIG ", wtlev," ", 2, " G21[1]", sep=""))
           wrt("FILL G21")
           wrt("LINK 0 G21")
           wrt("WEIG 1")
-          wrt("")
-        }
       }
-      if (as.integer(weighting$mode)>0){
-        wrt("NOTE   Create the standardised weights")
-        wrt("WEIG")
-        wrt("")
-        if ( weighting$FSDE==2){
-          wrt("NOTE   Turn on sandwich estimators for the fixed part parameter standard errors")
-          wrt("FSDE 2")
-          wrt("")
-        }else{
-          wrt("FSDE 0")
-          wrt("")
-        }
-        if ( weighting$RSDE==2){
-          wrt("NOTE   Turn on sandwich estimators for the random part parameter standard errors")
-          wrt("RSDE 2")
-          wrt("")
-        }else{
-          wrt("RSDE 0")
-          wrt("")
-        }
-      }else{
-        wrt("NOTE   Create the equal weights")
-        wrt("WEIG")
-        wrt("WEIG   0")
-        wrt("")
-      }
+   }
+    wrt("")
+    if (weighting$standardised == TRUE){
+      wrt("NOTE   Create the standardised weights")
+      wrt("WEIG")
     }else{
-      stop("The length of levels does not match with the length of weights.")
+      wrt("WEIG 0")
     }
+    wrt("")
   }
   if (D[1]=="Normal"){
     wrt("PREF   0")
