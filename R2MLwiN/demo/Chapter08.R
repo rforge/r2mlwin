@@ -41,7 +41,7 @@ cons <- rep(1, 108)
 
 ns <- 100
 IGLS_array <- MCMC_array <- array(, c(3, 2, ns))
-MCMC_median <- data.frame(RP2_var_cons = rep(0, ns), RP1_var_cons = rep(0, ns))
+MCMC_median <- data.frame(RP2_var_Intercept = rep(0, ns), RP1_var_Intercept = rep(0, ns))
 CounterMCMC <- rep(0, 3)
 Actual <- c(30, 10, 40)
 for(i in 1:ns){
@@ -50,18 +50,18 @@ for(i in 1:ns){
   e <- rnorm(108, 0, sqrt(Actual[3]))
   resp <- Actual[1] * cons + u + e
   indata <- data.frame(cbind(pupil, school, cons, resp))
-  simModelIGLS <- runMLwiN(resp ~ (0|cons) + (2|cons) + (1|cons), levID = c("school", "pupil"), data=indata)
+  simModelIGLS <- runMLwiN(resp ~ 1 + (school|1) + (pupil|1), data=indata)
   IGLS_array[,,i] <- cbind(coef(simModelIGLS), diag(vcov(simModelIGLS)))
-  simModelMCMC <- runMLwiN(resp ~ (0|cons) + (2|cons) + (1|cons), levID = c("school", "pupil"), estoptions = list(EstM = 1), data=indata)
+  simModelMCMC <- runMLwiN(resp ~ 1 + (school|1) + (pupil|1), estoptions = list(EstM = 1), data=indata)
   MCMC_array[,,i] <- cbind(coef(simModelMCMC), diag(vcov(simModelMCMC)))
-  MCMC_median[i, ] <- c(median(simModelMCMC["chains"][,"RP2_var_cons"]), median(simModelMCMC["chains"][,"RP1_var_cons"]))
-  if (Actual[1] > quantile(simModelMCMC["chains"][,"FP_cons"], 0.025) & Actual[1] < quantile(simModelMCMC["chains"][,"FP_cons"], 0.975)) {
+  MCMC_median[i, ] <- c(median(simModelMCMC["chains"][,"RP2_var_Intercept"]), median(simModelMCMC["chains"][,"RP1_var_Intercept"]))
+  if (Actual[1] > quantile(simModelMCMC["chains"][,"FP_Intercept"], 0.025) & Actual[1] < quantile(simModelMCMC["chains"][,"FP_Intercept"], 0.975)) {
     CounterMCMC[1] <- CounterMCMC[1] + 1
   }
-  if (Actual[2] > quantile(simModelMCMC["chains"][,"RP2_var_cons"], 0.025) & Actual[2] < quantile(simModelMCMC["chains"][,"RP2_var_cons"], 0.975)) {
+  if (Actual[2] > quantile(simModelMCMC["chains"][,"RP2_var_Intercept"], 0.025) & Actual[2] < quantile(simModelMCMC["chains"][,"RP2_var_Intercept"], 0.975)) {
     CounterMCMC[2] <- CounterMCMC[2] + 1
   }
-  if (Actual[3] > quantile(simModelMCMC["chains"][,"RP1_var_cons"], 0.025) & Actual[3] < quantile(simModelMCMC["chains"][,"RP1_var_cons"], 0.975)) {
+  if (Actual[3] > quantile(simModelMCMC["chains"][,"RP1_var_Intercept"], 0.025) & Actual[3] < quantile(simModelMCMC["chains"][,"RP1_var_Intercept"], 0.975)) {
     CounterMCMC[3] <- CounterMCMC[3] + 1
   }
 }
@@ -98,7 +98,7 @@ cat("Simulation results using MCMC\n"); MCMC_results
 
 # Investigating median estimates with Gamma(epsilon,epsilon) priors
 
-Mean_across_simus <- round(c(mean(MCMC_median$RP2_var_cons), mean(MCMC_median$RP1_var_cons)), 2)
+Mean_across_simus <- round(c(mean(MCMC_median$RP2_var_Intercept), mean(MCMC_median$RP1_var_Intercept)), 2)
 Actual <- tail(Actual, -1)
 Percent_bias <- round(-100 * (1 - Mean_across_simus / Actual), 2)
 Percent_interval_coverage <- tail(Percent_interval_coverage, -1)

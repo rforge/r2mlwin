@@ -39,11 +39,11 @@ reading1[reading1==-10] <- NA
 
 summary(reading1)
 
-reading <- reshape(reading1,
-  idvar="student",
+reading <- reshape(reading1, 
+  idvar="student", 
   timevar="ID",
-  varying=c("READ1", "AGE1", "READ2", "AGE2", "READ3", "AGE3", "READ4", "AGE4", "READ5", "AGE5", "READ6", "AGE6"),
-  sep="",
+  varying=c("READ1", "AGE1", "READ2", "AGE2", "READ3", "AGE3", "READ4", "AGE4", "READ5", "AGE5", "READ6", "AGE6"), 
+  sep="", 
   direction="long"
 )
 
@@ -70,20 +70,18 @@ tab$age[7,] <- c(length(na.omit(reading$age)), mean(na.omit(reading$age)), sd(na
 rownames(tab)[7] <- "Total"
 tab
 
-reading$cons <- rep(1, nrow(reading))
-
-(mymodel1 <- runMLwiN(reading~(0|cons)+(1|cons)+(2|cons), levID=c("student", "occasion"), data=reading))
+(mymodel1 <- runMLwiN(reading~1+(student|1)+(occasion|1), data=reading))
 
 
 # 13.3 A linear growth curve model . . . . . . . . . . . . . . . . . . . 201
 
-(mymodel2 <- runMLwiN(reading~(0|cons+age)+(1|cons)+(2|cons), levID=c("student", "occasion"),
+(mymodel2 <- runMLwiN(reading~1+age+(student|1)+(occasion|1), 
  estoptions=list(startval=list(FP.b=mymodel1@FP, FP.v=mymodel1@FP.cov, RP.b=mymodel1@RP, RP.v=mymodel1@RP.cov)), data=reading))
 
-(mymodel3 <- runMLwiN(reading~(0|cons+age)+(1|cons)+(2|cons+age), levID=c("student", "occasion"),
+(mymodel3 <- runMLwiN(reading~1+age+(student|1+age)+(occasion|1), 
  estoptions=list(resi.store=TRUE, startval=list(FP.b=mymodel2@FP, FP.v=mymodel2@FP.cov, RP.b=mymodel2@RP, RP.v=mymodel2@RP.cov)), data=reading))
 
-u0 <- na.omit(mymodel3@residual[,"lev_2_resi_est_cons"])
+u0 <- na.omit(mymodel3@residual[,"lev_2_resi_est_Intercept"])
 u0std <- (u0 - mean(u0))/sd(u0)
 
 u1 <- na.omit(mymodel3@residual[,"lev_2_resi_est_age"])
@@ -91,7 +89,7 @@ u1std <- (u1 - mean(u1))/sd(u1)
 
 plot(u0std, u1std, asp=1)
 
-e0 <- na.omit(mymodel3@residual[,"lev_1_resi_est_cons"])
+e0 <- na.omit(mymodel3@residual[,"lev_1_resi_est_Intercept"])
 e0std <- (e0 - mean(e0))/sd(e0)
 e0rank <- rank(e0)
 e0uniform <- (e0rank - 0.5)/length(e0rank)
@@ -101,43 +99,40 @@ plot(e0std, e0nscore, asp=1)
 
 # 13.4 Complex level 1 variation . . . . . . . . . . . . . . . . . . . . 204
 
-(mymodel4 <- runMLwiN(reading~(0|cons+age)+(1|cons+age)+(2|cons+age), levID=c("student", "occasion"), data=reading))
+(mymodel4 <- runMLwiN(reading~1+age+(student|1+age)+(occasion|1+age), data=reading))
 
 # 13.5 Repeated measures modelling of non-linear polynomial growth . . . 205
 
-reading$agesq <- reading$age^2
+(mymodel5 <- runMLwiN(reading~1+age+I(age^2)+(student|1+age+I(age^2))+(occasion|1+age), estoptions=list(resi.store=TRUE), data=reading))
 
-(mymodel5 <- runMLwiN(reading~(0|cons+age+agesq)+(1|cons+age)+(2|cons+age+agesq), levID=c("student", "occasion"),
- estoptions=list(resi.store=TRUE), data=reading))
+l2varfn <- mymodel5@RP["RP2_var_Intercept"] + 2*mymodel5@RP["RP2_cov_Intercept_age"]*mymodel5@data$age + mymodel5@RP["RP2_var_age"]*mymodel5@data$age^2 + 2*mymodel5@RP["RP2_cov_Intercept_I(age^2)"]*mymodel5@data$age^2 + 2*mymodel5@RP["RP2_cov_age_I(age^2)"]*mymodel5@data$age*mymodel5@data[["I(age^2)"]] + mymodel5@RP["RP2_var_I(age^2)"]*mymodel5@data[["I(age^2)"]]^2
 
-l2varfn <- mymodel5@RP["RP2_var_cons"] + 2*mymodel5@RP["RP2_cov_cons_age"]*reading$age + mymodel5@RP["RP2_var_age"]*reading$age^2 + 2*mymodel5@RP["RP2_cov_cons_agesq"]*reading$agesq + 2*mymodel5@RP["RP2_cov_age_agesq"]*reading$age*reading$agesq + mymodel5@RP["RP2_var_agesq"]*reading$agesq^2
-
-l1varfn <- mymodel5@RP["RP1_var_cons"] + 2*mymodel5@RP["RP1_cov_cons_age"]*reading$age + mymodel5@RP["RP1_var_age"]*reading$age^2
+l1varfn <- mymodel5@RP["RP1_var_Intercept"] + 2*mymodel5@RP["RP1_cov_Intercept_age"]*mymodel5@data$age + mymodel5@RP["RP1_var_age"]*mymodel5@data$age^2
 
 totvarfn <- l2varfn + l2varfn
 
-plot(totvarfn, reading$age)
+plot(totvarfn, mymodel5@data$age)
 
-xb <- as.matrix(reading[,c("cons", "age", "agesq")]) %*% as.matrix(mymodel5@FP)
+xb <- predict(mymodel5)
 
-u0 <- na.omit(mymodel5@residual[,"lev_2_resi_est_cons"])
+u0 <- na.omit(mymodel5@residual[,"lev_2_resi_est_Intercept"])
 u1 <- na.omit(mymodel5@residual[,"lev_2_resi_est_age"])
-u2 <- na.omit(mymodel5@residual[,"lev_2_resi_est_agesq"])
+u2 <- na.omit(mymodel5@residual[,"lev_2_resi_est_I(age^2)"])
 
-yhat <- xb + u0[reading$student] + u1[reading$student]*reading$age + u2[reading$student]*reading$agesq
+yhat <- xb + u0[mymodel5@data$student] + u1[mymodel5@data$student]*mymodel5@data$age + u2[mymodel5@data$student]*mymodel5@data[["I(age^2)"]]
 
-plot(reading$age, yhat, type="n")
-lines(reading$age[reading$student==1], yhat[reading$student==1], col=1)
-lines(reading$age[reading$student==2], yhat[reading$student==2], col=2)
-lines(reading$age[reading$student==3], yhat[reading$student==3], col=3)
-lines(reading$age[reading$student==4], yhat[reading$student==4], col=4)
+plot(mymodel5@data$age, yhat, type="n")
+lines(mymodel5@data$age[mymodel5@data$student==1], yhat[mymodel5@data$student==1], col=1)
+lines(mymodel5@data$age[mymodel5@data$student==2], yhat[mymodel5@data$student==2], col=2)
+lines(mymodel5@data$age[mymodel5@data$student==3], yhat[mymodel5@data$student==3], col=3)
+lines(mymodel5@data$age[mymodel5@data$student==4], yhat[mymodel5@data$student==4], col=4)
 
-plot(reading$age, yhat, type="n")
-lines(reading$age[reading$student==10], yhat[reading$student==10], col=1)
-lines(reading$age[reading$student==11], yhat[reading$student==11], col=2)
-lines(reading$age[reading$student==12], yhat[reading$student==12], col=3)
-lines(reading$age[reading$student==13], yhat[reading$student==13], col=4)
-lines(reading$age[reading$student==14], yhat[reading$student==14], col=4)
+plot(mymodel5@data$age, yhat, type="n")
+lines(mymodel5@data$age[mymodel5@data$student==10], yhat[mymodel5@data$student==10], col=1)
+lines(mymodel5@data$age[mymodel5@data$student==11], yhat[mymodel5@data$student==11], col=2)
+lines(mymodel5@data$age[mymodel5@data$student==12], yhat[mymodel5@data$student==12], col=3)
+lines(mymodel5@data$age[mymodel5@data$student==13], yhat[mymodel5@data$student==13], col=4)
+lines(mymodel5@data$age[mymodel5@data$student==14], yhat[mymodel5@data$student==14], col=4)
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .209
 

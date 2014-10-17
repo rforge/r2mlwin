@@ -36,15 +36,15 @@ data(tutorial)
 ## Define the model
 ## IGLS
 ## Fit the model
-(mymodel1 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), data=tutorial))
+(mymodel1 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), data=tutorial))
 
 ## Diffuse priors (Gamma priors)
 ## Fit the model
-(mymodel2 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1), data=tutorial))
+(mymodel2 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), estoptions=list(EstM=1), data=tutorial))
 
 ## Diffuse priors (Uniform priors)
 ## Fit the model
-(mymodel3 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
+(mymodel3 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),
  estoptions=list(EstM=1, mcmcMeth=list(priorcode=0)), data=tutorial))
 
 aa <- cbind(mymodel1["FP"],mymodel2["FP"],mymodel3["FP"])
@@ -58,14 +58,14 @@ rm(list=c("mymodel1", "mymodel2", "mymodel3"))
 
 ## Informative normal prior for beta_1
 ## Fit the model
-(mymodel4 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
+(mymodel4 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),
  estoptions=list(EstM=1, mcmcMeth=list(priorParam=list(fixe=list(standlrt=c(1,.01))))), data=tutorial))
 
 sixway(mymodel4["chains"][,"FP_standlrt"],"beta_1")
 
 ## Informative normal prior for beta_1
 ## Fit the model
-(mymodel5 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
+(mymodel5 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), 
  estoptions=list(EstM=1, mcmcMeth=list(priorParam=list(fixe=list(standlrt=c(1,.1))))), data=tutorial))
 
 sixway(mymodel5["chains"][,"FP_standlrt"],"beta_1")
@@ -74,37 +74,37 @@ sixway(mymodel5["chains"][,"FP_standlrt"],"beta_1")
 
 ## Specifies an ingormative prior for sigma2u
 ## Fit the model
-(mymodel6 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
+(mymodel6 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),
  estoptions=list(EstM=1, mcmcMeth=list(priorParam=list(rp2=list(estimates=.2,size=100)))), data=tutorial))
 
-sixway(mymodel6["chains"][,"RP2_var_cons"],"sigma^2_u0")
+sixway(mymodel6["chains"][,"RP2_var_Intercept"],"sigma^2_u0")
 
 # 5.5 Changing the random number seed and the parameter starting values  .66
 
 ## Set starting values for random and fixed parameter estimates
 FP.b <- c(-2,5)
-names(FP.b) <- c("FP_cons","FP_standlrt")
+names(FP.b) <- c("FP_Intercept","FP_standlrt")
 RP.b <- c(2,4)
-names(RP.b) <- c("RP2_var_cons","RP1_var_cons")
+names(RP.b) <- c("RP2_var_Intercept","RP1_var_Intercept")
 startval <- list(FP.b=FP.b,RP.b=RP.b)
 
 ## Fit the model
-(mymodel7 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
+(mymodel7 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),
  estoptions=list(EstM=1, mcmcMeth=list(burnin=0, iterations=500), startval=startval), data=tutorial))
 
 rm(list=c("mymodel4", "mymodel5", "mymodel6", "mymodel7"))
 
 ##Use different seeds
-(mymodel8 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
+(mymodel8 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),
  estoptions=list(EstM=1, mcmcMeth=list(seed=1)), data=tutorial))
 
-(mymodel9 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
+(mymodel9 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),
  estoptions=list(EstM=1, mcmcMeth=list(seed=2)), data=tutorial))
 
-(mymodel10 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
+(mymodel10 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),
  estoptions=list(EstM=1, mcmcMeth=list(seed=3)), data=tutorial))
 
-(mymodel11 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
+(mymodel11 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),
  estoptions=list(EstM=1, mcmcMeth=list(seed=4)), data=tutorial))
 
 aa <- cbind(mymodel8["FP"],mymodel9["FP"],mymodel10["FP"],mymodel11["FP"])

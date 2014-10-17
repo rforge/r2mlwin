@@ -51,7 +51,7 @@ tab
 
 t.test(normexam~sex, data=tutorial, var.equal=TRUE)
 
-(mymodel1 <- runMLwiN(normexam~(0|cons+sex)+(1|cons), levID=c("student"), data=tutorial))
+(mymodel1 <- runMLwiN(normexam~1+sex+(student|1), data=tutorial))
 
 # 2.4 Comparing more than two groups: Fixed effects models . . . . . . . .20
 
@@ -59,35 +59,29 @@ mean_normexam <- aggregate(normexam ~ school, mean, data=tutorial)$normexam
 
 hist(mean_normexam)
 
-mymodel2 <- runMLwiN(normexam~(0|cons)+(1|cons), levID=c("student"), data=tutorial)
+mymodel2 <- runMLwiN(normexam~1+(student|1), data=tutorial)
 
-tutorial <- cbind(tutorial,Untoggle(tutorial[["school"]],"school"))
+tutorial$school <- relevel(tutorial$school, 65)
 
-formula <- as.formula(paste0("normexam~(0|cons+", paste0("school_", 1:64, collapse="+"), ")+(1|cons)"))
-
-(mymodel3 <- runMLwiN(formula, levID=c("student"), data=tutorial))
+(mymodel3 <- runMLwiN(normexam~1+school+(student|1), data=tutorial))
 
 aov(normexam ~ school, data=tutorial)
 
+if (!require(lmtest)) install.packages("lmtest")
 
-LR <- logLik(mymodel2) - logLik(mymodel3)
-LR
+lrtest(mymodel2, mymodel3)
 
-
-tutorial <- cbind(tutorial,Untoggle(tutorial[["schgend"]],"schgend"))
-
-formula <- as.formula(paste0("normexam~(0|cons+", paste0("school_", 1:64, collapse="+"), "+schgend_boysch+schgend_girlsch)+(1|cons)"))
-
-
-(mymodel4 <- runMLwiN(formula, levID=c("student"), data=tutorial))
+(mymodel4 <- runMLwiN(normexam~1+school+schgend+(student|1), data=tutorial))
 
 
 
 # 2.5 Comparing means: Random effects or multilevel model . . .  . . . . .28
 
-(mymodel5 <- runMLwiN(normexam~(0|cons)+(1|cons)+(2|cons), levID=c("school", "student"), data=tutorial))
+tutorial$school <- as.numeric(levels(tutorial$school))[tutorial$school]
 
-(mymodel6 <- runMLwiN(normexam~(0|cons+schgend_boysch+schgend_girlsch)+(1|cons)+(2|cons), levID=c("school", "student"), data=tutorial))
+(mymodel5 <- runMLwiN(normexam~1+(school|1)+(student|1), data=tutorial))
+
+(mymodel6 <- runMLwiN(normexam~1+schgend+(school|1)+(student|1), data=tutorial))
 
 
 #     Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . 35

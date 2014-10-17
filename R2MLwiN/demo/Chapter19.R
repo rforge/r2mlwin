@@ -34,8 +34,6 @@ options(MLwiN_path=mlwin)
 data(jspmix1)
 
 jspmix1$denomb <- jspmix1$cons
-jspmix1$sex <- as.integer(jspmix1$sex) - 1
-jspmix1$behaviour <- as.integer(jspmix1$behaviour) - 1
 
 tab1 <- matrix(,3,3)
 colnames(tab1)<- c("0","1","TOTALS")
@@ -50,16 +48,18 @@ tab1[3,2] <- sd(jspmix1$english[jspmix1$behaviour==1])
 tab1[3,3] <- sd(jspmix1$english)
 formatC(tab1)
 
-round(cor(jspmix1[,c("sex","fluent","ravens","english","behaviour")]),4)
+vars <- cbind(as.numeric(jspmix1$sex)-1, jspmix1$fluent, jspmix1$ravens, jspmix1$english, as.numeric(jspmix1$behaviour)-1)
+colnames(vars) <- c("sex", "fluent", "ravens", "english", "behaviour")
+round(cor(vars),4)
 
 # 19.3 Setting up a single level mixed response model . . . . . . . . . .291
 
-(mymodel <- runMLwiN(c(english,probit(behaviour,denomb))~(`0s`|cons+sex+ravens)+(`0c`|fluent(1,0))+(`1s`|cons.english), levID="id", D=c("Mixed","Normal","Binomial"),
+(mymodel <- runMLwiN(c(english,probit(behaviour,denomb))~1+sex+ravens+fluent[1]+(id|1[1]), D=c("Mixed","Normal","Binomial"),
  estoptions=list(EstM=1, mcmcMeth=list(fixM=1, residM=1, Lev1VarM=1), sort.ignore=TRUE), data=jspmix1))
 
 # 19.4 Multilevel mixed response model . . . . . . . . . . . . . . . . . 294
 
-(mymodel <- runMLwiN(c(english,probit(behaviour,denomb))~(`0s`|cons+sex+ravens)+(`0c`|fluent(1,0))+(`2s`|cons)+(`1s`|cons.english), levID=c('school', 'id'), D=c("Mixed","Normal","Binomial"),
+(mymodel <- runMLwiN(c(english,probit(behaviour,denomb))~1+sex+ravens+fluent[1]+(school|1)+(id|1[1]), D=c("Mixed","Normal","Binomial"),
  estoptions=list(EstM=1, mcmcMeth=list(fixM=1, residM=1, Lev1VarM=1)), data=jspmix1))
 
 # 19.5 Rats dataset . . . . . . . . . . . . . . . . . . . . . . . . . . .295
@@ -80,9 +80,9 @@ options(MLwiN_path=mlwin)
 ## Read rats data
 data(rats)
 
-(mymodel <- runMLwiN(c(y8,y15,y22,y29,y36)~(0|cons)+(1|cons), levID="rat", D='Multivariate Normal', estoptions=list(EstM=1), data=rats))
+(mymodel <- runMLwiN(c(y8,y15,y22,y29,y36)~1+(rat|1), D='Multivariate Normal', estoptions=list(EstM=1), data=rats))
 
-sixway(mymodel["chains"][,"RP1_var_cons_y8"],"sigma2u0")
+sixway(mymodel["chains"][,"RP1_var_Intercept_y8"],"sigma2u0")
 
 covM1 <- matrix(,5,5)
 colnames(covM1) <- rownames(covM1) <- c("cons.y8","cons.y15","cons.y22","cons.y29","cons.y36")
@@ -93,7 +93,7 @@ round(cov2cor(t(covM1)),3)
 
 # 19.6 Fitting an autoregressive structure to the variance matrix . . . .298
 
-(mymodel <- runMLwiN(c(y8,y15,y22,y29,y36)~(0|cons)+(1|cons), levID="rat", D='Multivariate Normal',
+(mymodel <- runMLwiN(c(y8,y15,y22,y29,y36)~1+(rat|1), D='Multivariate Normal',
  estoptions=list(EstM=1, mcmcMeth=list(iterations=50000), mcmcOptions=list(mcco=4)), data=rats))
 
 covM2 <- matrix(,5,5)

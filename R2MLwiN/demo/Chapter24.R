@@ -34,16 +34,16 @@ data(tutorial)
 
 ## Define the model
 
-(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1), data=tutorial))
+(mymodel <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), estoptions=list(EstM=1), data=tutorial))
 
-summary(mymodel["chains"][,"RP2_var_cons"])
-sixway(mymodel["chains"][,"RP2_var_cons"],"sigma2u2")
+summary(mymodel["chains"][,"RP2_var_Intercept"])
+sixway(mymodel["chains"][,"RP2_var_Intercept"],"sigma2u2")
 
 ## Parameter expansion at level 2
 
-(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1, mcmcOptions=list(paex=c(2,1))), data=tutorial))
+(mymodel <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), estoptions=list(EstM=1, mcmcOptions=list(paex=c(2,1))), data=tutorial))
 
-sixway(mymodel["chains"][,"RP2_var_cons"],"sigma2u0")
+sixway(mymodel["chains"][,"RP2_var_Intercept"],"sigma2u0")
 
 # 24.3 Binary responses - Voting example . . . . . . . . . . . . . . . . 386
 
@@ -53,25 +53,25 @@ data(bes83)
 
 ## Define the model
 
-(mymodel <- runMLwiN(logit(votecons,cons)~(0|cons+defence+unemp+taxes+privat)+(2|cons), levID=c('area','voter'), D="Binomial", estoptions=list(EstM=1), data=bes83))
+(mymodel <- runMLwiN(logit(votecons,cons)~1+defence+unemp+taxes+privat+(area|1), D="Binomial", estoptions=list(EstM=1), data=bes83))
 
-sixway(mymodel["chains"][,"RP2_var_cons"],acf.maxlag=500,"sigma2u0")
+sixway(mymodel["chains"][,"RP2_var_Intercept"],acf.maxlag=500,"sigma2u0")
 
 ## Parameter expansion at level 2
 
-(mymodel <- runMLwiN(logit(votecons,cons)~(0|cons+defence+unemp+taxes+privat)+(2|cons), levID=c('area','voter'), D="Binomial",
+(mymodel <- runMLwiN(logit(votecons,cons)~1+defence+unemp+taxes+privat+(area|1), D="Binomial",
  estoptions=list(EstM=1, mcmcOptions=list(paex=c(2,1))), data=bes83))
 
-sixway(mymodel["chains"][,"RP2_var_cons"],acf.maxlag=500,"sigma2u0")
+sixway(mymodel["chains"][,"RP2_var_Intercept"],acf.maxlag=500,"sigma2u0")
 
 # 24.4 The choice of prior distribution . . . . . . . . . . . . . . . . .390
 
 ## Uniform on the variance scale priors+Parameter expansion at level 2
 
-(mymodel <- runMLwiN(logit(votecons,cons)~(0|cons+defence+unemp+taxes+privat)+(2|cons), levID=c('area','voter'), D="Binomial",
+(mymodel <- runMLwiN(logit(votecons,cons)~1+defence+unemp+taxes+privat+(area|1), D="Binomial",
  estoptions=list(EstM=1, mcmcMeth=list(priorcode=0), mcmcOptions=list(paex=c(2,1))), data=bes83))
 
-sixway(mymodel["chains"][,"RP2_var_cons"],acf.maxlag=100,"sigma2u0")
+sixway(mymodel["chains"][,"RP2_var_Intercept"],acf.maxlag=100,"sigma2u0")
 
 # 24.5 Parameter expansion and WinBUGS . . . . . . . . . . . . . . . . . 391
 
@@ -88,7 +88,7 @@ while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file
 ## winbugs executable
 # winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
 
-mymodel <- runMLwiN(logit(votecons,cons)~(0|cons+defence+unemp+taxes+privat)+(2|cons), levID=c('area','voter'), D="Binomial",
+mymodel <- runMLwiN(logit(votecons,cons)~1+defence+unemp+taxes+privat+(area|1), D="Binomial",
  estoptions=list(EstM=1, mcmcMeth=list(priorcode=0), mcmcOptions=list(paex=c(2,1)), show.file=T),
  BUGO=c(version=4, n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=bes83)
 
@@ -103,10 +103,10 @@ data(tutorial)
 
 ## Define the model
 
-(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1), data=tutorial))
+(mymodel <- runMLwiN(normexam~1+standlrt+(school|1+standlrt)+(student|1), estoptions=list(EstM=1), data=tutorial))
 
 ## Parameter expansion at level 2
-(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons), levID=c('school','student'),
+(mymodel <- runMLwiN(normexam~1+standlrt+(school|1+standlrt)+(student|1),
  estoptions=list(EstM=1, mcmcOptions=list(paex=c(2,1))), data=tutorial))
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .399

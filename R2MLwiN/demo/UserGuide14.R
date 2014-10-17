@@ -37,29 +37,29 @@ summary(gcsemv1)
 
 # 14.3 Setting up the basic model . . . . . . . . . . . . . . . . . . . .214
 
-(mymodel1 <- runMLwiN(c(written, csework)~(0|cons)+(1|cons), levID="student", D="Multivariate Normal", estoptions=list(sort.ignore=TRUE), data=gcsemv1))
+(mymodel1 <- runMLwiN(c(written, csework)~1+(student|1), D="Multivariate Normal", estoptions=list(sort.ignore=TRUE), data=gcsemv1))
 
-(mymodel2 <- runMLwiN(c(written, csework)~(0|cons+female)+(1|cons)+(2|cons), levID=c("school", "student"), D="Multivariate Normal", data=gcsemv1))
+(mymodel2 <- runMLwiN(c(written, csework)~1+female+(school|1)+(student|1), D="Multivariate Normal", data=gcsemv1))
 
-mymodel2@RP["RP2_cov_cons_written_cons_csework"]/sqrt(mymodel2@RP["RP2_var_cons_written"]*mymodel2@RP["RP2_var_cons_csework"])
+mymodel2@RP["RP2_cov_Intercept_written_Intercept_csework"]/sqrt(mymodel2@RP["RP2_var_Intercept_written"]*mymodel2@RP["RP2_var_Intercept_csework"])
 
-mymodel2@RP["RP1_cov_cons_written_cons_csework"]/sqrt(mymodel2@RP["RP1_var_cons_written"]*mymodel2@RP["RP1_var_cons_csework"])
+mymodel2@RP["RP1_cov_Intercept_written_Intercept_csework"]/sqrt(mymodel2@RP["RP1_var_Intercept_written"]*mymodel2@RP["RP1_var_Intercept_csework"])
 
 # 14.4 A more elaborate model . . . . . . . . . . . . . . . . . . . . . .219
 
-(mymodel3 <- runMLwiN(c(written, csework)~(0|cons+female)+(1|cons)+(2|cons+female), levID=c("school", "student"), D="Multivariate Normal", data=gcsemv1))
+(mymodel3 <- runMLwiN(c(written, csework)~1+female+(school|1+female)+(student|1), D="Multivariate Normal", data=gcsemv1))
 
-(mymodel4 <- runMLwiN(c(written, csework)~(0|cons+female)+(1|cons)+(2|cons+female.csework), levID=c("school", "student"), D="Multivariate Normal", estoptions=list(resi.store=TRUE), data=gcsemv1))
+(mymodel4 <- runMLwiN(c(written, csework)~1+female+(school|1+female[1])+(student|1), D="Multivariate Normal", estoptions=list(resi.store=TRUE), data=gcsemv1))
 
-mymodel4@RP["RP2_cov_cons_written_cons_csework"]/sqrt(mymodel4@RP["RP2_var_cons_written"]*mymodel4@RP["RP2_var_cons_csework"])
+mymodel4@RP["RP2_cov_Intercept_written_Intercept_csework"]/sqrt(mymodel4@RP["RP2_var_Intercept_written"]*mymodel4@RP["RP2_var_Intercept_csework"])
 
-mymodel4@RP["RP2_cov_cons_written_female_csework"]/sqrt(mymodel4@RP["RP2_var_cons_written"]*mymodel4@RP["RP2_var_female_csework"])
+mymodel4@RP["RP2_cov_Intercept_written_femaleFemale_1"]/sqrt(mymodel4@RP["RP2_var_Intercept_written"]*mymodel4@RP["RP2_var_femaleFemale_1"])
 
-mymodel4@RP["RP2_cov_cons_csework_female_csework"]/sqrt(mymodel4@RP["RP2_var_cons_csework"]*mymodel4@RP["RP2_var_female_csework"])
+mymodel4@RP["RP2_cov_Intercept_csework_femaleFemale_1"]/sqrt(mymodel4@RP["RP2_var_Intercept_csework"]*mymodel4@RP["RP2_var_femaleFemale_1"])
 
-u0 <- na.omit(mymodel4@residual[,"lev_2_resi_est_cons.written"])
-u1 <- na.omit(mymodel4@residual[,"lev_2_resi_est_cons.csework"])
-u2 <- na.omit(mymodel4@residual[,"lev_2_resi_est_female.csework"])
+u0 <- na.omit(mymodel4@residual[,"lev_2_resi_est_Intercept.written"])
+u1 <- na.omit(mymodel4@residual[,"lev_2_resi_est_Intercept.csework"])
+u2 <- na.omit(mymodel4@residual[,"lev_2_resi_est_femaleFemale.1"])
 
 plot(u0, u0, asp=1)
 plot(u0, u1, asp=1)
@@ -75,7 +75,7 @@ data(tutorial)
 tutorial$binexam <- as.integer(tutorial$normexam > 0)
 tutorial$binlrt <- as.integer(tutorial$standlrt > 0)
 
-(mymodel5 <- runMLwiN(c(logit(binexam, cons), logit(binlrt, cons))~(0|cons), levID="student", D=c("Mixed", "Binomial", "Binomial"), estoptions=list(sort.ignore=TRUE), data=tutorial))
+(mymodel5 <- runMLwiN(c(logit(binexam, cons), logit(binlrt, cons))~1, D=c("Mixed", "Binomial", "Binomial"), estoptions=list(sort.ignore=TRUE), data=tutorial))
 
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .224

@@ -34,25 +34,25 @@ data(tutorial)
 
 plot(tutorial$standlrt, tutorial$normexam, asp=1)
 
-(mymodel1 <- runMLwiN(normexam~(0|cons+standlrt)+(1|cons), levID=c("student"), data=tutorial))
+(mymodel1 <- runMLwiN(normexam~1+standlrt+(student|1), data=tutorial))
 
-(mymodel2 <- runMLwiN(normexam~(0|cons+standlrt)+(1|cons)+(2|cons), levID=c("school", "student"), estoptions=list(resi.store=TRUE), data=tutorial))
+(mymodel2 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), estoptions=list(resi.store=TRUE), data=tutorial))
 
 # 4.2 Graphing predicted school lines from a random intercept model . . . 51
 
-xbu <- as.matrix(tutorial[,c("cons", "standlrt")]) %*% as.matrix(mymodel2@FP)
+xb <- predict(mymodel2)
 
-plot(tutorial$standlrt, xbu, type="l")
+plot(tutorial$standlrt, xb, type="l")
 
-u0 <- na.omit(mymodel2@residual$lev_2_resi_est_cons)
+u0 <- na.omit(mymodel2@residual$lev_2_resi_est_Intercept)
 
-xbu <- xbu + u0[tutorial$school]
+xbu <- xb + u0[mymodel2@data$school]
 
 head(u0)
 
 plot(tutorial$standlrt, xbu, type="l")
 
-pred <- as.data.frame(cbind(tutorial$school, tutorial$standlrt, xbu)[order(tutorial$school, tutorial$standlrt), ])
+pred <- as.data.frame(cbind(mymodel2@data$school, mymodel2@data$standlrt, xbu)[order(mymodel2@data$school, mymodel2@data$standlrt), ])
 
 colnames(pred) <- c("school", "standlrt", "xbu")
 
@@ -60,28 +60,26 @@ xyplot(xbu~standlrt, type="l", group=school, data=pred)
 
 # 4.3 The effect of clustering on the standard errors of coeficients . . .58
 
-tutorial <- cbind(tutorial,Untoggle(tutorial[["schgend"]],"schgend"))
+(mymodel3 <- runMLwiN(normexam~1+standlrt+schgend+(school|1)+(student|1), data=tutorial))
 
-(mymodel3 <- runMLwiN(normexam~(0|cons+standlrt+schgend_boysch+schgend_girlsch)+(1|cons)+(2|cons), levID=c("school", "student"), data=tutorial))
+(mymodel4 <- runMLwiN(normexam~1+standlrt+schgend+(student|1), data=tutorial))
 
-(mymodel4 <- runMLwiN(normexam~(0|cons+standlrt+schgend_boysch+schgend_girlsch)+(1|cons)+(2|cons), levID=c("student"), data=tutorial))
-
-# 4.4 Does the coeficient of standlrt vary across schools? Introducing a
+# 4.4 Does the coeficient of standlrt vary across schools? Introducing a 
 #     random slope . . . . . . . . . . . . . . . . . . . . . . . . . . . .59
 
-(mymodel5 <- runMLwiN(normexam~(0|cons+standlrt)+(1|cons)+(2|cons+standlrt), levID=c("school", "student"), estoptions=list(resi.store=TRUE), data=tutorial))
+(mymodel5 <- runMLwiN(normexam~1+standlrt+(school|1+standlrt)+(student|1), estoptions=list(resi.store=TRUE), data=tutorial))
 
 # 4.5 Graphing predicted school lines from a random slope model . . . . . 62
 
-xb <- as.matrix(tutorial[,c("cons", "standlrt")]) %*% as.matrix(mymodel5@FP)
+xb <- predict(mymodel5)
 
-u <- cbind(na.omit(mymodel5@residual$lev_2_resi_est_cons), na.omit(mymodel5@residual$lev_2_resi_est_standlrt))
+u <- cbind(na.omit(mymodel5@residual$lev_2_resi_est_Intercept), na.omit(mymodel5@residual$lev_2_resi_est_standlrt))
 
-rphat <- rowSums(as.matrix(tutorial[,c("cons", "standlrt")]) * as.matrix(u[tutorial$school,]))
+rphat <- rowSums(as.matrix(mymodel5@data[,c("Intercept", "standlrt")]) * as.matrix(u[tutorial$school,]))
 
 xbu = xb + rphat
 
-pred <- as.data.frame(cbind(tutorial$school, tutorial$standlrt, xbu)[order(tutorial$school, tutorial$standlrt), ])
+pred <- as.data.frame(cbind(mymodel5@data$school, mymodel5@data$standlrt, xbu)[order(mymodel5@data$school, mymodel5@data$standlrt), ])
 
 colnames(pred) <- c("school", "standlrt", "xbu")
 

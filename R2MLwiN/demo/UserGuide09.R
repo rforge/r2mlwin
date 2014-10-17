@@ -42,21 +42,18 @@ summary(bang)
 # Fitting a single-level logit model in MLwiN . . . . . . . . . . . . . .121
 
 addmargins(with(bang, table(lc, use)))
-bang["One_child"] <- as.integer(bang$lc == "One child")
-bang["Two_children"] <- as.integer(bang$lc == "Two children")
-bang["Three_plus"] <- as.integer(bang$lc == "Three plus")
 
-(mymodel1 <- runMLwiN(logit(use, cons)~(0|cons + One_child + Two_children + Three_plus), levID="woman", D="Binomial", data=bang))
+(mymodel1 <- runMLwiN(logit(use, cons)~1+lc, D="Binomial", data=bang))
 
-if (require(car)){
-  linearHypothesis(mymodel1, "FP_One_child = FP_Two_children")
-}
+if (!require(car)) install.packages("car")
+
+linearHypothesis(mymodel1, "FP_lcOne child = FP_lcTwo children")
 
 # A probit model . . . . . . . . . . . . . . . . . . . . . . . . . . . . 126
 
-(mymodel2 <- runMLwiN(probit(use, cons)~(0|cons + One_child + Two_children + Three_plus), levID="woman", D="Binomial", data=bang))
+(mymodel2 <- runMLwiN(probit(use, cons)~1+lc, D="Binomial", data=bang))
 
-(mymodel3 <- runMLwiN(logit(use, cons)~(0|cons + One_child + Two_children + Three_plus + age), levID="woman", D="Binomial", data=bang))
+(mymodel3 <- runMLwiN(logit(use, cons)~1+lc+age, D="Binomial", data=bang))
 
 # 9.3 A two-level random intercept model . . . . . . . . . . . . . . . . 128
 
@@ -66,27 +63,28 @@ if (require(car)){
 
 # Fitting a two-level random intercept model in MLwiN . . . . . . . . . .129
 
-(mymodel4 <- runMLwiN(logit(use, cons)~(0|cons + One_child + Two_children + Three_plus + age)+(2|cons), levID=c("district", "woman"), D="Binomial", data=bang))
+(mymodel4 <- runMLwiN(logit(use, cons)~1+lc+age+(district|1), D="Binomial", data=bang))
 
-(mymodel5 <- runMLwiN(logit(use, cons)~(0|cons + One_child + Two_children + Three_plus + age)+(2|cons), levID=c("district", "woman"), D="Binomial",
+(mymodel5 <- runMLwiN(logit(use, cons)~1+lc+age+(district|1), D="Binomial",
  estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel4@FP, FP.v=mymodel4@FP.cov, RP.b=mymodel4@RP, RP.v=mymodel4@RP.cov)), data=bang))
 
-if (require(car)){
-  linearHypothesis(mymodel5, "RP2_var_cons = 0")
-}
+if (!require(car)) install.packages("car")
+
+linearHypothesis(mymodel5, "RP2_var_Intercept = 0")
+
 # Variance partition coeficient . . . . . . . . . . . . . . . . . . . . .131
 
 set.seed(1)
 
 invlogit <- function(x) exp(x)/(1+exp(x))
 
-u <- sqrt(coef(mymodel5)["RP2_var_cons"]) * qnorm(runif(5000))
+u <- sqrt(coef(mymodel5)["RP2_var_Intercept"]) * qnorm(runif(5000))
 
-p1 <- invlogit(coef(mymodel5)["FP_cons"] + u)
+p1 <- invlogit(coef(mymodel5)["FP_Intercept"] + u)
 
-p2 <- invlogit(coef(mymodel5)["FP_cons"] + coef(mymodel5)["FP_Three_plus"] + coef(mymodel5)["FP_age"]*-9.7 + u)
+p2 <- invlogit(coef(mymodel5)["FP_Intercept"] + coef(mymodel5)["FP_lc3plus"] + coef(mymodel5)["FP_age"]*-9.7 + u)
 
-p3 <- invlogit(coef(mymodel5)["FP_cons"] + coef(mymodel5)["FP_age"]*15.3 + u)
+p3 <- invlogit(coef(mymodel5)["FP_Intercept"] + coef(mymodel5)["FP_age"]*15.3 + u)
 
 v1 <- p1*(1-p1)
 lev2var1 <- sd(p1)^2
@@ -110,29 +108,21 @@ cat(paste0("VPC for an old woman with no children (high probability use) = ", le
 
 table(bang$educ)
 
-bang["Lower_primary"] <- as.integer(bang$educ == "Lower primary")
-bang["Upper_primary"] <- as.integer(bang$educ == "Upper primary")
-bang["Sec_and_above"] <- as.integer(bang$educ == "Secondary and above")
-
-bang$urban <- as.integer(bang$urban)
-bang$urban <- bang$urban - 1
-
-bang$hindu <- as.integer(bang$hindu)
-bang$hindu<- bang$hindu - 1
-
-(mymodel6 <- runMLwiN(logit(use, cons)~(0|cons + One_child + Two_children + Three_plus + age + urban + Lower_primary + Upper_primary + Sec_and_above + hindu)+(2|cons), levID=c("district", "woman"), D="Binomial",
+(mymodel6 <- runMLwiN(logit(use, cons)~1+lc+age+urban+educ+hindu+(district|1), D="Binomial",
  estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel5@FP, FP.v=mymodel5@FP.cov, RP.b=mymodel5@RP, RP.v=mymodel5@RP.cov)), data=bang))
 
 # 9.4 A two-level random coeficient model . . . . . . . . . . . . . . . .135
 
-(mymodel7 <- runMLwiN(logit(use, cons)~(0|cons + One_child + Two_children + Three_plus + age + urban + Lower_primary + Upper_primary + Sec_and_above + hindu)+(2|cons+urban), levID=c("district", "woman"), D="Binomial",
+(mymodel7 <- runMLwiN(logit(use, cons)~1+lc+age+urban+educ+hindu+(district|1+urban), D="Binomial",
  estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel6@FP, FP.v=mymodel6@FP.cov, RP.b=mymodel6@RP, RP.v=mymodel6@RP.cov)), data=bang))
-if (require(car)){
-  linearHypothesis(mymodel7, "RP2_cov_cons_urban = 0")
-  linearHypothesis(mymodel7, "RP2_var_urban = 0")
-  linearHypothesis(mymodel7, c("RP2_cov_cons_urban = 0", "RP2_var_urban = 0"))
-}
-(mymodel8 <- runMLwiN(logit(use, cons)~(0|cons + One_child + Two_children + Three_plus + age + urban + Lower_primary + Upper_primary + Sec_and_above + hindu + d_lit + d_pray)+(2|cons+urban), levID=c("district", "woman"), D="Binomial",
+
+if (!require(car)) install.packages("car")
+
+linearHypothesis(mymodel7, "RP2_cov_Intercept_urbanUrban = 0")
+linearHypothesis(mymodel7, "RP2_var_urbanUrban = 0")
+linearHypothesis(mymodel7, c("RP2_cov_Intercept_urbanUrban = 0", "RP2_var_urbanUrban = 0"))
+
+(mymodel8 <- runMLwiN(logit(use, cons)~1+lc+age+urban+educ+hindu+d_lit+d_pray+(district|1+urban), D="Binomial",
  estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel7@FP, FP.v=mymodel7@FP.cov, RP.b=mymodel7@RP, RP.v=mymodel7@RP.cov)), data=bang))
 
 # 9.5 Modelling binomial data . . . . . . . . . . . . . . . . . . . . . .139
@@ -140,7 +130,9 @@ if (require(car)){
 # Modelling district-level variation with district-level proportions . . 139
 
 # Creating a district-level data set . . . . . . . . . . . . . . . . . . 140
-library(doBy)
+
+if (!require(doBy)) install.packages("doBy")
+
 bangshort <- summaryBy(use + cons ~ district + d_lit + d_pray, FUN=c(mean, sum), data=bang)
 bangshort$use.sum <- NULL
 colnames(bangshort) <- c("district", "d_lit", "d_pray", "use", "cons", "denom")
@@ -148,9 +140,9 @@ bangshort$use <- bangshort$use - 1
 
 # Fitting the model . . . . . . . . . . . . . . . . . . . . . . . . . . .142
 
-(mymodel9 <- runMLwiN(logit(use, denom)~(0|cons+d_lit+d_pray)+(2|cons), levID=c("district", "district"), D="Binomial", data=bangshort))
+(mymodel9 <- runMLwiN(logit(use, denom)~1+d_lit+d_pray+(district|1), D="Binomial", data=bangshort))
 
-(mymodel10 <- runMLwiN(logit(use, denom)~(0|cons+d_lit+d_pray)+(2|cons), levID=c("district", "district"), D="Binomial",
+(mymodel10 <- runMLwiN(logit(use, denom)~1+d_lit+d_pray+(district|1), D="Binomial",
  estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel9@FP, FP.v=mymodel9@FP.cov, RP.b=mymodel9@RP, RP.v=mymodel9@RP.cov)), data=bangshort))
 
 ############################################################################

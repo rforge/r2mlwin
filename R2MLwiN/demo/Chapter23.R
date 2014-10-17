@@ -49,18 +49,16 @@ while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file
 #winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
 
 bang1$denomb <- bang1$cons
-bang1$urban <- as.integer(bang1$urban) - 1
-bang1$use <- as.integer(bang1$use) - 1
 
 ## Define the model
 
-(mymodel <- runMLwiN(logit(use,denomb)~(0|cons+age+lc[None]+urban)+(2|cons+urban), levID=c('district','woman'), D="Binomial", estoptions=list(EstM=1), data=bang1))
+(mymodel <- runMLwiN(logit(use,denomb)~1+age+lc+urban+(district|1+urban), D="Binomial", estoptions=list(EstM=1), data=bang1))
 
 trajectories(mymodel["chains"])
 
 ##Orthogonal update
 
-(mymodel <- runMLwiN(logit(use,denomb)~(0|cons+age+lc[None]+urban)+(2|cons+urban), levID=c('district','woman'), D="Binomial", estoptions=list(EstM=1, mcmcOptions=list(orth=1)), data=bang1))
+(mymodel <- runMLwiN(logit(use,denomb)~1+age+lc+urban+(district|1+urban), D="Binomial", estoptions=list(EstM=1, mcmcOptions=list(orth=1)), data=bang1))
 
 trajectories(mymodel["chains"])
 
@@ -69,23 +67,21 @@ trajectories(mymodel["chains"])
 ## Read mmmec1 data
 data(mmmec1)
 
-mmmec1$logexp <- double2singlePrecision(log(mmmec1$exp))
-levels(mmmec1[["nation"]]) <- c("Belgium", "W_Germany", "Denmark", "France", "UK", "Italy", "Ireland", "Luxembourg", "Netherlands")
-
+contrasts(mmmec1$nation, 9) = diag(9)
 ## Define the model
 ## Choose option(s) for inference
 ## Fit the model
-(mymodel <- runMLwiN(log(obs,logexp)~(0|nation[]+Belgium:uvbi+W_Germany:uvbi+Denmark:uvbi+France:uvbi+UK:uvbi+Italy:uvbi+Ireland:uvbi+Luxembourg:uvbi+Netherlands:uvbi)+(2|cons),
- levID=c('region','county'), D="Poisson", estoptions=list(EstM=1,mcmcMeth=list(iterations=50000)), data=mmmec1))
+(mymodel <- runMLwiN(log(obs)~0+nation+nation:uvbi+offset(log(exp))+(region|1), D="Poisson",
+ estoptions=list(EstM=1,mcmcMeth=list(iterations=50000)), data=mmmec1))
 
-sixway(mymodel["chains"][,"FP_Belgium"],acf.maxlag=5000,"beta_1")
+sixway(mymodel["chains"][,"FP_nationBelgium"],acf.maxlag=5000,"beta_1")
 
 ##Orthogonal update
 
-(mymodel <- runMLwiN(log(obs,logexp)~(0|nation[]+Belgium:uvbi+W_Germany:uvbi+Denmark:uvbi+France:uvbi+UK:uvbi+Italy:uvbi+Ireland:uvbi+Luxembourg:uvbi+Netherlands:uvbi)+(2|cons),
- levID=c('region','county'), D="Poisson", estoptions=list(EstM=1, mcmcMeth=list(iterations=50000), mcmcOptions=list(orth=1)), data=mmmec1))
+(mymodel <- runMLwiN(log(obs)~0+nation+nation:uvbi+offset(log(exp))+(region|1), D="Poisson",
+ estoptions=list(EstM=1, mcmcMeth=list(iterations=50000), mcmcOptions=list(orth=1)), data=mmmec1))
 
-sixway(mymodel["chains"][,"FP_Belgium"],acf.maxlag=100,"beta_1")
+sixway(mymodel["chains"][,"FP_nationBelgium"],acf.maxlag=100,"beta_1")
 
 # 23.5 An Ordered multinomial example . . . . . . . . . . . . . . . . . .368
 
@@ -98,18 +94,16 @@ data(alevchem)
 alevchem$school <- as.numeric(factor(paste0(alevchem$lea, alevchem$estab)))
 
 alevchem$gcseav <- double2singlePrecision(alevchem$gcse_tot/alevchem$gcse_no-6)
-alevchem$gcse2 <- double2singlePrecision(alevchem$gcseav^2)
-alevchem$gcse3 <- double2singlePrecision(alevchem$gcseav^3)
 
 ##MCMC
 ## Fit the model
-(mymodel <- runMLwiN(logit(a_point,cons,A)~(`0s`|cons)+(`0c`|gcseav+gcse2+gender)+(`2c`|cons), levID=c('school','pupil'), D='Ordered Multinomial', estoptions=list(EstM=1), data=alevchem))
+(mymodel <- runMLwiN(logit(a_point,cons,6)~1+gcseav[1:5]+I(gcseav^2)[1:5]+gender[1:5]+(school|1[1:5]), D='Ordered Multinomial', estoptions=list(EstM=1), data=alevchem))
 
 trajectories(mymodel["chains"])
 
 ##Orthogonal update
 ## Fit the model
-(mymodel <- runMLwiN(logit(a_point,cons,A)~(`0s`|cons)+(`0c`|gcseav+gcse2+gender)+(`2c`|cons), levID=c('school','pupil'), D='Ordered Multinomial', estoptions=list(EstM=1, mcmcOptions=list(orth=1)), data=alevchem))
+(mymodel <- runMLwiN(logit(a_point,cons,6)~1+gcseav[1:5]+I(gcseav^2)[1:5]+gender[1:5]+(school|1[1:5]), D='Ordered Multinomial', estoptions=list(EstM=1, mcmcOptions=list(orth=1)), data=alevchem))
 
 trajectories(mymodel["chains"])
 
@@ -119,8 +113,6 @@ trajectories(mymodel["chains"])
 data(bang1)
 
 bang1$denomb <- bang1$cons
-bang1$urban <- as.integer(bang1$urban) - 1
-bang1$use <- as.integer(bang1$use) - 1
 
 ## openbugs executable
 if(!exists("openbugs")) openbugs="C:/Program Files (x86)/OpenBUGS321/OpenBUGS.exe"
@@ -139,7 +131,7 @@ while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file
 ## Define the model
 ##Orthogonal update (WinBUGS)
 
-mymodel <- runMLwiN(logit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons+urban), levID=c('district','woman'), D="Binomial",
+mymodel <- runMLwiN(logit(use,denomb)~1+age+lc+urban+(district|1+urban), D="Binomial",
  estoptions=list(EstM=1, mcmcOptions=list(orth=1), show.file=T), BUGO=c(version=4, n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=bang1)
 
 apply(mymodel[[1]],2,effectiveSize)

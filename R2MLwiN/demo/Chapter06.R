@@ -29,33 +29,30 @@ options(MLwiN_path=mlwin)
 ## Read tutorial data
 data(tutorial)
 
-tutorial=cbind(tutorial,Untoggle(tutorial[["school"]],"school"))
-
 ## Define the model
-formula <- as.formula(paste0("normexam~(0|cons+standlrt+",paste0("school_", 1:64, collapse="+"),"+",paste0("school_", 1:64, ":standlrt", collapse="+"),")+(1|cons)"))
 ## Choose MCMC algoritm for estimation (IGLS will be used to obtain starting values for MCMC)
 ## Fit the model
-(mymodel <- runMLwiN(formula, levID='student', estoptions=list(EstM=1), data=tutorial))
+(mymodel <- runMLwiN(normexam~1+standlrt+school+school:standlrt+(student|1), estoptions=list(EstM=1), data=tutorial))
 
 ## Define the model
 ## Choose IGLS algoritm for estimation
 ## Fit the model
-(mymodel0a <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons), levID=c('school','student'), data=tutorial))
+(mymodel0a <- runMLwiN(normexam~1+standlrt+(school|1+standlrt)+(student|1), data=tutorial))
 
 ## Choose MCMC algoritm for estimation (IGLS will be used to obtain starting values for MCMC)
 ## Fit the model
-(mymodel0 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1), data=tutorial))
+(mymodel0 <- runMLwiN(normexam~1+standlrt+(school|1+standlrt)+(student|1), estoptions=list(EstM=1), data=tutorial))
 
 # 6.1 Prediction intervals for a random slopes regression model . . . . . 75
 
 ## Save level 2 residual chains
 ## Fit the model
-(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons), levID=c('school','student'),
+(mymodel <- runMLwiN(normexam~1+standlrt+(school|1+standlrt)+(student|1),
  estoptions=list(EstM=1, mcmcMeth=list(iterations=5001), resi.store.levs=2), data=tutorial))
 
-predLines(mymodel, indata=tutorial, xname="standlrt", lev = 2, selected =NULL, probs=c(.025,.975), legend.space="right", legend.ncol=2)
+predLines(mymodel, xname="standlrt", lev = 2, selected =NULL, probs=c(.025,.975), legend.space="right", legend.ncol=2)
 dev.new()
-predLines(mymodel, indata=tutorial, xname="standlrt", lev = 2, selected =c(30,44,53,59), probs=c(.025,.975))
+predLines(mymodel, xname="standlrt", lev = 2, selected =c(30,44,53,59), probs=c(.025,.975))
 
 # 6.2 Alternative priors for variance matrices . . . . . . . . . . . . . .78
 
@@ -63,24 +60,24 @@ predLines(mymodel, indata=tutorial, xname="standlrt", lev = 2, selected =c(30,44
 
 ## Change the starting values for Level 2 variance matrix to .1 on diagonal 0 otherwise.
 RP.b <- c(.1,0,.1,.554)
-names(RP.b) <- c("RP2_var_cons", "RP2_cov_cons_standlrt", "RP2_var_standlrt", "RP1_var_cons")
+names(RP.b) <- c("RP2_var_Intercept", "RP2_cov_Intercept_standlrt", "RP2_var_standlrt", "RP1_var_Intercept")
 
 ## Fit the model
-(mymodel1 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons), levID=c('school','student'),
+(mymodel1 <- runMLwiN(normexam~1+standlrt+(school|1+standlrt)+(student|1),
  estoptions=list(EstM=1, startval=list(RP.b=RP.b)), data=tutorial))
 
 # 6.4 Uniform prior . . . . . . . . . . . . . . . . . . . . . . . . . . . 79
 
 ## Diffuse priors (Uniform priors)
 ## Fit the model
-(mymodel2 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons), levID=c('school','student'),
+(mymodel2 <- runMLwiN(normexam~1+standlrt+(school|1+standlrt)+(student|1),
  estoptions=list(EstM=1, mcmcMeth=list(priorcode=0)), data=tutorial))
 
 # 6.5 Informative prior . . . . . . . . . . . . . . . . . . . . . . . . . 80
 
 ## Informative normal prior for Sigma_u
 ## Fit the model
-(mymodel3 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons), levID=c('school','student'),
+(mymodel3 <- runMLwiN(normexam~1+standlrt+(school|1+standlrt)+(student|1),
  estoptions=list(EstM=1,mcmcMeth=list(priorParam=list(rp2=list(estimate=matrix(c(.09,.018,.09,.015),2,2),size=65)))), data=tutorial))
 
 # 6.6 Results . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 81

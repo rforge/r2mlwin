@@ -35,57 +35,36 @@ summary(mmmec)
 
 # 12.2 Fitting a simple Poisson model . . . . . . . . . . . . . . . . . .182
 
-mmmec$logexp = log(mmmec$exp)
-
-(mymodel1 <- runMLwiN(log(obs, logexp)~(0|cons+uvbi), levID="county", D="Poisson", data=mmmec))
+(mymodel1 <- runMLwiN(log(obs)~1+uvbi+offset(log(exp)), D="Poisson", data=mmmec))
 
 # 12.3 A three-level analysis . . . . . . . . . . . . . . . . . . . . . .184
 
-(mymodel2 <- runMLwiN(log(obs, logexp)~(0|cons)+(2|cons)+(3|cons), levID=c("nation", "region", "county"), D="Poisson", estoptions=list(Meth=0), data=mmmec))
+(mymodel2 <- runMLwiN(log(obs)~1+offset(log(exp))+(nation|1)+(region|1), D="Poisson", estoptions=list(Meth=0), data=mmmec))
 
-(mymodel3 <- runMLwiN(log(obs, logexp)~(0|cons)+(2|cons)+(3|cons), levID=c("nation", "region", "county"), D="Poisson", estoptions=list(Meth=0, nonlinear=c(N=1,M=2)), data=mmmec))
+(mymodel3 <- runMLwiN(log(obs)~1+offset(log(exp))+(nation|1)+(region|1), D="Poisson", estoptions=list(Meth=0, nonlinear=c(N=1,M=2)), data=mmmec))
 
-(mymodel4 <- runMLwiN(log(obs, logexp)~(0|cons+uvbi)+(2|cons)+(3|cons), levID=c("nation", "region", "county"), D="Poisson", estoptions=list(Meth=0, nonlinear=c(N=1,M=2)), data=mmmec))
+(mymodel4 <- runMLwiN(log(obs)~1+uvbi+offset(log(exp))+(nation|1)+(region|1), D="Poisson", estoptions=list(Meth=0, nonlinear=c(N=1,M=2)), data=mmmec))
 
 # 12.4 A two-level model using separate country terms . . . . . . . . . .186
 
 addmargins(with(mmmec, table(nation)))
 
-mmmec$belgium <- as.integer(mmmec$nation == "Belgium")
-mmmec$wgermany <- as.integer(mmmec$nation == "W Germany")
-mmmec$denmark <- as.integer(mmmec$nation == "Denmark")
-mmmec$france <- as.integer(mmmec$nation == "France")
-mmmec$uk <- as.integer(mmmec$nation == "UK")
-mmmec$italy <- as.integer(mmmec$nation == "Italy")
-mmmec$ireland <- as.integer(mmmec$nation == "Ireland")
-mmmec$luxembourg <- as.integer(mmmec$nation == "Luxembourg")
-mmmec$netherlands <- as.integer(mmmec$nation == "Netherlands")
+contrasts(mmmec$nation, 9) = diag(9)
 
-mmmec$belgiumXuvbi <- mmmec$belgium * mmmec$uvbi
-mmmec$wgermanyXuvbi <- mmmec$wgermany * mmmec$uvbi
-mmmec$denmarkXuvbi <- mmmec$denmark * mmmec$uvbi
-mmmec$franceXuvbi <- mmmec$france * mmmec$uvbi
-mmmec$ukXuvbi <- mmmec$uk * mmmec$uvbi
-mmmec$italyXuvbi <- mmmec$italy * mmmec$uvbi
-mmmec$irelandXuvbi <- mmmec$ireland * mmmec$uvbi
-mmmec$luxembourgXuvbi <- mmmec$luxembourg * mmmec$uvbi
-mmmec$netherlandsXuvbi <- mmmec$netherlands * mmmec$uvbi
+(mymodel5 <- runMLwiN(log(obs)~0+nation+nation:uvbi+offset(log(exp))+(region|1), D="Poisson", estoptions=list(Meth=0, nonlinear=c(N=1,M=2)), data=mmmec))
 
-(mymodel5 <- runMLwiN(log(obs, logexp)~(0|belgium+wgermany+denmark+france+uk+italy+ireland+luxembourg+netherlands+belgiumXuvbi+wgermanyXuvbi+denmarkXuvbi+franceXuvbi+ukXuvbi+italyXuvbi+irelandXuvbi+luxembourgXuvbi+netherlandsXuvbi)+(2|cons),
- levID=c("region", "county"), D="Poisson", estoptions=list(Meth=0, nonlinear=c(N=1,M=2)), data=mmmec))
+xb <- predict(mymodel5)
 
-xb <- as.matrix(mmmec[,c("belgium", "wgermany", "denmark", "france", "uk", "italy", "ireland", "luxembourg", "netherlands", "belgiumXuvbi", "wgermanyXuvbi", "denmarkXuvbi", "franceXuvbi", "ukXuvbi", "italyXuvbi", "irelandXuvbi", "luxembourgXuvbi", "netherlandsXuvbi")]) %*% as.matrix(mymodel5@FP)
-
-plot(mmmec$uvbi, xb, xlab="UV B radiation",ylab="prediction", type="n")
-lines(mmmec$uvbi[mmmec$belgium==1], xb[mmmec$belgium==1], col=1)
-lines(mmmec$uvbi[mmmec$wgermany==1], xb[mmmec$wgermany==1], col=2)
-lines(mmmec$uvbi[mmmec$denmark==1],xb[mmmec$denmark==1], col=3)
-lines(mmmec$uvbi[mmmec$france==1], xb[mmmec$france==1], col=4)
-lines(mmmec$uvbi[mmmec$uk==1], xb[mmmec$uk==1], col=5)
-lines(mmmec$uvbi[mmmec$italy==1],xb[mmmec$italy==1],  col=6)
-lines(mmmec$uvbi[mmmec$ireland==1], xb[mmmec$ireland==1], col=7)
-lines(mmmec$uvbi[mmmec$luxembourg==1], xb[mmmec$luxembourg==1], col=8)
-lines(mmmec$uvbi[mmmec$netherlands==1], xb[mmmec$netherlands==1], col=9)
+plot(mymodel5@data$uvbi, xb, xlab="UV B radiation",ylab="prediction", type="n")
+lines(mymodel5@data$uvbi[mymodel5@data$nationBelgium==1], xb[mymodel5@data$nationBelgium==1], col=1)
+lines(mymodel5@data$uvbi[mymodel5@data[["nationnationW Germany"]]==1], xb[mymodel5@data[["nationnationW Germany"]]==1], col=2)
+lines(mymodel5@data$uvbi[mymodel5@data$nationDebmark==1],xb[mymodel5@data$nationDebmark==1], col=3)
+lines(mymodel5@data$uvbi[mymodel5@data$nationFrance==1], xb[mymodel5@data$nationFrance==1], col=4)
+lines(mymodel5@data$uvbi[mymodel5@data$nationUK==1], xb[mymodel5@data$nationUK==1], col=5)
+lines(mymodel5@data$uvbi[mymodel5@data$nationItaly==1],xb[mymodel5@data$nationItaly==1],  col=6)
+lines(mymodel5@data$uvbi[mymodel5@data$nationIreland==1], xb[mymodel5@data$nationIreland==1], col=7)
+lines(mymodel5@data$uvbi[mymodel5@data$nationLuxembourg==1], xb[mymodel5@data$nationLuxembourg==1], col=8)
+lines(mymodel5@data$uvbi[mymodel5@data$nationNetherlands==1], xb[mymodel5@data$nationNetherlands==1], col=9)
 legend(7, 0.7, c("belgium", "wgermany", "denmark", "france", "uk", "italy", "ireland", "luxembourg", "netherlands"), lty=1, col=1:9)
 
 # 12.5 Some issues and problems for discrete response models . . . . . . 190

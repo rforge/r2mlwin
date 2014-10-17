@@ -32,7 +32,7 @@ options(MLwiN_path=mlwin)
 
 data(tutorial)
 
-(mymodel1 <- runMLwiN(normexam~(0|cons)+(1|cons)+(2|cons), levID=c("school", "student"), data=tutorial, estoptions=list(resi.store=TRUE)))
+(mymodel1 <- runMLwiN(normexam~1+(school|1)+(student|1), data=tutorial, estoptions=list(resi.store=TRUE)))
 
 
 
@@ -42,7 +42,7 @@ caterpillarR(mymodel1["residual"], lev=2)
 
 # 3.3 Normal plots . . . . . . . . . . . . . . . . . . . . . . . . . . . .43
 
-e0 <- mymodel1@residual$lev_1_resi_est_cons
+e0 <- mymodel1@residual$lev_1_resi_est_Intercept
 
 e0std <- (e0 - mean(e0)) / sd(e0)
 
@@ -55,7 +55,7 @@ e0nscore <- qnorm(e0uniform)
 plot(e0nscore, e0std, asp=1)
 
 
-u0 <- na.omit(mymodel1@residual$lev_2_resi_est_cons)
+u0 <- na.omit(mymodel1@residual$lev_2_resi_est_Intercept)
 
 u0std <- (u0 - mean(u0)) / sd(u0)
 

@@ -32,11 +32,11 @@ data(tutorial)
 ## Define the model
 ## IGLS
 ## Fit the model
-(mymodel1 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), data=tutorial))
+(mymodel1 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), data=tutorial))
 
 ## Gibbs
 ## Fit the model
-(mymodel2 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1), data=tutorial))
+(mymodel2 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), estoptions=list(EstM=1), data=tutorial))
 
 # 4.1 Metropolis Hastings (MH) sampling for the variance components model 46
 
@@ -46,14 +46,14 @@ data(tutorial)
 
 ## MH Adaptive with defaults
 ## Fit the model
-(mymodel3 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), 
+(mymodel3 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),  
  estoptions=list(EstM=1, mcmcMeth=list(fixM=2, residM=2, Lev1VarM=2)), data=tutorial))
 
 sixway(mymodel3["chains"][,"FP_standlrt"],"beta_1")
 
 ## MH Scale Factor =5.8
 ## Fit the model
-(mymodel4 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), 
+(mymodel4 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), 
  estoptions=list(EstM=1, mcmcMeth=list(fixM=2, residM=2, Lev1VarM=2, adaption=0)), data=tutorial))
 
 aa <- cbind(mymodel1["FP"],mymodel2["FP"],mymodel4["FP"],mymodel3["FP"])
@@ -67,21 +67,21 @@ rm(list=c("mymodel1","mymodel2","mymodel3","mymodel4"))
 # 4.5 Block updating MH sampling . . . . . . . . . . . . . . . . . . . . .49
 ## MH Adaptive with defaults
 ## Fit the model
-(mymodel5 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
+(mymodel5 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), 
  estoptions=list(EstM=1,mcmcMeth=list(fixM=3, residM=2, Lev1VarM=2, rate=40)), data=tutorial))
 
 estimates <- mymodel5["chains"]
 par(mfrow=c(3,2))
 plot(4951:nrow(estimates), estimates[4951:nrow(estimates),"deviance"], xlab="iteration", ylab=expression(paste("Est. of deviance")),type="l")
-plot(4951:nrow(estimates), estimates[4951:nrow(estimates),"FP_cons"], xlab="iteration", ylab=expression(paste("Est. of ",beta[0])),type="l")
+plot(4951:nrow(estimates), estimates[4951:nrow(estimates),"FP_Intercept"], xlab="iteration", ylab=expression(paste("Est. of ",beta[0])),type="l")
 plot(4951:nrow(estimates), estimates[4951:nrow(estimates),"FP_standlrt"], xlab="iteration", ylab=expression(paste("Est. of ",beta[1])),type="l")
-plot(4951:nrow(estimates), estimates[4951:nrow(estimates),"RP2_var_cons"], xlab="iteration", ylab=expression(paste("Est. of ",sigma[u0]^2)),type="l")
-plot(4951:nrow(estimates), estimates[4951:nrow(estimates),"RP1_var_cons"], xlab="iteration", ylab=expression(paste("Est. of ",sigma[e0]^2)),type="l")
+plot(4951:nrow(estimates), estimates[4951:nrow(estimates),"RP2_var_Intercept"], xlab="iteration", ylab=expression(paste("Est. of ",sigma[u0]^2)),type="l")
+plot(4951:nrow(estimates), estimates[4951:nrow(estimates),"RP1_var_Intercept"], xlab="iteration", ylab=expression(paste("Est. of ",sigma[e0]^2)),type="l")
 rm(mymodel5)
 
 # 4.6 Residuals in MCMC . . . . . . . . . . . . . . . . . . . . . . . . . 51
 
-(mymodel6 <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
+(mymodel6 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), 
  estoptions=list(EstM=1, resi.store=TRUE, resi.store.levs=2, mcmcMeth=list(iterations=5001)), data=tutorial))
 
 resi.chain2 <- mymodel6["resi.chains"]$resi_lev2
@@ -120,7 +120,7 @@ caterpillarR(mymodel6["residual"], lev=2)
 
 # 4.9 Estimating a function of parameters . . . . . . . . . . . . . . . . 58
 estimates <- mymodel6["chains"]
-isc <- estimates[,"RP2_var_cons"]/(estimates[,"RP2_var_cons"]+estimates[,"RP1_var_cons"])
+isc <- estimates[,"RP2_var_Intercept"]/(estimates[,"RP2_var_Intercept"]+estimates[,"RP1_var_Intercept"])
 summary(isc)
 sixway(isc,"isc")
 rm(mymodel6)

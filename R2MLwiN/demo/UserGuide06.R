@@ -30,53 +30,41 @@ options(MLwiN_path=mlwin)
 
 data(tutorial)
 
-(mymodel1 <- runMLwiN(normexam~(0|cons+standlrt)+(1|cons)+(2|cons+standlrt), levID=c("school", "student"), data=tutorial))
+(mymodel1 <- runMLwiN(normexam~1+standlrt+(school|1+standlrt)+(student|1), data=tutorial))
 
 # 6.1 The impact of school gender on girls' achievement . . . . . . . . . 80
 
-tutorial <- cbind(tutorial,Untoggle(tutorial[["schgend"]],"schgend"))
+(mymodel2 <- runMLwiN(normexam~1+standlrt+sex+schgend+(school|1+standlrt)+(student|1), data=tutorial))
 
-(mymodel2 <- runMLwiN(normexam~(0|cons+standlrt+sex+schgend_boysch+schgend_girlsch)+(1|cons)+(2|cons+standlrt), levID=c("school", "student"), data=tutorial))
-
-tutorial["boyschXstandlrt"] <- tutorial$schgend_boysch * tutorial$standlrt
-tutorial["girlschXstandlrt"] <- tutorial$schgend_girlsch * tutorial$standlrt
-
-(mymodel3 <- runMLwiN(normexam~(0|cons+standlrt+sex+schgend_boysch+schgend_girlsch+boyschXstandlrt+girlschXstandlrt)+(1|cons)+(2|cons+standlrt),
- levID=c("school", "student"), estoptions=list(startval=list(FP.b=mymodel2@FP, FP.v=mymodel2@FP.cov, RP.b=mymodel2@RP, RP.v=mymodel2@RP.cov)), data=tutorial))
+(mymodel3 <- runMLwiN(normexam~1+standlrt+sex+schgend+schgend:standlrt+(school|1+standlrt)+(student|1),
+ estoptions=list(startval=list(FP.b=mymodel2@FP, FP.v=mymodel2@FP.cov, RP.b=mymodel2@RP, RP.v=mymodel2@RP.cov)), data=tutorial))
 
 
 # 6.2 Contextual effects of school intake ability averages . . . . . . . .83
 
-tutorial["mid"] <- as.integer(as.integer(tutorial$schav) == 2)
-tutorial["high"] <- as.integer(as.integer(tutorial$schav) == 3)
+(mymodel4 <- runMLwiN(normexam~1+standlrt+sex+schgend+schav+(school|1+standlrt)+(student|1), data=tutorial))
 
-(mymodel4 <- runMLwiN(normexam~(0|cons+standlrt+sex+schgend_boysch+schgend_girlsch+mid+high)+(1|cons)+(2|cons+standlrt), levID=c("school", "student"), data=tutorial))
+(mymodel5 <- runMLwiN(normexam~1+standlrt+sex+schgend+schav+standlrt:schav+(school|1+standlrt)+(student|1), data=tutorial))
 
-tutorial["standlrtXmid"] <- tutorial$standlrt*tutorial$mid
-tutorial["standlrtXhigh"] <- tutorial$standlrt*tutorial$high
+pred <- predict(mymodel5, params=c("FP_schavhigh", "FP_standlrt:schavhigh"), se.fit=TRUE)
 
-(mymodel5 <- runMLwiN(normexam~(0|cons+standlrt+sex+schgend_boysch+schgend_girlsch+mid+high+standlrtXmid+standlrtXhigh)+(1|cons)+(2|cons+standlrt), levID=c("school", "student"), data=tutorial))
-
-hilovars = c("high", "standlrtXhigh")
-hilopars = c("FP_high", "FP_standlrtXhigh")
-
-hilodiff <- as.matrix(tutorial[,hilovars]) %*% as.matrix(mymodel5@FP[hilopars])
-hilodiff_se <- sqrt(diag(as.matrix(tutorial[,hilovars]) %*% mymodel5@FP.cov[hilopars, hilopars] %*% t(as.matrix(tutorial[,hilovars]))))
+hilodiff <- pred$fit
+hilodiff_se <- pred$se.fit
 
 hilodiff_lo <- hilodiff - 1.96*hilodiff_se
 hilodiff_hi <- hilodiff + 1.96*hilodiff_se
 
-highdata <- as.data.frame(cbind(tutorial$high, tutorial$standlrtXhigh, hilodiff, hilodiff_lo, hilodiff_hi)[order(tutorial$standlrtXhigh), ])
-colnames(highdata) <- c("high", "standlrtXhigh", "hilodiff", "hilodiff_lo", "hilodiff_hi")
-highdata <- highdata[highdata$high==1, ]
+highdata <- as.data.frame(cbind(mymodel5@data$schavhigh, mymodel5@data[["standlrt:schavhigh"]], hilodiff, hilodiff_lo, hilodiff_hi)[order(mymodel5@data[["standlrt:schavhigh"]]), ])
+colnames(highdata) <- c("schavhigh", "standlrt:schavhigh", "hilodiff", "hilodiff_lo", "hilodiff_hi")
+highdata <- highdata[highdata$schavhigh==1, ]
 
-plot(highdata$standlrtXhigh, highdata$hilodiff, type="l")
+plot(highdata[["standlrt:schavhigh"]], highdata$hilodiff, type="l")
 
-xyplot(hilodiff~standlrtXhigh,
+xyplot(hilodiff~`standlrt:schavhigh`,
   panel=function(x, y, subscripts){
-	panel.xyplot(x, y, type="l")
-	panel.xyplot(x, highdata$hilodiff_hi, type="l", lty=2)
-	panel.xyplot(x, highdata$hilodiff_lo, type="l", lty=2)
+    panel.xyplot(x, y, type="l")
+    panel.xyplot(x, highdata$hilodiff_hi, type="l", lty=2)
+    panel.xyplot(x, highdata$hilodiff_lo, type="l", lty=2)
   },
   data=highdata
 )

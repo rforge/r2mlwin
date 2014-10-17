@@ -33,28 +33,28 @@ options(MLwiN_path=mlwin)
 data(diag1)
 summary(diag1)
 
-(mymodel1 <- runMLwiN(n_ilea~(0|cons+n_vrq)+(1|cons)+(2|cons+n_vrq), levID=c("school", "pupil"),
+(mymodel1 <- runMLwiN(n_ilea~1+n_vrq+(school|1+n_vrq)+(pupil|1),
  estoptions=list(resi.store=TRUE, resioptions=c("standardised", "leverage", "influence", "deletion")), data=diag1))
 
-xb <- as.matrix(diag1[,c("cons", "n_vrq")]) %*% as.matrix(mymodel1@FP)
+xb <- predict(mymodel1)
 
-u0 <- na.omit(mymodel1@residual$lev_2_resi_est_cons)
+u0 <- na.omit(mymodel1@residual$lev_2_resi_est_Intercept)
 u1 <- na.omit(mymodel1@residual$lev_2_resi_est_n_vrq)
 
-yhat <- xb + u0[diag1$school] + u1[diag1$school]*diag1$n_vrq
+yhat <- xb + u0[mymodel1@data$school] + u1[mymodel1@data$school]*mymodel1@data$n_vrq
 
-plot(diag1$n_vrq, yhat, type="n")
+plot(mymodel1@data$n_vrq, yhat, type="n")
 for (i in 1:18) {
-  lines(diag1$n_vrq[diag1$school == i], yhat[diag1$school == i], col=1)
+  lines(mymodel1@data$n_vrq[mymodel1@data$school == i], yhat[mymodel1@data$school == i], col=1)
 }
-lines(diag1$n_vrq[diag1$school == 17], yhat[diag1$school == 17], col=2, lwd=3)
+lines(mymodel1@data$n_vrq[mymodel1@data$school == 17], yhat[mymodel1@data$school == 17], col=2, lwd=3)
 
 yhatold <- yhat
 
-plot(diag1$n_vrq[diag1$school != 17], diag1$n_ilea[diag1$school != 17], type="p")
-points(diag1$n_vrq[diag1$school == 17], diag1$n_ilea[diag1$school == 17], col=2, cex=2)
+plot(mymodel1@data$n_vrq[mymodel1@data$school != 17], mymodel1@data$n_ilea[mymodel1@data$school != 17], type="p")
+points(mymodel1@data$n_vrq[mymodel1@data$school == 17], mymodel1@data$n_ilea[mymodel1@data$school == 17], col=2, cex=2)
 
-u0se <- na.omit(mymodel1@residual$lev_2_resi_se_cons)
+u0se <- na.omit(mymodel1@residual$lev_2_resi_se_Intercept)
 u1se <- na.omit(mymodel1@residual$lev_2_resi_se_n_vrq)
 
 u0rank <- rank(u0)
@@ -67,7 +67,7 @@ u1rankhi <- u1+u1se
 u1ranklo <- u1-u1se
 u1rankno <- order(u1rank)
 
-sch17=which(levels(as.factor(diag1$school))==17)
+sch17=which(levels(as.factor(mymodel1@data$school))==17)
 
 plot(1:18, u0[u0rankno], ylim=c(-0.3,0.3), pch=15, xlab="Rank",ylab="u0 residual estimate")
 points(1:18, u0rankhi[u0rankno], pch=24,bg="grey")
@@ -88,16 +88,16 @@ points(u0[17], u1[17], bg=2, col=2, cex=2)
 
 hist(u0, breaks=seq(min(u0)-0.01, max(u0)+0.01, 0.01))
 
-u0std <- na.omit(mymodel1@residual$lev_2_std_resi_est_cons)
+u0std <- na.omit(mymodel1@residual$lev_2_std_resi_est_Intercept)
 hist(u0std, breaks=seq(min(u0std)-0.1, max(u0std)+0.1, 0.1))
 
-u0lev <- na.omit(mymodel1@residual$lev_2_resi_leverage_cons)
+u0lev <- na.omit(mymodel1@residual$lev_2_resi_leverage_Intercept)
 hist(u0lev, breaks=seq(min(u0lev)-0.01, max(u0lev)+0.01, 0.01))
 
-u0inf <- na.omit(mymodel1@residual$lev_2_resi_influence_cons)
+u0inf <- na.omit(mymodel1@residual$lev_2_resi_influence_Intercept)
 hist(u0inf, breaks=seq(min(u0inf)-0.025, max(u0inf)+0.025, 0.025))
 
-u0del <- na.omit(mymodel1@residual$lev_2_resi_deletion_cons)
+u0del <- na.omit(mymodel1@residual$lev_2_resi_deletion_Intercept)
 hist(u0del, breaks=seq(min(u0del)-0.1, max(u0del)+0.1, 0.1))
 
 plot(u0std[-17], u0lev[-17], ylim=c(0.15,0.4), xlim=c(-0.2, 2.2), type="p", xlab="u0 standardised residual", ylab="u0 leverage residual")
@@ -120,14 +120,14 @@ hist(u1del, breaks=seq(min(u1del)-0.1, max(u1del)+0.1, 0.1))
 plot(u1std[-17], u1lev[-17], ylim=c(0.1,0.35), xlim=c(-1.4, 2.4), type="p", xlab="u1 standardised residual", ylab="u1 leverage residual")
 points(u1std[17], u1lev[17],  bg=2, col=2, cex=2)
 
-e0 <- na.omit(mymodel1@residual$lev_1_resi_est_cons)
+e0 <- na.omit(mymodel1@residual$lev_1_resi_est_Intercept)
 e0rank <- rank(e0)
 e0std <- (e0 - mean(e0))/sd(e0)
 e0uniform <- e0rank/(length(e0rank)+1)
 e0nscore <- qnorm(e0uniform)
 
-plot(e0nscore[diag1$school != 17], e0std[diag1$school != 17], ylim=c(-4,5), xlim=c(-4, 4), type="p", xlab="e0nscore", ylab="e0std")
-points(e0nscore[diag1$school == 17], e0std[diag1$school == 17],  bg=2, col=2, cex=2)
+plot(e0nscore[mymodel1@data$school != 17], e0std[mymodel1@data$school != 17], ylim=c(-4,5), xlim=c(-4, 4), type="p", xlab="e0nscore", ylab="e0std")
+points(e0nscore[mymodel1@data$school == 17], e0std[mymodel1@data$school == 17],  bg=2, col=2, cex=2)
 
 diag1$pupilnumber <- unlist(by(diag1$school, diag1$school, function(x) 1:length(x)))
 
@@ -135,13 +135,13 @@ diag1[order(e0)[1], c("school", "pupil", "pupilnumber")]
 
 diag1$s17p22 <- as.integer(diag1$school==17 & diag1$pupilnumber==22)
 
-(mymodel2 <- runMLwiN(n_ilea~(0|cons+n_vrq+s17p22)+(1|cons)+(2|cons+n_vrq), levID=c("school", "pupil"),
+(mymodel2 <- runMLwiN(n_ilea~1+n_vrq+s17p22+(school|1+n_vrq)+(pupil|1),
  estoptions=list(resi.store=TRUE, startval=list(FP.b=mymodel1@FP, FP.v=mymodel1@FP.cov, RP.b=mymodel1@RP, RP.v=mymodel1@RP.cov)), data=diag1))
 
-u0 <- na.omit(mymodel2@residual$lev_2_resi_est_cons)
+u0 <- na.omit(mymodel2@residual$lev_2_resi_est_Intercept)
 u1 <- na.omit(mymodel2@residual$lev_2_resi_est_n_vrq)
 
-u0se <- sqrt(na.omit(mymodel2@residual$lev_2_resi_var_cons))
+u0se <- sqrt(na.omit(mymodel2@residual$lev_2_resi_var_Intercept))
 u1se <- sqrt(na.omit(mymodel2@residual$lev_2_resi_var_n_vrq))
 
 u0rank <- rank(u0)
@@ -169,30 +169,30 @@ points(x=which(u1rankno==sch17),y=u1[u1rankno[which(u1rankno==sch17)]],pch=22,bg
 diag1$s17 <- as.integer(diag1$school == 17)
 diag1$s17Xn_vrq <- diag1$s17*diag1$n_vrq
 
-(mymodel3 <- runMLwiN(n_ilea~(0|cons+n_vrq+s17p22+s17+s17Xn_vrq)+(1|cons)+(2|cons+n_vrq), levID=c("school", "pupil"),
+(mymodel3 <- runMLwiN(n_ilea~1+n_vrq+s17p22+s17+s17Xn_vrq+(school|1+n_vrq)+(pupil|1),
  estoptions=list(startval=list(FP.b=mymodel2@FP, FP.v=mymodel2@FP.cov, RP.b=mymodel2@RP, RP.v=mymodel2@RP.cov)), data=diag1))
 
-(mymodel4 <- runMLwiN(n_ilea~(0|cons+n_vrq+s17p22+s17)+(1|cons)+(2|cons+n_vrq), levID=c("school", "pupil"),
+(mymodel4 <- runMLwiN(n_ilea~1+n_vrq+s17p22+s17+(school|1+n_vrq)+(pupil|1),
  estoptions=list(resi.store=TRUE, startval=list(FP.b=mymodel3@FP, FP.v=mymodel3@FP.cov, RP.b=mymodel3@RP, RP.v=mymodel3@RP.cov)), data=diag1))
 
-xb <- as.matrix(diag1[,c("cons", "n_vrq", "s17p22", "s17")]) %*% as.matrix(mymodel4@FP)
+xb <- predict(mymodel4)
 
-u0 <- na.omit(mymodel4@residual$lev_2_resi_est_cons)
+u0 <- na.omit(mymodel4@residual$lev_2_resi_est_Intercept)
 u1 <- na.omit(mymodel4@residual$lev_2_resi_est_n_vrq)
 
-yhat <- xb + u0[diag1$school] + u1[diag1$school]*diag1$n_vrq
+yhat <- xb + u0[mymodel4@data$school] + u1[mymodel4@data$school]*mymodel4@data$n_vrq
 
-plot(diag1$n_vrq, yhat, type="n")
+plot(mymodel4@data$n_vrq, yhat, type="n")
 for (i in 1:18) {
-  lines(diag1$n_vrq[diag1$school == i], yhatold[diag1$school == i], col=1)
+  lines(mymodel4@data$n_vrq[mymodel4@data$school == i], yhatold[mymodel4@data$school == i], col=1)
 }
-lines(diag1$n_vrq[diag1$school == 17], yhatold[diag1$school == 17], col=2, lwd=3)
+lines(mymodel4@data$n_vrq[mymodel4@data$school == 17], yhatold[mymodel4@data$school == 17], col=2, lwd=3)
 
-plot(diag1$n_vrq, yhat, type="n")
+plot(mymodel4@data$n_vrq, yhat, type="n")
 for (i in 1:18) {
-  points(diag1$n_vrq[diag1$school == i], yhat[diag1$school == i], col=1)
+  points(mymodel4@data$n_vrq[mymodel4@data$school == i], yhat[mymodel4@data$school == i], col=1)
 }
-points(diag1$n_vrq[diag1$school == 17], yhat[diag1$school == 17], col=2, lwd=3)
+points(mymodel4@data$n_vrq[mymodel4@data$school == 17], yhat[mymodel4@data$school == 17], col=2, lwd=3)
 
 # 15.3 A general approach to data exploration . . . . . . . . . . . . . .240
 

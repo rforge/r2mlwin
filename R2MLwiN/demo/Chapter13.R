@@ -32,8 +32,6 @@ options(MLwiN_path=mlwin)
 data(alevchem)
 
 alevchem$gcseav <- double2singlePrecision(alevchem$gcse_tot/alevchem$gcse_no-6)
-alevchem$gcse2 <- double2singlePrecision(alevchem$gcseav^2)
-alevchem$gcse3 <- double2singlePrecision(alevchem$gcseav^3)
 
 hist(alevchem$gcseav,breaks=20)
 
@@ -41,31 +39,31 @@ hist(alevchem$gcseav,breaks=20)
 
 ## Define the model
 ## Fit the model
-(mymodel <- runMLwiN(a_point~(0|cons)+(1|cons), levID="pupil", estoptions=list(EstM=1), data=alevchem))
+(mymodel <- runMLwiN(a_point~1+(pupil|1), estoptions=list(EstM=1), data=alevchem))
 
 ## Define the model
 ## Fit the model
-(mymodel <- runMLwiN(a_point~(0|cons+gcseav+gcse2+gcse3+gender)+(1|cons), levID="pupil", estoptions=list(EstM=1, resi.store=T), data=alevchem))
+(mymodel <- runMLwiN(a_point~1+gcseav+I(gcseav^2)+I(gcseav^3)+gender+(pupil|1), estoptions=list(EstM=1, resi.store=T), data=alevchem))
 
 resi <- mymodel["residual"]
 FP <- mymodel["FP"]
-predCurves(mymodel, indata=alevchem, xname="gcseav", group="gender")
+predCurves(mymodel, xname="gcseav", group="genderfemale")
 
 # 13.3 Ordered multinomial modelling . . . . . . . . . . . . . . . . . . 186
 
 ##Define the model
 ##IGLS
 ## Fit the model
-(mymodel <- runMLwiN(logit(a_point,cons,A)~(`0s`|cons), levID="pupil", D='Ordered Multinomial', data=alevchem))
+(mymodel <- runMLwiN(logit(a_point,cons,6)~1, D='Ordered Multinomial', data=alevchem))
 
 ##MCMC
 ## Fit the model
-(mymodel <- runMLwiN(logit(a_point,cons,A)~(`0s`|cons), levID="pupil", D='Ordered Multinomial', estoptions=list(EstM=1), data=alevchem))
+(mymodel <- runMLwiN(logit(a_point,cons,6)~1, D='Ordered Multinomial', estoptions=list(EstM=1), data=alevchem))
 
 # 13.4 Adding predictor variables . . . . . . . . . . . . . . . . . . . .191
 ##MCMC
 ## Fit the model
-(mymodel <- runMLwiN(logit(a_point,cons,A)~(`0s`|cons)+(`0c`|gcseav+gcse2+gcse3+gender), levID="pupil", D='Ordered Multinomial', estoptions=list(EstM=1), data=alevchem))
+(mymodel <- runMLwiN(logit(a_point,cons,6)~1+gcseav[1:5]+I(gcseav^2)[1:5]+I(gcseav^3)[1:5]+gender[1:5], D='Ordered Multinomial', estoptions=list(EstM=1), data=alevchem))
 
 # 13.5 Multilevel ordered response modelling . . . . . . . . . . . . . . 192
 
@@ -76,20 +74,20 @@ alevchem$school <- as.numeric(factor(paste0(alevchem$lea, alevchem$estab)))
 
 ##MCMC
 ## Fit the model
-(mymodel <- runMLwiN(logit(a_point,cons,A)~(`0s`|cons)+(`0c`|gcseav+gcse2+gender)+( `2c`|cons), levID=c('school','pupil'), D='Ordered Multinomial',
+(mymodel <- runMLwiN(logit(a_point,cons,6)~1+gcseav[1:5]+I(gcseav^2)[1:5]+gender[1:5]+(school|1[1:5]), D='Ordered Multinomial',
  estoptions=list(EstM=1), data=alevchem))
 
 ##MCMC
 ## Fit the model
-(mymodel <- runMLwiN(logit(a_point,cons,A)~(`0s`|cons)+(`0c`|gcseav+gcse2+gender)+( `2c`|cons+gcseav), levID=c('school','pupil'), D='Ordered Multinomial',
+(mymodel <- runMLwiN(logit(a_point,cons,6)~1+gcseav[1:5]+I(gcseav^2)[1:5]+gender[1:5]+(school|1[1:5]+gcseav[1:5]), D='Ordered Multinomial',
  estoptions=list(EstM=1), data=alevchem))
-sixway(mymodel["chains"][,"RP2_var_cons_12345"],acf.maxlag = 300,"sigma2v6")
+sixway(mymodel["chains"][,"RP2_var_Intercept_12345"],acf.maxlag = 300,"sigma2v6")
 
 ##Increases iterations to 50,000
 ## Fit the model
-(mymodel <- runMLwiN(logit(a_point,cons,A)~(`0s`|cons)+(`0c`|gcseav+gcse2+gender)+( `2c`|cons+gcseav), levID=c('school','pupil'), D='Ordered Multinomial',
+(mymodel <- runMLwiN(logit(a_point,cons,6)~1+gcseav[1:5]+I(gcseav^2)[1:5]+gender[1:5]+(school|1[1:5]+gcseav[1:5]), D='Ordered Multinomial',
  estoptions=list(EstM=1, mcmcMeth=list(iterations=50000)), data=alevchem))
-sixway(mymodel["chains"][,"RP2_var_cons_12345"],acf.maxlag = 300,"sigma2v6")
+sixway(mymodel["chains"][,"RP2_var_Intercept_12345"],acf.maxlag = 300,"sigma2v6")
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .128
 

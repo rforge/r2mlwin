@@ -35,21 +35,21 @@ error <- double2singlePrecision(rnorm(length(tutorial$standlrt),0,sqrt(.2)))
 obslrt <- double2singlePrecision(tutorial$standlrt+error)
 tutorial <- cbind(tutorial,error,obslrt)
 
-(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(1|cons), levID="student", data=tutorial))
+(mymodel <- runMLwiN(normexam~1+standlrt+(student|1), data=tutorial))
 
-(mymodel <- runMLwiN(normexam~(0|cons+error)+(1|cons), levID="student", data=tutorial))
+(mymodel <- runMLwiN(normexam~1+error+(student|1), data=tutorial))
 
-(mymodel <- runMLwiN(normexam~(0|cons+obslrt)+(1|cons), levID="student", data=tutorial))
+(mymodel <- runMLwiN(normexam~1+obslrt+(student|1), data=tutorial))
 
-(mymodel <- runMLwiN(normexam~(0|cons+obslrt)+(1|cons), levID="student", estoptions=list(EstM=1,merr=c(N=1,"obslrt",.2)), data=tutorial))
+(mymodel <- runMLwiN(normexam~1+obslrt+(student|1), estoptions=list(EstM=1,merr=c(N=1,"obslrt",.2)), data=tutorial))
 
 # 14.2 Measurement error modelling in multilevel models . . . . . . . . .205
 
-(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1), data=tutorial))
+(mymodel <- runMLwiN(normexam~1+standlrt+(school|1+standlrt)+(student|1), estoptions=list(EstM=1), data=tutorial))
 
-(mymodel <- runMLwiN(normexam~(0|cons+obslrt)+(2|cons+obslrt)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1), data=tutorial))
+(mymodel <- runMLwiN(normexam~1+obslrt+(school|1+obslrt)+(student|1), estoptions=list(EstM=1), data=tutorial))
 
-(mymodel <- runMLwiN(normexam~(0|cons+obslrt)+(2|cons+obslrt)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1,merr=c(N=1,"obslrt",.2)), data=tutorial))
+(mymodel <- runMLwiN(normexam~1+obslrt+(school|1+obslrt)+(student|1), estoptions=list(EstM=1,merr=c(N=1,"obslrt",.2)), data=tutorial))
 
 # 14.3 Measurement errors in binomial models . . . . . . . . . . . . . . 208
 
@@ -58,18 +58,17 @@ tutorial <- cbind(tutorial,error,obslrt)
 data(bang1)
 
 bang1$denomb <- bang1$cons
-bang1$use <- as.integer(bang1$use) - 1
 
 set.seed(1)
-obsage <- double2singlePrecision(bang1[["age"]]+rnorm(length(bang1[["age"]]),0,5))
+obsage <- double2singlePrecision(bang1$age+rnorm(length(bang1$age),0,5))
 bang1 <- cbind(bang1,obsage)
 
-(mymodel <- runMLwiN(logit(use,denomb)~(0|cons+age), levID=c('district','woman'), D="Binomial", estoptions=list(EstM=1), data=bang1))
+(mymodel <- runMLwiN(logit(use,denomb)~1+age, D="Binomial", estoptions=list(EstM=1), data=bang1))
 
-(mymodel <- runMLwiN(logit(use,denomb)~(0|cons+obsage), levID=c('district','woman'), D="Binomial", estoptions=list(EstM=1), data=bang1))
+(mymodel <- runMLwiN(logit(use,denomb)~1+obsage, D="Binomial", estoptions=list(EstM=1), data=bang1))
 
 ## Adjust for the measurement errors
-(mymodel <- runMLwiN(logit(use,denomb)~(0|cons+obsage), levID=c('district','woman'), D="Binomial", estoptions=list(EstM=1, merr=c(N=1, "obsage", 25)), data=bang1))
+(mymodel <- runMLwiN(logit(use,denomb)~1+obsage, D="Binomial", estoptions=list(EstM=1, merr=c(N=1, "obsage", 25)), data=bang1))
 
 # 14.4 Measurement errors in more than one variable and
 #      misclassifications . . . . . . . . . . . . . . . . . . . . . . . .211

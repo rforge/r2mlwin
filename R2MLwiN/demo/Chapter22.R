@@ -35,12 +35,12 @@ data(tutorial)
 
 ## Define the model
 
-(mymodel <- runMLwiN(normexam~(0|cons)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1), data=tutorial))
+(mymodel <- runMLwiN(normexam~1+(school|1)+(student|1), estoptions=list(EstM=1), data=tutorial))
 
 
 ## Structured MVN
 
-(mymodel <- runMLwiN(normexam~(0|cons)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1, mcmcOptions=list(smvn=1)), data=tutorial))
+(mymodel <- runMLwiN(normexam~1+(school|1)+(student|1), estoptions=list(EstM=1, mcmcOptions=list(smvn=1)), data=tutorial))
 
 # 22.3 Model Comparison and structured MVN models . . . . . . . . . . . .349
 
@@ -48,19 +48,19 @@ data(tutorial)
 
 ## Gibbs
 
-(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1), data=tutorial))
+(mymodel <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), estoptions=list(EstM=1), data=tutorial))
 
 ## SMCMC
 
-(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1, mcmcOptions=list(smcm=1)), data=tutorial))
+(mymodel <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), estoptions=list(EstM=1, mcmcOptions=list(smcm=1)), data=tutorial))
 
 ## Structured MVN
 
-(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1, mcmcOptions=list(smvn=1)), data=tutorial))
+(mymodel <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), estoptions=list(EstM=1, mcmcOptions=list(smvn=1)), data=tutorial))
 
 # 22.4 Assessing the need for the level 2 variance . . . . . . . . . . . 350
 
-sixway(mymodel["chains"][,"RP2_var_cons"],"sigma2u0")
+sixway(mymodel["chains"][,"RP2_var_Intercept"],"sigma2u0")
 
 set.seed(1)
 tutorial$temp <- double2singlePrecision(rnorm(4059))
@@ -69,18 +69,18 @@ tutorial$temp <- double2singlePrecision(rnorm(4059))
 
 ##IGLS
 
-(mymodel <- runMLwiN(temp~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), data=tutorial))
+(mymodel <- runMLwiN(temp~1+standlrt+(school|1)+(student|1), data=tutorial))
 
 ## Gibbs
 
-(mymodel <- runMLwiN(temp~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1), data=tutorial))
+(mymodel <- runMLwiN(temp~1+standlrt+(school|1)+(student|1), estoptions=list(EstM=1), data=tutorial))
 
 ## Structured MVN
 
-(mymodel <- runMLwiN(temp~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'), estoptions=list(EstM=1, mcmcOptions=list(smvn=1)), data=tutorial))
+(mymodel <- runMLwiN(temp~1+standlrt+(school|1)+(student|1), estoptions=list(EstM=1, mcmcOptions=list(smvn=1)), data=tutorial))
 
-summary(mymodel["chains"][,"RP2_var_cons"])
-sixway(mymodel["chains"][,"RP2_var_cons"],"sigma2u0")
+summary(mymodel["chains"][,"RP2_var_Intercept"])
+sixway(mymodel["chains"][,"RP2_var_Intercept"],"sigma2u0")
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .355
 

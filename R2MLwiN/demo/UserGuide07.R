@@ -32,36 +32,37 @@ options(MLwiN_path=mlwin)
 
 data(tutorial)
 
-tutorial["girl"] <- as.integer(tutorial$sex) - 1
-tutorial["boy"] <- 1 - tutorial$girl
-
 covmatrix <- matrix(, nrow = 3, ncol = 1)
 covmatrix[1,1] = 1
-covmatrix[2,1] = 'boy'
-covmatrix[3,1] = 'girl'
+covmatrix[2,1] = 'sexboy'
+covmatrix[3,1] = 'sexgirl'
 
-(mymodel1 <- runMLwiN(normexam ~ (0|boy+girl)+(1|boy+girl), levID="student", estoptions=list(clre=covmatrix), data=tutorial))
+contrasts(tutorial$sex, 2) <- diag(2)
+
+(mymodel1 <- runMLwiN(normexam ~ 0+sex+(student|0+sex), estoptions=list(clre=covmatrix), data=tutorial))
+
+contrasts(tutorial$sex, 1) <- c(0,1)
 
 # 7.2 Variance functions at level 2 . . . . . . . . . . . . . . . . . . . 95
 
-(mymodel2 <- runMLwiN(normexam ~ (0|cons+standlrt)+(1|cons)+(2|cons+standlrt), levID=c("school", "student"), data=tutorial))
+(mymodel2 <- runMLwiN(normexam ~ 1+standlrt+(school|1+standlrt)+(student|1), data=tutorial))
 
-l2varfn <- mymodel2@RP["RP2_var_cons"] + (2*mymodel2@RP["RP2_cov_cons_standlrt"]*tutorial$standlrt) + (mymodel2@RP["RP2_var_standlrt"]*tutorial$standlrt^2)
+l2varfn <- mymodel2@RP["RP2_var_Intercept"] + (2*mymodel2@RP["RP2_cov_Intercept_standlrt"]*mymodel2@data$standlrt) + (mymodel2@RP["RP2_var_standlrt"]*mymodel2@data$standlrt^2)
 
-varfndata <- as.data.frame(cbind(tutorial$standlrt, l2varfn)[order(tutorial$standlrt),])
+varfndata <- as.data.frame(cbind(mymodel2@data$standlrt, l2varfn)[order(mymodel2@data$standlrt),])
 colnames(varfndata) <- c("standlrt", "l2varfn")
 
 plot(varfndata$standlrt, varfndata$l2varfn, type="l")
 
 # 7.3 Further elaborating the model for the student-level variance . . . .99
 
-(mymodel3 <- runMLwiN(normexam ~ (0|cons+standlrt)+(1|cons+standlrt)+(2|cons+standlrt), levID=c("school", "student"), data=tutorial))
+(mymodel3 <- runMLwiN(normexam ~ 1+standlrt+(school|1+standlrt)+(student|1+standlrt), data=tutorial))
 
-l2varfn <- mymodel3@RP["RP2_var_cons"] + (2*mymodel3@RP["RP2_cov_cons_standlrt"]*tutorial$standlrt) + (mymodel3@RP["RP2_var_standlrt"]*tutorial$standlrt^2)
+l2varfn <- mymodel3@RP["RP2_var_Intercept"] + (2*mymodel3@RP["RP2_cov_Intercept_standlrt"]*mymodel3@data$standlrt) + (mymodel3@RP["RP2_var_standlrt"]*mymodel3@data$standlrt^2)
 
-l1varfn <- mymodel3@RP["RP1_var_cons"] + (2*mymodel3@RP["RP1_cov_cons_standlrt"]*tutorial$standlrt) + (mymodel3@RP["RP1_var_standlrt"]*tutorial$standlrt^2)
+l1varfn <- mymodel3@RP["RP1_var_Intercept"] + (2*mymodel3@RP["RP1_cov_Intercept_standlrt"]*mymodel3@data$standlrt) + (mymodel3@RP["RP1_var_standlrt"]*mymodel3@data$standlrt^2)
 
-varfndata <- as.data.frame(cbind(tutorial$standlrt, l2varfn, l1varfn)[order(tutorial$standlrt),])
+varfndata <- as.data.frame(cbind(mymodel3@data$standlrt, l2varfn, l1varfn)[order(mymodel3@data$standlrt),])
 colnames(varfndata) <- c("standlrt", "l2varfn", "l1varfn")
 
 xyplot(l2varfn+l1varfn~standlrt, data=varfndata, type="l")
@@ -72,31 +73,31 @@ covmatrix[1,1] = 1
 covmatrix[2,1] = 'standlrt'
 covmatrix[3,1] = 'standlrt'
 covmatrix[1,2] = 1
-covmatrix[2,2] = 'girl'
-covmatrix[3,2] = 'cons'
+covmatrix[2,2] = 'sexgirl'
+covmatrix[3,2] = 'Intercept'
 covmatrix[1,3] = 1
 covmatrix[2,3] = 'standlrt'
-covmatrix[3,3] = 'girl'
+covmatrix[3,3] = 'sexgirl'
 
-(mymodel4 <- runMLwiN(normexam ~ (0|cons+standlrt+girl)+(1|cons+standlrt+girl)+(2|cons+standlrt), levID=c("school", "student"), estoptions=list(clre=covmatrix), data=tutorial))
+(mymodel4 <- runMLwiN(normexam ~ 1+standlrt+sex+(school|1+standlrt)+(student|1+standlrt+sex), estoptions=list(clre=covmatrix), data=tutorial))
 
 covmatrix <- matrix(, nrow = 3, ncol = 2)
 covmatrix[1,1] = 1
 covmatrix[2,1] = 'standlrt'
 covmatrix[3,1] = 'standlrt'
 covmatrix[1,2] = 1
-covmatrix[2,2] = 'girl'
-covmatrix[3,2] = 'cons'
+covmatrix[2,2] = 'sexgirl'
+covmatrix[3,2] = 'Intercept'
 
-(mymodel5 <- runMLwiN(normexam ~ (0|cons+standlrt+girl)+(1|cons+standlrt+girl)+(2|cons+standlrt), levID=c("school", "student"), estoptions=list(clre=covmatrix), data=tutorial))
+(mymodel5 <- runMLwiN(normexam ~ 1+standlrt+sex+(school|1+standlrt)+(student|1+standlrt+sex), estoptions=list(clre=covmatrix), data=tutorial))
 
-l2varfn <- mymodel5@RP["RP2_var_cons"] + (2*mymodel5@RP["RP2_cov_cons_standlrt"]*tutorial$standlrt) + (mymodel5@RP["RP2_var_standlrt"]*tutorial$standlrt^2)
+l2varfn <- mymodel5@RP["RP2_var_Intercept"] + (2*mymodel5@RP["RP2_cov_Intercept_standlrt"]*mymodel5@data$standlrt) + (mymodel5@RP["RP2_var_standlrt"]*mymodel5@data$standlrt^2)
 
-l1varfnboys <- mymodel5@RP["RP1_var_cons"] + (2*mymodel5@RP["RP1_cov_cons_standlrt"]*tutorial$standlrt)
+l1varfnboys <- mymodel5@RP["RP1_var_Intercept"] + (2*mymodel5@RP["RP1_cov_Intercept_standlrt"]*mymodel5@data$standlrt)
 
-l1varfngirls <- mymodel5@RP["RP1_var_cons"] + (2*mymodel5@RP["RP1_cov_cons_standlrt"]*tutorial$standlrt) + (2*mymodel5@RP["RP1_cov_standlrt_girl"]*tutorial$standlrt) + mymodel5@RP["RP1_var_girl"]
+l1varfngirls <- mymodel5@RP["RP1_var_Intercept"] + (2*mymodel5@RP["RP1_cov_Intercept_standlrt"]*mymodel5@data$standlrt) + (2*mymodel5@RP["RP1_cov_standlrt_sexgirl"]*mymodel5@data$standlrt) + mymodel5@RP["RP1_var_sexgirl"]
 
-varfndata <- as.data.frame(cbind(tutorial$standlrt, l2varfn, l1varfnboys, l1varfngirls)[order(tutorial$standlrt),])
+varfndata <- as.data.frame(cbind(mymodel5@data$standlrt, l2varfn, l1varfnboys, l1varfngirls)[order(mymodel5@data$standlrt),])
 colnames(varfndata) <- c("standlrt", "l2varfn", "l1varfnboys", "l1varfngirls")
 
 xyplot(l2varfn+l1varfnboys+l1varfngirls~standlrt, data=varfndata, type="l")

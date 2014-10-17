@@ -49,7 +49,7 @@ while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file
 ## Define the model
 ## Hierarchical centring at level 2 (DO NOT USE VERSION 2.25; the bug has been fixed for VERSION 2.26)
 
-mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
+mymodel <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),
  estoptions=list(EstM=1, mcmcOptions=list(hcen=2), show.file=T),
  BUGO=c(version=4, n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=tutorial)
 
@@ -63,8 +63,7 @@ sixway(mymodel[[1]][,"beta[1]"],"beta[1]")
 data(bang1)
 
 bang1$denomb <- bang1$cons
-bang1$urban <- as.integer(bang1$urban) - 1
-bang1$use <- as.integer(bang1$use) - 1
+
 ## openbugs executable
 if(!exists("openbugs")) openbugs="C:/Program Files (x86)/OpenBUGS321/OpenBUGS.exe"
 while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file.access(openbugs,mode=4)==0){
@@ -84,34 +83,37 @@ while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file
 
 ## Hierarchical centring at level 2
 
-(mymodel <- runMLwiN(logit(use,denomb)~(0|cons+age+lc[None]+urban)+(2|cons+urban), levID=c('district','woman'), D="Binomial",
+(mymodel <- runMLwiN(logit(use,denomb)~1+age+lc+urban+(district|1+urban), D="Binomial",
  estoptions=list(EstM=1, mcmcOptions=list(hcen=2)), data=bang1))
 
 trajectories(mymodel["chains"])
 
 ## Hierarchical centring at level 2 + Orthogonal updates
 
+(mymodel <- runMLwiN(logit(use,denomb)~1+age+lc+urban+(district|1+urban), D="Binomial",
+ estoptions=list(EstM=1, mcmcOptions=list(hcen=2, orth=1)), data=bang1))
+
+trajectories(mymodel["chains"])
 
 # 25.5 The Melanoma example . . . . . . . . . . . . . . . . . . . . . . .414
 
 ## Read mmmec1 data
 data(mmmec1)
 
-mmmec1$logexp <- double2singlePrecision(log(mmmec1$exp))
-levels(mmmec1[["nation"]]) <- c("Belgium", "W_Germany", "Denmark", "France", "UK", "Italy", "Ireland", "Luxembourg", "Netherlands")
+contrasts(mmmec1$nation, 9) = diag(9)
 
 ## Define the model
 ## Hierarchical centring at level 2
-(mymodel <- runMLwiN(log(obs,logexp)~(0|nation[]+Belgium:uvbi+W_Germany:uvbi+Denmark:uvbi+France:uvbi+UK:uvbi+Italy:uvbi+Ireland:uvbi+Luxembourg:uvbi+Netherlands:uvbi)+(2|cons),
- levID=c('region','county'), D="Poisson", indata=mmmec1, estoptions=list(EstM=1,mcmcMeth=list(iterations=50000), mcmcOptions=list(hcen=2))))
+(mymodel <- runMLwiN(log(obs)~0+nation+nation:uvbi+offset(log(exp))+(region|1), D="Poisson",
+ estoptions=list(EstM=1,mcmcMeth=list(iterations=50000), mcmcOptions=list(hcen=2)), data=mmmec1))
 
-sixway(mymodel["chains"][,"FP_Belgium"],acf.maxlag=100,"beta_1")
+sixway(mymodel["chains"][,"FP_nationBelgium"],acf.maxlag=100,"beta_1")
 
 ## Hierarchical centring at level 2 + Orthogonal updates
-(mymodel <- runMLwiN(log(obs,logexp)~(0|nation[]+Belgium:uvbi+W_Germany:uvbi+Denmark:uvbi+France:uvbi+UK:uvbi+Italy:uvbi+Ireland:uvbi+Luxembourg:uvbi+Netherlands:uvbi)+(2|cons),
- levID=c('region','county'), D="Poisson", indata=mmmec1, estoptions=list(EstM=1, mcmcMeth=list(iterations=50000), mcmcOptions=list(orth=1, hcen=2))))
+(mymodel <- runMLwiN(log(obs)~0+nation+nation:uvbi+offset(log(exp))+(region|1), D="Poisson",
+ estoptions=list(EstM=1, mcmcMeth=list(iterations=50000), mcmcOptions=list(orth=1, hcen=2)), data=mmmec1))
 
-sixway(mymodel["chains"][,"FP_Belgium"],acf.maxlag=100,"beta_1")
+sixway(mymodel["chains"][,"FP_nationBelgium"],acf.maxlag=100,"beta_1")
 
 # 25.6 Normal response models in MLwiN . . . . . . . . . . . . . . . . . 419
 
@@ -122,14 +124,14 @@ data(tutorial)
 ## Univariate MH
 ## Hierarchical centring at level 2
 
-(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
+(mymodel <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),
  estoptions=list(EstM=1, mcmcMeth=list(fixM=2, residM=2), mcmcOptions=list(hcen=2)), data=tutorial))
 
 trajectories(mymodel["chains"],Range=c(4501,5000))
 ## Gibbs
 ## Hierarchical centring at level 2
 
-(mymodel <- runMLwiN(normexam~(0|cons+standlrt)+(2|cons)+(1|cons), levID=c('school','student'),
+(mymodel <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),
  estoptions=list(EstM=1, mcmcOptions=list(hcen=2)), data=tutorial))
 
 trajectories(mymodel["chains"],Range=c(4501,5000))
