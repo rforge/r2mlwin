@@ -1,7 +1,3 @@
-Changes/Bug fixes
-Revisit cross-classification specification as this should apply to the whole model, rather than level by level
-Allow specification of all ID/Weight columns instead of assuming they are consecutive
-
 Model Specification Checks:
 (IGLS) Check lower levels are non-equal standardised weights if standardised weights are specified
 
