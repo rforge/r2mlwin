@@ -1,5 +1,5 @@
 setClass(Class = "mlwinfitMCMC", representation = representation(Nobs="numeric",DataLength="numeric",Hierarchy="ANY",burnin="numeric",iterations="numeric",
-                                                                 D="ANY", Formula="ANY", levID="character", merr="ANY", fact="ANY", xclass="ANY",
+                                                                 D="ANY", Formula="ANY", levID="character", merr="ANY", fact="ANY", xc="ANY",
                                                                  FP="numeric", RP="numeric", RP.cov="matrix", FP.cov="matrix", chains="ANY",
                                                                  elapsed.time="numeric", call="ANY",BDIC="numeric", LIKE="ANY", fact.loadings="numeric",fact.loadings.sd="numeric",
                                                                  fact.cov="numeric", fact.cov.sd="numeric", fact.chains="ANY", MIdata="data.frame",
@@ -19,7 +19,7 @@ setMethod(
     if(i=="levID"){return(x@levID)}else {}
     if(i=="merr"){return(x@merr)}else {}
     if(i=="fact"){return(x@fact)}else {}
-    if(i=="xclass"){return(x@xclass)}else {}
+    if(i=="xc"){return(x@xc)}else {}
     if(i=="FP"){return(x@FP)}else {}
     if(i=="RP"){return(x@RP)}else {}
     if(i=="FP.cov"){return(x@FP.cov)}else {}
@@ -55,7 +55,7 @@ setReplaceMethod(
     if(i=="levID"){x@levID<-value}else {}
     if(i=="merr"){x@merr<-value}else {}
     if(i=="fact"){x@fact<-value}else {}
-    if(i=="xclass"){x@xclass<-value}else {}
+    if(i=="xc"){x@xc<-value}else {}
     if(i=="FP"){x@FP<-value}else {}
     if(i=="RP"){x@RP<-value}else {}
     if(i=="FP.cov"){x@FP.cov<-value}else {}
@@ -93,7 +93,7 @@ setMethod(
     if(i=="levID"){return(x@levID)}else {}
     if(i=="merr"){return(x@merr)}else {}
     if(i=="fact"){return(x@fact)}else {}
-    if(i=="xclass"){return(x@xclass)}else {}
+    if(i=="xc"){return(x@xc)}else {}
     if(i=="FP"){return(x@FP)}else {}
     if(i=="RP"){return(x@RP)}else {}
     if(i=="FP.cov"){return(x@FP.cov)}else {}
@@ -129,7 +129,7 @@ setReplaceMethod(
     if(i=="levID"){x@levID<-value}else {}
     if(i=="merr"){x@merr<-value}else {}
     if(i=="fact"){x@fact<-value}else {}
-    if(i=="xclass"){x@xclass<-value}else {}
+    if(i=="xc"){x@xc<-value}else {}
     if(i=="FP"){x@FP<-value}else {}
     if(i=="RP"){x@RP<-value}else {}
     if(i=="FP.cov"){x@FP.cov<-value}else {}
@@ -221,10 +221,10 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   cat(paste(rep("-",50),collapse="*"),"\n")
   cat("MLwiN multilevel model",paste("(",object@D[1],")",sep=""),"\n")
   if (!is.null(object@Hierarchy)) print(object@Hierarchy)
-  if (is.null(object@xclass)){
-    cat("Estimation algorithm:  MCMC      Elapsed time :",paste(round(object@elapsed.time,2),"s",sep=""), "\n")
-  }else{
+  if (!is.null(object@xc) && object@xc == TRUE){
     cat("Estimation algorithm:  MCMC      Cross-classified              Elapsed time :",paste(round(object@elapsed.time,2),"s",sep=""), "\n")
+  }else{
+    cat("Estimation algorithm:  MCMC      Elapsed time :",paste(round(object@elapsed.time,2),"s",sep=""), "\n")
   }
   cat("Number of obs: ",object@Nobs,"(from total",object@DataLength,")        Number of iter.:",object@iterations,"         Burn-in:", object@burnin , "\n")
     

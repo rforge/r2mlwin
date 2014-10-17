@@ -1,6 +1,6 @@
 MacroScript2 <- function(indata,dtafile,oldsyntax=FALSE,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,Meth,merr,carcentre,maxiter,convtol,
                          seed,iterations,burnin,scale,thinning,priorParam,refresh,fixM,residM,Lev1VarM, 
-                         OtherVarM,adaption,priorcode,rate, tol,lclo,mcmcOptions,fact,xclass=NULL,BUGO=NULL,mem.init,optimat=F,
+                         OtherVarM,adaption,priorcode,rate, tol,lclo,mcmcOptions,fact,xc=NULL,mm=NULL,car=NULL,BUGO=NULL,mem.init,optimat=F,
                          nopause,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,MCMCfile=MCMCfile,
                          chainfile=chainfile,MIfile=MIfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,resichains=resichains,
                          FACTchainfile=FACTchainfile,resi.store.levs=resi.store.levs,debugmode=debugmode, startval=startval, dami=dami){
@@ -1139,41 +1139,36 @@ MacroScript2 <- function(indata,dtafile,oldsyntax=FALSE,resp, levID, expl, rp, D
   }
   
   if (D[1]=="Multivariate Normal") wrt(paste("MCCO ",mcmcOptions$mcco))
-  if (!is.null(carcentre) && carcentre == TRUE) {
-    wrt("CARC 1")
+
+  if (!is.null(xc) && xc == TRUE) {
+    wrt("XCLA 1")
   }
-  if (!is.null(xclass)){
-    for(ii in 1:length(as.numeric(xclass$class))){
-      if (as.numeric(xclass$N1[ii])==1){
-        wrt(paste("MULM",as.numeric(xclass$class[ii])," 1"))
-        wrt(paste("CARP",as.numeric(xclass$class[ii])," 0"))
-      }
-      if (xclass$N1[ii]>1){
-        if (length(xclass)==4){
-          carflag=F
-        }else{
-          carflag=xclass$car[ii]
-        }
-        if (is.na(xclass$id[ii])){
-          wrt(paste("MULM ",as.numeric(xclass$class[ii])," ", as.numeric(xclass$N1[ii])," '",xclass$weight[ii],"'",sep=""))
-          if (carflag){
-            wrt(paste("CARP",as.numeric(xclass$class[ii])," 1"))
-          }else{
-            wrt(paste("CARP",as.numeric(xclass$class[ii])," 0"))
-          }
-        }else{
-          wrt(paste("MULM ",as.numeric(xclass$class[ii])," ", as.numeric(xclass$N1[ii])," '",xclass$weight[ii],"'"," '",xclass$id[ii],"'",sep=""))
-          if (carflag){
-            wrt(paste("CARP",as.numeric(xclass$class[ii])," 1"))
-          }else{
-            wrt(paste("CARP",as.numeric(xclass$class[ii])," 0"))
-          }
+
+  if (!is.null(mm)) {
+    for (i in 1:length(mm)) {
+      if (!any(is.na(mm[[i]]))) {
+        mmlev <- (length(mm) - i) + 1
+        if (D[1] != "Multivariate Normal") {
+          wrt(paste0("MULM ", mmlev, " ", length(mm[[i]]$mmvar), " '", mm[[i]]$weights[[1]], "'"))
+        } else {
+          wrt(paste0("MULM ", mmlev, " ", length(mm[[i]]$mmvar), " '", mm[[i]]$weights[[1]], "' '", mm[[i]]$mmvars[[1]], "'"))
         }
       }
     }
-    wrt("XCLA 1")
   }
-  
+
+  if (!is.null(car)) {
+    for (i in 1:length(car)) {
+      if (!any(is.na(car[[i]]))) {
+        carlev <- (length(car) - i) + 1
+        wrt(paste0("MULM ", carlev, " ", length(car[[i]]$carvar), " '", car[[i]]$weights[[1]], "' '", car[[i]]$carvar[[1]], "'"))
+        wrt(paste("CARP", carlev, "1"))
+      }
+    }
+    if (!is.null(carcentre) && carcentre == TRUE) {
+      wrt("CARC 1")
+    }
+  } 
   wrt("")
   
   wrt("NOTE Set MCMC seed")
@@ -1197,7 +1192,7 @@ MacroScript2 <- function(indata,dtafile,oldsyntax=FALSE,resp, levID, expl, rp, D
     wrt("POST   0")
   }
   
-  if (is.null(xclass)){
+  if (is.null(xc)){
     wrt("MISR   0")
     wrt("LINK 2 G30")
     if (D[1]=="Multinomial"&& as.numeric(D[4])==0){
@@ -1267,7 +1262,7 @@ MacroScript2 <- function(indata,dtafile,oldsyntax=FALSE,resp, levID, expl, rp, D
   if ((!is.null(BUGO))&&!(D[1]=="Mixed")&&nrp>0){
     version=as.numeric(BUGO["version"])
     if(D[1]=='Normal'||D[1]=='Multivariate Normal') DD2=0
-    if (is.null(xclass)){
+    if (is.null(xc)){
       wrt(paste("BUGO 6 ",DD," ",DD2, " G30[1] ", priorcol," '",modelfile,"' ","'",initfile,"' ","'",datafile,"'",sep=""))
       wrt("ERAS   G30")
       wrt("LINK 0 G30")
@@ -1280,12 +1275,12 @@ MacroScript2 <- function(indata,dtafile,oldsyntax=FALSE,resp, levID, expl, rp, D
     wrt("ECHO 1")
 
     residcols <- ""
-    if (is.null(xclass)){
+    if (is.null(xc)){
       residcols <- "G30[1] G30[2]"
     }
     wrt(paste("MCMC   0", burnin, adaption, scale, rate, tol, residcols, priorcol, fixM, residM, Lev1VarM, OtherVarM, priorcode, DD))
  
-    if (is.null(xclass)){
+    if (is.null(xc)){
       wrt("ERAS G30")
       wrt("LINK 0 G30")
     }

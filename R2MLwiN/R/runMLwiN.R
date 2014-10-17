@@ -746,28 +746,193 @@ version:date:md5:filename:x64:trial
   }
 
   xclass=estoptions$xclass
+
+  if (!is.null(xclass)) {
+    warning("Old cross-classification option specified, see the help file for new syntax")
+  }
+
   if (EstM == 0 && !is.null(xclass)) {
     stop("Cross-classification is not available with (R)IGLS estimation")
   }
 
-  if (!is.null(xclass)) {
-    for (i in 1:length(as.numeric(xclass$class))) {
-      lev <- as.numeric(xclass$class[i])
-      num <- as.numeric(xclass$N1[i])
-      weightcol <- xclass$weight[i]
-      idcol <- xclass$id[i]
-      if (is.null(idcol) || is.na(idcol)) {
-        idcol <- rev(na.omit(levID))[lev]
+  xc=estoptions$xc
+  if (is.null(xc)) {
+    xc <- FALSE
+  }
+
+  mm=estoptions$mm
+  if (!is.null(mm)) {
+    xc <- TRUE
+    for (i in 1:length(mm)) {
+      if (!any(is.na(mm[[i]]))) {
+        if (length(mm[[i]]$mmvar) != length(mm[[i]]$weights)) {
+          stop("Number of multiple membership weights does not match identifiers")
+        }
+        mmlev <- (length(mm) - i) + 1
+        for (j in 1:length(mm[[i]]$mmvar)) {
+          var <- mm[[i]]$mmvar[[j]]
+          if (is.character(var)) {
+            if (var %in% colnames(indata)) indata[[var]] <- NULL
+            mmvar = model.frame(as.formula(paste0("~", var)), data=data)
+            indata = cbind(indata, mmvar)
+          } else {
+            if (is.vector(var)) {
+              indata = cbind(indata, var)
+              mmname <- paste0("_MMID", (length(mm) - i) + 1, "_", j)
+              vnames <- colnames(indata)
+              vnames[length(vnames)] <- mmname
+              colnames(indata) <- vnames
+              mm[[i]]$mmvar[[j]] <- mmname
+            } else {
+              stop("Invalid weights specification")
+            }
+          }
+        }
+        for (j in 1:length(mm[[i]]$weights)) {
+          var <- mm[[i]]$weights[[j]]
+          if (is.character(var)) {
+            if (var %in% colnames(indata)) indata[[var]] <- NULL
+            mmweight = model.frame(as.formula(paste0("~", var)), data=data)
+            indata = cbind(indata, mmweight)
+          } else {
+            if (is.vector(var)) {
+              indata = cbind(indata, var)
+              mmwname <- paste0("_MMWEIGHT", (length(mm) - i) + 1, "_", j)
+              vnames <- colnames(indata)
+              vnames[length(vnames)] <- mmwname
+              colnames(indata) <- vnames
+              mms[[i]]$weight[[j]] <- mmwname
+            } else {
+              stop("Invalid weights specification")
+            }
+          }
+        }
       }
-      idstart = which(colnames(indata) == idcol)
-      idend = idstart+(num-1)
-      idmat <- indata[, colnames(indata)[idstart:idend]]
-        
-      if (!is.null(weightcol)) {
+    }
+  }
+
+  car=estoptions$car
+  if (!is.null(car)) {
+    xc <- TRUE
+    for (i in 1:length(car)) {
+      if (!any(is.na(car[[i]]))) {
+        if (length(car[[i]]$carvar) != length(car[[i]]$weights)) {
+          stop("Number of CAR weights does not match identifiers")
+        }
+        carlev <- (length(car) - i) + 1
+        for (j in 1:length(car[[i]]$carvar)) {
+          var <- car[[i]]$carvar[[j]]
+          if (is.character(var)) {
+            if (var %in% colnames(indata)) {
+              indata[[var]] <- NULL
+            }
+            carvar = model.frame(as.formula(paste0("~", var)), data=data)
+            indata = cbind(indata, carvar)
+          } else {
+            if (is.vector(var)) {
+              indata = cbind(indata, var)
+              carname <- paste0("_CARID", (length(car) - i) + 1, "_", j)
+              vnames <- colnames(indata)
+              vnames[length(vnames)] <- carname
+              colnames(indata) <- vnames
+              car[[i]]$carvar[[j]] <- carname
+            } else {
+              stop("Invalid weights specification")
+            }
+          }
+        }
+        for (j in 1:length(car[[i]]$weights)) {
+          var <- car[[i]]$weights[[j]]
+          if (is.character(var)) {
+            if (var %in% colnames(indata)) indata[[var]] <- NULL
+            carweight = model.frame(as.formula(paste0("~", var)), data=data)
+            indata = cbind(indata, carweight)
+          } else {
+            if (is.vector(var)) {
+              indata = cbind(indata, var)
+              carwname <- paste0("_CARWEIGHT", (length(car) - i) + 1, "_", j)
+              vnames <- colnames(indata)
+              vnames[length(vnames)] <- carwname
+              colnames(indata) <- vnames
+              car[[i]]$weights[[j]] <- carwname
+            } else {
+              stop("Invalid weights specification")
+            }
+          }
+        }
+      }
+    }
+  }
+
+  carcentre=estoptions$carcentre
+  if (is.null(carcentre)) {
+    carcentre <- FALSE
+  }
+
+  # Convert old version of syntax
+  if (!is.null(xclass)) {
+    xc <- TRUE
+    for (i in 1:length(as.numeric(xclass$class))) {
+      num <- as.numeric(xclass$N1[i])
+      if (num > 1) {
+        lev <- as.numeric(xclass$class[i])
+
+        weightcol <- xclass$weight[i]
+        idcol <- xclass$id[i]
+        if (is.null(idcol) || is.na(idcol)) {
+          idcol <- rev(na.omit(levID))[lev]
+        }
+        idstart = which(colnames(indata) == idcol)
+        idend = idstart+(num-1)
+        idcols <- colnames(indata)[idstart:idend]
+
         weightstart = which(colnames(indata) == weightcol)
         weightend = weightstart+(num-1)
-        weightmat <- indata[, colnames(indata)[weightstart:weightend]]
+        weightcols <- colnames(indata)[weightstart:weightend]
 
+        if (xclass$car == FALSE) {
+          if (is.null(car)) car <- list(carvar=list(), weights=list())
+          car[[lev]]$carvar <- as.list(idcols)
+          car[[lev]]$weights <- as.list(weightcols)
+        } else {
+          if (is.null(mm)) mm <- list(mmvar=list(), weights=list())
+          mm[[lev]]$mmvar <- as.list(idcols)
+          mm[[lev]]$weights <- as.list(weightcols)
+        }
+      }
+    }
+  }
+
+
+  if (!is.null(car) && !is.null(mm)) {
+    mmlev <- max(length(car), length(mm))
+    for (i in 1:mmlev) {
+      if (any(!is.na(mm)) && any(!is.na(car))) {
+        stop("Multiple membership and CAR cannot be defined at the same level")
+      }
+    }
+  }
+
+  if (!is.null(car)) {
+    carcount <- 0
+    for (i in 1:length(car)) {
+      if (!any(is.na(car[[i]]))) {
+        carcount <- carcount + 1
+      }
+    }
+    if (carcount > 1 && carcentre != TRUE) {
+      stop("CAR can only apply to one level unless CAR centring is turned on")
+    }
+  }
+
+
+  if (!is.null(mm)) {
+    for (i in 1:length(mm)) {
+      if (!any(is.na(mm[[i]]))) {
+        varnames <- unlist(mm[[i]]$mmvar)
+        weightnames <- unlist(mm[[i]]$weights)
+        idmat <- indata[, varnames]
+        weightmat <- indata[, weightnames]
         # NOTE: These checks could probably be vectorised
         for (i in 1:nrow(idmat)) {
           for (j in 1:ncol(idmat)) {
@@ -790,30 +955,41 @@ version:date:md5:filename:x64:trial
     }
   }
 
-  notation=estoptions$notation
-  if(is.null(notation)) {
-    if (is.null(xclass)) {
-      notation="level"
-    } else {
-      notation="class"
+  if (!is.null(car)) {
+    for (i in 1:length(car)) {
+      if (!any(is.na(car[[i]]))) {
+        varnames <- unlist(car[[i]]$carvar)
+        weightnames <- unlist(car[[i]]$weights)
+        idmat <- indata[, varnames]
+        weightmat <- indata[, weightnames]
+        # NOTE: These checks could probably be vectorised
+        for (i in 1:nrow(idmat)) {
+          for (j in 1:ncol(idmat)) {
+            if (idmat[i, j] != 0 && weightmat[i, j] == 0) {
+              stop(paste("The CAR ID variable", j, "for observation", i, "is present but a zero MM weight has been specified for it"))
+            }
+            if (idmat[i, j] == 0 && weightmat[i, j] != 0) {
+              stop(paste("The CAR ID variable", j, "for observation", i, "is absent but a positive MM weight has been specified for it"))
+            }
+            for (k in 1:j) {
+              if (k != j) {
+                if (idmat[i, j] == idmat[i, k] && idmat[i, j] != 0) {
+                  stop(paste("The CAR ID variable", j, "for observation", i, "is duplicated in ID variable", k))
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 
-  carcentre=estoptions$carcentre
-  if (is.null(carcentre)) {
-    carcentre <- FALSE
-  }
-  carcount <- 0
-  if (is.null(xclass)) {
-    for(i in 1:length(as.numeric(xclass$class))) {
-      if (length(xclass) > 4){
-        if (xclass$car[i] == TRUE) {
-          carcount <- carcount + 1
-        }
-        if (carcount > 1 && xclass$car[i] == TRUE && carcentre != TRUE) {
-          stop("CAR can only apply to one level unless CAR centring is turned on")
-        }
-      }
+  notation=estoptions$notation
+  if(is.null(notation)) {
+    if (is.null(xc)) {
+      notation="level"
+    } else {
+      notation="class"
     }
   }
 
@@ -1386,28 +1562,31 @@ version:date:md5:filename:x64:trial
 
   if (drop.data) {
     outvars <- c(resp)
-    
+
     # Multiple membership IDs if applicable
-    if (!is.null(xclass)) {
-      for (i in 1:length(as.numeric(xclass$class))) {
-        lev <- as.numeric(xclass$class[i])
-        num <- as.numeric(xclass$N1[i])
-        weightcol <- xclass$weight[i]
-        idcol <- xclass$id[i]
-        if (is.null(idcol) || is.na(idcol)) {
-          idcol <- rev(na.omit(levID))[lev]
-        }
-        idstart = which(colnames(indata) == idcol)
-        idend = idstart+(num-1)
-        outvars <- union(outvars, colnames(indata)[idstart:idend])
-        
-        if (!is.null(weightcol)) {
-          weightstart = which(colnames(indata) == weightcol)
-          weightend = weightstart+(num-1)
-          outvars <- union(outvars, colnames(indata)[weightstart:weightend])
+    if (!is.null(mm)) {
+      for (i in 1:length(mm)) {
+        if (!any(is.na(mm[[i]]))) {
+          varnames <- unlist(mm[[i]]$mmvar)
+          weightnames <- unlist(mm[[i]]$weights)
+          outvars <- union(outvars, varnames)
+          outvars <- union(outvars, weightnames)
         }
       }
     }
+
+    # CAR membership IDs if applicable
+    if (!is.null(car)) {
+      for (i in 1:length(car)) {
+        if (!any(is.na(car[[i]]))) {
+          varnames <- unlist(car[[i]]$carvar)
+          weightnames <- unlist(car[[i]]$weights)
+          outvars <- union(outvars, varnames)
+          outvars <- union(outvars, weightnames)
+        }
+      }
+    }
+
     outvars <- union(outvars, na.omit(levID))
     if(is.list(expl)) {
       if (!is.na(expl$sep.coeff[1])){
@@ -1470,7 +1649,7 @@ version:date:md5:filename:x64:trial
     if (sort.force == TRUE) {
       outdata <- outdata[do.call(order, outdata[na.omit(levID)]), ]
     } else {
-      if (is.null(estoptions$xclass) && all(do.call(order, outdata[na.omit(levID)]) == seq(1, nrow(outdata))) == FALSE) {
+      if (is.null(xc) && all(do.call(order, outdata[na.omit(levID)]) == seq(1, nrow(outdata))) == FALSE) {
         stop("The input data are not sorted according to the model hierarchy")
       }
     }
@@ -1486,7 +1665,7 @@ version:date:md5:filename:x64:trial
   shortID <- na.omit(rev(levID))
   if (length(shortID) > 1) {
     for (lev in length(shortID):2) {
-      if (!is.null(xclass)) {
+      if (!is.null(xc)) {
         groupsize <- by(outdata, outdata[,shortID[lev]], nrow)
       } else {
         test <- require(reshape, quietly=TRUE)
@@ -1635,7 +1814,7 @@ version:date:md5:filename:x64:trial
   if (EstM==1){
     MacroScript2(outdata, dtafile,oldsyntax,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,Meth,merr,carcentre,maxiter,convtol,
                  seed,iterations,burnin,scale,thinning,priorParam,refresh,fixM,residM,Lev1VarM, 
-                 OtherVarM,adaption,priorcode,rate, tol,lclo,mcmcOptions,fact,xclass,BUGO,mem.init,optimat,
+                 OtherVarM,adaption,priorcode,rate, tol,lclo,mcmcOptions,fact,xc,mm,car,BUGO,mem.init,optimat,
                  nopause,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,MCMCfile=MCMCfile,
                  chainfile=chainfile,MIfile=MIfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,
                  resichains=resichains,FACTchainfile=FACTchainfile,resi.store.levs=resi.store.levs,debugmode=debugmode,startval=startval, dami=dami)
@@ -1782,10 +1961,8 @@ version:date:md5:filename:x64:trial
     n.iter=iterations+burnin
     addmore=NULL
     if(EstM==1){
-      if(!is.null(xclass)&&length(xclass)==5){
-        if(sum(xclass[[5]])>0){
-          addmore=c(addmore,"carmean")
-        }
+      if(!is.null(car)){
+        addmore=c(addmore,"carmean")
       }	
       if(is.matrix(mcmcOptions$paex)){
         if(sum(mcmcOptions$paex[,2])>0){
@@ -1911,7 +2088,7 @@ version:date:md5:filename:x64:trial
       outMCMC["levID"]=levID
       outMCMC["merr"]=merr
       outMCMC["fact"]=fact
-      outMCMC["xclass"]=xclass
+      outMCMC["xc"]=xc
       outMCMC["FP"]=FP
       outMCMC["RP"]=RP
       outMCMC["FP.cov"]=FP.cov
