@@ -552,7 +552,7 @@ version:date:md5:filename:x64:trial
     for (i in 1:length(weighting$weightvar)) {
       if (!is.na(weighting$weightvar[i])) {
         if (is.character(weighting$weightvar[[i]])) {
-            wtvar = model.frame(as.formula(paste0("~", weighting$weightvar[[i]])), data=data)
+            wtvar = model.frame(as.formula(paste0("~", weighting$weightvar[[i]])), data=data, na.action=NULL)
             indata = cbind(indata, wtvar)
         } else {
           if (is.vector(weighting$weightvar[[i]])) {
@@ -773,7 +773,7 @@ version:date:md5:filename:x64:trial
           var <- mm[[i]]$mmvar[[j]]
           if (is.character(var)) {
             if (var %in% colnames(indata)) indata[[var]] <- NULL
-            mmvar = model.frame(as.formula(paste0("~", var)), data=data)
+            mmvar = model.frame(as.formula(paste0("~", var)), data=data, na.action=NULL)
             indata = cbind(indata, mmvar)
           } else {
             if (is.vector(var)) {
@@ -792,7 +792,7 @@ version:date:md5:filename:x64:trial
           var <- mm[[i]]$weights[[j]]
           if (is.character(var)) {
             if (var %in% colnames(indata)) indata[[var]] <- NULL
-            mmweight = model.frame(as.formula(paste0("~", var)), data=data)
+            mmweight = model.frame(as.formula(paste0("~", var)), data=data, na.action=NULL)
             indata = cbind(indata, mmweight)
           } else {
             if (is.vector(var)) {
@@ -826,7 +826,7 @@ version:date:md5:filename:x64:trial
             if (var %in% colnames(indata)) {
               indata[[var]] <- NULL
             }
-            carvar = model.frame(as.formula(paste0("~", var)), data=data)
+            carvar = model.frame(as.formula(paste0("~", var)), data=data, na.action=NULL)
             indata = cbind(indata, carvar)
           } else {
             if (is.vector(var)) {
@@ -845,7 +845,7 @@ version:date:md5:filename:x64:trial
           var <- car[[i]]$weights[[j]]
           if (is.character(var)) {
             if (var %in% colnames(indata)) indata[[var]] <- NULL
-            carweight = model.frame(as.formula(paste0("~", var)), data=data)
+            carweight = model.frame(as.formula(paste0("~", var)), data=data, na.action=NULL)
             indata = cbind(indata, carweight)
           } else {
             if (is.vector(var)) {
