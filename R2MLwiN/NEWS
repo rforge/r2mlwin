@@ -1,3 +1,19 @@
+Mon Oct 20 2014
+1. Bug fixing
+   * Updated package information to specify the correct dependencies and external functions.
+   * Corrected generated macro for  (R)IGLS weights so that standardised weight columns at different levels do not overwrited each other
+   * Keep missing data when generating new variables
+
+2. Changes
+   * Implemented new formula syntax (see help files) to fit better with R conventions
+   * Optionally use the sparseby function to reduce memory usage when calculating model hierarchy information
+   * Added missing S4 methods to allow operation with more external packages
+   * Added analysed data to the S4 object to allow postestimation analysis
+   * All interaction/dummy variables are now generated prior to calling MLwiN when using the newer syntax
+   * Implemented new syntax for specifying cross-classified/multiple membership/CAR models
+   * Updated included demos to use the newer formula syntax
+   * Added CITATION file into package
+
 Tue Jul 15 2014
 1. Changes
    * Replace 0s, 0c,... by 0|, 0||,..., respectively.
