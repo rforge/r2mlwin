@@ -927,12 +927,17 @@ version:date:md5:filename:x64:trial
 
 
   if (!is.null(mm)) {
-    for (i in 1:length(mm)) {
-      if (!any(is.na(mm[[i]]))) {
-        varnames <- unlist(mm[[i]]$mmvar)
-        weightnames <- unlist(mm[[i]]$weights)
+    for (k in 1:length(mm)) {
+      if (!any(is.na(mm[[k]]))) {
+        varnames <- unlist(mm[[k]]$mmvar)
+        weightnames <- unlist(mm[[k]]$weights)
         idmat <- indata[, varnames]
         weightmat <- indata[, weightnames]
+        if (!all(idmat[,1] == indata[, levID[k]])) {
+          stop("The first multiple membership column should match the ID column")
+        }
+        levID[k] <- mm[[k]]$mmvar[[1]]
+
         # NOTE: These checks could probably be vectorised
         for (i in 1:nrow(idmat)) {
           for (j in 1:ncol(idmat)) {
