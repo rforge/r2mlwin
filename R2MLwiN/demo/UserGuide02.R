@@ -67,7 +67,7 @@ tutorial$school <- relevel(tutorial$school, 65)
 
 aov(normexam ~ school, data=tutorial)
 
-if (!require(lmtest)) install.packages("lmtest")
+if (!require(lmtest)) install.packages("lmtest"); library(lmtest)
 
 lrtest(mymodel2, mymodel3)
 

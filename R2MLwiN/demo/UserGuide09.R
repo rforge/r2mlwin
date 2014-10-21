@@ -45,7 +45,7 @@ addmargins(with(bang, table(lc, use)))
 
 (mymodel1 <- runMLwiN(logit(use, cons)~1+lc, D="Binomial", data=bang))
 
-if (!require(car)) install.packages("car")
+if (!require(car)) install.packages("car"); library(car)
 
 linearHypothesis(mymodel1, "FP_lcOne child = FP_lcTwo children")
 
@@ -68,7 +68,7 @@ linearHypothesis(mymodel1, "FP_lcOne child = FP_lcTwo children")
 (mymodel5 <- runMLwiN(logit(use, cons)~1+lc+age+(district|1), D="Binomial",
                       estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel4@FP, FP.v=mymodel4@FP.cov, RP.b=mymodel4@RP, RP.v=mymodel4@RP.cov)), data=bang))
 
-if (!require(car)) install.packages("car")
+if (!require(car)) install.packages("car"); library(car)
 
 linearHypothesis(mymodel5, "RP2_var_Intercept = 0")
 
@@ -116,7 +116,7 @@ table(bang$educ)
 (mymodel7 <- runMLwiN(logit(use, cons)~1+lc+age+urban+educ+hindu+(district|1+urban), D="Binomial",
                       estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel6@FP, FP.v=mymodel6@FP.cov, RP.b=mymodel6@RP, RP.v=mymodel6@RP.cov)), data=bang))
 
-if (!require(car)) install.packages("car")
+if (!require(car)) install.packages("car"); library(car)
 
 linearHypothesis(mymodel7, "RP2_cov_Intercept_urbanUrban = 0")
 linearHypothesis(mymodel7, "RP2_var_urbanUrban = 0")
@@ -131,7 +131,7 @@ linearHypothesis(mymodel7, c("RP2_cov_Intercept_urbanUrban = 0", "RP2_var_urbanU
 
 # Creating a district-level data set . . . . . . . . . . . . . . . . . . 140
 
-if (!require(doBy)) install.packages("doBy")
+if (!require(doBy)) install.packages("doBy"); library(doBy)
 
 bangshort <- summaryBy(use + cons ~ district + d_lit + d_pray, FUN=c(mean, sum), data=bang)
 bangshort$use.sum <- NULL

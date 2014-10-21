@@ -134,7 +134,7 @@ findClust <- function(data, var1, var2) {
   merge(data[,c(var1,var2)], ids, sort=FALSE)$id
 }
 
-if (!require(doBy)) install.packages("doBy")
+if (!require(doBy)) install.packages("doBy"); library(doBy)
 
 data(xc, package="R2MLwiN")
 
