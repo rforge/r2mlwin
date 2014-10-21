@@ -4,7 +4,7 @@
 # 3   Residuals . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 37
 #
 #     Rasbash, J., Steele, F., Browne, W. J. and Goldstein, H. (2012).
-#     A User’s Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
+#     A User's Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
 #     University of Bristol.
 ############################################################################
 #     R script to replicate all analyses using R2MLwiN
@@ -30,7 +30,7 @@ options(MLwiN_path=mlwin)
 
 # 3.1 What are multilevel residuals? . . . . . . . . . . . . . . . . . . .37
 
-data(tutorial)
+data(tutorial, package="R2MLwiN")
 
 (mymodel1 <- runMLwiN(normexam~1+(school|1)+(student|1), data=tutorial, estoptions=list(resi.store=TRUE)))
 

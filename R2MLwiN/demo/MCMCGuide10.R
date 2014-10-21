@@ -26,7 +26,7 @@ options(MLwiN_path=mlwin)
 # User's input if necessary
 
 ## Read bang1 data
-data(bang1)
+data(bang1, package="R2MLwiN")
 
 ## openbugs executable
 if(!exists("openbugs")) openbugs="C:/Program Files (x86)/OpenBUGS321/OpenBUGS.exe"
@@ -80,7 +80,7 @@ sixway(mymodel4["chains"][,"RP2_var_Intercept"],"sigma2u0")
 
 ## Gibbs
 (mymodel7 <- runMLwiN(probit(use,denomb)~1+age+lc+urban+(district|1+urban), D="Binomial",
- estoptions=list(EstM=1, mcmcMeth=list(fixM=1,residM=1)), data=bang1))
+                      estoptions=list(EstM=1, mcmcMeth=list(fixM=1,residM=1)), data=bang1))
 
 ## Univariate MH by default
 (mymodel8 <- runMLwiN(probit(use,denomb)~1+age+lc+urban+(district|1+urban), D="Binomial", estoptions=list(EstM=1), data=bang1))
@@ -107,7 +107,7 @@ print(sdtable)
 
 ## Define the model
 mymodel9 <- runMLwiN(logit(use,denomb)~1+age+(district|1), D="Binomial",
- estoptions=list(EstM=1), BUGO=c(version=4, n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=bang1)
+                     estoptions=list(EstM=1), BUGO=c(version=4, n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=bang1)
 
 summary(mymodel9[[1]][,"beta[1]"])
 sixway(mymodel9[[1]][,"beta[1]"],"beta[1]")

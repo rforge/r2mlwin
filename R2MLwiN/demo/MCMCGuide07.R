@@ -29,7 +29,7 @@ options(MLwiN_path=mlwin)
 # User's input if necessary
 
 ## Read tutorial data
-data(tutorial)
+data(tutorial, package="R2MLwiN")
 
 ## openbugs executable
 if(!exists("openbugs")) openbugs="C:/Program Files (x86)/OpenBUGS321/OpenBUGS.exe"
@@ -49,7 +49,7 @@ while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file
 ## Uses the results from IGLS to create initial values for bugs
 ## Fit the model by calling openbugs using the rbugs package
 mymodel1 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),
- estoptions=list(EstM=1, show.file=T), BUGO=c(version=4,n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=tutorial)
+                     estoptions=list(EstM=1, show.file=T), BUGO=c(version=4,n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=tutorial)
 
 summary(mymodel1[[1]][,"beta[2]"])
 sixway(mymodel1[[1]][,"beta[2]"])
@@ -73,13 +73,13 @@ bugEst <- paste0(tempdir(),"/tutorial1_log.txt")
 
 
 chains.bugs1 <- mlwin2bugs(D="t", levID=c('school','student'), datafile, initfile, modelfile, bugEst, fact=NULL, addmore=NULL, n.chains = 1, n.iter = 5500, n.burnin=500, n.thin=1, debug=T, bugs=openbugs,
-        bugsWorkingDir=tempdir(), OpenBugs = T)
+                           bugsWorkingDir=tempdir(), OpenBugs = T)
 ## Close winbugs manually
 summary(chains.bugs1)
 sixway(chains.bugs1[[1]][,"df"],"df")
 
 chains.bugs2 <- mlwin2bugs(D="t", levID=c('school','student'), datafile, initfile, modelfile, bugEst, fact=NULL, addmore=NULL, n.chains = 1, n.iter = 12000, n.burnin=2000, n.thin=1, debug=T, bugs=openbugs,
-        bugsWorkingDir=tempdir(), OpenBugs = T)
+                           bugsWorkingDir=tempdir(), OpenBugs = T)
 ## Close winbugs manually
 summary(chains.bugs2)
 sixway(chains.bugs2[[1]][,"df"],"df")

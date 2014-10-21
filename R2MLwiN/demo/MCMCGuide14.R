@@ -27,7 +27,7 @@ options(MLwiN_path=mlwin)
 # User's input if necessary
 
 ## Read tutorial data
-data(tutorial)
+data(tutorial, package="R2MLwiN")
 
 # 14.1 Effects of measurement error on predictors . . . . . . . . . . . .200
 set.seed(1)
@@ -55,7 +55,7 @@ tutorial <- cbind(tutorial,error,obslrt)
 
 
 ## Read bang1 data
-data(bang1)
+data(bang1, package="R2MLwiN")
 
 bang1$denomb <- bang1$cons
 

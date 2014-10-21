@@ -4,7 +4,7 @@
 # 6   Contextual Effects . . . . . . . . . . . . . . . . . . . . . . . . .79
 #
 #     Rasbash, J., Steele, F., Browne, W. J. and Goldstein, H. (2012).
-#     A User’s Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
+#     A User's Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
 #     University of Bristol.
 ############################################################################
 #     R script to replicate all analyses using R2MLwiN
@@ -28,7 +28,7 @@ options(MLwiN_path=mlwin)
 # Double return HERE
 # User's input if necessary
 
-data(tutorial)
+data(tutorial, package="R2MLwiN")
 
 (mymodel1 <- runMLwiN(normexam~1+standlrt+(school|1+standlrt)+(student|1), data=tutorial))
 
@@ -37,7 +37,7 @@ data(tutorial)
 (mymodel2 <- runMLwiN(normexam~1+standlrt+sex+schgend+(school|1+standlrt)+(student|1), data=tutorial))
 
 (mymodel3 <- runMLwiN(normexam~1+standlrt+sex+schgend+schgend:standlrt+(school|1+standlrt)+(student|1),
- estoptions=list(startval=list(FP.b=mymodel2@FP, FP.v=mymodel2@FP.cov, RP.b=mymodel2@RP, RP.v=mymodel2@RP.cov)), data=tutorial))
+                      estoptions=list(startval=list(FP.b=mymodel2@FP, FP.v=mymodel2@FP.cov, RP.b=mymodel2@RP, RP.v=mymodel2@RP.cov)), data=tutorial))
 
 
 # 6.2 Contextual effects of school intake ability averages . . . . . . . .83
@@ -61,12 +61,12 @@ highdata <- highdata[highdata$schavhigh==1, ]
 plot(highdata[["standlrt:schavhigh"]], highdata$hilodiff, type="l")
 
 xyplot(hilodiff~`standlrt:schavhigh`,
-  panel=function(x, y, subscripts){
-    panel.xyplot(x, y, type="l")
-    panel.xyplot(x, highdata$hilodiff_hi, type="l", lty=2)
-    panel.xyplot(x, highdata$hilodiff_lo, type="l", lty=2)
-  },
-  data=highdata
+       panel=function(x, y, subscripts){
+         panel.xyplot(x, y, type="l")
+         panel.xyplot(x, highdata$hilodiff_hi, type="l", lty=2)
+         panel.xyplot(x, highdata$hilodiff_lo, type="l", lty=2)
+       },
+       data=highdata
 )
 
 #     Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . 87

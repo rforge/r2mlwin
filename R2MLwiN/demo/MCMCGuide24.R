@@ -30,7 +30,7 @@ options(MLwiN_path=mlwin)
 
 # User's input if necessary
 ## Read tutorial data
-data(tutorial)
+data(tutorial, package="R2MLwiN")
 
 ## Define the model
 
@@ -49,7 +49,7 @@ sixway(mymodel["chains"][,"RP2_var_Intercept"],"sigma2u0")
 
 
 ## Read bes83 data
-data(bes83)
+data(bes83, package="R2MLwiN")
 
 ## Define the model
 
@@ -60,7 +60,7 @@ sixway(mymodel["chains"][,"RP2_var_Intercept"],acf.maxlag=500,"sigma2u0")
 ## Parameter expansion at level 2
 
 (mymodel <- runMLwiN(logit(votecons,cons)~1+defence+unemp+taxes+privat+(area|1), D="Binomial",
- estoptions=list(EstM=1, mcmcOptions=list(paex=c(2,1))), data=bes83))
+                     estoptions=list(EstM=1, mcmcOptions=list(paex=c(2,1))), data=bes83))
 
 sixway(mymodel["chains"][,"RP2_var_Intercept"],acf.maxlag=500,"sigma2u0")
 
@@ -69,7 +69,7 @@ sixway(mymodel["chains"][,"RP2_var_Intercept"],acf.maxlag=500,"sigma2u0")
 ## Uniform on the variance scale priors+Parameter expansion at level 2
 
 (mymodel <- runMLwiN(logit(votecons,cons)~1+defence+unemp+taxes+privat+(area|1), D="Binomial",
- estoptions=list(EstM=1, mcmcMeth=list(priorcode=0), mcmcOptions=list(paex=c(2,1))), data=bes83))
+                     estoptions=list(EstM=1, mcmcMeth=list(priorcode=0), mcmcOptions=list(paex=c(2,1))), data=bes83))
 
 sixway(mymodel["chains"][,"RP2_var_Intercept"],acf.maxlag=100,"sigma2u0")
 
@@ -89,8 +89,8 @@ while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file
 # winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
 
 mymodel <- runMLwiN(logit(votecons,cons)~1+defence+unemp+taxes+privat+(area|1), D="Binomial",
- estoptions=list(EstM=1, mcmcMeth=list(priorcode=0), mcmcOptions=list(paex=c(2,1)), show.file=T),
- BUGO=c(version=4, n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=bes83)
+                    estoptions=list(EstM=1, mcmcMeth=list(priorcode=0), mcmcOptions=list(paex=c(2,1)), show.file=T),
+                    BUGO=c(version=4, n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=bes83)
 
 apply(mymodel[[1]],2,effectiveSize)
 sixway(mymodel[[1]][,"sigma2.u2"],acf.maxlag=250,"sigma2.u2")
@@ -99,7 +99,7 @@ sixway(mymodel[[1]][,"sigma2.v2"],acf.maxlag=100,"sigma2.v2")
 # 24.6 Parameter expansion and random slopes . . . . . . . . . . . . . . 396
 
 ## Read tutorial data
-data(tutorial)
+data(tutorial, package="R2MLwiN")
 
 ## Define the model
 
@@ -107,7 +107,7 @@ data(tutorial)
 
 ## Parameter expansion at level 2
 (mymodel <- runMLwiN(normexam~1+standlrt+(school|1+standlrt)+(student|1),
- estoptions=list(EstM=1, mcmcOptions=list(paex=c(2,1))), data=tutorial))
+                     estoptions=list(EstM=1, mcmcOptions=list(paex=c(2,1))), data=tutorial))
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .399
 

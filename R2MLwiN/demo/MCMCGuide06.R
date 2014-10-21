@@ -27,7 +27,7 @@ options(MLwiN_path=mlwin)
 # User's input if necessary
 
 ## Read tutorial data
-data(tutorial)
+data(tutorial, package="R2MLwiN")
 
 ## Define the model
 ## Choose MCMC algoritm for estimation (IGLS will be used to obtain starting values for MCMC)
@@ -48,7 +48,7 @@ data(tutorial)
 ## Save level 2 residual chains
 ## Fit the model
 (mymodel <- runMLwiN(normexam~1+standlrt+(school|1+standlrt)+(student|1),
- estoptions=list(EstM=1, mcmcMeth=list(iterations=5001), resi.store.levs=2), data=tutorial))
+                     estoptions=list(EstM=1, mcmcMeth=list(iterations=5001), resi.store.levs=2), data=tutorial))
 
 predLines(mymodel, xname="standlrt", lev = 2, selected =NULL, probs=c(.025,.975), legend.space="right", legend.ncol=2)
 dev.new()
@@ -64,21 +64,21 @@ names(RP.b) <- c("RP2_var_Intercept", "RP2_cov_Intercept_standlrt", "RP2_var_sta
 
 ## Fit the model
 (mymodel1 <- runMLwiN(normexam~1+standlrt+(school|1+standlrt)+(student|1),
- estoptions=list(EstM=1, startval=list(RP.b=RP.b)), data=tutorial))
+                      estoptions=list(EstM=1, startval=list(RP.b=RP.b)), data=tutorial))
 
 # 6.4 Uniform prior . . . . . . . . . . . . . . . . . . . . . . . . . . . 79
 
 ## Diffuse priors (Uniform priors)
 ## Fit the model
 (mymodel2 <- runMLwiN(normexam~1+standlrt+(school|1+standlrt)+(student|1),
- estoptions=list(EstM=1, mcmcMeth=list(priorcode=0)), data=tutorial))
+                      estoptions=list(EstM=1, mcmcMeth=list(priorcode=0)), data=tutorial))
 
 # 6.5 Informative prior . . . . . . . . . . . . . . . . . . . . . . . . . 80
 
 ## Informative normal prior for Sigma_u
 ## Fit the model
 (mymodel3 <- runMLwiN(normexam~1+standlrt+(school|1+standlrt)+(student|1),
- estoptions=list(EstM=1,mcmcMeth=list(priorParam=list(rp2=list(estimate=matrix(c(.09,.018,.09,.015),2,2),size=65)))), data=tutorial))
+                      estoptions=list(EstM=1,mcmcMeth=list(priorParam=list(rp2=list(estimate=matrix(c(.09,.018,.09,.015),2,2),size=65)))), data=tutorial))
 
 # 6.6 Results . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 81
 

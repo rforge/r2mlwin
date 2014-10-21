@@ -4,7 +4,7 @@
 # 18  Modelling Cross-classified Data . . . . . . . . . . . . . . . . . .271
 #
 #     Rasbash, J., Steele, F., Browne, W. J. and Goldstein, H. (2012).
-#     A User’s Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
+#     A User's Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
 #     University of Bristol.
 ############################################################################
 #     R script to replicate all analyses using R2MLwiN
@@ -39,7 +39,7 @@ options(MLwiN_path=mlwin)
 # 18.4 Modelling a two-way classification: An example . . . . . . . . . .275
 
 
-data(xc)
+data(xc, package="R2MLwiN")
 summary(xc)
 
 sid_dummy <- model.matrix(~factor(xc$SID)-1)
@@ -62,7 +62,7 @@ random.ui[2:19,] <- diag(18)*-1
 random.ci <- rep(0, 18)
 
 (mymode1 <- runMLwiN(ATTAIN~1+(CONS|s1+s2+s3+s4+s5+s6+s7+s8+s9+s10+s11+s12+s13+s14+s15+s16+s17+s18+s19)+(PID|1)+(PUPIL|1),
- estoptions=list(clre=covmatrix, constraints=list(random.ui=random.ui, random.ci=random.ci)), data=xc))
+                     estoptions=list(clre=covmatrix, constraints=list(random.ui=random.ui, random.ci=random.ci)), data=xc))
 
 
 # 18.5 Other aspects of the SETX command . . . . . . . . . . . . . . . . 277
@@ -91,7 +91,7 @@ random.ui[21:38,19:36] <- diag(18)*-1
 random.ci <- rep(0, 36)
 
 (mymodel2 <- runMLwiN(ATTAIN~1+(CONS|s1+s2+s3+s4+s5+s6+s7+s8+s9+s10+s11+s12+s13+s14+s15+s16+s17+s18+s19+s1Xvrq+s2Xvrq+s3Xvrq+s4Xvrq+s5Xvrq+s6Xvrq+s7Xvrq+s8Xvrq+s9Xvrq+s10Xvrq+s11Xvrq+s12Xvrq+s13Xvrq+s14Xvrq+s15Xvrq+s16Xvrq+s17Xvrq+s18Xvrq+s19Xvrq)+(PID|CONS)+(PUPIL|CONS),
- estoptions=list(clre=covmatrix, constraints=list(random.ui=random.ui, random.ci=random.ci)), data=xc))
+                      estoptions=list(clre=covmatrix, constraints=list(random.ui=random.ui, random.ci=random.ci)), data=xc))
 
 # Note: The final models in this section of the manual are for demonstration only.
 # The models presented in the manual do not converge with the current data.
@@ -123,9 +123,9 @@ findClust <- function(data, var1, var2) {
       moreclust <- FALSE
     }
   }
-
+  
   cat(paste0("Number of clusters: ", length(grplist),"\n"))
-
+  
   ids <- NULL
   for (i in 1:length(grplist)) {
     ids <- rbind(ids, cbind(unique(grplist[[i]][[var1]]), i))
@@ -136,7 +136,7 @@ findClust <- function(data, var1, var2) {
 
 if (!require(doBy)) install.packages("doBy")
 
-data(xc)
+data(xc, package="R2MLwiN")
 
 xc$region <- findClust(xc, "SID", "PID")
 xc$region <- NULL
@@ -193,7 +193,7 @@ random.ci <- rep(0, 7)
 xc <- xc[order(xc$region, xc$PID, xc$PUPIL), ]
 
 (mymode1 <- runMLwiN(ATTAIN~1+(region|rs1+rs2+rs3+rs4+rs5+rs6+rs7+rs8)+(PID|1)+(PUPIL|1),
- estoptions=list(clre=covmatrix, constraints=list(random.ui=random.ui, random.ci=random.ci)), data=xc))
+                     estoptions=list(clre=covmatrix, constraints=list(random.ui=random.ui, random.ci=random.ci)), data=xc))
 
 # 18.7 Modelling a multi-way cross-classification . . . . . . . . . . . .280
 

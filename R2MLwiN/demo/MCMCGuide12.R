@@ -28,7 +28,7 @@ options(MLwiN_path=mlwin)
 
 
 ## Read bang data
-data(bang)
+data(bang, package="R2MLwiN")
 
 bang$use4 <- relevel(bang$use4, 4)
 
@@ -50,7 +50,7 @@ cat(paste("Pr(y = 3) =", round(exp(mymodel["FP"]["FP_Intercept_3"])/(1+exp(mymod
 
 cat(paste("Pr(y = 3) =", round(exp(mymodel["FP"]["FP_Intercept_3"])/(1+exp(mymodel["FP"]["FP_Intercept_1"])+exp(mymodel["FP"]["FP_Intercept_2"])+exp(mymodel["FP"]["FP_Intercept_3"])),4),"\n"))
 cat(paste("Pr(y = 3) =", round(exp(mymodel["FP"]["FP_Intercept_3"]+mymodel["FP"]["FP_lcTwo children_3"])/(1+exp(mymodel["FP"]["FP_Intercept_1"]+mymodel["FP"]["FP_lcTwo children_1"])+
-exp(mymodel["FP"]["FP_Intercept_2"]+mymodel["FP"]["FP_lcTwo children_2"])+exp(mymodel["FP"]["FP_Intercept_3"]+mymodel["FP"]["FP_lcTwo children_3"])),4),"\n"))
+                                                                                                            exp(mymodel["FP"]["FP_Intercept_2"]+mymodel["FP"]["FP_lcTwo children_2"])+exp(mymodel["FP"]["FP_Intercept_3"]+mymodel["FP"]["FP_lcTwo children_3"])),4),"\n"))
 
 # 12.3 Interval estimates for conditional probabilities . . . . . . . . .175
 
@@ -60,7 +60,7 @@ summary(pred1)
 sixway(pred1,"prob1")
 
 pred2 <- exp(chains[,"FP_Intercept_3"]+chains[,"FP_lcTwo children_3"])/(1+exp(chains[,"FP_Intercept_1"]+chains[,"FP_lcTwo children_1"])+
-exp(chains[,"FP_Intercept_2"]+chains[,"FP_lcTwo children_2"])+exp(chains[,"FP_Intercept_3"]+chains[,"FP_lcTwo children_3"]))
+                                                                          exp(chains[,"FP_Intercept_2"]+chains[,"FP_lcTwo children_2"])+exp(chains[,"FP_Intercept_3"]+chains[,"FP_lcTwo children_3"]))
 summary(pred2)
 sixway(pred2,"prob1")
 

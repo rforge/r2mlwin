@@ -4,7 +4,7 @@
 # 5   Graphical Procedures for Exploring the Model . . . . . . . . . . . .65
 #
 #     Rasbash, J., Steele, F., Browne, W. J. and Goldstein, H. (2012).
-#     A User’s Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
+#     A User's Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
 #     University of Bristol.
 ############################################################################
 #     R script to replicate all analyses using R2MLwiN
@@ -30,7 +30,7 @@ options(MLwiN_path=mlwin)
 
 # 5.1 Displaying multiple graphs . . . . . . . . . . . . . . . . . . . . .65
 
-data(tutorial)
+data(tutorial, package="R2MLwiN")
 
 (mymodel1 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), estoptions=list(resi.store=TRUE), data=tutorial))
 
@@ -62,11 +62,11 @@ colnames(pred) <- c("school", "standlrt", "xb", "xbu")
 xyplot(xbu~standlrt, type="l", group=school, data=pred)
 
 xyplot(xbu~standlrt,
-  panel=function(x, y, subscripts){
-    panel.xyplot(x, y, type="l", groups=pred$school, subscripts=subscripts)
-    panel.xyplot(pred$standlrt, pred$xb, type="l", lwd=3, color="black")
-  },
-  data=pred
+       panel=function(x, y, subscripts){
+         panel.xyplot(x, y, type="l", groups=pred$school, subscripts=subscripts)
+         panel.xyplot(pred$standlrt, pred$xb, type="l", lwd=3, color="black")
+       },
+       data=pred
 )
 
 c(unique(mymodel1@data$school)[u0rank==65], u0rank[u0rank==65])

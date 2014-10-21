@@ -33,7 +33,7 @@ options(MLwiN_path=mlwin)
 # User's input if necessary
 
 ## Read bang1 data
-data(bang1)
+data(bang1, package="R2MLwiN")
 
 ## openbugs executable
 if(!exists("openbugs")) openbugs="C:/Program Files (x86)/OpenBUGS321/OpenBUGS.exe"
@@ -65,28 +65,28 @@ trajectories(mymodel["chains"])
 # 23.4 A Poisson example . . . . . . . . . . . . . . . . . . . . . . . . 364
 
 ## Read mmmec1 data
-data(mmmec1)
+data(mmmec1, package="R2MLwiN")
 
 contrasts(mmmec1$nation, 9) = diag(9)
 ## Define the model
 ## Choose option(s) for inference
 ## Fit the model
 (mymodel <- runMLwiN(log(obs)~0+nation+nation:uvbi+offset(log(exp))+(region|1), D="Poisson",
- estoptions=list(EstM=1,mcmcMeth=list(iterations=50000)), data=mmmec1))
+                     estoptions=list(EstM=1,mcmcMeth=list(iterations=50000)), data=mmmec1))
 
 sixway(mymodel["chains"][,"FP_nationBelgium"],acf.maxlag=5000,"beta_1")
 
 ##Orthogonal update
 
 (mymodel <- runMLwiN(log(obs)~0+nation+nation:uvbi+offset(log(exp))+(region|1), D="Poisson",
- estoptions=list(EstM=1, mcmcMeth=list(iterations=50000), mcmcOptions=list(orth=1)), data=mmmec1))
+                     estoptions=list(EstM=1, mcmcMeth=list(iterations=50000), mcmcOptions=list(orth=1)), data=mmmec1))
 
 sixway(mymodel["chains"][,"FP_nationBelgium"],acf.maxlag=100,"beta_1")
 
 # 23.5 An Ordered multinomial example . . . . . . . . . . . . . . . . . .368
 
 ## Read alevchem data
-data(alevchem)
+data(alevchem, package="R2MLwiN")
 
 # Note: Establishment codes on their own do not uniquely identify schools.
 # Schools are instead uniquely identified by LEA code, establishment ID 
@@ -110,7 +110,7 @@ trajectories(mymodel["chains"])
 # 23.6 The WinBUGS interface . . . . . . . . . . . . . . . . . . . . . . 372
 
 ## Read bang1 data
-data(bang1)
+data(bang1, package="R2MLwiN")
 
 bang1$denomb <- bang1$cons
 
@@ -132,7 +132,7 @@ while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file
 ##Orthogonal update (WinBUGS)
 
 mymodel <- runMLwiN(logit(use,denomb)~1+age+lc+urban+(district|1+urban), D="Binomial",
- estoptions=list(EstM=1, mcmcOptions=list(orth=1), show.file=T), BUGO=c(version=4, n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=bang1)
+                    estoptions=list(EstM=1, mcmcOptions=list(orth=1), show.file=T), BUGO=c(version=4, n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=bang1)
 
 apply(mymodel[[1]],2,effectiveSize)
 sixway(mymodel[[1]][,"beta[1]"],"beta[1]")

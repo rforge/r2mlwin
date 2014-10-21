@@ -29,7 +29,7 @@ options(MLwiN_path=mlwin)
 # User's input if necessary
 
 ## Read lips1 data
-data(lips1)
+data(lips1, package="R2MLwiN")
 summary(lips1)
 
 # 17.2 Fixed effects models . . . . . . . . . . . . . . . . . . . . . . .248
@@ -43,13 +43,13 @@ lips1<- lips1[with(lips1, order(neigh1,area,area)), ]
 # 17.3 Random effects models . . . . . . . . . . . . . . . . . . . . . . 251
 
 (mymodel <- runMLwiN(log(obs)~1+perc_aff+offset(offs)+(neigh1|0)+(area|1), D='Poisson',
- estoptions=list(EstM=1, notation="class", mcmcMeth=list(iterations=50000)), data=lips1))
+                     estoptions=list(EstM=1, notation="class", mcmcMeth=list(iterations=50000)), data=lips1))
 
 # 17.4 A spatial multiple-membership (MM) model . . . . . . . . . . . . .252
 
 (mymodel <- runMLwiN(log(obs)~1+perc_aff+offset(offs)+(neigh1|1)+(area|1), D='Poisson',
- estoptions=list(mm=list(list(mmvar=list("neigh1","neigh2","neigh3","neigh4","neigh5","neigh6","neigh7","neigh8","neigh9","neigh10","neigh11"),weights=list("weight1","weight2","weight3","weight4","weight5","weight6","weight7","weight8","weight9","weight10","weight11")), NA, NA), 
- EstM=1, mcmcMeth=list(iterations=50000)), data=lips1))
+                     estoptions=list(mm=list(list(mmvar=list("neigh1","neigh2","neigh3","neigh4","neigh5","neigh6","neigh7","neigh8","neigh9","neigh10","neigh11"),weights=list("weight1","weight2","weight3","weight4","weight5","weight6","weight7","weight8","weight9","weight10","weight11")), NA, NA), 
+                                     EstM=1, mcmcMeth=list(iterations=50000)), data=lips1))
 # 17.5 Other spatial models . . . . . . . . . . . . . . . . . . . . . . .255
 
 # 17.6 Fitting a CAR model in MLwiN . . . . . . . . . . . . . . . . . . .255
@@ -68,15 +68,15 @@ while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file
 #winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
 
 (mymodel <- runMLwiN(log(obs)~0+perc_aff+offset(offs)+(area|1)+(area|0), D='Poisson',
- estoptions=list(car=list(list(carvar=list("neigh1","neigh2","neigh3","neigh4","neigh5","neigh6","neigh7","neigh8","neigh9","neigh10","neigh11"),weights=list("wcar1","wcar2","wcar3","wcar4","wcar5","wcar6","wcar7","wcar8","wcar9","wcar10","wcar11")), NA, NA),
- EstM=1, mcmcMeth=list(iterations=50000)),
- BUGO=c(version=4, n.chains=1, bugs=openbugs, OpenBugs = T), data=lips1))
+                     estoptions=list(car=list(list(carvar=list("neigh1","neigh2","neigh3","neigh4","neigh5","neigh6","neigh7","neigh8","neigh9","neigh10","neigh11"),weights=list("wcar1","wcar2","wcar3","wcar4","wcar5","wcar6","wcar7","wcar8","wcar9","wcar10","wcar11")), NA, NA),
+                                     EstM=1, mcmcMeth=list(iterations=50000)),
+                     BUGO=c(version=4, n.chains=1, bugs=openbugs, OpenBugs = T), data=lips1))
 
 # 17.7 Including exchangeable random effects . . . . . . . . . . . . . . 259
 
 (mymodel <- runMLwiN(log(obs)~0+perc_aff+offset(offs)+(area|1)+(area|1), D='Poisson',
- estoptions=list(car=list(list(carvar=list("neigh1","neigh2","neigh3","neigh4","neigh5","neigh6","neigh7","neigh8","neigh9","neigh10","neigh11"),weights=list("wcar1","wcar2","wcar3","wcar4","wcar5","wcar6","wcar7","wcar8","wcar9","wcar10","wcar11")), NA, NA),
- EstM=1, mcmcMeth=list(iterations=50000)), data=lips1))
+                     estoptions=list(car=list(list(carvar=list("neigh1","neigh2","neigh3","neigh4","neigh5","neigh6","neigh7","neigh8","neigh9","neigh10","neigh11"),weights=list("wcar1","wcar2","wcar3","wcar4","wcar5","wcar6","wcar7","wcar8","wcar9","wcar10","wcar11")), NA, NA),
+                                     EstM=1, mcmcMeth=list(iterations=50000)), data=lips1))
 
 # 17.8 Further reading on spatial modelling . . . . . . . . . . . . . . .260
 

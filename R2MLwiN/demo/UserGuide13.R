@@ -4,7 +4,7 @@
 # 13  Fitting Models to Repeated Measures Data . . . . . . . . . . . . . 191
 #
 #     Rasbash, J., Steele, F., Browne, W. J. and Goldstein, H. (2012).
-#     A User’s Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
+#     A User's Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
 #     University of Bristol.
 ############################################################################
 #     R script to replicate all analyses using R2MLwiN
@@ -32,7 +32,7 @@ options(MLwiN_path=mlwin)
 
 # 13.2 A basic model . . . . . . . . . . . . . . . . . . . . . . . . . . 194
 
-data(reading1)
+data(reading1, package="R2MLwiN")
 summary(reading1)
 
 reading1[reading1==-10] <- NA
@@ -40,11 +40,11 @@ reading1[reading1==-10] <- NA
 summary(reading1)
 
 reading <- reshape(reading1, 
-  idvar="student", 
-  timevar="ID",
-  varying=c("READ1", "AGE1", "READ2", "AGE2", "READ3", "AGE3", "READ4", "AGE4", "READ5", "AGE5", "READ6", "AGE6"), 
-  sep="", 
-  direction="long"
+                   idvar="student", 
+                   timevar="ID",
+                   varying=c("READ1", "AGE1", "READ2", "AGE2", "READ3", "AGE3", "READ4", "AGE4", "READ5", "AGE5", "READ6", "AGE6"), 
+                   sep="", 
+                   direction="long"
 )
 
 reading <- reading[c("student", "ID", "AGE", "READ")]
@@ -76,10 +76,10 @@ tab
 # 13.3 A linear growth curve model . . . . . . . . . . . . . . . . . . . 201
 
 (mymodel2 <- runMLwiN(reading~1+age+(student|1)+(occasion|1), 
- estoptions=list(startval=list(FP.b=mymodel1@FP, FP.v=mymodel1@FP.cov, RP.b=mymodel1@RP, RP.v=mymodel1@RP.cov)), data=reading))
+                      estoptions=list(startval=list(FP.b=mymodel1@FP, FP.v=mymodel1@FP.cov, RP.b=mymodel1@RP, RP.v=mymodel1@RP.cov)), data=reading))
 
 (mymodel3 <- runMLwiN(reading~1+age+(student|1+age)+(occasion|1), 
- estoptions=list(resi.store=TRUE, startval=list(FP.b=mymodel2@FP, FP.v=mymodel2@FP.cov, RP.b=mymodel2@RP, RP.v=mymodel2@RP.cov)), data=reading))
+                      estoptions=list(resi.store=TRUE, startval=list(FP.b=mymodel2@FP, FP.v=mymodel2@FP.cov, RP.b=mymodel2@RP, RP.v=mymodel2@RP.cov)), data=reading))
 
 u0 <- na.omit(mymodel3@residual[,"lev_2_resi_est_Intercept"])
 u0std <- (u0 - mean(u0))/sd(u0)

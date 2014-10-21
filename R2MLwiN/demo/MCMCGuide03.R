@@ -29,7 +29,7 @@ options(MLwiN_path=mlwin)
 # User's input if necessary
 
 ## Read tutorial data
-data(tutorial)
+data(tutorial, package="R2MLwiN")
 
 ## Define the model
 ## The highest level comes first, then the second highest and so on

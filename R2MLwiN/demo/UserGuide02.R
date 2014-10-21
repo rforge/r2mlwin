@@ -4,7 +4,7 @@
 # 2   Introduction to Multilevel Modelling . . . . . . . . . . . . . . . . 9
 #
 #     Rasbash, J., Steele, F., Browne, W. J. and Goldstein, H. (2012).
-#     A User’s Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
+#     A User's Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
 #     University of Bristol.
 ############################################################################
 #     R script to replicate all analyses using R2MLwiN
@@ -32,7 +32,7 @@ options(MLwiN_path=mlwin)
 
 # 2.2 Opening the worksheet and looking at the data . . . . . . . . . . . 10
 
-data(tutorial)
+data(tutorial, package="R2MLwiN")
 
 summary(tutorial)
 

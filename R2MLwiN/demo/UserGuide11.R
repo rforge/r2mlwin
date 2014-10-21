@@ -4,7 +4,7 @@
 # 11  Fitting an Ordered Category Response Model . . . . . . . . . . . . 161
 #
 #     Rasbash, J., Steele, F., Browne, W. J. and Goldstein, H. (2012).
-#     A User’s Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
+#     A User's Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
 #     University of Bristol.
 ############################################################################
 #     R script to replicate all analyses using R2MLwiN
@@ -30,7 +30,7 @@ options(MLwiN_path=mlwin)
 
 # 11.1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . .161
 
-data(alevchem)
+data(alevchem, package="R2MLwiN")
 summary(alevchem)
 
 # 11.2 An analysis using the traditional approach . . . . . . . . . . . .162
@@ -74,19 +74,19 @@ alevchem$school <- as.numeric(factor(paste0(alevchem$lea, alevchem$estab)))
 (mymodel7 <- runMLwiN(logit(a_point, cons, 6)~1+(school|1[1:5]), D="Ordered Multinomial", data=alevchem))
 
 (mymodel8 <- runMLwiN(logit(a_point, cons, 6)~1+(school|1[1:5]), D="Ordered Multinomial",
- estoptions=list(nonlinear=c(N=1,M=2)), data=alevchem))
+                      estoptions=list(nonlinear=c(N=1,M=2)), data=alevchem))
 
 (mymodel9 <- runMLwiN(logit(a_point, cons, 6)~1+gcseavnormal[1:5]+(school|1[1:5]), D="Ordered Multinomial",
- estoptions=list(nonlinear=c(N=1,M=2)), data=alevchem))
+                      estoptions=list(nonlinear=c(N=1,M=2)), data=alevchem))
 
 (mymodel10 <- runMLwiN(logit(a_point, cons, 6)~1+gcseavnormal+(school|1[1:5]), D="Ordered Multinomial",
- estoptions=list(nonlinear=c(N=1,M=2)), data=alevchem))
+                       estoptions=list(nonlinear=c(N=1,M=2)), data=alevchem))
 
 (mymodel11 <- runMLwiN(logit(a_point, cons, 6)~1+gcseavnormal[1:5]+gender[1:5]+I(gcseavnormal^2)[1:5]+(school|1[1:5]), D="Ordered Multinomial",
- estoptions=list(nonlinear=c(N=1,M=2)), data=alevchem))
+                       estoptions=list(nonlinear=c(N=1,M=2)), data=alevchem))
 
 (mymodel12 <- runMLwiN(logit(a_point, cons, 6)~1+gcseavnormal[1:5]+gender[1:5]+I(gcseavnormal^2)[1:5]+(school|1[1:5]+gcseavnormal[1:5]), D="Ordered Multinomial",
- estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel11@FP, FP.v=mymodel11@FP.cov, RP.b=mymodel11@RP, RP.v=mymodel11@RP.cov)), data=alevchem))
+                       estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel11@FP, FP.v=mymodel11@FP.cov, RP.b=mymodel11@RP, RP.v=mymodel11@RP.cov)), data=alevchem))
 
 invlogit <- function(x) exp(x)/(1+exp(x))
 
@@ -111,7 +111,7 @@ invlogit(mymodel12@FP["FP_Intercept_C"]+mymodel12@FP["FP_gcseavnormal"])
 invlogit(mymodel12@FP["FP_Intercept_B"]+mymodel12@FP["FP_gcseavnormal"])
 
 (mymodel13 <- runMLwiN(logit(a_point, cons, 6)~1+gcseavnormal[1:5]+gender[1:5]+I(gcseavnormal^2)[1:5]+(school|+gcseavnormal[1:5]+gender[1:5]), D="Ordered Multinomial",
- estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel12@FP, FP.v=mymodel12@FP.cov, RP.b=mymodel12@RP, RP.v=mymodel12@RP.cov)), data=alevchem))
+                       estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel12@FP, FP.v=mymodel12@FP.cov, RP.b=mymodel12@RP, RP.v=mymodel12@RP.cov)), data=alevchem))
 
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .180

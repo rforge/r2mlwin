@@ -33,7 +33,7 @@ options(MLwiN_path=mlwin)
 # User's input if necessary
 
 ## Read hungary1 data
-data(hungary1)
+data(hungary1, package="R2MLwiN")
 
 round(colMeans(hungary1[,c("es_core","biol_core","phys_core")]),4)
 round(apply(hungary1[,c("es_core","biol_core","phys_core")],2,sd),4)
@@ -58,7 +58,7 @@ loading <- matrix(c(1,0,0,0,0,0,1),ncol=7,nrow=nfact,byrow=TRUE)
 constr <- matrix(c(1,0,0,0,0,0,0),ncol=7,nrow=nfact,byrow=TRUE)
 
 (mymodel <- runMLwiN(c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2)~1+(student|1), D='Multivariate Normal',
- estoptions=list(EstM=1, fact=list(nfact=nfact, lev.fact=lev.fact, nfactcor=nfactcor, factcor=factcor, loading=loading, constr=constr)), data=hungary1))
+                     estoptions=list(EstM=1, fact=list(nfact=nfact, lev.fact=lev.fact, nfactcor=nfactcor, factcor=factcor, loading=loading, constr=constr)), data=hungary1))
 
 ranks <- rank(mymodel["fact.chains"]$scores)
 plot(x=ranks,mymodel["fact.chains"]$scores,xlab="rank",ylab="factor scores",ylim=c(-2.35,1.2))
@@ -75,7 +75,7 @@ loading <- matrix(c(1,0,0,0,0,0,1,0,1,0,0,0,0,1),ncol=7,nrow=nfact,byrow=TRUE)
 constr <- matrix(c(1,0,0,0,0,0,0,1,1,0,0,0,0,0),ncol=7,nrow=nfact,byrow=TRUE)
 
 (mymodel <- runMLwiN(c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2)~1+(student|1), D='Multivariate Normal',
- estoptions=list(EstM=1, fact=list(nfact=nfact, lev.fact=lev.fact, nfactcor=nfactcor, factcor=factcor, loading=loading, constr=constr)), data=hungary1))
+                     estoptions=list(EstM=1, fact=list(nfact=nfact, lev.fact=lev.fact, nfactcor=nfactcor, factcor=factcor, loading=loading, constr=constr)), data=hungary1))
 
 scores <- mymodel["fact.chains"]$scores
 plot(scores[, 2],scores[,1],xlab = "Factor 2",ylab="Factor 1")
@@ -91,7 +91,7 @@ sixway(loads[, "load2_biol_r3"],acf.maxlag=1500,name="load2.3")
 ##burn-in: 5000, iterations=10,000
 
 (mymodel <- runMLwiN(c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2)~1+(student|1), D='Multivariate Normal',
- estoptions=list(EstM=1, fact=list(nfact=nfact, lev.fact=lev.fact, nfactcor=nfactcor, factcor=factcor, loading=loading, constr=constr), mcmcMeth=list(burnin=5000, iterations=10000)), data=hungary1))
+                     estoptions=list(EstM=1, fact=list(nfact=nfact, lev.fact=lev.fact, nfactcor=nfactcor, factcor=factcor, loading=loading, constr=constr), mcmcMeth=list(burnin=5000, iterations=10000)), data=hungary1))
 
 loads <- mymodel["fact.chains"]$loadings
 
@@ -108,7 +108,7 @@ loading <- matrix(c(1,0,0,0,0,0,1,0,1,0,0,0,0,1),ncol=7,nrow=nfact,byrow=TRUE)
 constr <- matrix(c(1,0,0,0,0,0,0,1,1,0,0,0,0,0),ncol=7,nrow=nfact,byrow=TRUE)
 
 (mymodel <- runMLwiN(c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2)~1+(student|1), D='Multivariate Normal',
- estoptions=list(EstM=1, fact=list(nfact=nfact, lev.fact=lev.fact, nfactcor=nfactcor, factcor=factcor, loading=loading, constr=constr), mcmcMeth=list(burnin=5000, iterations=10000)), data=hungary1))
+                     estoptions=list(EstM=1, fact=list(nfact=nfact, lev.fact=lev.fact, nfactcor=nfactcor, factcor=factcor, loading=loading, constr=constr), mcmcMeth=list(burnin=5000, iterations=10000)), data=hungary1))
 
 # 20.8 Multilevel factor analysis . . . . . . . . . . . . . . . . . . . 320
 
@@ -138,7 +138,7 @@ loading <- matrix(c(1,0,0,0,0,0,1,1,0,0,0,0,0,1),ncol=7,nrow=nfact,byrow=TRUE)
 constr <- matrix(c(1,0,0,0,0,0,0,1,0,0,0,0,0,0),ncol=7,nrow=nfact,byrow=TRUE)
 
 (mymodel=runMLwiN(c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2)~1+(school|1)+(student|1), D='Multivariate Normal',
- estoptions=list(EstM=1, fact=list(nfact=nfact, lev.fact=lev.fact, nfactcor=nfactcor, factcor=factcor, loading=loading, constr=constr)), data=hungary1))
+                  estoptions=list(EstM=1, fact=list(nfact=nfact, lev.fact=lev.fact, nfactcor=nfactcor, factcor=factcor, loading=loading, constr=constr)), data=hungary1))
 
 ranks <- rank(na.omit(mymodel["fact.chains"]$scores[,2]))
 plot(x=ranks,y=na.omit(mymodel["fact.chains"]$scores[,2]),xlab="rank",ylab="factor scores",ylim=c(-1,1))

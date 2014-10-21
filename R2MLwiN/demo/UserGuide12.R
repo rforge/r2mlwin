@@ -4,7 +4,7 @@
 # 12  Modelling Count Data . . . . . . . . . . . . . . . . . . . . . . . 181
 #
 #     Rasbash, J., Steele, F., Browne, W. J. and Goldstein, H. (2012).
-#     A User’s Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
+#     A User's Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
 #     University of Bristol.
 ############################################################################
 #     R script to replicate all analyses using R2MLwiN
@@ -30,7 +30,7 @@ options(MLwiN_path=mlwin)
 
 # 12.1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . .181
 
-data(mmmec)
+data(mmmec, package="R2MLwiN")
 summary(mmmec)
 
 # 12.2 Fitting a simple Poisson model . . . . . . . . . . . . . . . . . .182

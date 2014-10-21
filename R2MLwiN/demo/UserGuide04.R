@@ -4,7 +4,7 @@
 # 4   Random Intercept and Random Slope Models . . . . . . . . . . . . . .47
 #
 #     Rasbash, J., Steele, F., Browne, W. J. and Goldstein, H. (2012).
-#     A User’s Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
+#     A User's Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
 #     University of Bristol.
 ############################################################################
 #     R script to replicate all analyses using R2MLwiN
@@ -30,7 +30,7 @@ options(MLwiN_path=mlwin)
 
 # 4.1 Random intercept models . . . . . . . . . . . . . . . . . . . . . . 47
 
-data(tutorial)
+data(tutorial, package="R2MLwiN")
 
 plot(tutorial$standlrt, tutorial$normexam, asp=1)
 

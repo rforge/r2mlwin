@@ -27,7 +27,7 @@ options(MLwiN_path=mlwin)
 # User's input if necessary
 
 ## Read tutorial data
-data(tutorial)
+data(tutorial, package="R2MLwiN")
 
 ## Define the model
 ## IGLS
@@ -47,14 +47,14 @@ data(tutorial)
 ## MH Adaptive with defaults
 ## Fit the model
 (mymodel3 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),  
- estoptions=list(EstM=1, mcmcMeth=list(fixM=2, residM=2, Lev1VarM=2)), data=tutorial))
+                      estoptions=list(EstM=1, mcmcMeth=list(fixM=2, residM=2, Lev1VarM=2)), data=tutorial))
 
 sixway(mymodel3["chains"][,"FP_standlrt"],"beta_1")
 
 ## MH Scale Factor =5.8
 ## Fit the model
 (mymodel4 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), 
- estoptions=list(EstM=1, mcmcMeth=list(fixM=2, residM=2, Lev1VarM=2, adaption=0)), data=tutorial))
+                      estoptions=list(EstM=1, mcmcMeth=list(fixM=2, residM=2, Lev1VarM=2, adaption=0)), data=tutorial))
 
 aa <- cbind(mymodel1["FP"],mymodel2["FP"],mymodel4["FP"],mymodel3["FP"])
 bb <- cbind(mymodel1["RP"],mymodel2["RP"],mymodel4["RP"],mymodel3["RP"])
@@ -68,7 +68,7 @@ rm(list=c("mymodel1","mymodel2","mymodel3","mymodel4"))
 ## MH Adaptive with defaults
 ## Fit the model
 (mymodel5 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), 
- estoptions=list(EstM=1,mcmcMeth=list(fixM=3, residM=2, Lev1VarM=2, rate=40)), data=tutorial))
+                      estoptions=list(EstM=1,mcmcMeth=list(fixM=3, residM=2, Lev1VarM=2, rate=40)), data=tutorial))
 
 estimates <- mymodel5["chains"]
 par(mfrow=c(3,2))
@@ -82,7 +82,7 @@ rm(mymodel5)
 # 4.6 Residuals in MCMC . . . . . . . . . . . . . . . . . . . . . . . . . 51
 
 (mymodel6 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), 
- estoptions=list(EstM=1, resi.store=TRUE, resi.store.levs=2, mcmcMeth=list(iterations=5001)), data=tutorial))
+                      estoptions=list(EstM=1, resi.store=TRUE, resi.store.levs=2, mcmcMeth=list(iterations=5001)), data=tutorial))
 
 resi.chain2 <- mymodel6["resi.chains"]$resi_lev2
 sixway(resi.chain2[,1], name="u0_1")

@@ -25,7 +25,7 @@ while (!file.access(mlwin, mode=1)==0) {
 options(MLwiN_path=mlwin)
 
 ## Read tutorial data
-data(tutorial)
+data(tutorial, package="R2MLwiN")
 
 ## Define the model
 ## Choose IGLS algoritm for estimation

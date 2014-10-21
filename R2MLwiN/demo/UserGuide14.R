@@ -4,7 +4,7 @@
 # 14  Multivariate Response Models . . . . . . . . . . . . . . . . . . . 211
 #
 #     Rasbash, J., Steele, F., Browne, W. J. and Goldstein, H. (2012).
-#     A User’s Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
+#     A User's Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
 #     University of Bristol.
 ############################################################################
 #     R script to replicate all analyses using R2MLwiN
@@ -30,7 +30,7 @@ options(MLwiN_path=mlwin)
 
 # 14.1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . .211
 
-data(gcsemv1)
+data(gcsemv1, package="R2MLwiN")
 summary(gcsemv1)
 
 # 14.2 Specifying a multivariate model . . . . . . . . . . . . . . . . . 212
@@ -70,7 +70,7 @@ plot(u2, u2, asp=1)
 
 # 14.5 Multivariate models for discrete responses . . . . . . . . . . . .222
 
-data(tutorial)
+data(tutorial, package="R2MLwiN")
 
 tutorial$binexam <- as.integer(tutorial$normexam > 0)
 tutorial$binlrt <- as.integer(tutorial$standlrt > 0)

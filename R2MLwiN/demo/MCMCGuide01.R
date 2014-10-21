@@ -43,7 +43,7 @@ options(MLwiN_path=mlwin)
 # User's input if necessary
 
 ## Read tutorial data
-data(tutorial)
+data(tutorial, package="R2MLwiN")
 
 set.seed(1)
 
@@ -73,18 +73,18 @@ colnames(estimates) = c("beta0","beta1", "sigma2e")
 
 j=1
 for (i in 1: totaliterations){
-    beta0 = rnorm(1,(sumy - beta1* sumx)/N, sqrt(sigma2e/N))
-    beta1 = rnorm(1,(sumxy -beta0*sumx)/sumxsq, sqrt(sigma2e/sumxsq))
-
-    e2i = (y- (beta0 + beta1*x))^2
-    sume2i = sum(e2i)
-
-    sigma2e = 1/rgamma(1, epsilon + N/2, epsilon +sume2i/2)
-
-    if ((i%%thinning==0)&&(i>burnin)){
-        estimates[j,]=round(c(beta0,beta1,sigma2e),3)
-        j=j+1
-    }
+  beta0 = rnorm(1,(sumy - beta1* sumx)/N, sqrt(sigma2e/N))
+  beta1 = rnorm(1,(sumxy -beta0*sumx)/sumxsq, sqrt(sigma2e/sumxsq))
+  
+  e2i = (y- (beta0 + beta1*x))^2
+  sume2i = sum(e2i)
+  
+  sigma2e = 1/rgamma(1, epsilon + N/2, epsilon +sume2i/2)
+  
+  if ((i%%thinning==0)&&(i>burnin)){
+    estimates[j,]=round(c(beta0,beta1,sigma2e),3)
+    j=j+1
+  }
 }
 
 sumstat=round(rbind(colMeans(estimates),apply(estimates,2, sd)),4)
@@ -95,11 +95,11 @@ print(sumstat)
 
 par(mfrow=c(3,1),mar = c(4, 4.5, 2, 2))
 plot(1:nrow(estimates),estimates[,"beta0"],xlab="iteration",
-ylab=expression(paste("Est. of ",beta[0])),type="l")
+     ylab=expression(paste("Est. of ",beta[0])),type="l")
 plot(1:nrow(estimates),estimates[,"beta1"],xlab="iteration",
-ylab=expression(paste("Est. of ",beta[1])),type="l")
+     ylab=expression(paste("Est. of ",beta[1])),type="l")
 plot(1:nrow(estimates),estimates[,"sigma2e"],xlab="iteration",
-ylab=expression(paste("Est. of ",sigma[e]^2)),type="l")
+     ylab=expression(paste("Est. of ",sigma[e]^2)),type="l")
 
 # 1.9 Macro to run a hybrid Metropolis and Gibbs sampling method
 #     for a linear regression example . . . . . . . . . . . . . . . . . . 15
@@ -135,46 +135,46 @@ colnames(estimates) = c("beta0","beta1", "sigma2e")
 
 j=1
 for (i in 1: totaliterations){
-    # Update beta0
-    # Propose a new beta0
-    beta0prop = rnorm(1,beta0, beta0sd)
-    beta0logpostdiff=-1*(2*(beta0-beta0prop)*(sumy - beta1*sumx)+N*(beta0prop^2-beta0^2))/(2*sigma2e)
-    if (beta0logpostdiff > 0){
-        # Definitely accept as higher posterior
-        beta0 = beta0prop
-        beta0accept = beta0accept + 1
-    }else{
-        # Only sometimes accept
-        if (runif(1)<exp(beta0logpostdiff)){
-            beta0 = beta0prop
-            beta0accept = beta0accept + 1
-        }
+  # Update beta0
+  # Propose a new beta0
+  beta0prop = rnorm(1,beta0, beta0sd)
+  beta0logpostdiff=-1*(2*(beta0-beta0prop)*(sumy - beta1*sumx)+N*(beta0prop^2-beta0^2))/(2*sigma2e)
+  if (beta0logpostdiff > 0){
+    # Definitely accept as higher posterior
+    beta0 = beta0prop
+    beta0accept = beta0accept + 1
+  }else{
+    # Only sometimes accept
+    if (runif(1)<exp(beta0logpostdiff)){
+      beta0 = beta0prop
+      beta0accept = beta0accept + 1
     }
-
-    # Update beta1
-    beta1prop = rnorm(1,beta1, beta1sd)
-    beta1logpostdiff = -1*(2*(beta1-beta1prop)*(sumxy -beta0*sumx)+ sumxsq*(beta1prop^2-beta1^2))/(2*sigma2e)
-    if (beta1logpostdiff > 0){
-        # Definitely accept as higher posterior
-        beta1 = beta1prop
-        beta1accept = beta1accept + 1
-    }else{
-        # Only sometimes accept
-        if (runif(1)<exp(beta1logpostdiff)){
-            beta1 = beta1prop
-            beta1accept = beta1accept + 1
-        }
+  }
+  
+  # Update beta1
+  beta1prop = rnorm(1,beta1, beta1sd)
+  beta1logpostdiff = -1*(2*(beta1-beta1prop)*(sumxy -beta0*sumx)+ sumxsq*(beta1prop^2-beta1^2))/(2*sigma2e)
+  if (beta1logpostdiff > 0){
+    # Definitely accept as higher posterior
+    beta1 = beta1prop
+    beta1accept = beta1accept + 1
+  }else{
+    # Only sometimes accept
+    if (runif(1)<exp(beta1logpostdiff)){
+      beta1 = beta1prop
+      beta1accept = beta1accept + 1
     }
-
-    e2i = (y- (beta0 + beta1*x))^2
-    sume2i = sum(e2i)
-
-    sigma2e = 1/rgamma(1, epsilon + N/2, epsilon +sume2i/2)
-
-    if ((i%%thinning==0)&&(i>burnin)){
-        estimates[j,]=round(c(beta0,beta1,sigma2e),3)
-        j=j+1
-    }
+  }
+  
+  e2i = (y- (beta0 + beta1*x))^2
+  sume2i = sum(e2i)
+  
+  sigma2e = 1/rgamma(1, epsilon + N/2, epsilon +sume2i/2)
+  
+  if ((i%%thinning==0)&&(i>burnin)){
+    estimates[j,]=round(c(beta0,beta1,sigma2e),3)
+    j=j+1
+  }
 }
 
 sumstat=round(rbind(colMeans(estimates),apply(estimates,2, sd)),4)

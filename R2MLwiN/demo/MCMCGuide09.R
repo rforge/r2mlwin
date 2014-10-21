@@ -27,13 +27,13 @@ options(MLwiN_path=mlwin)
 # User's input if necessary
 
 ## Read tutorial data
-data(tutorial)
+data(tutorial, package="R2MLwiN")
 
 boy.normexam <- tutorial$normexam[which(tutorial$girl==0)]
 girl.normexam <- tutorial$normexam[which(tutorial$girl==1)]
 tab1 = cbind(c(length(boy.normexam),mean(boy.normexam),sd(boy.normexam)),
-c(length(girl.normexam), mean(girl.normexam), sd(girl.normexam)),
-c(length(tutorial$normexam), mean(tutorial$normexam), sd(tutorial$normexam)))
+             c(length(girl.normexam), mean(girl.normexam), sd(girl.normexam)),
+             c(length(tutorial$normexam), mean(tutorial$normexam), sd(tutorial$normexam)))
 colnames(tab1) <- c("0","1","TOTAL")
 rownames(tab1) <- c("N","MEANS","SDs")
 formatC(round(tab1,6))
@@ -48,13 +48,13 @@ intakecat[which(c5>.7)] <- 5
 intakecat[which(c5>1.1)] <- 6
 normexam <- tutorial$normexam
 tab2 <- cbind(c(sum(intakecat==0),mean(normexam[intakecat==0]),sd(normexam[intakecat==0])),
-c(sum(intakecat==1), mean(normexam[intakecat==1]), sd(normexam[intakecat==1])),
-c(sum(intakecat==2), mean(normexam[intakecat==2]), sd(normexam[intakecat==2])),
-c(sum(intakecat==3), mean(normexam[intakecat==3]), sd(normexam[intakecat==3])),
-c(sum(intakecat==4), mean(normexam[intakecat==4]), sd(normexam[intakecat==4])),
-c(sum(intakecat==5), mean(normexam[intakecat==5]), sd(normexam[intakecat==5])),
-c(sum(intakecat==6), mean(normexam[intakecat==6]), sd(normexam[intakecat==6])),
-c(length(intakecat), mean(normexam),sd(normexam)))
+              c(sum(intakecat==1), mean(normexam[intakecat==1]), sd(normexam[intakecat==1])),
+              c(sum(intakecat==2), mean(normexam[intakecat==2]), sd(normexam[intakecat==2])),
+              c(sum(intakecat==3), mean(normexam[intakecat==3]), sd(normexam[intakecat==3])),
+              c(sum(intakecat==4), mean(normexam[intakecat==4]), sd(normexam[intakecat==4])),
+              c(sum(intakecat==5), mean(normexam[intakecat==5]), sd(normexam[intakecat==5])),
+              c(sum(intakecat==6), mean(normexam[intakecat==6]), sd(normexam[intakecat==6])),
+              c(length(intakecat), mean(normexam),sd(normexam)))
 colnames(tab2) <- c("0","1","2","3","4","5","6","TOTAL")
 rownames(tab2) <- c("N","MEANS","SDs")
 formatC(round(tab2,6))
@@ -96,7 +96,7 @@ clre[1,1] <- 1; clre[2,1] <- 'standlrt'; clre[3,1] <- 'standlrt'
 
 ## Fit the model
 (mymodel4 <- runMLwiN(normexam~1+standlrt+(school|1+standlrt)+(student|1+standlrt),
- estoptions=list(EstM=1, clre=clre), data=tutorial))
+                      estoptions=list(EstM=1, clre=clre), data=tutorial))
 
 # 9.4 Relationship with gender . . . . . . . . . . . . . . . . . . . . . 123
 
@@ -108,7 +108,7 @@ clre[1,1] <- 1; clre[2,1] <- 'standlrt'; clre[3,1] <- 'standlrt'
 clre[1,2] <- 1; clre[2,2] <- 'girl';     clre[3,2] <- 'girl'
 ## Fit the model
 (mymodel5 <- runMLwiN(normexam~1+standlrt+girl+(school|1+standlrt)+(student|1+standlrt+girl),
- estoptions=list(EstM=1,clre=clre), data=tutorial))
+                      estoptions=list(EstM=1,clre=clre), data=tutorial))
 
 l2varfn <- mymodel5["RP"]["RP2_var_Intercept"]+2*mymodel5["RP"]["RP2_cov_Intercept_standlrt"]*tutorial$standlrt+mymodel5["RP"]["RP2_var_standlrt"]*tutorial$standlrt^2
 l1varfnboys <- mymodel5["RP"]["RP1_var_Intercept"]+2*mymodel5["RP"]["RP1_cov_Intercept_standlrt"]*tutorial$standlrt
@@ -122,7 +122,7 @@ abline(v=0,lty="dotted")
 
 ## Fit the model
 (mymodel6 <- runMLwiN(normexam~1+standlrt+girl+(school|1+standlrt)+(student|1+standlrt+girl),
- estoptions=list(EstM=1, clre=clre, mcmcMeth=list(lclo=1)), data=tutorial))
+                      estoptions=list(EstM=1, clre=clre, mcmcMeth=list(lclo=1)), data=tutorial))
 
 l2varfn <- mymodel6["RP"]["RP2_var_Intercept"]+2*mymodel6["RP"]["RP2_cov_Intercept_standlrt"]*tutorial$standlrt+mymodel6["RP"]["RP2_var_standlrt"]*tutorial$standlrt^2
 l1varfnboys <- 1/exp(mymodel6["RP"]["RP1_var_Intercept"]+2*mymodel6["RP"]["RP1_cov_Intercept_standlrt"]*tutorial$standlrt)

@@ -4,7 +4,7 @@
 # 7   Modelling the Variance as a Function of Explanatory Variables . . . 89
 #
 #     Rasbash, J., Steele, F., Browne, W. J. and Goldstein, H. (2012).
-#     A User’s Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
+#     A User's Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
 #     University of Bristol.
 ############################################################################
 #     R script to replicate all analyses using R2MLwiN
@@ -30,7 +30,7 @@ options(MLwiN_path=mlwin)
 
 # 7.1 A level 1 variance function for two groups . . . . . . . . . . . . .89
 
-data(tutorial)
+data(tutorial, package="R2MLwiN")
 
 covmatrix <- matrix(, nrow = 3, ncol = 1)
 covmatrix[1,1] = 1

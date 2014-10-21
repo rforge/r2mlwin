@@ -4,7 +4,7 @@
 # 15  Diagnostics for Multilevel Models . . . . . . . . . . . . . . . . .225
 #
 #     Rasbash, J., Steele, F., Browne, W. J. and Goldstein, H. (2012).
-#     A User’s Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
+#     A User's Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
 #     University of Bristol.
 ############################################################################
 #     R script to replicate all analyses using R2MLwiN
@@ -30,11 +30,11 @@ options(MLwiN_path=mlwin)
 
 # 15.1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . .225
 
-data(diag1)
+data(diag1, package="R2MLwiN")
 summary(diag1)
 
 (mymodel1 <- runMLwiN(n_ilea~1+n_vrq+(school|1+n_vrq)+(pupil|1),
- estoptions=list(resi.store=TRUE, resioptions=c("standardised", "leverage", "influence", "deletion")), data=diag1))
+                      estoptions=list(resi.store=TRUE, resioptions=c("standardised", "leverage", "influence", "deletion")), data=diag1))
 
 xb <- predict(mymodel1)
 
@@ -136,7 +136,7 @@ diag1[order(e0)[1], c("school", "pupil", "pupilnumber")]
 diag1$s17p22 <- as.integer(diag1$school==17 & diag1$pupilnumber==22)
 
 (mymodel2 <- runMLwiN(n_ilea~1+n_vrq+s17p22+(school|1+n_vrq)+(pupil|1),
- estoptions=list(resi.store=TRUE, startval=list(FP.b=mymodel1@FP, FP.v=mymodel1@FP.cov, RP.b=mymodel1@RP, RP.v=mymodel1@RP.cov)), data=diag1))
+                      estoptions=list(resi.store=TRUE, startval=list(FP.b=mymodel1@FP, FP.v=mymodel1@FP.cov, RP.b=mymodel1@RP, RP.v=mymodel1@RP.cov)), data=diag1))
 
 u0 <- na.omit(mymodel2@residual$lev_2_resi_est_Intercept)
 u1 <- na.omit(mymodel2@residual$lev_2_resi_est_n_vrq)
@@ -170,10 +170,10 @@ diag1$s17 <- as.integer(diag1$school == 17)
 diag1$s17Xn_vrq <- diag1$s17*diag1$n_vrq
 
 (mymodel3 <- runMLwiN(n_ilea~1+n_vrq+s17p22+s17+s17Xn_vrq+(school|1+n_vrq)+(pupil|1),
- estoptions=list(startval=list(FP.b=mymodel2@FP, FP.v=mymodel2@FP.cov, RP.b=mymodel2@RP, RP.v=mymodel2@RP.cov)), data=diag1))
+                      estoptions=list(startval=list(FP.b=mymodel2@FP, FP.v=mymodel2@FP.cov, RP.b=mymodel2@RP, RP.v=mymodel2@RP.cov)), data=diag1))
 
 (mymodel4 <- runMLwiN(n_ilea~1+n_vrq+s17p22+s17+(school|1+n_vrq)+(pupil|1),
- estoptions=list(resi.store=TRUE, startval=list(FP.b=mymodel3@FP, FP.v=mymodel3@FP.cov, RP.b=mymodel3@RP, RP.v=mymodel3@RP.cov)), data=diag1))
+                      estoptions=list(resi.store=TRUE, startval=list(FP.b=mymodel3@FP, FP.v=mymodel3@FP.cov, RP.b=mymodel3@RP, RP.v=mymodel3@RP.cov)), data=diag1))
 
 xb <- predict(mymodel4)
 

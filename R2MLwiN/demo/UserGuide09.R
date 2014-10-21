@@ -4,7 +4,7 @@
 # 9   Logistic Models for Binary and Binomial Responses . . . . . . . . .117
 #
 #     Rasbash, J., Steele, F., Browne, W. J. and Goldstein, H. (2012).
-#     A User’s Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
+#     A User's Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
 #     University of Bristol.
 ############################################################################
 #     R script to replicate all analyses using R2MLwiN
@@ -30,7 +30,7 @@ options(MLwiN_path=mlwin)
 
 # 9.1 Introduction and description of the example data . . . . . . . . . 117
 
-data(bang)
+data(bang, package="R2MLwiN")
 summary(bang)
 
 # 9.2 Single-level logistic regression . . . . . . . . . . . . . . . . . 119
@@ -66,7 +66,7 @@ linearHypothesis(mymodel1, "FP_lcOne child = FP_lcTwo children")
 (mymodel4 <- runMLwiN(logit(use, cons)~1+lc+age+(district|1), D="Binomial", data=bang))
 
 (mymodel5 <- runMLwiN(logit(use, cons)~1+lc+age+(district|1), D="Binomial",
- estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel4@FP, FP.v=mymodel4@FP.cov, RP.b=mymodel4@RP, RP.v=mymodel4@RP.cov)), data=bang))
+                      estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel4@FP, FP.v=mymodel4@FP.cov, RP.b=mymodel4@RP, RP.v=mymodel4@RP.cov)), data=bang))
 
 if (!require(car)) install.packages("car")
 
@@ -109,12 +109,12 @@ cat(paste0("VPC for an old woman with no children (high probability use) = ", le
 table(bang$educ)
 
 (mymodel6 <- runMLwiN(logit(use, cons)~1+lc+age+urban+educ+hindu+(district|1), D="Binomial",
- estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel5@FP, FP.v=mymodel5@FP.cov, RP.b=mymodel5@RP, RP.v=mymodel5@RP.cov)), data=bang))
+                      estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel5@FP, FP.v=mymodel5@FP.cov, RP.b=mymodel5@RP, RP.v=mymodel5@RP.cov)), data=bang))
 
 # 9.4 A two-level random coeficient model . . . . . . . . . . . . . . . .135
 
 (mymodel7 <- runMLwiN(logit(use, cons)~1+lc+age+urban+educ+hindu+(district|1+urban), D="Binomial",
- estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel6@FP, FP.v=mymodel6@FP.cov, RP.b=mymodel6@RP, RP.v=mymodel6@RP.cov)), data=bang))
+                      estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel6@FP, FP.v=mymodel6@FP.cov, RP.b=mymodel6@RP, RP.v=mymodel6@RP.cov)), data=bang))
 
 if (!require(car)) install.packages("car")
 
@@ -123,7 +123,7 @@ linearHypothesis(mymodel7, "RP2_var_urbanUrban = 0")
 linearHypothesis(mymodel7, c("RP2_cov_Intercept_urbanUrban = 0", "RP2_var_urbanUrban = 0"))
 
 (mymodel8 <- runMLwiN(logit(use, cons)~1+lc+age+urban+educ+hindu+d_lit+d_pray+(district|1+urban), D="Binomial",
- estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel7@FP, FP.v=mymodel7@FP.cov, RP.b=mymodel7@RP, RP.v=mymodel7@RP.cov)), data=bang))
+                      estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel7@FP, FP.v=mymodel7@FP.cov, RP.b=mymodel7@RP, RP.v=mymodel7@RP.cov)), data=bang))
 
 # 9.5 Modelling binomial data . . . . . . . . . . . . . . . . . . . . . .139
 
@@ -143,6 +143,6 @@ bangshort$use <- bangshort$use - 1
 (mymodel9 <- runMLwiN(logit(use, denom)~1+d_lit+d_pray+(district|1), D="Binomial", data=bangshort))
 
 (mymodel10 <- runMLwiN(logit(use, denom)~1+d_lit+d_pray+(district|1), D="Binomial",
- estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel9@FP, FP.v=mymodel9@FP.cov, RP.b=mymodel9@RP, RP.v=mymodel9@RP.cov)), data=bangshort))
+                       estoptions=list(nonlinear=c(N=1,M=2), startval=list(FP.b=mymodel9@FP, FP.v=mymodel9@FP.cov, RP.b=mymodel9@RP, RP.v=mymodel9@RP.cov)), data=bangshort))
 
 ############################################################################

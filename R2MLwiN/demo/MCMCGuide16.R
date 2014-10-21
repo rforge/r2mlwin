@@ -31,7 +31,7 @@ options(MLwiN_path=mlwin)
 # User's input if necessary
 
 ## Read wage1 data
-data(wage1)
+data(wage1, package="R2MLwiN")
 
 summary(wage1)
 hist(wage1$earnings)
@@ -53,7 +53,7 @@ tabulate(wage1$numjobs)
 
 ##Multiple membership
 (mymodel <- runMLwiN(logearn~1+age_40+sex+parttime+(company|1)+(id|1),
- estoptions=list(EstM=1, mm=list(list(mmvar=list("company","company2","company3","company4"),weights=list("weight1","weight2","weight3","weight4")), NA), resi.store=T, resi.store.levs=2), data=wage1))
+                     estoptions=list(EstM=1, mm=list(list(mmvar=list("company","company2","company3","company4"),weights=list("weight1","weight2","weight3","weight4")), NA), resi.store=T, resi.store.levs=2), data=wage1))
 
 # 16.5 Residuals in multiple membership models . . . . . . . . . . . . . 240
 
@@ -78,14 +78,14 @@ wage1$companyno67 <- (wage1$company==67)+(wage1$company2==67)+(wage1$company3==6
 ##New model
 ##Multiple membership
 (mymodel <- runMLwiN(logearn~1+age_40+sex+parttime+companyno54+companyno67+(company|1)+(id|1),
- estoptions=list(EstM=1, mm=list(list(mmvar=list("company","company2","company3","company4"),weights=list("weight1","weight2","weight3","weight4")), NA)), data=wage1))
+                     estoptions=list(EstM=1, mm=list(list(mmvar=list("company","company2","company3","company4"),weights=list("weight1","weight2","weight3","weight4")), NA)), data=wage1))
 
 #  16.6 Alternative weights for multiple membership models . . . . . . . .243
 
 
 ## New weights
 (mymodel <- runMLwiN(logearn~1+age_40+sex+parttime+companyno54+companyno67+(company|1)+(id|1),
- estoptions=list(EstM=1, mm=list(list(mmvar=list("company","company2","company3","company4"),weights=list("weight1","weight2","weight3","weight4")), NA)), data=wage1))
+                     estoptions=list(EstM=1, mm=list(list(mmvar=list("company","company2","company3","company4"),weights=list("weight1","weight2","weight3","weight4")), NA)), data=wage1))
 
 # 16.7 Multiple membership multiple classification (MMMC) models . . . . 244
 

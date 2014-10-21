@@ -29,7 +29,7 @@ options(MLwiN_path=mlwin)
 # User's input if necessary
 
 ## Read gcsecomp1 data
-data(gcsecomp1)
+data(gcsecomp1, package="R2MLwiN")
 #summary(gcsecomp1)
 #cor(gcsecomp1[,c("written","csework")])
 
@@ -48,7 +48,7 @@ data(gcsecomp1)
 
 ##Store residual chain at level 3: school
 (mymodel <- runMLwiN(c(written,csework)~1+female+(school|1)+(student|1), D='Multivariate Normal',
- estoptions=list(EstM=1, resi.store=T, resi.store.levs=3), data=gcsecomp1))
+                     estoptions=list(EstM=1, resi.store=T, resi.store.levs=3), data=gcsecomp1))
 
 resi <- mymodel["resi.chains"]$resi_lev3
 label <- 1:ncol(resi)
@@ -93,7 +93,7 @@ for(i in 1:6) points(x=resi0mean[rankno0[which(rankno0==hipos[i])]],y=resi1mean[
 
 library(R2MLwiN)
 ## Read gcsemv1 data
-data(gcsemv1)
+data(gcsemv1, package="R2MLwiN")
 
 (mymodel <- runMLwiN(c(written,csework)~1+female+(student|1), D='Multivariate Normal', estoptions=list(EstM=1, sort.ignore=TRUE), data=gcsemv1))
 
@@ -117,13 +117,13 @@ options(MLwiN_path=mlwin)
 # User's input if necessary
 
 ## Read hungary1 data
-data(hungary1)
+data(hungary1, package="R2MLwiN")
 summary(hungary1)
 
 (mymodel <- runMLwiN(c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2)~1+female+(school|1)+(student|1), D='Multivariate Normal', data=hungary1))
 
 (mymodel <- runMLwiN(c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2)~1+female+(school|1)+(student|1), D='Multivariate Normal',
- estoptions=list(EstM=1,mcmcMeth=list(dami=c(0,1000,2000,3000,4000,5000))), data=hungary1))
+                     estoptions=list(EstM=1,mcmcMeth=list(dami=c(0,1000,2000,3000,4000,5000))), data=hungary1))
 
 head(mymodel["MIdata"])
 

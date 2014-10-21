@@ -4,7 +4,7 @@
 # 10  Multinomial Logistic Models for Unordered Categorical Responses . .145
 #
 #     Rasbash, J., Steele, F., Browne, W. J. and Goldstein, H. (2012).
-#     A User’s Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
+#     A User's Guide to MLwiN, v2.26. Centre for Multilevel Modelling,
 #     University of Bristol.
 ############################################################################
 #     R script to replicate all analyses using R2MLwiN
@@ -30,7 +30,7 @@ options(MLwiN_path=mlwin)
 
 # 10.1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . .145
 
-data(bang)
+data(bang, package="R2MLwiN")
 
 addmargins(with(bang, table(use4)))
 
@@ -58,7 +58,7 @@ cat(paste("Pr(y = 4) =", round(1/(1+exp(mymodel1@FP["FP_Intercept_ster"])+exp(my
 (mymodel2 <- (runMLwiN(log(use4,cons)~1+lc+(district|1), D="Unordered Multinomial", data=bang)))
 
 (mymodel3 <- (runMLwiN(log(use4,cons)~1+lc+(district|1), D="Unordered Multinomial",
- estoptions=list(nonlinear=c(1,2), startval=list(FP.b=mymodel2@FP, FP.v=mymodel2@FP.cov, RP.b=mymodel2@RP, RP.v=mymodel2@RP.cov), resi.store=TRUE), data=bang)))
+                       estoptions=list(nonlinear=c(1,2), startval=list(FP.b=mymodel2@FP, FP.v=mymodel2@FP.cov, RP.b=mymodel2@RP, RP.v=mymodel2@RP.cov), resi.store=TRUE), data=bang)))
 
 
 mymodel3@RP["RP2_cov_Intercept_ster_Intercept_mod"]/sqrt(mymodel3@RP["RP2_var_Intercept_ster"]*mymodel3@RP["RP2_var_Intercept_mod"])
