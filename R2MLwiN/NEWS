@@ -13,6 +13,7 @@ Mon Oct 20 2014
    * Implemented new syntax for specifying cross-classified/multiple membership/CAR models
    * Updated included demos to use the newer formula syntax
    * Added CITATION file into package
+   * Added df2matrix and matrix2df functions to convert multiple membership information between data frame and matrix formats
 
 Tue Jul 15 2014
 1. Changes
