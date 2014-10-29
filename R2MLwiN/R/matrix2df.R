@@ -1,6 +1,12 @@
-matrix2df <- function(mat, idstub="id", weightstub="weight") {
+matrix2df <- function(mat, standardise=FALSE, idstub="id", weightstub="weight") {
   if (!is.matrix(mat) && !is(mat, "sparseMatrix")) {
     stop("Invalid input data")
+  }
+  if (is.null(colnames(mat))) {
+    colnames(mat) <- 1:ncol(mat)
+  }
+  if (standardise == TRUE) {
+    mat <- mat / Matrix::rowSums(mat)
   }
   numvars <- max(Matrix::rowSums(mat!=0))
   idcols <- data.frame(matrix(0, nrow(mat), numvars))
