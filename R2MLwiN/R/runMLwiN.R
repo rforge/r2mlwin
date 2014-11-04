@@ -582,6 +582,9 @@ version:date:md5:filename:x64:trial
   if (is.null(clean.files)) clean.files=T
    
   clre=estoptions$clre
+  clre[2,] <- gsub("1", "Intercept", clre[2,])
+  clre[3,] <- gsub("1", "Intercept", clre[3,])
+  
   smat=estoptions$smat
 
   if (!is.null(smat)) {
