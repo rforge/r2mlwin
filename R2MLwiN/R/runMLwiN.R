@@ -779,45 +779,55 @@ version:date:md5:filename:x64:trial
     xc <- TRUE
     for (i in 1:length(mm)) {
       if (!any(is.na(mm[[i]]))) {
-        if (length(mm[[i]]$mmvar) != length(mm[[i]]$weights)) {
-          stop("Number of multiple membership weights does not match identifiers")
-        }
-        mmlev <- (length(mm) - i) + 1
-        for (j in 1:length(mm[[i]]$mmvar)) {
-          var <- mm[[i]]$mmvar[[j]]
-          if (is.character(var)) {
-            if (var %in% colnames(indata)) indata[[var]] <- NULL
-            mmvar = model.frame(as.formula(paste0("~", var)), data=data, na.action=NULL)
-            indata = cbind(indata, mmvar)
-          } else {
-            if (is.vector(var)) {
-              indata = cbind(indata, var)
-              mmname <- paste0("_MMID", (length(mm) - i) + 1, "_", j)
-              vnames <- colnames(indata)
-              vnames[length(vnames)] <- mmname
-              colnames(indata) <- vnames
-              mm[[i]]$mmvar[[j]] <- mmname
+        if (is.matrix(mm[[i]]) || is(mm[[i]], "sparseMatrix")) {
+          idstub <- paste0("id_", length(mm)-i, "_")
+          weightstub <- paste0("weight_", length(mm)-i, "_")
+          mmdf <- matrix2df(mm[[i]], standardise=TRUE, idstub=idstub, weightstub=weightstub)
+          indata <- cbind(indata, mmdf)
+          numids <- ncol(mmdf) / 2
+          mm[[i]] <- list(mmvar=paste0(idstub, 1:numids), weights=paste0(weightstub, 1:numids))
+          levID[i] <- paste0(idstub[1], 1)
+        } else {
+          if (length(mm[[i]]$mmvar) != length(mm[[i]]$weights)) {
+            stop("Number of multiple membership weights does not match identifiers")
+          }
+          mmlev <- (length(mm) - i) + 1
+          for (j in 1:length(mm[[i]]$mmvar)) {
+            var <- mm[[i]]$mmvar[[j]]
+            if (is.character(var)) {
+              if (var %in% colnames(indata)) indata[[var]] <- NULL
+              mmvar = model.frame(as.formula(paste0("~", var)), data=data, na.action=NULL)
+              indata = cbind(indata, mmvar)
             } else {
-              stop("Invalid weights specification")
+              if (is.vector(var)) {
+                indata = cbind(indata, var)
+                mmname <- paste0("_MMID", (length(mm) - i) + 1, "_", j)
+                vnames <- colnames(indata)
+                vnames[length(vnames)] <- mmname
+                colnames(indata) <- vnames
+                mm[[i]]$mmvar[[j]] <- mmname
+              } else {
+                stop("Invalid weights specification")
+              }
             }
           }
-        }
-        for (j in 1:length(mm[[i]]$weights)) {
-          var <- mm[[i]]$weights[[j]]
-          if (is.character(var)) {
-            if (var %in% colnames(indata)) indata[[var]] <- NULL
-            mmweight = model.frame(as.formula(paste0("~", var)), data=data, na.action=NULL)
-            indata = cbind(indata, mmweight)
-          } else {
-            if (is.vector(var)) {
-              indata = cbind(indata, var)
-              mmwname <- paste0("_MMWEIGHT", (length(mm) - i) + 1, "_", j)
-              vnames <- colnames(indata)
-              vnames[length(vnames)] <- mmwname
-              colnames(indata) <- vnames
-              mms[[i]]$weight[[j]] <- mmwname
+          for (j in 1:length(mm[[i]]$weights)) {
+            var <- mm[[i]]$weights[[j]]
+            if (is.character(var)) {
+              if (var %in% colnames(indata)) indata[[var]] <- NULL
+              mmweight = model.frame(as.formula(paste0("~", var)), data=data, na.action=NULL)
+              indata = cbind(indata, mmweight)
             } else {
-              stop("Invalid weights specification")
+              if (is.vector(var)) {
+                indata = cbind(indata, var)
+                mmwname <- paste0("_MMWEIGHT", (length(mm) - i) + 1, "_", j)
+                vnames <- colnames(indata)
+                vnames[length(vnames)] <- mmwname
+                colnames(indata) <- vnames
+                mms[[i]]$weight[[j]] <- mmwname
+              } else {
+                stop("Invalid weights specification")
+              }
             }
           }
         }
@@ -830,47 +840,57 @@ version:date:md5:filename:x64:trial
     xc <- TRUE
     for (i in 1:length(car)) {
       if (!any(is.na(car[[i]]))) {
-        if (length(car[[i]]$carvar) != length(car[[i]]$weights)) {
-          stop("Number of CAR weights does not match identifiers")
-        }
-        carlev <- (length(car) - i) + 1
-        for (j in 1:length(car[[i]]$carvar)) {
-          var <- car[[i]]$carvar[[j]]
-          if (is.character(var)) {
-            if (var %in% colnames(indata)) {
-              indata[[var]] <- NULL
-            }
-            carvar = model.frame(as.formula(paste0("~", var)), data=data, na.action=NULL)
-            indata = cbind(indata, carvar)
-          } else {
-            if (is.vector(var)) {
-              indata = cbind(indata, var)
-              carname <- paste0("_CARID", (length(car) - i) + 1, "_", j)
-              vnames <- colnames(indata)
-              vnames[length(vnames)] <- carname
-              colnames(indata) <- vnames
-              car[[i]]$carvar[[j]] <- carname
+        if (is.matrix(car[[i]]) || is(car[[i]], "sparseMatrix")) {
+          idstub <- paste0("id_", length(car)-i, "_")
+          weightstub <- paste0("weight_", length(car)-i, "_")
+          cardf <- matrix2df(car[[i]], standardise=TRUE, idstub=idstub, weightstub=weightstub)
+          indata <- cbind(indata, cardf)
+          numids <- ncol(cardf) / 2
+          car[[i]] <- list(carvar=paste0(idstub, 1:numids), weights=paste0(weightstub, 1:numids))
+          levID[i] <- paste0(idstub[1], 1)
+        } else {
+          if (length(car[[i]]$carvar) != length(car[[i]]$weights)) {
+            stop("Number of CAR weights does not match identifiers")
+          }
+          carlev <- (length(car) - i) + 1
+          for (j in 1:length(car[[i]]$carvar)) {
+            var <- car[[i]]$carvar[[j]]
+            if (is.character(var)) {
+              if (var %in% colnames(indata)) {
+                indata[[var]] <- NULL
+              }
+              carvar = model.frame(as.formula(paste0("~", var)), data=data, na.action=NULL)
+              indata = cbind(indata, carvar)
             } else {
-              stop("Invalid weights specification")
+              if (is.vector(var)) {
+                indata = cbind(indata, var)
+                carname <- paste0("_CARID", (length(car) - i) + 1, "_", j)
+                vnames <- colnames(indata)
+                vnames[length(vnames)] <- carname
+                colnames(indata) <- vnames
+                car[[i]]$carvar[[j]] <- carname
+              } else {
+                stop("Invalid weights specification")
+              }
             }
           }
-        }
-        for (j in 1:length(car[[i]]$weights)) {
-          var <- car[[i]]$weights[[j]]
-          if (is.character(var)) {
-            if (var %in% colnames(indata)) indata[[var]] <- NULL
-            carweight = model.frame(as.formula(paste0("~", var)), data=data, na.action=NULL)
-            indata = cbind(indata, carweight)
-          } else {
-            if (is.vector(var)) {
-              indata = cbind(indata, var)
-              carwname <- paste0("_CARWEIGHT", (length(car) - i) + 1, "_", j)
-              vnames <- colnames(indata)
-              vnames[length(vnames)] <- carwname
-              colnames(indata) <- vnames
-              car[[i]]$weights[[j]] <- carwname
+          for (j in 1:length(car[[i]]$weights)) {
+            var <- car[[i]]$weights[[j]]
+            if (is.character(var)) {
+              if (var %in% colnames(indata)) indata[[var]] <- NULL
+              carweight = model.frame(as.formula(paste0("~", var)), data=data, na.action=NULL)
+              indata = cbind(indata, carweight)
             } else {
-              stop("Invalid weights specification")
+              if (is.vector(var)) {
+                indata = cbind(indata, var)
+                carwname <- paste0("_CARWEIGHT", (length(car) - i) + 1, "_", j)
+                vnames <- colnames(indata)
+                vnames[length(vnames)] <- carwname
+                colnames(indata) <- vnames
+                car[[i]]$weights[[j]] <- carwname
+              } else {
+                stop("Invalid weights specification")
+              }
             }
           }
         }
