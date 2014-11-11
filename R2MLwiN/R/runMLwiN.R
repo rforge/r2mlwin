@@ -244,6 +244,12 @@ version:date:md5:filename:x64:trial
   
   resp = invars$resp
 
+  if (D[1] == "Normal") {
+    if (is.factor(indata[[resp]])) {
+      warning("You have specified a factor variable as a continuous response, you may wish to check its numeric values")
+    }
+  }
+
   if (D[1] == "Ordered Multinomial" || D[1] == "Unordered Multinomial") {
     if (!is.factor(indata[[resp]])) {
       indata[[resp]] <- as.factor(indata[[resp]])
@@ -264,6 +270,11 @@ version:date:md5:filename:x64:trial
   }
   if (D[1] == "Mixed") {
     for (i in 2:length(D)) {
+      if (D[[i]][[1]] == "Normal") {
+        if (is.factor(indata[[resp[i-1]]])) {
+          warning("You have specified a factor variable as a continuous response, you may wish to check its numeric values")
+        }
+      }
       if (D[[i]][[1]] == "Binomial") {
         if (is.logical(indata[[resp[i-1]]])) {
           indata[[resp[i-1]]] <- as.integer(indata[[resp[i-1]]])
