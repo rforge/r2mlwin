@@ -2091,6 +2091,7 @@ version:date:md5:filename:x64:trial
       outIGLS["RP.cov"]=RP.cov
       outIGLS["LIKE"]=LIKE
       outIGLS["Meth"]=Meth
+      outIGLS["nonlinear"]=nonlinear
       outIGLS["Converged"]=Converged
       outIGLS["Iterations"]=Iterations
       outIGLS["elapsed.time"]=time2[3]

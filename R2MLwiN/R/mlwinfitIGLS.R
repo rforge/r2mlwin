@@ -5,7 +5,7 @@ setClass(Class = "mlwinfitIGLS", representation = representation(Nobs="numeric",
                                                                  D="ANY", Formula="ANY", levID="character",
                                                                  FP="numeric", RP="numeric", RP.cov="matrix", FP.cov="matrix", LIKE="ANY",
                                                                  elapsed.time="numeric", call="ANY", residual="data.frame",
-                                                                 Converged="logical", Iterations="numeric", Meth="numeric", data="data.frame"))
+                                                                 Converged="logical", Iterations="numeric", Meth="numeric", nonlinear="numeric", data="data.frame"))
 
 # extract parts of mlwinfitIGLS
 #
@@ -34,6 +34,7 @@ setMethod(
     if(i=="Converged"){return(x@Converged)}else {}
     if(i=="Iterations"){return(x@Iterations)}else {}
     if(i=="Meth"){return(x@Meth)}else {}
+    if(i=="nonlinear"){return(x@nonlinear)}else {}
     #                if(i=="chains.bugs"){return(x@chains.bugs)}else {}
     if(i=="residual"){return(x@residual)}else {}
     if(i=="data"){return(x@data)}else {}
@@ -66,6 +67,7 @@ setMethod(
     if(i=="Converged"){return(x@Converged)}else {}
     if(i=="Iterations"){return(x@Iterations)}else {}
     if(i=="Meth"){return(x@Meth)}else {}
+    if(i=="nonlinear"){return(x@nonlinear)}else {}
     if(i=="residual"){return(x@residual)}else {}
     if(i=="data"){return(x@data)}else {}
   }
@@ -97,6 +99,7 @@ setReplaceMethod(
     if(i=="Converged"){x@Converged<-value}else {}
     if(i=="Iterations"){x@Iterations<-value}else {}
     if(i=="Meth"){x@Meth<-value}else {}
+    if(i=="nonlinear"){x@nonlinear<-value}else {}
     if(i=="residual"){x@residual<-value}else {}
     if(i=="data"){x@data<-value}else {}
     validObject(x)
@@ -129,6 +132,7 @@ setReplaceMethod(
     if(i=="Converged"){x@Converged<-value}else {}
     if(i=="Iterations"){x@Iterations<-value}else {}
     if(i=="Meth"){x@Meth<-value}else {}
+    if(i=="nonlinear"){x@nonlinear<-value}else {}
     if(i=="residual"){x@residual<-value}else {}
     if(i=="data"){x@data<-value}else {}
     validObject(x)
@@ -205,6 +209,15 @@ printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
     cat("IGLS")
   } else {
     cat("RIGLS")
+  }
+  if (object@D[1] != "Normal" && object@D[1] != "Multivariate Normal") {
+    if (object@nonlinear[1] == 0) {
+      cat(" MQL")
+    }
+    if (object@nonlinear[1] == 1) {
+      cat(" PQL")
+    }
+    cat(object@nonlinear[2])
   }
   cat("        Elapsed time :",paste(round(object@elapsed.time,2),"s",sep=""), "\n")
   cat("Number of obs: ",object@Nobs,"(from total",object@DataLength,")")
