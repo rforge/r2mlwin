@@ -1,4 +1,4 @@
-setClass(Class = "mlwinfitMCMC", representation = representation(Nobs="numeric",DataLength="numeric",Hierarchy="ANY",burnin="numeric",iterations="numeric",
+setClass(Class = "mlwinfitMCMC", representation = representation(version="character",Nobs="numeric",DataLength="numeric",Hierarchy="ANY",burnin="numeric",iterations="numeric",
                                                                  D="ANY", Formula="ANY", levID="character", merr="ANY", fact="ANY", xc="ANY",
                                                                  FP="numeric", RP="numeric", RP.cov="matrix", FP.cov="matrix", chains="ANY",
                                                                  elapsed.time="numeric", call="ANY",BDIC="numeric", LIKE="ANY", fact.loadings="numeric",fact.loadings.sd="numeric",
@@ -9,6 +9,7 @@ setMethod(
   f= "[",
   signature="mlwinfitMCMC",
   definition=function(x,i,j,drop){
+    if(i=="version"){return(x@version)}else {}
     if(i=="Nobs"){return(x@Nobs)}else {}
     if(i=="DataLength"){return(x@DataLength)}else {}                
     if(i=="Hierarchy"){return(x@Hierarchy)}else {}        
@@ -45,6 +46,7 @@ setReplaceMethod(
   f= "[",
   signature="mlwinfitMCMC",
   definition=function(x,i,j,value){
+    if(i=="version"){x@version<-value}else {}
     if(i=="Nobs"){x@Nobs<-value}else {}
     if(i=="DataLength"){x@DataLength<-value}else {}                                           
     if(i=="Hierarchy"){x@Hierarchy<-value}else {} 
@@ -83,6 +85,7 @@ setMethod(
   f= "[[",
   signature="mlwinfitMCMC",
   definition=function(x,i,j,drop){
+    if(i=="version"){return(x@version)}else {}
     if(i=="Nobs"){return(x@Nobs)}else {}
     if(i=="DataLength"){return(x@DataLength)}else {}
     if(i=="Hierarchy"){return(x@Hierarchy)}else {}
@@ -119,6 +122,7 @@ setReplaceMethod(
   f= "[[",
   signature="mlwinfitMCMC",
   definition=function(x,i,j,value){
+    if(i=="version"){x@version<-value}else {}
     if(i=="Nobs"){x@Nobs<-value}else {}
     if(i=="DataLength"){x@DataLength<-value}else {}
     if(i=="Hierarchy"){x@Hierarchy<-value}else {}
@@ -219,7 +223,7 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   levID0=object@levID
   cat("\n")
   cat(paste(rep("-",50),collapse="*"),"\n")
-  cat("MLwiN multilevel model",paste("(",object@D[1],")",sep=""),"\n")
+  cat(object@version, " multilevel model",paste("(",object@D[1],")",sep=""),"\n")
   if (!is.null(object@Hierarchy)) print(object@Hierarchy)
   if (!is.null(object@xc) && object@xc == TRUE){
     cat("Estimation algorithm:  MCMC      Cross-classified              Elapsed time :",paste(round(object@elapsed.time,2),"s",sep=""), "\n")

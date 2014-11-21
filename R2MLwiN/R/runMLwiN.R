@@ -213,15 +213,15 @@ version:date:md5:filename:x64:trial
   if (checkversion == TRUE) { # Allow disabling the version check if it is slowing things down (e.g. in a simulation study)
     currentver = versioninfo[versioninfo$md5==digest(cmd, algo="md5", file=TRUE),]  
     if (nrow(currentver) == 0) {
-      versiontext = "MLwiN version unknown or >2.31"
+      versiontext = "MLwiN (version: unknown or >2.31)"
     } else {
       if (currentver$version < 2.28) { # Block versions >year older than current release
         stop("The current version of MLwiN is too old, please update it from http://www.bris.ac.uk/cmm/software/mlwin/download/upgrades.html")
       }
-      versiontext = paste0("MLwiN version ", currentver$version)
+      versiontext = paste0("MLwiN (version: ", currentver$version, ")")
     }
   } else {
-    versiontext = "MLwiN version unchecked"
+    versiontext = "MLwiN (version: unchecked)"
   }
   
   # the current function call
@@ -2079,6 +2079,7 @@ version:date:md5:filename:x64:trial
   if (EstM==0){
     if (is.null(BUGO)){
       outIGLS=new("mlwinfitIGLS")
+      outIGLS["version"]=versiontext
       outIGLS["Nobs"]=NUsed
       outIGLS["DataLength"]=NTotal
       outIGLS["Hierarchy"]=hierarchy
@@ -2118,6 +2119,7 @@ version:date:md5:filename:x64:trial
   if (EstM==1){
     if (is.null(BUGO)){
       outMCMC=new("mlwinfitMCMC")
+      outMCMC["version"]=versiontext
       outMCMC["Nobs"]=NUsed
       outMCMC["DataLength"]=NTotal
       outMCMC["Hierarchy"]=hierarchy

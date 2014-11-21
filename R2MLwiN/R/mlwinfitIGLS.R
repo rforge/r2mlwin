@@ -1,7 +1,7 @@
 # An S4 class that stores the outputs of the fitted model.
 # @slot a contains an R object
 # @export
-setClass(Class = "mlwinfitIGLS", representation = representation(Nobs="numeric",DataLength="numeric",Hierarchy="ANY",
+setClass(Class = "mlwinfitIGLS", representation = representation(version="character",Nobs="numeric",DataLength="numeric",Hierarchy="ANY",
                                                                  D="ANY", Formula="ANY", levID="character",
                                                                  FP="numeric", RP="numeric", RP.cov="matrix", FP.cov="matrix", LIKE="ANY",
                                                                  elapsed.time="numeric", call="ANY", residual="data.frame",
@@ -18,6 +18,7 @@ setMethod(
   f= "[",
   signature="mlwinfitIGLS",
   definition=function(x,i,j,drop){
+    if(i=="version"){return(x@version)}else {}
     if(i=="Nobs"){return(x@Nobs)}else {}
     if(i=="DataLength"){return(x@DataLength)}else {}
     if(i=="Hierarchy"){return(x@Hierarchy)}else {}
@@ -51,6 +52,7 @@ setMethod(
   f= "[[",
   signature="mlwinfitIGLS",
   definition=function(x,i,j,drop){
+    if(i=="version"){return(x@version)}else {}
     if(i=="Nobs"){return(x@Nobs)}else {}
     if(i=="DataLength"){return(x@DataLength)}else {}
     if(i=="Hierarchy"){return(x@Hierarchy)}else {}
@@ -83,6 +85,7 @@ setReplaceMethod(
   f= "[",
   signature="mlwinfitIGLS",
   definition=function(x,i,j,value){
+    if(i=="version"){x@version<-value}else {}
     if(i=="Nobs"){x@Nobs<-value}else {}
     if(i=="DataLength"){x@DataLength<-value}else {}
     if(i=="Hierarchy"){x@Hierarchy<-value}else {}
@@ -116,6 +119,7 @@ setReplaceMethod(
   f= "[[",
   signature="mlwinfitIGLS",
   definition=function(x,i,j,value){
+    if(i=="version"){x@version<-value}else {}
     if(i=="Nobs"){x@Nobs<-value}else {}
     if(i=="DataLength"){x@DataLength<-value}else {}
     if(i=="Hierarchy"){x@Hierarchy<-value}else {}
@@ -202,7 +206,7 @@ printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   }
   cat("\n")
   cat(paste(rep("-",50),collapse="*"),"\n")
-  cat("MLwiN multilevel model",paste("(",object@D[1],")",sep=""),"\n")
+  cat(object@version, " multilevel model",paste("(",object@D[1],")",sep=""),"\n")
   if (!is.null(object@Hierarchy)) print(object@Hierarchy)
   cat("Estimation algorithm:  ")
   if (object@Meth==1) {
