@@ -20,9 +20,9 @@ Rasbash, J., Browne, W. J., Healy, M., Cameron, B., Charlton, C. M. J. (2013) ML
 Rasbash, J., Steele, F., Browne, W.J., Goldstein, H. (2012) \emph{A User's Guide to MLwiN v2.26}. University of Bristol: Centre for Multilevel
 Modelling.
 
-Aitkin, M. & Longford, N. (1986). Statistical modelling in school effectiveness studies (with discussion). Journal of the Royal Statistical Society,
-Series A, 149:1–43.
-}
+Aitkin, M. & Longford, N. (1986). Statistical modelling in school
+effectiveness studies (with discussion). Journal of the Royal
+Statistical Society, Series A, 149:1-43. }
 
 \description{
   Examination data for 907 students within 18 schools.}
