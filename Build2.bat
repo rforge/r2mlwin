@@ -14,7 +14,7 @@
 
 @echo.
 @echo "Checks the package"
-@call "%R_PATH%\Rcmd.exe" check  R2MLwiN %*
+@call "%R_PATH%\Rcmd.exe" BATCH --no-restore --no-save checkpkgdir.r checkpkgdir.Rout%*
 @if not %errorlevel% == 0 set BuildError=%errorlevel%
 @echo.
 
