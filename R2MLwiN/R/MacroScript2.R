@@ -1260,7 +1260,6 @@ MacroScript2 <- function(indata,dtafile,oldsyntax=FALSE,resp, levID, expl, rp, D
   }
 
   if ((!is.null(BUGO))&&!(D[1]=="Mixed")&&nrp>0){
-    version=as.numeric(BUGO["version"])
     if(D[1]=='Normal'||D[1]=='Multivariate Normal') DD2=0
     if (is.null(xc)){
       wrt(paste("BUGO 6 ",DD," ",DD2, " G30[1] ", priorcol," '",modelfile,"' ","'",initfile,"' ","'",datafile,"'",sep=""))

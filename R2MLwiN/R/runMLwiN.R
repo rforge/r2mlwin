@@ -2028,10 +2028,6 @@ version:date:md5:filename:x64:trial
     if (is.na(OpenBugs)){
       OpenBugs=F
     }
-    version=as.integer(BUGO["version"])
-    if (is.na(version)){
-      version=4
-    }
     n.chains=as.integer(BUGO["n.chains"])
     if (is.na(n.chains)){
       n.chains=1
