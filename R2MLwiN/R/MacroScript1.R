@@ -1,6 +1,7 @@
-MacroScript1 <- function(indata,dtafile,oldsyntax=FALSE,resp, levID, expl, rp, D='Normal', nonlinear=c(0,1), categ=NULL,notation=NULL, nonfp=NA, clre, Meth=1, extra=F,reset,rcon,fcon,maxiter,convtol,
-                         mem.init="default", optimat=F, weighting=NULL, fpsandwich=F, rpsandwich=F,modelfile=modelfile,initfile=initfile,datafile=datafile,
-                         macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode,startval=startval){
+MacroScript1 <- function(indata,dtafile,oldsyntax=FALSE,resp,levID,expl,rp,D='Normal',nonlinear=c(0,1),categ=NULL,notation=NULL,
+                         nonfp=NA,clre=NULL,Meth=1,extra=FALSE,reset,rcon=NULL,fcon=NULL,maxiter=20,convtol=2,
+                         mem.init="default",optimat=FALSE,weighting=NULL,fpsandwich=FALSE,rpsandwich=FALSE,modelfile,initfile,datafile,
+                         macrofile,IGLSfile,resifile,resi.store=FALSE,resioptions,debugmode=FALSE,startval=NULL){
   
   nlev=length(levID)
   
