@@ -1,4 +1,4 @@
-ws2foreign <- function(wsfile, foreignfile, MLwiNPath = NULL, x64=FALSE){
+ws2foreign <- function(wsfile, foreignfile, MLwiNPath = NULL, x64=NULL){
   ## Convert MLwiN worksheet file to other data file which is used in Minitab, SAS, SPSS, or Stata
   temptfile =gsub("\\", "/", tempfile("coversion_",fileext=".txt"),fixed=TRUE)
   cat(file=temptfile)
@@ -6,6 +6,14 @@ ws2foreign <- function(wsfile, foreignfile, MLwiNPath = NULL, x64=FALSE){
   write(paste("LOAD   '",wsfile,"'",sep=""), temptfile, append=T)
   write(paste("STOR   '",foreignfile,"'",sep=""), temptfile, append=T)
   write("EXIT", temptfile, append=T)
+  
+  if(is.null(x64)) {
+    if (.Machine$sizeof.pointer == 8) {
+      x64=TRUE
+    } else {
+      x64=FALSE
+    }
+  }
   
   if (is.null(MLwiNPath)) {
     MLwiNPath <- getOption("MLwiN_path")
