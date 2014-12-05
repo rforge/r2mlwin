@@ -48,7 +48,19 @@ caterpillarR <- function(resi, lev=2){
       sapply(names(x), f, simplify = FALSE)
   }
 
-  if (is.character(resi)) myresi=read.dta(resi) else myresi=resi
+  if (class(resi) == "mlwinfitIGLS" || class(resi) == "mlwinfitMCMC") {
+    myresi <- resi@residual
+    if (is.null(myresi)) {
+      stop("To generate a caterpillar plot the model must be run with the resi.store option set to TRUE")
+    }
+  } else {
+    if (class(resi) == "data.frame") {
+      myresi <- resi
+    } else {
+      stop("Invalid resi option specified")
+    }
+  }
+
   est.names=names(myresi)[grep(paste("lev_",lev,"_resi_est",sep=""),names(myresi))]
   if (length(est.names)==1){
     est=as.matrix(na.omit(myresi[[est.names]]),ncol=1)

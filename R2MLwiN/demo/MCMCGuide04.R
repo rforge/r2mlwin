@@ -116,7 +116,7 @@ points(1:65,u0rankhi[rankno],pch=25,bg="grey")
 for(i in 1:65) {lines(rep(i,2),c(u0ranklo[rankno[i]],u0rankhi[rankno[i]]))}
 
 ## Alternatively
-caterpillarR(mymodel6["residual"], lev=2)
+caterpillarR(mymodel6, lev=2)
 
 # 4.9 Estimating a function of parameters . . . . . . . . . . . . . . . . 58
 estimates <- mymodel6["chains"]

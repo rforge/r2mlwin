@@ -38,7 +38,7 @@ data(tutorial, package="R2MLwiN")
 
 # 3.2 Calculating residuals in MLwiN . . . . . . . . . . . . . . . . . . .40
 
-caterpillarR(mymodel1["residual"], lev=2)
+caterpillarR(mymodel1, lev=2)
 
 # 3.3 Normal plots . . . . . . . . . . . . . . . . . . . . . . . . . . . .43
 
