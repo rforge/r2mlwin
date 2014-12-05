@@ -1218,12 +1218,12 @@ MacroScript1 <- function(indata,dtafile,oldsyntax=FALSE,resp, levID, expl, rp, D
       
       wrt("RTYP   0")
       wrt("RESI")
-      if (!("variance" %in% resioptions)){
-        for (k in 1:len.rpx){
-          wrt(paste0("CALC G23[",k,"]=G21[",k,"]/sqrt(G22[",k,"])",sep=""))
-        }
+      for (k in 1:len.rpx){
+        wrt(paste0("CALC G23[",k,"]=G21[",k,"]/sqrt(G22[",k,"])",sep=""))
       }
-      outgroups <- c(outgroups, "G23")
+      if ("standardised" %in% resioptions){
+        outgroups <- c(outgroups, "G23")
+      }
     }
     
     #NOTE leverage depends on residuals with rtype 0

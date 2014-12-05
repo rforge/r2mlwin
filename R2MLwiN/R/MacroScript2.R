@@ -1954,10 +1954,8 @@ MacroScript2 <- function(indata,dtafile,oldsyntax=FALSE,resp, levID, expl, rp, D
         wrt("MCRE")
 
         ccount =1
-        if (!("variance" %in% resioptions)){
-          for (k in 1:len.rpx){
-            wrt(paste0("CALC G28[",k,"]=G28[",k,"]/sqrt(G27[",k,"])",sep=""))
-          }
+        for (k in 1:len.rpx){
+          wrt(paste0("CALC G28[",k,"]=G26[",k,"]/sqrt(G27[",k,"])",sep=""))
         }
         outgroups <- c(outgroups, "G28")
       }
@@ -1967,7 +1965,7 @@ MacroScript2 <- function(indata,dtafile,oldsyntax=FALSE,resp, levID, expl, rp, D
       
       if (!("variance"%in%resioptions)){
         for (k in 1:len.rpx){
-          wrt(paste0("CALC G28[",k,"]=sqrt(G28[",k,"])"))# Convert the variances to standard errors
+          wrt(paste0("CALC G27[",k,"]=sqrt(G27[",k,"])"))# Convert the variances to standard errors
         }
       }
       
