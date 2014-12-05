@@ -423,7 +423,7 @@ setMethod("fitted.values", "mlwinfitMCMC", function (object,  ...) {
 })
 
 setMethod("residuals", "mlwinfitMCMC", function (object,  ...) {
-  form <- Formula.translate(object@Formula, NULL, object@D, object@data)
+  form <- Formula.translate(object@Formula, object@D, object@data)
   if (!is.list(form$resp)) {
     object@data[[form$resp]] - fitted(object)
   } else {
@@ -440,7 +440,7 @@ setMethod("predict", "mlwinfitMCMC", function (object, newdata=NULL, params=NULL
   if (is.null(newdata)) {
     indata <- object@data
   } else {
-    indata <- Formula.translate(object@Formula, NULL, object@D, object@data)$indata
+    indata <- Formula.translate(object@Formula, object@D, object@data)$indata
   }
   if (is.null(params)) {
     fp.names <- names(FP <- object@FP)

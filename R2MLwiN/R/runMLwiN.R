@@ -230,7 +230,7 @@ version:date:md5:filename:x64:trial
   if (oldsyntax) {
     invars = Formula.translate.compat(Formula, levID, D, indata)
   } else {
-    invars = Formula.translate(Formula, levID, D, indata)
+    invars = Formula.translate(Formula, D, indata)
     newdata = invars$indata
     invars$indata <- NULL
     if (!is.null(newdata)){

@@ -1,4 +1,4 @@
-Formula.translate <- function(Formula, levID, D='Normal', indata){
+Formula.translate <- function(Formula, D='Normal', indata){
 
   get.terms <- function(fstr){
     if (is.na(fstr)){
@@ -409,7 +409,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
     left[!is_empty]
   }
   
-  nlev=length(levID)
+  nlev=0
   cc=c(0:nlev)
   is_str_form <- is.character(Formula)
   if(is_str_form){
@@ -523,7 +523,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
   }
     
   if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial'||D[1]=='Multivariate Normal'||D[1]=='Mixed'){
-    nlev=length(levID)
+    nlev=0
     cc=c(0:nlev)
     if (D[1]=='Multivariate Normal'){
       resp=sub("c\\(","",resp)
@@ -1254,7 +1254,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
     D=rep(NA,3)
     names(D)=c("Distr","link","denominator")
     D[1]='Binomial'
-    nlev=length(levID)
+    nlev=0
 
     resp=regmatches(resp, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", resp))[[1]]
     link=resp[2]
@@ -1419,7 +1419,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
   }
   
   if (D[1]=='Poisson'|| D[1]=='Negbinom'){
-    nlev=length(levID)
+    nlev=0
     resp=regmatches(resp, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", resp))[[1]]
     link=resp[2]
     resp=strsplit(resp[3],",")[[1]]
@@ -1598,7 +1598,7 @@ Formula.translate <- function(Formula, levID, D='Normal', indata){
   }
   
   if (D[1]=='Normal'){
-    nlev=length(levID)
+    nlev=0
     nleft=length(left)
     
     if (is_str_form){
