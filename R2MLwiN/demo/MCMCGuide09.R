@@ -68,7 +68,7 @@ formatC(round(tab2,6))
 ## Choose option(s) for inference
 ## Fit the model
 (mymodel1 <- runMLwiN(normexam~1+standlrt+(student|1+standlrt), estoptions=list(EstM=1), data=tutorial))
-trajectories(mymodel1["chains"],Range=c(4501,5000))
+trajectories(mymodel1,Range=c(4501,5000))
 
 l1varfn <- mymodel1["RP"]["RP1_var_Intercept"]+2*mymodel1["RP"]["RP1_cov_Intercept_standlrt"]*tutorial$standlrt+mymodel1["RP"]["RP1_var_standlrt"]*tutorial$standlrt^2
 plot(sort(tutorial$standlrt),l1varfn[order(tutorial$standlrt)],xlab="standlrt",ylab="l1varfn",type="l")

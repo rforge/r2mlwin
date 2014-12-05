@@ -86,14 +86,14 @@ while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file
 (mymodel <- runMLwiN(logit(use,denomb)~1+age+lc+urban+(district|1+urban), D="Binomial",
                      estoptions=list(EstM=1, mcmcOptions=list(hcen=2)), data=bang1))
 
-trajectories(mymodel["chains"])
+trajectories(mymodel)
 
 ## Hierarchical centring at level 2 + Orthogonal updates
 
 (mymodel <- runMLwiN(logit(use,denomb)~1+age+lc+urban+(district|1+urban), D="Binomial",
                      estoptions=list(EstM=1, mcmcOptions=list(hcen=2, orth=1)), data=bang1))
 
-trajectories(mymodel["chains"])
+trajectories(mymodel)
 
 # 25.5 The Melanoma example . . . . . . . . . . . . . . . . . . . . . . .414
 
@@ -127,14 +127,14 @@ data(tutorial, package="R2MLwiN")
 (mymodel <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),
                      estoptions=list(EstM=1, mcmcMeth=list(fixM=2, residM=2), mcmcOptions=list(hcen=2)), data=tutorial))
 
-trajectories(mymodel["chains"],Range=c(4501,5000))
+trajectories(mymodel,Range=c(4501,5000))
 ## Gibbs
 ## Hierarchical centring at level 2
 
 (mymodel <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),
                      estoptions=list(EstM=1, mcmcOptions=list(hcen=2)), data=tutorial))
 
-trajectories(mymodel["chains"],Range=c(4501,5000))
+trajectories(mymodel,Range=c(4501,5000))
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .422
 

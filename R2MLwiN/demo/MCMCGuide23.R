@@ -54,13 +54,13 @@ bang1$denomb <- bang1$cons
 
 (mymodel <- runMLwiN(logit(use,denomb)~1+age+lc+urban+(district|1+urban), D="Binomial", estoptions=list(EstM=1), data=bang1))
 
-trajectories(mymodel["chains"])
+trajectories(mymodel)
 
 ##Orthogonal update
 
 (mymodel <- runMLwiN(logit(use,denomb)~1+age+lc+urban+(district|1+urban), D="Binomial", estoptions=list(EstM=1, mcmcOptions=list(orth=1)), data=bang1))
 
-trajectories(mymodel["chains"])
+trajectories(mymodel)
 
 # 23.4 A Poisson example . . . . . . . . . . . . . . . . . . . . . . . . 364
 
@@ -99,13 +99,13 @@ alevchem$gcseav <- double2singlePrecision(alevchem$gcse_tot/alevchem$gcse_no-6)
 ## Fit the model
 (mymodel <- runMLwiN(logit(a_point,cons,6)~1+gcseav[1:5]+I(gcseav^2)[1:5]+gender[1:5]+(school|1[1:5]), D='Ordered Multinomial', estoptions=list(EstM=1), data=alevchem))
 
-trajectories(mymodel["chains"])
+trajectories(mymodel)
 
 ##Orthogonal update
 ## Fit the model
 (mymodel <- runMLwiN(logit(a_point,cons,6)~1+gcseav[1:5]+I(gcseav^2)[1:5]+gender[1:5]+(school|1[1:5]), D='Ordered Multinomial', estoptions=list(EstM=1, mcmcOptions=list(orth=1)), data=alevchem))
 
-trajectories(mymodel["chains"])
+trajectories(mymodel)
 
 # 23.6 The WinBUGS interface . . . . . . . . . . . . . . . . . . . . . . 372
 

@@ -51,7 +51,7 @@ sixway(mymodel["chains"][,"FP_Intercept"],"beta_0")
 
 (mymodel <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), estoptions=list(EstM=1, mcmcOptions=list(smcm=1)), data=tutorial))
 
-trajectories(mymodel["chains"],Range=c(1,500))
+trajectories(mymodel,Range=c(1,500))
 
 # 21.4 Examining the residual chains . . . . . . . . . . . . . . . . . . 335
 
