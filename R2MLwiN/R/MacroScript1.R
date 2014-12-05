@@ -1,5 +1,5 @@
 MacroScript1 <- function(indata,dtafile,oldsyntax=FALSE,resp, levID, expl, rp, D='Normal', nonlinear=c(0,1), categ=NULL,notation=NULL, nonfp=NA, clre, Meth=1, extra=F,reset,rcon,fcon,maxiter,convtol,
-                         BUGO=NULL,mem.init="default", optimat=F, weighting=NULL, fpsandwich=F, rpsandwich=F,modelfile=modelfile,initfile=initfile,datafile=datafile,
+                         mem.init="default", optimat=F, weighting=NULL, fpsandwich=F, rpsandwich=F,modelfile=modelfile,initfile=initfile,datafile=datafile,
                          macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode,startval=startval){
   
   nlev=length(levID)
@@ -1389,41 +1389,6 @@ MacroScript1 <- function(indata,dtafile,oldsyntax=FALSE,resp, levID, expl, rp, D
     wrt("ERAS G30")
     wrt("LINK 0 G30")
 
-  }
-  
-  if ((!is.null(BUGO))&&!(D[1]=="Mixed")&&nrp>0){
-    if(D[1]=="Normal") DD=1
-    if(D[1]=="Binomial") DD=2
-    if(D[1]=="Poisson") DD=3
-    if(D[1]=='Multivariate Normal') DD=4
-    if(D[1]=="Multinomial") {if (as.numeric(D[4])==0) DD=6 else DD=7}
-    
-    for (j in nrp:1){
-      rpx=rp[[j]]
-      len.rpx=length(rp[[j]])
-      wrt(paste("NOTE Calculate MCMC starting values for level ",as.numeric(sub("rp","",rp.names[j]))," residuals",sep=""))
-      wrt(paste("RLEV   ",as.numeric(sub("rp","",rp.names[j])),sep=""))
-      wrt("RFUN")
-      wrt("RCOV 2")
-      wrt("LINK 2 G21")
-      wrt(paste("LINK", len.rpx, "G22"))
-      wrt(paste("LINK", len.rpx, "G23"))
-      wrt("ROUT G22 G23")
-      wrt("MISR 0")
-      wrt("RESI")
-      wrt("MISR 1")
-      wrt("JOIN G21[1] G22 G21[1]")
-      wrt("JOIN G21[2] G23 G21[2]")
-      wrt("ERAS G22 G23")
-      wrt("LINK 0 G22")
-      wrt("LINK 0 G23")
-    }
-    
-    version=as.numeric(BUGO["version"])
-    if(D[1]=='Normal'||D[1]=='Multivariate Normal') DD2=0
-    wrt(paste("BUGO 6 ",DD," ",DD2, " G21[1] ","'",modelfile,"' ","'",initfile,"' ","'",datafile,"'",sep=""))
-    wrt("ERAS G21")
-    wrt("LINK 0 G21")
   }
   
   if (!debugmode) wrt("EXIT")

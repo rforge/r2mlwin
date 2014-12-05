@@ -1791,7 +1791,7 @@ version:date:md5:filename:x64:trial
   }
   if (EstM==0){
     MacroScript1(outdata, dtafile,oldsyntax,resp, levID, expl, rp, D, nonlinear, categ,notation, nonfp, clre,Meth,extra,reset,rcon,fcon,maxiter,convtol,
-                 BUGO,mem.init, optimat, weighting, fpsandwich, rpsandwich, modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,
+                 mem.init, optimat, weighting, fpsandwich, rpsandwich, modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,
                  IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode,startval=startval)
     iterations=estoptions$mcmcMeth$iterations
     if(is.null(iterations)) iterations=5000
