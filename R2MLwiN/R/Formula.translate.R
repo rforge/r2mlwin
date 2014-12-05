@@ -431,45 +431,30 @@ Formula.translate <- function(Formula, D='Normal', indata){
     left = c("1", left)
   }  
   
-  if (is.null(levID)){
-    charposlevID <- grepl("^[[:alpha:]]{1}[[:graph:]]*\\|",left)
-    vlpos <- grepl("\\|",left)
-    nonzeropos <- !grepl("^0{1}(s|c)*\\|", left)
-    vlpos <- vlpos&nonzeropos
-    if (any(charposlevID) && (sum(charposlevID)==sum(vlpos))){
-      levID <- sub("\\|{1,2}[[:graph:]]+","",left[which(vlpos)])
-      nlev=length(levID)
-      cc=c(0:nlev)
-      for (ii in 1:nlev){
-        pos_first <- grep(paste0("^",levID[ii], "\\|"), left)
-        if (length(pos_first)>0){
-          pos_first <- pos_first[1]
-          left[pos_first] <- sub(paste0("^",levID[ii], "\\|"), paste0(c(nlev:1)[ii], "|"), left[pos_first])
-        }
-      } 
-      onevlzero <- left=="1|0"
-      onevdlzero <- left=="1||0"
-      delpos <- onevlzero|onevdlzero
-      left <- left[!(delpos)]
-    }else{
-      stop("levID cannot be determined based on the formula")
-    }
+
+  charposlevID <- grepl("^[[:alpha:]]{1}[[:graph:]]*\\|",left)
+  vlpos <- grepl("\\|",left)
+  nonzeropos <- !grepl("^0{1}(s|c)*\\|", left)
+  vlpos <- vlpos&nonzeropos
+  if (any(charposlevID) && (sum(charposlevID)==sum(vlpos))){
+    levID <- sub("\\|{1,2}[[:graph:]]+","",left[which(vlpos)])
+    nlev=length(levID)
+    cc=c(0:nlev)
+    for (ii in 1:nlev){
+      pos_first <- grep(paste0("^",levID[ii], "\\|"), left)
+      if (length(pos_first)>0){
+        pos_first <- pos_first[1]
+        left[pos_first] <- sub(paste0("^",levID[ii], "\\|"), paste0(c(nlev:1)[ii], "|"), left[pos_first])
+      }
+    } 
+    onevlzero <- left=="1|0"
+    onevdlzero <- left=="1||0"
+    delpos <- onevlzero|onevdlzero
+    left <- left[!(delpos)]
   }else{
-    charposlevID <- grepl("^[[:alpha:]]{1}[[:graph:]]*\\|",left)
-    if (any(charposlevID)){
-      for (ii in 1:nlev){
-        pos_first <- grep(paste0("^",levID[ii], "\\|"), left)
-        if (length(pos_first)>0){
-          pos_first <- pos_first[1]
-          left[pos_first] <- sub(paste0("^",levID[ii], "\\|"), paste0(c(nlev:1)[ii], "|"), left[pos_first])
-        }
-      }  
-      onevlzero <- left=="1|0"
-      onevdlzero <- left=="1||0"
-      delpos <- onevlzero|onevdlzero
-      left <- left[!(delpos)] 
-    }
+    stop("levID cannot be determined based on the formula")
   }
+
   if(sum(grepl("^[[:digit:]]+\\|{2}", left))>0){
     for (i in cc){
       left=sub(paste(i,"\\|{2}",sep=""),paste("\\`",i,"c`\\|",sep=""),left)
@@ -500,7 +485,7 @@ Formula.translate <- function(Formula, D='Normal', indata){
   }
     
   if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial'||D[1]=='Multivariate Normal'||D[1]=='Mixed'){
-    nlev=0
+    nlev=length(levID)
     cc=c(0:nlev)
     if (D[1]=='Multivariate Normal'){
       resp=sub("c\\(","",resp)
@@ -1185,7 +1170,7 @@ Formula.translate <- function(Formula, D='Normal', indata){
     D=rep(NA,3)
     names(D)=c("Distr","link","denominator")
     D[1]='Binomial'
-    nlev=0
+    nlev=length(levID)
 
     resp=regmatches(resp, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", resp))[[1]]
     link=resp[2]
@@ -1327,7 +1312,7 @@ Formula.translate <- function(Formula, D='Normal', indata){
   }
   
   if (D[1]=='Poisson'|| D[1]=='Negbinom'){
-    nlev=0
+    nlev=length(levID)
     resp=regmatches(resp, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", resp))[[1]]
     link=resp[2]
     resp=strsplit(resp[3],",")[[1]]
@@ -1484,7 +1469,7 @@ Formula.translate <- function(Formula, D='Normal', indata){
   }
   
   if (D[1]=='Normal'){
-    nlev=0
+    nlev=length(levID)
     nleft=length(left)
     
     indata <- get.Idata(left, indata) 
