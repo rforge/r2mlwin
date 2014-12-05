@@ -49,7 +49,7 @@ estoptions= list(resi.store=TRUE)
 mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions)
 
 ## Caterpillar plot
-caterpillarR(mymodel["residual"], lev=2)
+caterpillarR(mymodel@residual, lev=2)
 }
 }
 

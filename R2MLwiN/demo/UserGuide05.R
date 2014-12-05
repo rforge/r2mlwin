@@ -34,8 +34,8 @@ data(tutorial, package="R2MLwiN")
 
 (mymodel1 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), estoptions=list(resi.store=TRUE), data=tutorial))
 
-u0 = na.omit(mymodel1@residual$lev_2_resi_est_Intercept)
-u0se <- sqrt(na.omit(mymodel1@residual$lev_2_resi_var_Intercept))
+u0 = mymodel1@residual$lev_2_resi_est_Intercept
+u0se <- sqrt(mymodel1@residual$lev_2_resi_var_Intercept)
 
 u0rank <- rank(u0)
 u0rankhi <- u0+u0se
@@ -151,8 +151,8 @@ legend(-3, 3, c("School 53", "School 59"), lty=1, col=c("red", "green"))
 
 xb <- predict(mymodel2)
 
-u0 <- na.omit(mymodel2@residual$lev_2_resi_est_Intercept)
-u1 <- na.omit(mymodel2@residual$lev_2_resi_est_standlrt)
+u0 <- mymodel2@residual$lev_2_resi_est_Intercept
+u1 <- mymodel2@residual$lev_2_resi_est_standlrt
 
 xbu <- xb + u0[mymodel2@data$school] + u1[mymodel2@data$school] * mymodel2@data$standlrt
 
@@ -175,9 +175,9 @@ points(mymodel2@data$standlrt[mymodel2@data$school==53], mymodel2@data$normexam[
 points(mymodel2@data$standlrt[mymodel2@data$school==59], mymodel2@data$normexam[mymodel2@data$school==59], col="green")
 legend(-3, 3, c("School 53", "School 59"), lty=1, col=c("red", "green"))
 
-u0var <- na.omit(mymodel2@residual$lev_2_resi_var_Intercept)
-u0u1cov <- na.omit(mymodel2@residual$lev_2_resi_cov_standlrt_Intercep)
-u1var <- na.omit(mymodel2@residual$lev_2_resi_var_standlrt)
+u0var <- mymodel2@residual$lev_2_resi_var_Intercept
+u0u1cov <- mymodel2@residual$lev_2_resi_cov_standlrt_Intercep
+u1var <- mymodel2@residual$lev_2_resi_var_standlrt
 
 xbu_lo <- xbu - 1.96*sqrt(u0var[mymodel2@data$school] + 2*u0u1cov[mymodel2@data$school]*mymodel2@data$standlrt + u1var[mymodel2@data$school]*mymodel2@data$standlrt^2)
 xbu_hi <- xbu + 1.96*sqrt(u0var[mymodel2@data$school] + 2*u0u1cov[mymodel2@data$school]*mymodel2@data$standlrt + u1var[mymodel2@data$school]*mymodel2@data$standlrt^2)

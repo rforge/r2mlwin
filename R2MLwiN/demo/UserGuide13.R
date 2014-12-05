@@ -81,15 +81,15 @@ tab
 (mymodel3 <- runMLwiN(reading~1+age+(student|1+age)+(occasion|1), 
                       estoptions=list(resi.store=TRUE, startval=list(FP.b=mymodel2@FP, FP.v=mymodel2@FP.cov, RP.b=mymodel2@RP, RP.v=mymodel2@RP.cov)), data=reading))
 
-u0 <- na.omit(mymodel3@residual[,"lev_2_resi_est_Intercept"])
+u0 <- mymodel3@residual$lev_2_resi_est_Intercept
 u0std <- (u0 - mean(u0))/sd(u0)
 
-u1 <- na.omit(mymodel3@residual[,"lev_2_resi_est_age"])
+u1 <- mymodel3@residual$lev_2_resi_est_age
 u1std <- (u1 - mean(u1))/sd(u1)
 
 plot(u0std, u1std, asp=1)
 
-e0 <- na.omit(mymodel3@residual[,"lev_1_resi_est_Intercept"])
+e0 <- na.omit(mymodel3@residual$lev_1_resi_est_Intercept)
 e0std <- (e0 - mean(e0))/sd(e0)
 e0rank <- rank(e0)
 e0uniform <- (e0rank - 0.5)/length(e0rank)
@@ -115,9 +115,9 @@ plot(totvarfn, mymodel5@data$age)
 
 xb <- predict(mymodel5)
 
-u0 <- na.omit(mymodel5@residual[,"lev_2_resi_est_Intercept"])
-u1 <- na.omit(mymodel5@residual[,"lev_2_resi_est_age"])
-u2 <- na.omit(mymodel5@residual[,"lev_2_resi_est_I(age^2)"])
+u0 <- mymodel5@residual$lev_2_resi_est_Intercept
+u1 <- mymodel5@residual$lev_2_resi_est_age
+u2 <- mymodel5@residual[["lev_2_resi_est_I(age^2)"]]
 
 yhat <- xb + u0[mymodel5@data$student] + u1[mymodel5@data$student]*mymodel5@data$age + u2[mymodel5@data$student]*mymodel5@data[["I(age^2)"]]
 

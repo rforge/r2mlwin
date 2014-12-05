@@ -11,9 +11,9 @@ predLines <- function(object, indata=NULL, xname, lev=2, selected=NULL, probs=c(
     indata <- object[["data"]]
   }
   if (cls=="mlwinfitIGLS"){
-    FP <- object["FP"]
-    myresi <- object["residual"]
-    levID <- object["levID"]
+    FP <- object@FP
+    myresi <- object@residual
+    levID <- object@levID
     
     categrv <- as.factor(indata[[rev(levID)[lev]]])
     levels(categrv) <- 1:length(levels(categrv))
@@ -26,7 +26,7 @@ predLines <- function(object, indata=NULL, xname, lev=2, selected=NULL, probs=c(
     if (length(est.names)==1){
       est0 <- na.omit(myresi[[est.names]])
       if (length(est0)==length(unique(categrv))){
-        est <- as.matrix(est0[categrv],ncol=1)
+        est <- as.matrix(est0[categrv])
         colnames(est)=sub("_resi_est","",est.names)
       }else{
         stop("The number of groups do not match the number of residual estimates.")
@@ -34,7 +34,7 @@ predLines <- function(object, indata=NULL, xname, lev=2, selected=NULL, probs=c(
     }else{
       est0 <- NULL
       for (i in 1:length(est.names)){
-        est0 <- cbind(est0,na.omit(myresi[[est.names[i]]]))
+        est0 <- cbind(est0,myresi[[est.names[i]]])
       }
       if (nrow(est0)==length(unique(categrv))){
         est <- as.matrix(est0[categrv,])
@@ -92,8 +92,8 @@ predLines <- function(object, indata=NULL, xname, lev=2, selected=NULL, probs=c(
     
     ## This function is to draw predicted lines (medians, lower quantiles and upper quantiles) at higher levels (level>=2)
     resi.chains <- object["resi.chains"][[paste0("resi_lev", lev)]]
-    chains <- object["chains"]
-    levID <- object["levID"]
+    chains <- object@chains
+    levID <- object@levID
     
     categrv=indata[[rev(levID)[lev]]]
     if (is.null(selected)){

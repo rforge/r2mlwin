@@ -4,7 +4,7 @@
 setClass(Class = "mlwinfitIGLS", representation = representation(version="character",Nobs="numeric",DataLength="numeric",Hierarchy="ANY",
                                                                  D="ANY", Formula="ANY", levID="character",
                                                                  FP="numeric", RP="numeric", RP.cov="matrix", FP.cov="matrix", LIKE="ANY",
-                                                                 elapsed.time="numeric", call="ANY", residual="data.frame",
+                                                                 elapsed.time="numeric", call="ANY", residual="list",
                                                                  Converged="logical", Iterations="numeric", Meth="numeric", nonlinear="numeric", data="data.frame"))
 
 # extract parts of mlwinfitIGLS

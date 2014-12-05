@@ -1759,7 +1759,12 @@ version:date:md5:filename:x64:trial
     initfile=NULL
     datafile=NULL
   }
-  if (resi.store) resifile = gsub("\\", "/", tempfile("resifile_", tmpdir =workdir,fileext=".dta"), fixed=TRUE)
+  if (resi.store) {
+    resifile = NULL
+    for (i in 1:length(rp)) {
+      resifile = c(resifile, gsub("\\", "/", tempfile(paste0("resifile_",i), tmpdir =workdir,fileext=".dta"), fixed=TRUE))
+    }
+  }
   if (!is.null(resi.store.levs)) resichains = gsub("\\", "/", tempfile("resichains_",tmpdir =workdir,fileext=".dta"), fixed=TRUE)
 
   if ((D[1]=="Multivariate Normal"||D[1]=="Mixed"||D[1]=="Multinomial") && !is.null(clre)) {
@@ -1781,7 +1786,11 @@ version:date:md5:filename:x64:trial
       if (EstM==1 && is.null(BUGO)) file.remove(MCMCfile)
       if (EstM==1 && is.null(BUGO)) file.remove(chainfile)
       if (!is.null(BUGO))  file.remove(modelfile)
-      if (resi.store&& is.null(BUGO)) file.remove(resifile)
+      if (resi.store&& is.null(BUGO)) {
+        for (i in 1:length(rp)) {
+          file.remove(resifile[i])
+        }
+      }
       if (EstM==1 && is.null(BUGO)){
         if (!is.null(resi.store.levs)) file.remove(resichains)
         if (!is.null(fact)) file.remove(FACTchainfile)
@@ -2048,11 +2057,12 @@ version:date:md5:filename:x64:trial
   }
   
   if (resi.store&& is.null(BUGO)){
-    resiraw=read.dta(resifile)
-    residelpos=grep("^[c]?[[:digit:]]+$", names(resiraw))
-    if(length(residelpos)==0){
-    }else{
-      resisavename=names(resiraw)[-residelpos]
+    resiraw=list()
+    for (i in 1:length(rp)) {
+      tmp <- as.list(read.dta(resifile[i]))
+      for (j in names(tmp)) {
+        resiraw[[j]] <- tmp[[j]]
+      }
     }
   }
   
@@ -2096,11 +2106,7 @@ version:date:md5:filename:x64:trial
       outIGLS["data"]=as.data.frame(outdata)
       
       if (resi.store){
-        if(length(residelpos)==0){
-          outIGLS["residual"]=resiraw
-        }else{
-          outIGLS["residual"]=resiraw[resisavename]
-        }
+        outIGLS["residual"]=resiraw
       }
       
       finalClean(clean.files)
@@ -2155,11 +2161,7 @@ version:date:md5:filename:x64:trial
       }
       
       if (resi.store){
-        if(length(residelpos)==0){
-          outMCMC["residual"]=resiraw
-        }else{
-          outMCMC["residual"]=resiraw[resisavename]
-        }
+        outMCMC["residual"]=resiraw
       }
       finalClean(clean.files)
       return(outMCMC)

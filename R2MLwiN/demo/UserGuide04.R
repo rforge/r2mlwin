@@ -44,7 +44,7 @@ xb <- predict(mymodel2)
 
 plot(tutorial$standlrt, xb, type="l")
 
-u0 <- na.omit(mymodel2@residual$lev_2_resi_est_Intercept)
+u0 <- mymodel2@residual$lev_2_resi_est_Intercept
 
 xbu <- xb + u0[mymodel2@data$school]
 
@@ -73,7 +73,7 @@ xyplot(xbu~standlrt, type="l", group=school, data=pred)
 
 xb <- predict(mymodel5)
 
-u <- cbind(na.omit(mymodel5@residual$lev_2_resi_est_Intercept), na.omit(mymodel5@residual$lev_2_resi_est_standlrt))
+u <- cbind(mymodel5@residual$lev_2_resi_est_Intercept, mymodel5@residual$lev_2_resi_est_standlrt)
 
 rphat <- rowSums(as.matrix(mymodel5@data[,c("Intercept", "standlrt")]) * as.matrix(u[tutorial$school,]))
 

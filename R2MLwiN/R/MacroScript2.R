@@ -1979,10 +1979,14 @@ MacroScript2 <- function(indata,dtafile,oldsyntax=FALSE,resp, levID, expl, rp, D
         wrt("MISR 1")
       }
       wrt("")
+      wrt("LINK 0 G30")
+      for (i in 1:length(outgroups)) {
+        wrt(paste("GSET 2 G30", outgroups[i], "G30"))
+        wrt(paste("LINK 0", outgroups[i]))
+      }
     }
     
     if (resi.store&&nrp>0){
-      wrt("LINK 0 G30")
       for (j in nrp:1){
         rpx=rp[[j]]
         len.rpx=length(rp[[j]])
@@ -1993,7 +1997,7 @@ MacroScript2 <- function(indata,dtafile,oldsyntax=FALSE,resp, levID, expl, rp, D
           displevel <- displevel - 1
         }
         calcresiduals(levtt, displevel, rpx, resioptions, clre=clre)
-        wrt(paste("PSTA '", resifile, "' G30",sep=""))
+        wrt(paste("PSTA '", resifile[j], "' G30",sep=""))
       }
       wrt("ERAS G30")
       wrt("LINK 0 G30")

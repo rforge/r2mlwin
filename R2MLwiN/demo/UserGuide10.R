@@ -69,8 +69,8 @@ hipos=rep(0,2)
 hipos[1]=which(levels(as.factor(bang$district))==56)
 hipos[2]=which(levels(as.factor(bang$district))==11)
 
-u0 <- mymodel3@residual[,"lev_2_resi_est_Intercept.ster"]
-u0se <- sqrt(mymodel3@residual[,"lev_2_resi_var_Intercept.ster"])
+u0 <- mymodel3@residual$lev_2_resi_est_Intercept.ster
+u0se <- sqrt(mymodel3@residual$lev_2_resi_var_Intercept.ster)
 u0rank <- rank(u0)
 u0rankhi <- u0+u0se
 u0ranklo <- u0-u0se
@@ -81,8 +81,8 @@ points(1:60, u0ranklo[u0rankno],pch=25,bg="grey")
 for(i in 1:60) {lines(rep(i,2),c(u0ranklo[u0rankno[i]],u0rankhi[u0rankno[i]]))}
 for(i in 1:2) points(x=which(u0rankno==hipos[i]),y=u0[u0rankno[which(u0rankno==hipos[i])]],pch=22,bg=i+1)
 
-u1 <- mymodel3@residual[,"lev_2_resi_est_Intercept.mod"]
-u1se <- sqrt(mymodel3@residual[,"lev_2_resi_var_Intercept.mod"])
+u1 <- mymodel3@residual$lev_2_resi_est_Intercept.mod
+u1se <- sqrt(mymodel3@residual$lev_2_resi_var_Intercept.mod)
 u1rank <- rank(u1)
 u1rankhi <- u1+u1se
 u1ranklo <- u1-u1se
@@ -93,8 +93,8 @@ points(1:60, u1ranklo[u1rankno],pch=25,bg="grey")
 for(i in 1:60) {lines(rep(i,2),c(u1ranklo[u1rankno[i]],u1rankhi[u1rankno[i]]))}
 for(i in 1:2) points(x=which(u1rankno==hipos[i]),y=u1[u1rankno[which(u1rankno==hipos[i])]],pch=22,bg=i+1)
 
-u2 <- mymodel3@residual[,"lev_2_resi_est_Intercept.trad"]
-u2se <- sqrt(mymodel3@residual[,"lev_2_resi_var_Intercept.trad"])
+u2 <- mymodel3@residual$lev_2_resi_est_Intercept.trad
+u2se <- sqrt(mymodel3@residual$lev_2_resi_var_Intercept.trad)
 u2rank <- rank(u2)
 u2rankhi <- u2+u2se
 u2ranklo <- u2-u2se

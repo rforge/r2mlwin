@@ -55,7 +55,7 @@ e0nscore <- qnorm(e0uniform)
 plot(e0nscore, e0std, asp=1)
 
 
-u0 <- na.omit(mymodel1@residual$lev_2_resi_est_Intercept)
+u0 <- mymodel1@residual$lev_2_resi_est_Intercept
 
 u0std <- (u0 - mean(u0)) / sd(u0)
 

@@ -54,26 +54,31 @@ caterpillarR <- function(resi, lev=2){
       stop("To generate a caterpillar plot the model must be run with the resi.store option set to TRUE")
     }
   } else {
-    if (class(resi) == "data.frame") {
+    if (is.list(resi)) {
       myresi <- resi
     } else {
-      stop("Invalid resi option specified")
+      if (is.data.frame(resi)) {
+       myresi <- as.list(resi)
+      } else {
+        stop("Invalid resi option specified")
+      }
     }
   }
 
   est.names=names(myresi)[grep(paste("lev_",lev,"_resi_est",sep=""),names(myresi))]
   if (length(est.names)==1){
-    est=as.matrix(na.omit(myresi[[est.names]]),ncol=1)
+    est=as.matrix(na.omit(myresi[[est.names]]))
     colnames(est)=sub("_resi_est","",est.names)
-    var=na.omit(myresi[,grep(paste("lev_",lev,"_resi_(var|variance)_",sep=""),names(myresi))[1]])
+    var=na.omit(myresi[[grep(paste("lev_",lev,"_resi_(var|variance)_",sep=""),names(myresi))[1]]])
     d1=length(est)
     tt=array(,c(1,1,d1))
     tt[1,1,]=var
   }else{
     est=NULL
     for (i in 1:length(est.names)){
-      est=cbind(est,na.omit(myresi[[est.names[i]]]))
+      est=cbind(est,myresi[[est.names[i]]])
     }
+    est = na.omit(est)
     colnames(est)=sub("_resi_est","",est.names)
     tempnames=sub(paste("lev_",lev,"_resi_est_",sep=""),"",est.names)
     d1=dim(est)[1]
@@ -86,14 +91,14 @@ caterpillarR <- function(resi, lev=2){
         if (i==j){
           tmatch=grep(paste("lev_",lev,"_resi_(var|variance)_",tempnames[i],sep=""),names(myresi))[1]
           if (length(tmatch)!=0){
-            cov.lower[ccount,]=na.omit(myresi[,tmatch])
+            cov.lower[ccount,]=na.omit(myresi[[tmatch]])
           }else{
             cov.lower[ccount,]=rep(0,d1)
           }
         }else{
           tmatch=grep(paste("lev_",lev,"_resi_cov_",tempnames[i],"_",tempnames[j],sep=""),names(myresi))
           if (length(tmatch)!=0){
-            cov.lower[ccount,]=na.omit(myresi[,tmatch])
+            cov.lower[ccount,]=na.omit(myresi[[tmatch]])
           }else{
             cov.lower[ccount,]=rep(0,d1)
           }

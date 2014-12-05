@@ -3,7 +3,7 @@ setClass(Class = "mlwinfitMCMC", representation = representation(version="charac
                                                                  FP="numeric", RP="numeric", RP.cov="matrix", FP.cov="matrix", chains="ANY",
                                                                  elapsed.time="numeric", call="ANY",BDIC="numeric", LIKE="ANY", fact.loadings="numeric",fact.loadings.sd="numeric",
                                                                  fact.cov="numeric", fact.cov.sd="numeric", fact.chains="ANY", MIdata="data.frame",
-                                                                 residual="data.frame", resi.chains="ANY", data="data.frame"))
+                                                                 residual="list", resi.chains="ANY", data="data.frame"))
 
 setMethod(
   f= "[",

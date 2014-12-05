@@ -38,8 +38,8 @@ summary(diag1)
 
 xb <- predict(mymodel1)
 
-u0 <- na.omit(mymodel1@residual$lev_2_resi_est_Intercept)
-u1 <- na.omit(mymodel1@residual$lev_2_resi_est_n_vrq)
+u0 <- mymodel1@residual$lev_2_resi_est_Intercept
+u1 <- mymodel1@residual$lev_2_resi_est_n_vrq
 
 yhat <- xb + u0[mymodel1@data$school] + u1[mymodel1@data$school]*mymodel1@data$n_vrq
 
@@ -54,8 +54,8 @@ yhatold <- yhat
 plot(mymodel1@data$n_vrq[mymodel1@data$school != 17], mymodel1@data$n_ilea[mymodel1@data$school != 17], type="p")
 points(mymodel1@data$n_vrq[mymodel1@data$school == 17], mymodel1@data$n_ilea[mymodel1@data$school == 17], col=2, cex=2)
 
-u0se <- na.omit(mymodel1@residual$lev_2_resi_se_Intercept)
-u1se <- na.omit(mymodel1@residual$lev_2_resi_se_n_vrq)
+u0se <- mymodel1@residual$lev_2_resi_se_Intercept
+u1se <- mymodel1@residual$lev_2_resi_se_n_vrq
 
 u0rank <- rank(u0)
 u0rankhi <- u0+u0se
@@ -88,16 +88,16 @@ points(u0[17], u1[17], bg=2, col=2, cex=2)
 
 hist(u0, breaks=seq(min(u0)-0.01, max(u0)+0.01, 0.01))
 
-u0std <- na.omit(mymodel1@residual$lev_2_std_resi_est_Intercept)
+u0std <- mymodel1@residual$lev_2_std_resi_est_Intercept
 hist(u0std, breaks=seq(min(u0std)-0.1, max(u0std)+0.1, 0.1))
 
-u0lev <- na.omit(mymodel1@residual$lev_2_resi_leverage_Intercept)
+u0lev <- mymodel1@residual$lev_2_resi_leverage_Intercept
 hist(u0lev, breaks=seq(min(u0lev)-0.01, max(u0lev)+0.01, 0.01))
 
-u0inf <- na.omit(mymodel1@residual$lev_2_resi_influence_Intercept)
+u0inf <- mymodel1@residual$lev_2_resi_influence_Intercept
 hist(u0inf, breaks=seq(min(u0inf)-0.025, max(u0inf)+0.025, 0.025))
 
-u0del <- na.omit(mymodel1@residual$lev_2_resi_deletion_Intercept)
+u0del <- mymodel1@residual$lev_2_resi_deletion_Intercept
 hist(u0del, breaks=seq(min(u0del)-0.1, max(u0del)+0.1, 0.1))
 
 plot(u0std[-17], u0lev[-17], ylim=c(0.15,0.4), xlim=c(-0.2, 2.2), type="p", xlab="u0 standardised residual", ylab="u0 leverage residual")
@@ -105,22 +105,22 @@ points(u0std[17], u0lev[17],  bg=2, col=2, cex=2)
 
 hist(u1, breaks=seq(min(u1)-0.01, max(u1)+0.01, 0.01))
 
-u1std <- na.omit(mymodel1@residual$lev_2_std_resi_est_n_vrq)
+u1std <- mymodel1@residual$lev_2_std_resi_est_n_vrq
 hist(u1std, breaks=seq(min(u1std)-0.1, max(u1std)+0.1, 0.1))
 
-u1lev <- na.omit(mymodel1@residual$lev_2_resi_leverage_n_vrq)
+u1lev <- mymodel1@residual$lev_2_resi_leverage_n_vrq
 hist(u1lev, breaks=seq(min(u1lev)-0.01, max(u1lev)+0.01, 0.01))
 
-u1inf <- na.omit(mymodel1@residual$lev_2_resi_influence_n_vrq)
+u1inf <- mymodel1@residual$lev_2_resi_influence_n_vrq
 hist(u1inf, breaks=seq(min(u1inf)-0.025, max(u1inf)+0.025, 0.025))
 
-u1del <- na.omit(mymodel1@residual$lev_2_resi_deletion_n_vrq)
+u1del <- mymodel1@residual$lev_2_resi_deletion_n_vrq
 hist(u1del, breaks=seq(min(u1del)-0.1, max(u1del)+0.1, 0.1))
 
 plot(u1std[-17], u1lev[-17], ylim=c(0.1,0.35), xlim=c(-1.4, 2.4), type="p", xlab="u1 standardised residual", ylab="u1 leverage residual")
 points(u1std[17], u1lev[17],  bg=2, col=2, cex=2)
 
-e0 <- na.omit(mymodel1@residual$lev_1_resi_est_Intercept)
+e0 <- mymodel1@residual$lev_1_resi_est_Intercept
 e0rank <- rank(e0)
 e0std <- (e0 - mean(e0))/sd(e0)
 e0uniform <- e0rank/(length(e0rank)+1)
@@ -138,11 +138,11 @@ diag1$s17p22 <- as.integer(diag1$school==17 & diag1$pupilnumber==22)
 (mymodel2 <- runMLwiN(n_ilea~1+n_vrq+s17p22+(school|1+n_vrq)+(pupil|1),
                       estoptions=list(resi.store=TRUE, startval=list(FP.b=mymodel1@FP, FP.v=mymodel1@FP.cov, RP.b=mymodel1@RP, RP.v=mymodel1@RP.cov)), data=diag1))
 
-u0 <- na.omit(mymodel2@residual$lev_2_resi_est_Intercept)
-u1 <- na.omit(mymodel2@residual$lev_2_resi_est_n_vrq)
+u0 <- mymodel2@residual$lev_2_resi_est_Intercept
+u1 <- mymodel2@residual$lev_2_resi_est_n_vrq
 
-u0se <- sqrt(na.omit(mymodel2@residual$lev_2_resi_var_Intercept))
-u1se <- sqrt(na.omit(mymodel2@residual$lev_2_resi_var_n_vrq))
+u0se <- sqrt(mymodel2@residual$lev_2_resi_var_Intercept)
+u1se <- sqrt(mymodel2@residual$lev_2_resi_var_n_vrq)
 
 u0rank <- rank(u0)
 u0rankhi <- u0+u0se
@@ -177,8 +177,8 @@ diag1$s17Xn_vrq <- diag1$s17*diag1$n_vrq
 
 xb <- predict(mymodel4)
 
-u0 <- na.omit(mymodel4@residual$lev_2_resi_est_Intercept)
-u1 <- na.omit(mymodel4@residual$lev_2_resi_est_n_vrq)
+u0 <- mymodel4@residual$lev_2_resi_est_Intercept
+u1 <- mymodel4@residual$lev_2_resi_est_n_vrq
 
 yhat <- xb + u0[mymodel4@data$school] + u1[mymodel4@data$school]*mymodel4@data$n_vrq
 

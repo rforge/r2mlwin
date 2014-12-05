@@ -57,9 +57,9 @@ mymodel4@RP["RP2_cov_Intercept_written_femaleFemale_1"]/sqrt(mymodel4@RP["RP2_va
 
 mymodel4@RP["RP2_cov_Intercept_csework_femaleFemale_1"]/sqrt(mymodel4@RP["RP2_var_Intercept_csework"]*mymodel4@RP["RP2_var_femaleFemale_1"])
 
-u0 <- na.omit(mymodel4@residual[,"lev_2_resi_est_Intercept.written"])
-u1 <- na.omit(mymodel4@residual[,"lev_2_resi_est_Intercept.csework"])
-u2 <- na.omit(mymodel4@residual[,"lev_2_resi_est_femaleFemale.1"])
+u0 <- mymodel4@residual$lev_2_resi_est_Intercept.written
+u1 <- mymodel4@residual$lev_2_resi_est_Intercept.csework
+u2 <- mymodel4@residual$lev_2_resi_est_femaleFemale.1
 
 plot(u0, u0, asp=1)
 plot(u0, u1, asp=1)

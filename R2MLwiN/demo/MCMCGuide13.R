@@ -45,8 +45,6 @@ hist(alevchem$gcseav,breaks=20)
 ## Fit the model
 (mymodel <- runMLwiN(a_point~1+gcseav+I(gcseav^2)+I(gcseav^3)+gender+(pupil|1), estoptions=list(EstM=1, resi.store=T), data=alevchem))
 
-resi <- mymodel["residual"]
-FP <- mymodel["FP"]
 predCurves(mymodel, xname="gcseav", group="genderfemale")
 
 # 13.3 Ordered multinomial modelling . . . . . . . . . . . . . . . . . . 186
