@@ -1,9 +1,13 @@
 predCurves <- function(object, indata=NULL, xname, group=NULL, legend=T, legend.space="top", legend.ncol=2, ...){
   ## This function is to draw predicted lines using fixed part estimates
+
+  cls <- class(object)
+  if(!cls%in%c("mlwinfitIGLS", "mlwinfitMCMC"))
+    stop('need a "mlwinfitIGLS" or "mlwinfitMCMC" class object')
   
-  FP <- object["FP"]
+  FP <- object@FP
   if (is.null(indata)){
-    indata <- object[["data"]]
+    indata <- object@data
   }
   if (!is.null(group)){
     if(is.character(group)) group <- indata[[group]]
