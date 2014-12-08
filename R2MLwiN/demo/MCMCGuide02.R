@@ -38,12 +38,12 @@ data(tutorial, package="R2MLwiN")
 ## Fit the model
 (mymodel2 <- runMLwiN(normexam~1+standlrt+(student|1), estoptions=list(EstM=1), data=tutorial))
 
-estimates <- mymodel2["chains"]
+estimates <- mymodel2@chains
 par(mfrow=c(2,2))
-plot(1:nrow(estimates),estimates[,"deviance"],xlab="iteration", ylab=expression(paste("Est. of deviance")),type="l")
-plot(1:nrow(estimates),estimates[,"FP_Intercept"],xlab="iteration", ylab=expression(paste("Est. of ",beta[0])),type="l")
-plot(1:nrow(estimates),estimates[,"FP_standlrt"],xlab="iteration", ylab=expression(paste("Est. of ",beta[1])),type="l")
-plot(1:nrow(estimates),estimates[,"RP1_var_Intercept"],xlab="iteration", ylab=expression(paste("Est. of ",sigma[e0]^2)),type="l")
+plot(1:niter(estimates),estimates[,"deviance"],xlab="iteration", ylab=expression(paste("Est. of deviance")),type="l")
+plot(1:niter(estimates),estimates[,"FP_Intercept"],xlab="iteration", ylab=expression(paste("Est. of ",beta[0])),type="l")
+plot(1:niter(estimates),estimates[,"FP_standlrt"],xlab="iteration", ylab=expression(paste("Est. of ",beta[1])),type="l")
+plot(1:niter(estimates),estimates[,"RP1_var_Intercept"],xlab="iteration", ylab=expression(paste("Est. of ",sigma[e0]^2)),type="l")
 
 # 2.2 Deviance statistic and the DIC diagnostic . . . . . . . . . . . . . 28
 

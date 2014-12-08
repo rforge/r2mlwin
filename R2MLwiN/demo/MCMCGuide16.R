@@ -58,7 +58,7 @@ tabulate(wage1$numjobs)
 # 16.5 Residuals in multiple membership models . . . . . . . . . . . . . 240
 
 lencateg <- length(unique(wage1[["company"]]))
-resi0 <- mymodel["resi.chains"]$resi_lev2
+resi0 <- mymodel@resi.chains$resi_lev2
 resi0mean <- apply(resi0,2,mean)
 resi0sd <- apply(resi0,2,sd)
 

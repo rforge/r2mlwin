@@ -36,8 +36,8 @@ data(mmmec1, package="R2MLwiN")
 ## Fit the model
 (mymodel1 <- runMLwiN(log(obs)~1+uvbi+offset(log(exp)), D="Poisson",
                       estoptions=list(EstM=1, mcmcMeth=list(iterations=50000)), data=mmmec1))
-summary(mymodel1["chains"][,"FP_uvbi"])
-sixway(mymodel1["chains"][,"FP_uvbi"],"beta_1")
+summary(mymodel1@chains[,"FP_uvbi"])
+sixway(mymodel1@chains[,"FP_uvbi",drop=FALSE],"beta_1")
 
 # 11.2 Adding in region level random effects . . . . . . . . . . . . . . 157
 
@@ -46,8 +46,8 @@ sixway(mymodel1["chains"][,"FP_uvbi"],"beta_1")
 ## Fit the model
 (mymodel2 <- runMLwiN(log(obs)~1+uvbi+offset(log(exp))+(region|1), D="Poisson",
                       estoptions=list(EstM=1, mcmcMeth=list(iterations=50000, seed=13)), data=mmmec1))
-summary(mymodel2["chains"][,"FP_uvbi"])
-sixway(mymodel2["chains"][,"FP_uvbi"],"beta_1")
+summary(mymodel2@chains[,"FP_uvbi"])
+sixway(mymodel2@chains[,"FP_uvbi",drop=FALSE],"beta_1")
 
 # 11.3 Including nation effects in the model . . . . . . . . . . . . . . 159
 
@@ -73,7 +73,7 @@ contrasts(mmmec1$nation, 9) <- diag(9)
 ## Fit the model
 (mymodel5 <- runMLwiN(log(obs)~0+nation+nation:uvbi+offset(log(exp))+(region|1), D="Poisson",
                       estoptions=list(EstM=1,mcmcMeth=list(iterations=50000)), data=mmmec1))
-sixway(mymodel5["chains"][,"FP_nationBelgium"],acf.maxlag=5000,"beta_1")
+sixway(mymodel5@chains[,"FP_nationBelgium",drop=FALSE],acf.maxlag=5000,"beta_1")
 
 # 11.5 Problems with univariate updating Metropolis procedures . . . . . 163
 
@@ -81,7 +81,7 @@ sixway(mymodel5["chains"][,"FP_nationBelgium"],acf.maxlag=5000,"beta_1")
 ## Fit the model
 (mymodel6 <- runMLwiN(log(obs)~0+nation+nation:uvbi+offset(log(exp))+(region|1), D="Poisson",
                       estoptions=list(EstM=1, mcmcMeth=list(iterations=50000, thinning=10)), data=mmmec1))
-sixway(mymodel6["chains"][,"FP_nationBelgium"],"beta_1")
+sixway(mymodel6@chains[,"FP_nationBelgium",drop=FALSE],"beta_1")
 
 ## Half of million interations (could take a few hours to run)
 ##HOWEVER THE RESULT IS ATTACHED BELOW FOR 500,000

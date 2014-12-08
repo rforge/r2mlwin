@@ -49,7 +49,7 @@ data(tutorial, package="R2MLwiN")
 (mymodel3 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),  
                       estoptions=list(EstM=1, mcmcMeth=list(fixM=2, residM=2, Lev1VarM=2)), data=tutorial))
 
-sixway(mymodel3["chains"][,"FP_standlrt"],"beta_1")
+sixway(mymodel3@chains[,"FP_standlrt",drop=FALSE],"beta_1")
 
 ## MH Scale Factor =5.8
 ## Fit the model
@@ -70,7 +70,7 @@ rm(list=c("mymodel1","mymodel2","mymodel3","mymodel4"))
 (mymodel5 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), 
                       estoptions=list(EstM=1,mcmcMeth=list(fixM=3, residM=2, Lev1VarM=2, rate=40)), data=tutorial))
 
-estimates <- mymodel5["chains"]
+estimates <- mymodel5@chains
 par(mfrow=c(3,2))
 plot(4951:nrow(estimates), estimates[4951:nrow(estimates),"deviance"], xlab="iteration", ylab=expression(paste("Est. of deviance")),type="l")
 plot(4951:nrow(estimates), estimates[4951:nrow(estimates),"FP_Intercept"], xlab="iteration", ylab=expression(paste("Est. of ",beta[0])),type="l")
@@ -84,8 +84,8 @@ rm(mymodel5)
 (mymodel6 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), 
                       estoptions=list(EstM=1, resi.store=TRUE, resi.store.levs=2, mcmcMeth=list(iterations=5001)), data=tutorial))
 
-resi.chain2 <- mymodel6["resi.chains"]$resi_lev2
-sixway(resi.chain2[,1], name="u0_1")
+resi.chain2 <- mymodel6@resi.chains$resi_lev2
+sixway(resi.chain2[,1,drop=FALSE], name="u0_1")
 
 # 4.7 Comparing two schools . . . . . . . . . . . . . . . . . . . . . . . 54
 
@@ -119,7 +119,7 @@ for(i in 1:65) {lines(rep(i,2),c(u0ranklo[rankno[i]],u0rankhi[rankno[i]]))}
 caterpillarR(mymodel6, lev=2)
 
 # 4.9 Estimating a function of parameters . . . . . . . . . . . . . . . . 58
-estimates <- mymodel6["chains"]
+estimates <- mymodel6@chains
 isc <- estimates[,"RP2_var_Intercept"]/(estimates[,"RP2_var_Intercept"]+estimates[,"RP1_var_Intercept"])
 summary(isc)
 sixway(isc,"isc")

@@ -82,7 +82,7 @@ data(rats, package="R2MLwiN")
 
 (mymodel <- runMLwiN(c(y8,y15,y22,y29,y36)~1+(rat|1), D='Multivariate Normal', estoptions=list(EstM=1), data=rats))
 
-sixway(mymodel["chains"][,"RP1_var_Intercept_y8"],"sigma2u0")
+sixway(mymodel@chains[,"RP1_var_Intercept_y8",drop=FALSE],"sigma2u0")
 
 covM1 <- matrix(,5,5)
 colnames(covM1) <- rownames(covM1) <- c("cons.y8","cons.y15","cons.y22","cons.y29","cons.y36")

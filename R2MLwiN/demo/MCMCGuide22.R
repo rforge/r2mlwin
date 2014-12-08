@@ -60,7 +60,7 @@ data(tutorial, package="R2MLwiN")
 
 # 22.4 Assessing the need for the level 2 variance . . . . . . . . . . . 350
 
-sixway(mymodel["chains"][,"RP2_var_Intercept"],"sigma2u0")
+sixway(mymodel@chains[,"RP2_var_Intercept",drop=FALSE],"sigma2u0")
 
 set.seed(1)
 tutorial$temp <- double2singlePrecision(rnorm(4059))
@@ -79,8 +79,8 @@ tutorial$temp <- double2singlePrecision(rnorm(4059))
 
 (mymodel <- runMLwiN(temp~1+standlrt+(school|1)+(student|1), estoptions=list(EstM=1, mcmcOptions=list(smvn=1)), data=tutorial))
 
-summary(mymodel["chains"][,"RP2_var_Intercept"])
-sixway(mymodel["chains"][,"RP2_var_Intercept"],"sigma2u0")
+summary(mymodel@chains[,"RP2_var_Intercept"])
+sixway(mymodel@chains[,"RP2_var_Intercept",drop=FALSE],"sigma2u0")
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .355
 

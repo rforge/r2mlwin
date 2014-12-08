@@ -50,7 +50,7 @@ data(gcsecomp1, package="R2MLwiN")
 (mymodel <- runMLwiN(c(written,csework)~1+female+(school|1)+(student|1), D='Multivariate Normal',
                      estoptions=list(EstM=1, resi.store=T, resi.store.levs=3), data=gcsecomp1))
 
-resi <- mymodel["resi.chains"]$resi_lev3
+resi <- mymodel@resi.chains$resi_lev3
 label <- 1:ncol(resi)
 
 ##highlight

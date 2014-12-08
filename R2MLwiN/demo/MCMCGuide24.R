@@ -36,14 +36,14 @@ data(tutorial, package="R2MLwiN")
 
 (mymodel <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), estoptions=list(EstM=1), data=tutorial))
 
-summary(mymodel["chains"][,"RP2_var_Intercept"])
-sixway(mymodel["chains"][,"RP2_var_Intercept"],"sigma2u2")
+summary(mymodel@chains[,"RP2_var_Intercept"])
+sixway(mymodel@chains[,"RP2_var_Intercept",drop=FALSE],"sigma2u2")
 
 ## Parameter expansion at level 2
 
 (mymodel <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), estoptions=list(EstM=1, mcmcOptions=list(paex=c(2,1))), data=tutorial))
 
-sixway(mymodel["chains"][,"RP2_var_Intercept"],"sigma2u0")
+sixway(mymodel@chains[,"RP2_var_Intercept",drop=FALSE],"sigma2u0")
 
 # 24.3 Binary responses - Voting example . . . . . . . . . . . . . . . . 386
 
@@ -55,14 +55,14 @@ data(bes83, package="R2MLwiN")
 
 (mymodel <- runMLwiN(logit(votecons,cons)~1+defence+unemp+taxes+privat+(area|1), D="Binomial", estoptions=list(EstM=1), data=bes83))
 
-sixway(mymodel["chains"][,"RP2_var_Intercept"],acf.maxlag=500,"sigma2u0")
+sixway(mymodel@chains[,"RP2_var_Intercept",drop=FALSE],acf.maxlag=500,"sigma2u0")
 
 ## Parameter expansion at level 2
 
 (mymodel <- runMLwiN(logit(votecons,cons)~1+defence+unemp+taxes+privat+(area|1), D="Binomial",
                      estoptions=list(EstM=1, mcmcOptions=list(paex=c(2,1))), data=bes83))
 
-sixway(mymodel["chains"][,"RP2_var_Intercept"],acf.maxlag=500,"sigma2u0")
+sixway(mymodel@chains[,"RP2_var_Intercept",drop=FALSE],acf.maxlag=500,"sigma2u0")
 
 # 24.4 The choice of prior distribution . . . . . . . . . . . . . . . . .390
 
@@ -71,7 +71,7 @@ sixway(mymodel["chains"][,"RP2_var_Intercept"],acf.maxlag=500,"sigma2u0")
 (mymodel <- runMLwiN(logit(votecons,cons)~1+defence+unemp+taxes+privat+(area|1), D="Binomial",
                      estoptions=list(EstM=1, mcmcMeth=list(priorcode=0), mcmcOptions=list(paex=c(2,1))), data=bes83))
 
-sixway(mymodel["chains"][,"RP2_var_Intercept"],acf.maxlag=100,"sigma2u0")
+sixway(mymodel@chains[,"RP2_var_Intercept",drop=FALSE],acf.maxlag=100,"sigma2u0")
 
 # 24.5 Parameter expansion and WinBUGS . . . . . . . . . . . . . . . . . 391
 
@@ -92,9 +92,9 @@ mymodel <- runMLwiN(logit(votecons,cons)~1+defence+unemp+taxes+privat+(area|1), 
                     estoptions=list(EstM=1, mcmcMeth=list(priorcode=0), mcmcOptions=list(paex=c(2,1)), show.file=T),
                     BUGO=c(version=4, n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=bes83)
 
-apply(mymodel[[1]],2,effectiveSize)
-sixway(mymodel[[1]][,"sigma2.u2"],acf.maxlag=250,"sigma2.u2")
-sixway(mymodel[[1]][,"sigma2.v2"],acf.maxlag=100,"sigma2.v2")
+effectiveSize(mymodel)
+sixway(mymodel[,"sigma2.u2",drop=FALSE],acf.maxlag=250)
+sixway(mymodel[,"sigma2.v2",drop=FALSE],acf.maxlag=100)
 
 # 24.6 Parameter expansion and random slopes . . . . . . . . . . . . . . 396
 

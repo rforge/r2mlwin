@@ -51,8 +51,8 @@ while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file
 mymodel1 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),
                      estoptions=list(EstM=1, show.file=T), BUGO=c(version=4,n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=tutorial)
 
-summary(mymodel1[[1]][,"beta[2]"])
-sixway(mymodel1[[1]][,"beta[2]"])
+summary(mymodel1[,"beta[2]"])
+sixway(mymodel1[,"beta[2]",drop=FALSE])
 
 # 7.2 So why have a WinBUGS interface ? . . . . . . . . . . . . . . . . . 92
 # 7.3 t distributed school residuals . . . . . . . . . . . . . . . . . . .92
@@ -76,13 +76,13 @@ chains.bugs1 <- mlwin2bugs(D="t", levID=c('school','student'), datafile, initfil
                            bugsWorkingDir=tempdir(), OpenBugs = T)
 ## Close winbugs manually
 summary(chains.bugs1)
-sixway(chains.bugs1[[1]][,"df"],"df")
+sixway(chains.bugs1[,"df",drop=FALSE])
 
 chains.bugs2 <- mlwin2bugs(D="t", levID=c('school','student'), datafile, initfile, modelfile, bugEst, fact=NULL, addmore=NULL, n.chains = 1, n.iter = 12000, n.burnin=2000, n.thin=1, debug=T, bugs=openbugs,
                            bugsWorkingDir=tempdir(), OpenBugs = T)
 ## Close winbugs manually
 summary(chains.bugs2)
-sixway(chains.bugs2[[1]][,"df"],"df")
+sixway(chains.bugs2[,"df",drop=FALSE])
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . . 96
 

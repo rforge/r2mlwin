@@ -44,7 +44,7 @@ data(xc1, package="R2MLwiN")
 # 15.5 Residuals . . . . . . . . . . . . . . . . . . . . . . . . . . . . 223
 
 lencateg <- length(unique(xc1[["sid"]]))
-resi.chain0 <- mymodel["resi.chains"]$resi_lev3
+resi.chain0 <- mymodel@resi.chains$resi_lev3
 residual0 <- apply(resi.chain0,2,mean)
 rankno <- order(residual0)
 plot(x=1:lencateg,y=residual0[rankno],pch=24,bg="black",xlab="rank",ylab="cons")
@@ -52,7 +52,7 @@ abline(h=0,lty="dotted")
 
 ## Common caterpillar
 #lencateg <- length(unique(xc1[["sid"]]))
-#resi.chain0 <- mymodel["resi.chains"]$resi_lev3
+#resi.chain0 <- mymodel@resi.chains$resi_lev3
 #u0rank <- apply(resi.chain0,1,rank)
 #u0rankmn <- apply(u0rank, 1,mean)
 #u0ranklo <- apply(u0rank, 1, function(x) quantile(x,.025))
@@ -62,7 +62,7 @@ abline(h=0,lty="dotted")
 #caterpillar(y=u0rankmn[rankno],x=1:lencateg,qtlow=u0ranklo[rankno],qtup=u0rankhi[rankno]],ylim=c(0,20))
 
 lencateg <- length(unique(xc1[["pid"]]))
-resi.chain1 <- mymodel["resi.chains"]$resi_lev2
+resi.chain1 <- mymodel@resi.chains$resi_lev2
 residual1 <- apply(resi.chain1,2,mean)
 rankno <- order(residual1)
 plot(x=1:length(residual1),y=residual1[rankno],pch=24,bg="black",xlab="rank",ylab="cons")
@@ -70,7 +70,7 @@ abline(h=0,lty="dotted")
 
 ## Common caterpillar
 #lencateg <- length(unique(xc1[["pid"]]))
-#resi.chain1 <- mymodel["resi.chains"]$resi_lev2
+#resi.chain1 <- mymodel@resi.chains$resi_lev2
 #u0rank <- apply(resi.chain1,1,rank)
 #u0rankmn <- apply(u0rank, 1,mean)
 #u0ranklo <- apply(u0rank, 1, function(x) quantile(x,.025))
@@ -88,7 +88,7 @@ abline(h=0,lty="dotted")
                      estoptions=list(xc=T, EstM=1, resi.store=T, resi.store.levs=c(2,3)), data=xc1))
 
 lencateg <- length(unique(xc1$sid))
-resi.chain0 <- mymodel["resi.chains"]$resi_lev3
+resi.chain0 <- mymodel@resi.chains$resi_lev3
 residual0 <- apply(resi.chain0,2,mean)
 rankno <- order(residual0)
 plot(x=1:lencateg,y=residual0[rankno],pch=24,bg="black",xlab="rank",ylab="cons")

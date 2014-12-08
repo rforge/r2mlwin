@@ -74,14 +74,14 @@ contrasts(mmmec1$nation, 9) = diag(9)
 (mymodel <- runMLwiN(log(obs)~0+nation+nation:uvbi+offset(log(exp))+(region|1), D="Poisson",
                      estoptions=list(EstM=1,mcmcMeth=list(iterations=50000)), data=mmmec1))
 
-sixway(mymodel["chains"][,"FP_nationBelgium"],acf.maxlag=5000,"beta_1")
+sixway(mymodel@chains[,"FP_nationBelgium",drop=FALSE],acf.maxlag=5000,"beta_1")
 
 ##Orthogonal update
 
 (mymodel <- runMLwiN(log(obs)~0+nation+nation:uvbi+offset(log(exp))+(region|1), D="Poisson",
                      estoptions=list(EstM=1, mcmcMeth=list(iterations=50000), mcmcOptions=list(orth=1)), data=mmmec1))
 
-sixway(mymodel["chains"][,"FP_nationBelgium"],acf.maxlag=100,"beta_1")
+sixway(mymodel@chains[,"FP_nationBelgium",drop=FALSE],acf.maxlag=100,"beta_1")
 
 # 23.5 An Ordered multinomial example . . . . . . . . . . . . . . . . . .368
 
@@ -134,8 +134,8 @@ while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file
 mymodel <- runMLwiN(logit(use,denomb)~1+age+lc+urban+(district|1+urban), D="Binomial",
                     estoptions=list(EstM=1, mcmcOptions=list(orth=1), show.file=T), BUGO=c(version=4, n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=bang1)
 
-apply(mymodel[[1]],2,effectiveSize)
-sixway(mymodel[[1]][,"beta[1]"],"beta[1]")
+effectiveSize(mymodel)
+sixway(mymodel[,"beta[1]",drop=FALSE])
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .379
 

@@ -79,13 +79,13 @@ alevchem$school <- as.numeric(factor(paste0(alevchem$lea, alevchem$estab)))
 ## Fit the model
 (mymodel <- runMLwiN(logit(a_point,cons,6)~1+gcseav[1:5]+I(gcseav^2)[1:5]+gender[1:5]+(school|1[1:5]+gcseav[1:5]), D='Ordered Multinomial',
                      estoptions=list(EstM=1), data=alevchem))
-sixway(mymodel["chains"][,"RP2_var_Intercept_12345"],acf.maxlag = 300,"sigma2v6")
+sixway(mymodel@chains[,"RP2_var_Intercept_12345",drop=FALSE],acf.maxlag = 300,"sigma2v6")
 
 ##Increases iterations to 50,000
 ## Fit the model
 (mymodel <- runMLwiN(logit(a_point,cons,6)~1+gcseav[1:5]+I(gcseav^2)[1:5]+gender[1:5]+(school|1[1:5]+gcseav[1:5]), D='Ordered Multinomial',
                      estoptions=list(EstM=1, mcmcMeth=list(iterations=50000)), data=alevchem))
-sixway(mymodel["chains"][,"RP2_var_Intercept_12345"],acf.maxlag = 300,"sigma2v6")
+sixway(mymodel@chains[,"RP2_var_Intercept_12345",drop=FALSE],acf.maxlag = 300,"sigma2v6")
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .128
 

@@ -54,7 +54,7 @@ cat(paste("Pr(y = 3) =", round(exp(mymodel["FP"]["FP_Intercept_3"]+mymodel["FP"]
 
 # 12.3 Interval estimates for conditional probabilities . . . . . . . . .175
 
-chains <- mymodel["chains"]
+chains <- mymodel@chains
 pred1 <- exp(chains[,"FP_Intercept_3"])/(1+exp(chains[,"FP_Intercept_1"])+exp(chains[,"FP_Intercept_2"])+exp(chains[,"FP_Intercept_3"]))
 summary(pred1)
 sixway(pred1,"prob1")
@@ -74,7 +74,7 @@ sixway(pred2,"prob1")
 ## Uses MCMC
 ## Fit the model
 (mymodel <- runMLwiN(log(use4,cons)~1+lc+(district|1), D='Unordered Multinomial', estoptions=list(EstM=1, nonlinear=c(1,2)), data=bang))
-sixway(mymodel["chains"][,"RP2_var_Intercept_1"],"sigma2v0")
+sixway(mymodel@chains[,"RP2_var_Intercept_1",drop=FALSE],"sigma2v0")
 
 RP3.cons <- matrix(,3,3)
 RP3.cons[upper.tri(RP3.cons,diag=T)] <- mymodel["RP"][1:6]

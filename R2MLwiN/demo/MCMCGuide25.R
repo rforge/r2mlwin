@@ -53,7 +53,7 @@ mymodel <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),
                     estoptions=list(EstM=1, mcmcOptions=list(hcen=2), show.file=T),
                     BUGO=c(version=4, n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=tutorial)
 
-sixway(mymodel[[1]][,"beta[1]"],"beta[1]")
+sixway(mymodel[,"beta[1]",drop=FALSE])
 
 # 25.3 Binomial hierarchical centering algorithm . . . . . . . . . . . . 408
 
@@ -107,13 +107,13 @@ contrasts(mmmec1$nation, 9) = diag(9)
 (mymodel <- runMLwiN(log(obs)~0+nation+nation:uvbi+offset(log(exp))+(region|1), D="Poisson",
                      estoptions=list(EstM=1,mcmcMeth=list(iterations=50000), mcmcOptions=list(hcen=2)), data=mmmec1))
 
-sixway(mymodel["chains"][,"FP_nationBelgium"],acf.maxlag=100,"beta_1")
+sixway(mymodel@chains[,"FP_nationBelgium",drop=FALSE],acf.maxlag=100,"beta_1")
 
 ## Hierarchical centring at level 2 + Orthogonal updates
 (mymodel <- runMLwiN(log(obs)~0+nation+nation:uvbi+offset(log(exp))+(region|1), D="Poisson",
                      estoptions=list(EstM=1, mcmcMeth=list(iterations=50000), mcmcOptions=list(orth=1, hcen=2)), data=mmmec1))
 
-sixway(mymodel["chains"][,"FP_nationBelgium"],acf.maxlag=100,"beta_1")
+sixway(mymodel@chains[,"FP_nationBelgium",drop=FALSE],acf.maxlag=100,"beta_1")
 
 # 25.6 Normal response models in MLwiN . . . . . . . . . . . . . . . . . 419
 

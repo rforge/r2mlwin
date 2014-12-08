@@ -49,13 +49,13 @@ bang1$denomb <- bang1$cons
 ## Choose option(s) for inference
 ## Fit the model
 (mymodel1 <- runMLwiN(logit(use,denomb)~1+age, D="Binomial", estoptions=list(EstM=1), data=bang1))
-summary(mymodel1["chains"][,"FP_age"])
-sixway(mymodel1["chains"][,"FP_age"],"beta_1")
+summary(mymodel1@chains[,"FP_age"])
+sixway(mymodel1@chains[,"FP_age",drop=FALSE],"beta_1")
 
 ## 15,000 iterations
 ## Fit the model
 (mymodel2 <- runMLwiN(logit(use,denomb)~1+age, D="Binomial", estoptions=list(EstM=1, mcmcMeth=list(iterations=15000)), data=bang1))
-sixway(mymodel1["chains"][,"FP_age"],"beta_1")
+sixway(mymodel1@chains[,"FP_age",drop=FALSE],"beta_1")
 
 ## Define the model
 ## Change to 5000 iterations by default
@@ -65,8 +65,8 @@ sixway(mymodel1["chains"][,"FP_age"],"beta_1")
 
 ## Define the model
 (mymodel4 <- runMLwiN(logit(use,denomb)~1+age+lc+(district|1), D="Binomial", estoptions=list(EstM=1), data=bang1))
-summary(mymodel4["chains"][,"RP2_var_Intercept"])
-sixway(mymodel4["chains"][,"RP2_var_Intercept"],"sigma2u0")
+summary(mymodel4@chains[,"RP2_var_Intercept"])
+sixway(mymodel4@chains[,"RP2_var_Intercept",drop=FALSE],"sigma2u0")
 
 # 10.3 Random coefficients for area type . . . . . . . . . . . . . . . . 139
 
@@ -87,9 +87,9 @@ sixway(mymodel4["chains"][,"RP2_var_Intercept"],"sigma2u0")
 
 cat("The mean parameter estimates\n")
 aa <- cbind(mymodel7["FP"],mymodel8["FP"])
-ESS.aa <- effectiveSize(mymodel7["chains"][,2:11])
+ESS.aa <- effectiveSize(mymodel7@chains[,2:11])
 bb <- cbind(mymodel7["RP"],mymodel8["RP"])
-ESS.bb <- effectiveSize(mymodel8["chains"][,2:11])
+ESS.bb <- effectiveSize(mymodel8@chains[,2:11])
 ctable <- round(rbind(aa,bb),3)
 ctable <- cbind(ctable[,1],round(ESS.aa),ctable[,2],round(ESS.bb))
 colnames(ctable) <- c("Gibbs","ESS(Gibbs)","Metropolis", "ESS(Metropolis)")
@@ -109,13 +109,13 @@ print(sdtable)
 mymodel9 <- runMLwiN(logit(use,denomb)~1+age+(district|1), D="Binomial",
                      estoptions=list(EstM=1), BUGO=c(version=4, n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=bang1)
 
-summary(mymodel9[[1]][,"beta[1]"])
-sixway(mymodel9[[1]][,"beta[1]"],"beta[1]")
+summary(mymodel9[,"beta[1]"])
+sixway(mymodel9[,"beta[1]",drop=FALSE])
 
 (mymodel10 <- runMLwiN(logit(use,denomb)~1+age+(district|1), D="Binomial", estoptions=list(EstM=1), data=bang1))
 
-summary(mymodel10["chains"][,"FP_Intercept"])
-sixway(mymodel10["chains"][,"FP_Intercept"],"beta0")
+summary(mymodel10@chains[,"FP_Intercept"])
+sixway(mymodel10@chains[,"FP_Intercept",drop=FALSE],"beta_0")
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .128
 

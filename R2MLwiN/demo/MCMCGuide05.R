@@ -61,14 +61,14 @@ rm(list=c("mymodel1", "mymodel2", "mymodel3"))
 (mymodel4 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),
                       estoptions=list(EstM=1, mcmcMeth=list(priorParam=list(fixe=list(standlrt=c(1,.01))))), data=tutorial))
 
-sixway(mymodel4["chains"][,"FP_standlrt"],"beta_1")
+sixway(mymodel4@chains[,"FP_standlrt",drop=FALSE],"beta_1")
 
 ## Informative normal prior for beta_1
 ## Fit the model
 (mymodel5 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), 
                       estoptions=list(EstM=1, mcmcMeth=list(priorParam=list(fixe=list(standlrt=c(1,.1))))), data=tutorial))
 
-sixway(mymodel5["chains"][,"FP_standlrt"],"beta_1")
+sixway(mymodel5@chains[,"FP_standlrt",drop=FALSE],"beta_1")
 
 # 5.4 Specifying an informative prior for a random parameter . . . . . . .65
 
@@ -77,7 +77,7 @@ sixway(mymodel5["chains"][,"FP_standlrt"],"beta_1")
 (mymodel6 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),
                       estoptions=list(EstM=1, mcmcMeth=list(priorParam=list(rp2=list(estimates=.2,size=100)))), data=tutorial))
 
-sixway(mymodel6["chains"][,"RP2_var_Intercept"],"sigma^2_u0")
+sixway(mymodel6@chains[,"RP2_var_Intercept",drop=FALSE],"sigma^2_u0")
 
 # 5.5 Changing the random number seed and the parameter starting values  .66
 

@@ -60,8 +60,8 @@ constr <- matrix(c(1,0,0,0,0,0,0),ncol=7,nrow=nfact,byrow=TRUE)
 (mymodel <- runMLwiN(c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2)~1+(student|1), D='Multivariate Normal',
                      estoptions=list(EstM=1, fact=list(nfact=nfact, lev.fact=lev.fact, nfactcor=nfactcor, factcor=factcor, loading=loading, constr=constr)), data=hungary1))
 
-ranks <- rank(mymodel["fact.chains"]$scores)
-plot(x=ranks,mymodel["fact.chains"]$scores,xlab="rank",ylab="factor scores",ylim=c(-2.35,1.2))
+ranks <- rank(mymodel@fact.chains$scores)
+plot(x=ranks,mymodel@fact.chains$scores,xlab="rank",ylab="factor scores",ylim=c(-2.35,1.2))
 abline(h=0,lty="dotted")
 
 # 20.5 Adding a second factor to the model . . . . . . . . . . . . . . . .313
@@ -77,25 +77,25 @@ constr <- matrix(c(1,0,0,0,0,0,0,1,1,0,0,0,0,0),ncol=7,nrow=nfact,byrow=TRUE)
 (mymodel <- runMLwiN(c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2)~1+(student|1), D='Multivariate Normal',
                      estoptions=list(EstM=1, fact=list(nfact=nfact, lev.fact=lev.fact, nfactcor=nfactcor, factcor=factcor, loading=loading, constr=constr)), data=hungary1))
 
-scores <- mymodel["fact.chains"]$scores
+scores <- mymodel@fact.chains$scores
 plot(scores[, 2],scores[,1],xlab = "Factor 2",ylab="Factor 1")
 abline(h=0,lty="dotted")
 abline(v=0,lty="dotted")
 # 20.6 Examining the chains of the loading estimates . . . . . . . . . . 317
 
-loads <- mymodel["fact.chains"]$loadings
+loads <- mymodel@fact.chains$loadings
 
-sixway(loads[, "load1_biol_core"],acf.maxlag=400,name="load1.2")
-sixway(loads[, "load2_biol_r3"],acf.maxlag=1500,name="load2.3")
+sixway(loads[, "load1_biol_core",drop=FALSE],acf.maxlag=400,name="load1.2")
+sixway(loads[, "load2_biol_r3",drop=FALSE],acf.maxlag=1500,name="load2.3")
 
 ##burn-in: 5000, iterations=10,000
 
 (mymodel <- runMLwiN(c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2)~1+(student|1), D='Multivariate Normal',
                      estoptions=list(EstM=1, fact=list(nfact=nfact, lev.fact=lev.fact, nfactcor=nfactcor, factcor=factcor, loading=loading, constr=constr), mcmcMeth=list(burnin=5000, iterations=10000)), data=hungary1))
 
-loads <- mymodel["fact.chains"]$loadings
+loads <- mymodel@fact.chains$loadings
 
-sixway(loads[, "load2_biol_r3"],acf.maxlag=500,name="load2.3")
+sixway(loads[, "load2_biol_r3",drop=FALSE],acf.maxlag=500,name="load2.3")
 
 # 20.7 Correlated factor . . . . . . . . . . . . . . . . . . . . . . . .319
 
@@ -140,8 +140,8 @@ constr <- matrix(c(1,0,0,0,0,0,0,1,0,0,0,0,0,0),ncol=7,nrow=nfact,byrow=TRUE)
 (mymodel=runMLwiN(c(es_core,biol_core,biol_r3,biol_r4,phys_core,phys_r2)~1+(school|1)+(student|1), D='Multivariate Normal',
                   estoptions=list(EstM=1, fact=list(nfact=nfact, lev.fact=lev.fact, nfactcor=nfactcor, factcor=factcor, loading=loading, constr=constr)), data=hungary1))
 
-ranks <- rank(na.omit(mymodel["fact.chains"]$scores[,2]))
-plot(x=ranks,y=na.omit(mymodel["fact.chains"]$scores[,2]),xlab="rank",ylab="factor scores",ylim=c(-1,1))
+ranks <- rank(na.omit(mymodel@fact.chains$scores[,2]))
+plot(x=ranks,y=na.omit(mymodel@fact.chains$scores[,2]),xlab="rank",ylab="factor scores",ylim=c(-1,1))
 abline(h=0,lty="dotted")
 
 # 20.10 Extensions and some warnings . . . . . . . . . . . . . . . . . . 324
