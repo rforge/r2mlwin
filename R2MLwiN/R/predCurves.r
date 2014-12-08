@@ -9,6 +9,9 @@ predCurves <- function(object, indata=NULL, xname, group=NULL, legend=T, legend.
   if (is.null(indata)){
     indata <- object@data
   }
+  if (!xname %in% colnames(indata)) {
+    stop(paste(xname," does not exist in the data"))
+  }
   if (!is.null(group)){
     if(is.character(group)) group <- indata[[group]]
     if(!is.factor(group)) group <- as.factor(group)

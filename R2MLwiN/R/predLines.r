@@ -14,7 +14,10 @@ predLines <- function(object, indata=NULL, xname, lev=2, selected=NULL, probs=c(
     FP <- object@FP
     myresi <- object@residual
     levID <- object@levID
-    
+    if (length(myresi) == 0) {
+      stop("Residuals were not stored")
+    }
+   
     categrv <- as.factor(indata[[rev(levID)[lev]]])
     levels(categrv) <- 1:length(levels(categrv))
     categrv <- as.integer(categrv)
@@ -23,6 +26,9 @@ predLines <- function(object, indata=NULL, xname, lev=2, selected=NULL, probs=c(
     }
     
     est.names <- names(myresi)[grep(paste("lev_",lev,"_resi_est",sep=""),names(myresi))]
+    if (length(est.names)==0) {
+      stop("Residuals were not stored at the requested level")
+    }
     if (length(est.names)==1){
       est0 <- na.omit(myresi[[est.names]])
       if (length(est0)==length(unique(categrv))){
@@ -91,10 +97,12 @@ predLines <- function(object, indata=NULL, xname, lev=2, selected=NULL, probs=c(
   if (cls=="mlwinfitMCMC"){
     
     ## This function is to draw predicted lines (medians, lower quantiles and upper quantiles) at higher levels (level>=2)
-    resi.chains <- object["resi.chains"][[paste0("resi_lev", lev)]]
+    resi.chains <- object@resi.chains
     chains <- object@chains
     levID <- object@levID
-    
+    if (is.null(resi.chains)) {
+      stop("Residual chains were not stored")
+    }
     categrv=indata[[rev(levID)[lev]]]
     if (is.null(selected)){
       selected =unique(categrv)
@@ -103,6 +111,10 @@ predLines <- function(object, indata=NULL, xname, lev=2, selected=NULL, probs=c(
     rpx.names=sub(paste("RP",lev,"_var_",sep=""),"",colnames(chains)[grep(paste("RP",lev,"_var_",sep=""),colnames(chains))])
     lenrpx=length(rpx.names)
     lencateg=length(unique(categrv))
+    if (length(rpx.names) == 0) {
+      stop("Residual chains were not stored at the requested level")
+    }
+    resi.chains <- resi.chains[[paste0("resi_lev", lev)]]
     
     FP.pos=grep("FP_",colnames(chains))
     fp.names=sub("FP_","",colnames(chains)[FP.pos])
