@@ -38,9 +38,9 @@ bang$use4 <- relevel(bang$use4, 4)
 ## Fit the model
 (mymodel <- runMLwiN(log(use4,cons)~1, D='Unordered Multinomial', estoptions=list(EstM=1), data=bang))
 
-cat(paste("Pr(y = 1) =", round(exp(mymodel["FP"]["FP_Intercept_1"])/(1+exp(mymodel["FP"]["FP_Intercept_1"])+exp(mymodel["FP"]["FP_Intercept_2"])+exp(mymodel["FP"]["FP_Intercept_3"])),4),"\n"))
-cat(paste("Pr(y = 2) =", round(exp(mymodel["FP"]["FP_Intercept_2"])/(1+exp(mymodel["FP"]["FP_Intercept_1"])+exp(mymodel["FP"]["FP_Intercept_2"])+exp(mymodel["FP"]["FP_Intercept_3"])),4),"\n"))
-cat(paste("Pr(y = 3) =", round(exp(mymodel["FP"]["FP_Intercept_3"])/(1+exp(mymodel["FP"]["FP_Intercept_1"])+exp(mymodel["FP"]["FP_Intercept_2"])+exp(mymodel["FP"]["FP_Intercept_3"])),4),"\n"))
+cat(paste("Pr(y = 1) =", round(exp(mymodel@FP["FP_Intercept_1"])/(1+exp(mymodel@FP["FP_Intercept_1"])+exp(mymodel@FP["FP_Intercept_2"])+exp(mymodel@FP["FP_Intercept_3"])),4),"\n"))
+cat(paste("Pr(y = 2) =", round(exp(mymodel@FP["FP_Intercept_2"])/(1+exp(mymodel@FP["FP_Intercept_1"])+exp(mymodel@FP["FP_Intercept_2"])+exp(mymodel@FP["FP_Intercept_3"])),4),"\n"))
+cat(paste("Pr(y = 3) =", round(exp(mymodel@FP["FP_Intercept_3"])/(1+exp(mymodel@FP["FP_Intercept_1"])+exp(mymodel@FP["FP_Intercept_2"])+exp(mymodel@FP["FP_Intercept_3"])),4),"\n"))
 
 # 12.2 Adding predictor variables . . . . . . . . . . . . . . . . . . . .173
 
@@ -48,9 +48,9 @@ cat(paste("Pr(y = 3) =", round(exp(mymodel["FP"]["FP_Intercept_3"])/(1+exp(mymod
 ## Fit the model
 (mymodel <- runMLwiN(log(use4,cons)~1+lc, D='Unordered Multinomial', estoptions=list(EstM=1), data=bang))
 
-cat(paste("Pr(y = 3) =", round(exp(mymodel["FP"]["FP_Intercept_3"])/(1+exp(mymodel["FP"]["FP_Intercept_1"])+exp(mymodel["FP"]["FP_Intercept_2"])+exp(mymodel["FP"]["FP_Intercept_3"])),4),"\n"))
-cat(paste("Pr(y = 3) =", round(exp(mymodel["FP"]["FP_Intercept_3"]+mymodel["FP"]["FP_lcTwo children_3"])/(1+exp(mymodel["FP"]["FP_Intercept_1"]+mymodel["FP"]["FP_lcTwo children_1"])+
-                                                                                                            exp(mymodel["FP"]["FP_Intercept_2"]+mymodel["FP"]["FP_lcTwo children_2"])+exp(mymodel["FP"]["FP_Intercept_3"]+mymodel["FP"]["FP_lcTwo children_3"])),4),"\n"))
+cat(paste("Pr(y = 3) =", round(exp(mymodel@FP["FP_Intercept_3"])/(1+exp(mymodel@FP["FP_Intercept_1"])+exp(mymodel@FP["FP_Intercept_2"])+exp(mymodel@FP["FP_Intercept_3"])),4),"\n"))
+cat(paste("Pr(y = 3) =", round(exp(mymodel@FP["FP_Intercept_3"]+mymodel@FP["FP_lcTwo children_3"])/(1+exp(mymodel@FP["FP_Intercept_1"]+mymodel@FP["FP_lcTwo children_1"])+
+                                                                                                            exp(mymodel@FP["FP_Intercept_2"]+mymodel@FP["FP_lcTwo children_2"])+exp(mymodel@FP["FP_Intercept_3"]+mymodel@FP["FP_lcTwo children_3"])),4),"\n"))
 
 # 12.3 Interval estimates for conditional probabilities . . . . . . . . .175
 
@@ -77,7 +77,7 @@ sixway(pred2,"prob1")
 sixway(mymodel@chains[,"RP2_var_Intercept_1",drop=FALSE],"sigma2v0")
 
 RP3.cons <- matrix(,3,3)
-RP3.cons[upper.tri(RP3.cons,diag=T)] <- mymodel["RP"][1:6]
+RP3.cons[upper.tri(RP3.cons,diag=T)] <- mymodel@RP[1:6]
 RP3.cons[lower.tri(RP3.cons)] <- RP3.cons[upper.tri(RP3.cons)]
 round(cov2cor(RP3.cons),3)
 

@@ -47,8 +47,8 @@ data(tutorial, package="R2MLwiN")
 (mymodel3 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),
                       estoptions=list(EstM=1, mcmcMeth=list(priorcode=0)), data=tutorial))
 
-aa <- cbind(mymodel1["FP"],mymodel2["FP"],mymodel3["FP"])
-bb <- cbind(mymodel1["RP"],mymodel2["RP"],mymodel3["RP"])
+aa <- cbind(mymodel1@FP,mymodel2@FP,mymodel3@FP)
+bb <- cbind(mymodel1@RP,mymodel2@RP,mymodel3@RP)
 ctable <- round(rbind(aa,bb),3)
 colnames(ctable) <- c("IGLS","Gibbs1", "Gibbs2")
 print(ctable)
@@ -107,8 +107,8 @@ rm(list=c("mymodel4", "mymodel5", "mymodel6", "mymodel7"))
 (mymodel11 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),
                        estoptions=list(EstM=1, mcmcMeth=list(seed=4)), data=tutorial))
 
-aa <- cbind(mymodel8["FP"],mymodel9["FP"],mymodel10["FP"],mymodel11["FP"])
-bb <- cbind(mymodel8["RP"],mymodel9["RP"],mymodel10["RP"],mymodel11["RP"])
+aa <- cbind(mymodel8@FP,mymodel9@FP,mymodel10@FP,mymodel11@FP)
+bb <- cbind(mymodel8@RP,mymodel9@RP,mymodel10@RP,mymodel11@RP)
 ctable <- round(rbind(aa,bb),3)
 colnames(ctable) <- c("Seed1","Seed2", "Seed3","Seed4")
 print(ctable)

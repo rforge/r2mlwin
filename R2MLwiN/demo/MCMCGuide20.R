@@ -43,7 +43,7 @@ round(cor(hungary1[,c("es_core","biol_core","phys_core")]),4)
 
 covM1 <- matrix(,6,6)
 colnames(covM1) <- rownames(covM1) <- c("cons.es_core","cons.biol_core","cons.biol_r3","cons.biol_r4","cons.phys_core","cons.phys_r2")
-covM1[upper.tri(covM1,diag=T)] <- mymodel["RP"]
+covM1[upper.tri(covM1,diag=T)] <- mymodel@RP
 #covM1[lower.tri(covM1)] <- t(covM1)[lower.tri(covM1)]
 round(cov2cor(t(covM1)),3)
 
@@ -117,13 +117,13 @@ constr <- matrix(c(1,0,0,0,0,0,0,1,1,0,0,0,0,0),ncol=7,nrow=nfact,byrow=TRUE)
 
 covM1 <- matrix(,6,6)
 colnames(covM1) <- rownames(covM1) <- c("cons.es_core","cons.biol_core","cons.biol_r3","cons.biol_r4","cons.phys_core","cons.phys_r2")
-covM1[upper.tri(covM1,diag=T)] <- mymodel["RP"][22:42]
+covM1[upper.tri(covM1,diag=T)] <- mymodel@RP[22:42]
 #covM1[lower.tri(covM1)] <- t(covM1)[lower.tri(covM1)]
 round(cov2cor(t(covM1)),3)
 
 covM2 <- matrix(,6,6)
 colnames(covM2) <- rownames(covM2) <- c("cons.es_core","cons.biol_core","cons.biol_r3","cons.biol_r4","cons.phys_core","cons.phys_r2")
-covM2[upper.tri(covM2,diag=T)] <- mymodel["RP"][1:21]
+covM2[upper.tri(covM2,diag=T)] <- mymodel@RP[1:21]
 #covM2[lower.tri(covM2)] <- t(covM2)[lower.tri(covM2)]
 round(cov2cor(t(covM2)),3)
 

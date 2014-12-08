@@ -86,7 +86,7 @@ sixway(mymodel@chains[,"RP1_var_Intercept_y8",drop=FALSE],"sigma2u0")
 
 covM1 <- matrix(,5,5)
 colnames(covM1) <- rownames(covM1) <- c("cons.y8","cons.y15","cons.y22","cons.y29","cons.y36")
-covM1[upper.tri(covM1,diag=T)] <- mymodel["RP"]
+covM1[upper.tri(covM1,diag=T)] <- mymodel@RP
 #covM1[lower.tri(covM1)] <- t(covM1)[lower.tri(covM1)]
 round(t(covM1),3)
 round(cov2cor(t(covM1)),3)
@@ -98,7 +98,7 @@ round(cov2cor(t(covM1)),3)
 
 covM2 <- matrix(,5,5)
 colnames(covM2) <- rownames(covM2) <- c("cons.y8","cons.y15","cons.y22","cons.y29","cons.y36")
-covM2[upper.tri(covM2,diag=T)] <- mymodel["RP"]
+covM2[upper.tri(covM2,diag=T)] <- mymodel@RP
 #covM2[lower.tri(covM2)] <- t(covM2)[lower.tri(covM2)]
 round(t(covM2),3)
 round(cov2cor(t(covM2)),3)

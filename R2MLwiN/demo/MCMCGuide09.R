@@ -70,7 +70,7 @@ formatC(round(tab2,6))
 (mymodel1 <- runMLwiN(normexam~1+standlrt+(student|1+standlrt), estoptions=list(EstM=1), data=tutorial))
 trajectories(mymodel1,Range=c(4501,5000))
 
-l1varfn <- mymodel1["RP"]["RP1_var_Intercept"]+2*mymodel1["RP"]["RP1_cov_Intercept_standlrt"]*tutorial$standlrt+mymodel1["RP"]["RP1_var_standlrt"]*tutorial$standlrt^2
+l1varfn <- mymodel1@RP["RP1_var_Intercept"]+2*mymodel1@RP["RP1_cov_Intercept_standlrt"]*tutorial$standlrt+mymodel1@RP["RP1_var_standlrt"]*tutorial$standlrt^2
 plot(sort(tutorial$standlrt),l1varfn[order(tutorial$standlrt)],xlab="standlrt",ylab="l1varfn",type="l")
 abline(v=0,lty="dotted")
 
@@ -81,8 +81,8 @@ abline(v=0,lty="dotted")
 ## Fit the model
 (mymodel2 <- runMLwiN(normexam~1+standlrt+(school|1+standlrt)+(student|1), estoptions=list(EstM=1), data=tutorial))
 
-l2varfn <- mymodel2["RP"]["RP2_var_Intercept"]+2*mymodel2["RP"]["RP2_cov_Intercept_standlrt"]*tutorial$standlrt+mymodel2["RP"]["RP2_var_standlrt"]*tutorial$standlrt^2
-l1varfn = mymodel2["RP"]["RP1_var_Intercept"]
+l2varfn <- mymodel2@RP["RP2_var_Intercept"]+2*mymodel2@RP["RP2_cov_Intercept_standlrt"]*tutorial$standlrt+mymodel2@RP["RP2_var_standlrt"]*tutorial$standlrt^2
+l1varfn = mymodel2@RP["RP1_var_Intercept"]
 plot(sort(tutorial$standlrt),l2varfn[order(tutorial$standlrt)],xlab="standlrt",ylab="varfns",ylim=c(0,.6),type="l")
 abline(h=l1varfn)
 abline(v=0,lty="dotted")
@@ -110,9 +110,9 @@ clre[1,2] <- 1; clre[2,2] <- 'girl';     clre[3,2] <- 'girl'
 (mymodel5 <- runMLwiN(normexam~1+standlrt+girl+(school|1+standlrt)+(student|1+standlrt+girl),
                       estoptions=list(EstM=1,clre=clre), data=tutorial))
 
-l2varfn <- mymodel5["RP"]["RP2_var_Intercept"]+2*mymodel5["RP"]["RP2_cov_Intercept_standlrt"]*tutorial$standlrt+mymodel5["RP"]["RP2_var_standlrt"]*tutorial$standlrt^2
-l1varfnboys <- mymodel5["RP"]["RP1_var_Intercept"]+2*mymodel5["RP"]["RP1_cov_Intercept_standlrt"]*tutorial$standlrt
-l1varfngirls <- mymodel5["RP"]["RP1_var_Intercept"]+2*mymodel5["RP"]["RP1_cov_Intercept_standlrt"]*tutorial$standlrt+2*mymodel5["RP"]["RP1_cov_Intercept_girl"]+2*mymodel5["RP"]["RP1_cov_standlrt_girl"]*tutorial$standlrt
+l2varfn <- mymodel5@RP["RP2_var_Intercept"]+2*mymodel5@RP["RP2_cov_Intercept_standlrt"]*tutorial$standlrt+mymodel5@RP["RP2_var_standlrt"]*tutorial$standlrt^2
+l1varfnboys <- mymodel5@RP["RP1_var_Intercept"]+2*mymodel5@RP["RP1_cov_Intercept_standlrt"]*tutorial$standlrt
+l1varfngirls <- mymodel5@RP["RP1_var_Intercept"]+2*mymodel5@RP["RP1_cov_Intercept_standlrt"]*tutorial$standlrt+2*mymodel5@RP["RP1_cov_Intercept_girl"]+2*mymodel5@RP["RP1_cov_standlrt_girl"]*tutorial$standlrt
 plot(sort(tutorial$standlrt),l2varfn[order(tutorial$standlrt)],xlab="standlrt",ylab="varfns",ylim=c(0,.8),type="l")
 lines(sort(tutorial$standlrt),l1varfnboys[order(tutorial$standlrt)])
 lines(sort(tutorial$standlrt),l1varfngirls[order(tutorial$standlrt)])
@@ -124,9 +124,9 @@ abline(v=0,lty="dotted")
 (mymodel6 <- runMLwiN(normexam~1+standlrt+girl+(school|1+standlrt)+(student|1+standlrt+girl),
                       estoptions=list(EstM=1, clre=clre, mcmcMeth=list(lclo=1)), data=tutorial))
 
-l2varfn <- mymodel6["RP"]["RP2_var_Intercept"]+2*mymodel6["RP"]["RP2_cov_Intercept_standlrt"]*tutorial$standlrt+mymodel6["RP"]["RP2_var_standlrt"]*tutorial$standlrt^2
-l1varfnboys <- 1/exp(mymodel6["RP"]["RP1_var_Intercept"]+2*mymodel6["RP"]["RP1_cov_Intercept_standlrt"]*tutorial$standlrt)
-l1varfngirls <- 1/exp(mymodel6["RP"]["RP1_var_Intercept"]+2*mymodel6["RP"]["RP1_cov_Intercept_standlrt"]*tutorial$standlrt+2*mymodel6["RP"]["RP1_cov_Intercept_girl"]+2*mymodel6["RP"]["RP1_cov_standlrt_girl"]*tutorial$standlrt)
+l2varfn <- mymodel6@RP["RP2_var_Intercept"]+2*mymodel6@RP["RP2_cov_Intercept_standlrt"]*tutorial$standlrt+mymodel6@RP["RP2_var_standlrt"]*tutorial$standlrt^2
+l1varfnboys <- 1/exp(mymodel6@RP["RP1_var_Intercept"]+2*mymodel6@RP["RP1_cov_Intercept_standlrt"]*tutorial$standlrt)
+l1varfngirls <- 1/exp(mymodel6@RP["RP1_var_Intercept"]+2*mymodel6@RP["RP1_cov_Intercept_standlrt"]*tutorial$standlrt+2*mymodel6@RP["RP1_cov_Intercept_girl"]+2*mymodel6@RP["RP1_cov_standlrt_girl"]*tutorial$standlrt)
 plot(sort(tutorial$standlrt),l2varfn[order(tutorial$standlrt)],xlab="standlrt",ylab="varfns",ylim=c(0,.8),type="l")
 lines(sort(tutorial$standlrt),l1varfnboys[order(tutorial$standlrt)])
 lines(sort(tutorial$standlrt),l1varfngirls[order(tutorial$standlrt)])

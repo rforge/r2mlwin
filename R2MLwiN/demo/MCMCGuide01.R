@@ -106,8 +106,8 @@ plot(1:nrow(estimates),estimates[,"sigma2e"],xlab="iteration",
 set.seed(1)
 
 ## Set variables
-y = tutorial[["normexam"]]
-x = tutorial[["standlrt"]]
+y = tutorial$normexam
+x = tutorial$standlrt
 N = length(y)
 xsq = x^2
 xy = x*y

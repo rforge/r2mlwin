@@ -56,8 +56,8 @@ sixway(mymodel3@chains[,"FP_standlrt",drop=FALSE],"beta_1")
 (mymodel4 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), 
                       estoptions=list(EstM=1, mcmcMeth=list(fixM=2, residM=2, Lev1VarM=2, adaption=0)), data=tutorial))
 
-aa <- cbind(mymodel1["FP"],mymodel2["FP"],mymodel4["FP"],mymodel3["FP"])
-bb <- cbind(mymodel1["RP"],mymodel2["RP"],mymodel4["RP"],mymodel3["RP"])
+aa <- cbind(mymodel1@FP,mymodel2@FP,mymodel4@FP,mymodel3@FP)
+bb <- cbind(mymodel1@RP,mymodel2@RP,mymodel4@RP,mymodel3@RP)
 ctable <- round(rbind(aa,bb),3)
 colnames(ctable) <- c("IGLS","Gibbs", "MH", "MH Adaptive")
 print(ctable)
