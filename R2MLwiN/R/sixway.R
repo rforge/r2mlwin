@@ -11,7 +11,7 @@ sixway <- function(chain,name=NULL,acf.maxlag=100,pacf.maxlag=10, ...){
     stop("Cannot to plot more than one parameter at a time")
   }
   
-  if (is.mcmc.list(chain)) {
+  if (is.mcmc.list(chain) && nchain(chain) > 1) {
     warning("Sixway does not fully support multiple chains - diagnostics will be on concatinated chains")
   }
   
@@ -45,7 +45,7 @@ sixway <- function(chain,name=NULL,acf.maxlag=100,pacf.maxlag=10, ...){
   split.screen( figs = c( 1, 1 ), screen = 4)
   
   screen(5)
-  traceplot(chain,xlab="stored updates",ylab="parameter",type="l",tcl=-.1,cex.axis=.8,main="")
+  traceplot(chain,xlab="Iterations",ylab="parameter",type="l",tcl=-.1,cex.axis=.8,main="")
   
   flatchain <- as.matrix(chain)
   
