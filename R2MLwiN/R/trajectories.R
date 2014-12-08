@@ -12,7 +12,7 @@ trajectories <- function(object,Range=c(1,5000),selected=NULL){
   }
 
   if(is.null(selected)){
-    selected <- varnames(x)
+    selected <- varnames(chains)
   }
 
   chains <- window(chains, Range[1], Range[2])
