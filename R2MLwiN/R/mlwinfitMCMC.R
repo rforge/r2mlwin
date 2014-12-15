@@ -1,10 +1,81 @@
+#' This S4 class object is used to save the outputs from the fitted multilevel model using MCMC.
+#'
+#' ADD DESCRIPTION
+#'
+#' @section An instance of the Class:
+#'  An instance is created by calling function \code{\link{runMLwiN}}.
+#'
+#' @slot Nobs Computes the number of complete observations.
+#' @slot DataLength Total number of cases.
+#' @slot Hierarchy For each higher level of a multilevel model, returns the number of units at that level, together with the minimum, mean and maximum number of lower-level units nested within units of the current level.
+#' @slot burnin An integer specifying length of the burn-in.
+#' @slot iterations An integer specifying the number of iterations after burn-in.
+#' @slot D A vector specifying the type of distribution to be modelled, which can include \code{"Normal"}, \code{"Binomial"} \code{"Poisson"}, \code{"Multinomial"}, \code{"Multivariate Normal"}, or \code{"Mixed"}.
+#' @slot Formula A formula object (or a character string) specifying a multilevel model.
+#' @slot levID A character string (vector) of the specified level ID(s).
+#' @slot merr A vector which sets-up measurement errors on predictor variables.
+#' @slot fact A list of objects specified for factor analysis, including \code{nfact}, \code{lev.fact}, \code{nfactor}, \code{factor}, \code{loading} and \code{constr}.
+#' @slot xc MIGHT NEED REVISING: A list of objects specified for cross-classified and/or multiple membership models, including \code{class}, \code{N1}, \code{weight}, \code{id} and \code{car}. 
+#' @slot FP Displays the fixed part estimates.
+#' @slot RP Displays the random part estimates.
+#' @slot FP.cov Displays a covariance matrix of the fixed part estimates.
+#' @slot RP.cov Displays a covariance matrix of the random part estimates.
+#' @slot chains Captures the MCMC chains from MLwiN for all parameters.
+#' @slot elapsed.time Calculates the CPU time used for fitting the model.
+#' @slot BDIC Bayesian Deviance Information Criterion (DIC)
+#' @slot call The matched call.
+#' @slot LIKE The deviance statistic (-2*log(like)).
+#' @slot fact.loadings If \code{fact} is not empty, then the factor loadings are returned.
+#' @slot fact.loadings.sd TO ADD
+#' @slot fact.cov If \code{fact} is not empty, then factor covariances are returned.
+#' @slot fact.cov.sd TO ADD
+#' @slot fact.chains If \code{fact} is not empty, then the factor chains are returned.
+#' @slot MIdata If \code{dami} is not empty, then the complete response variable \code{y} are returned.
+#' @slot residual If \code{resi.store} is \code{TRUE}, then the residual estimates at all levels are returned.
+#' @slot resi.chains If \code{resi.store.levs} is not empty, then the residual chains at these levels are returned.
+#' @slot data
+#'
+#' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
+#' W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
+#'
+#' @seealso
+#' \code{\link{runMLwiN}}
+#'
+#' @examples
+#' \dontrun{
+#' library(R2MLwiN)
+#' # NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
+#' # ...so please change relevant line if different
+#' # if using R2MLwiN via WINE, the path may look like 
+#' # options(MLwiN_path = "/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/") 
+#'   
+#' ## Example: tutorial
+#' data(tutorial)
+#' formula = normexam ~ (0|cons + standlrt) + (2|cons + standlrt) + (1|cons)
+#' levID = c('school', 'student')
+#' ## Choose option(s) for inference
+#' estoptions = list(EstM = 1)
+#' ## Fit the model
+#' mymodel = runMLwiN(formula, levID, indata = tutorial, estoptions = estoptions)
+#'   
+#' ##summary method
+#' summary(mymodel)
+#' 
+#' ##get method
+#' mymodel["BDIC"]
+#' }
+#'
 setClass(Class = "mlwinfitMCMC", representation = representation(version="character",Nobs="numeric",DataLength="numeric",Hierarchy="ANY",burnin="numeric",iterations="numeric",
                                                                  D="ANY", Formula="ANY", levID="character", merr="ANY", fact="ANY", xc="ANY",
                                                                  FP="numeric", RP="numeric", RP.cov="matrix", FP.cov="matrix", chains="ANY",
                                                                  elapsed.time="numeric", call="ANY",BDIC="numeric", LIKE="ANY", fact.loadings="numeric",fact.loadings.sd="numeric",
                                                                  fact.cov="numeric", fact.cov.sd="numeric", fact.chains="ANY", MIdata="data.frame",
                                                                  residual="list", resi.chains="ANY", data="data.frame"))
-
+#' This method gets a slot of an instance of the S4 class.
+#' @name [
+#' @rdname extract-methods
+#' @aliases [[,mlwinfitMCMC-method
+#' @docType methods
 setMethod(
   f= "[",
   signature="mlwinfitMCMC",
@@ -42,6 +113,11 @@ setMethod(
   }
 )
 
+#' Replace names of mlwinfitMCMC
+#' @name [
+#' @rdname extract-methods
+#' @aliases [<-,mlwinfitMCMC-method
+#' @docType methods
 setReplaceMethod(
   f= "[",
   signature="mlwinfitMCMC",
@@ -81,6 +157,11 @@ setReplaceMethod(
   }
 )
 
+#' Extract parts of mlwinfitMCMC
+#' @name [[
+#' @rdname extract-methods
+#' @aliases [,mlwinfitMCMC-method
+#' @docType methods
 setMethod(
   f= "[[",
   signature="mlwinfitMCMC",
@@ -118,6 +199,11 @@ setMethod(
   }
 )
 
+#' Replace names of mlwinfitMCMC
+#' @name [[
+#' @rdname extract-methods
+#' @aliases [<-,mlwinfitMCMC-method
+#' @docType methods
 setReplaceMethod(
   f= "[[",
   signature="mlwinfitMCMC",
