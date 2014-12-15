@@ -1,3 +1,73 @@
+#' Draws a sixway plot of MCMC diagnostics.
+#' 
+#' This function produces a variety of diagnostic plots and statistics for MCMC
+#' chains.
+#' 
+#' @param chain A numeric vector, or \code{\link{mcmc}} object (in which case
+#' uses its \code{thin} argument, otherwise assumes thinning = 1), storing the
+#' MCMC chain for a chosen parameter.
+#' @param name The parameter name. If \code{name = NULL}, the column name of \code{chain} will
+#' be used, unless that is also NULL in which case "x" is used.
+#' @param acf.maxlag Maximum lag at which to calculate the auto-correlation
+#' function. \code{acf.maxlag = 100} by default. See \code{\link[stats]{acf}}.
+#' @param pacf.maxlag Maximum lag at which to calculate the partial
+#' auto-correlation function. \code{pacf.maxlag = 10} by default. See \code{\link[stats]{pacf}}.
+#' @param ...  Other graphical parameters (see \code{\link[graphics]{par}} for
+#' details).
+#' 
+#' @return A variety of plots and statistics are displayed in an R graphic
+#' window, including the following: \item{trace plot}{the plotted trajectory of
+#' an MCMC chain for a model parameter;} \item{kernel density plot}{kernel density estimates are computed
+#' using \code{\link[stats]{density}};} \item{autocorrelation function}{the function
+#' \code{\link[stats]{acf}} is used to compute and plot estimates of the
+#' autocorrelation function;} \item{partial autocorrelation function}{the
+#' function \code{\link[stats]{pacf}} computes and plots estimates of the partial
+#' autocorrelation function;} \item{Monte Carlo standard error}{the estimated
+#' Monte Carlo standard error (\code{\link{MCSE}}) of the posterior estimate of the
+#' mean is plotted against the number of iterations. As MCMC is a
+#' simulation-based approach this induces (Monte Carlo) uncertainty due to the
+#' random numbers it uses. This uncertainty reduces with more
+#' iterations, and is measured by the MCSE, and so this graph details how long
+#' the chain needs to be run to achieve a specific MCSE;} \item{accuracy
+#' diagnostics}{the box contains two contrasting accuracy diagnostics. The
+#' Raftery-Lewis diagnostic (\code{\link[coda]{raftery.diag}}) is a diagnostic
+#' based on a particular quantile of the distribution. The diagnostic Nhat is
+#' used to estimate the length of Markov chain required to estimate a
+#' particular quantile (e.g. the 2.5\% and 97.5\% quantiles) to a given
+#' accuracy. The Brooks-Draper diagnostic (\code{\link{BD}}) is a diagnostic based on
+#' the mean of the distribution. It is used to estimate the length of Markov
+#' chain required to produce a mean estimate to k(=2) significant figures with
+#' a given accuracy;} \item{summary statistics}{this box provides summary
+#' statistics including the posterior mean, sd, mode, quantiles and the
+#' effective sample size (ESS) of the chain.}
+#' 
+#' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
+#' W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
+#' 
+#' @seealso
+#' \code{\link{BD}},\code{\link{MCSE}},\code{\link{density}},\code{\link{acf}},\code{\link{pacf}},\code{\link[coda]{raftery.diag}},\code{\link[coda]{effectiveSize}}
+#' @examples
+#' 
+#' 
+#' \dontrun{
+#' library(R2MLwiN)
+#' #NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
+#' #...so please change relevant line if different
+#' #if using R2MLwiN via WINE, the path may look like 
+#' #options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/") 
+#' 
+#' ## Example: tutorial
+#' data(tutorial)
+#' formula=normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)
+#' levID=c('school','student')
+#' estoptions= list(EstM=1,resi.store.levs=2)
+#' mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions)
+#' 
+#' chain=mymodel["chains"][,"FP_standlrt"]
+#' sixway(chain,"beta_1")
+#' }
+#' 
+#' @export
 sixway <- function(chain,name=NULL,acf.maxlag=100,pacf.maxlag=10, ...){
   args <- list(...)
   
