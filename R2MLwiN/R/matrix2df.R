@@ -1,3 +1,22 @@
+#' For multiple membership models, translates matrix into a data.frame formatted for MLwiN
+#'  
+#' Translates a \code{\link[base]{matrix}} into a form usable by MLwiN for multiple membership models,
+#' namely a \code{\link[base]{data.frame}} with (a) columns containing membership IDs (if first row matrix is
+#' \code{0 1 1 0 1 1}, then first row of generated ID vectors would be, say, \code{2, 3, 5, 6})
+#' and (b) columns containing weights (in this example, if \code{standardise = TRUE}, then first
+#' row of generated weight vectors would be, say, \code{0.25, 0.25, 0.25, 0.25}, otherwise first
+#' row of generated weight vectors would be, say, \code{1, 1, 1, 1}.
+#' 
+#' @param mat A matrix.
+#' @param standardise If \code{TRUE}, ensures the row sums to one; defaults to \code{FALSE}.
+#' @param idstub Prefix for columns containing IDs; defaults to \code{id}.
+#' @param weightstub Prefix for columns containing weights; defaults to \code{weight}.
+#' 
+#' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
+#' W.J. (2014) Centre for Multilevel Modelling, University of Bristol, U.K.
+#' 
+#' @seealso \code{\link{df2matrix}}
+#' @export
 matrix2df <- function(mat, standardise=FALSE, idstub="id", weightstub="weight") {
   if (!is.matrix(mat) && !is(mat, "sparseMatrix")) {
     stop("Invalid input data")
