@@ -1,7 +1,47 @@
+#' Draws caterpillar plots of the residuals from a \code{\link{mlwinfitIGLS-class}} or 
+#' \code{\link{mlwinfitIGLS-class}} object, at a chosen level of the multilevel model.
+#' 
+#' Uses \code{\link[lattice]{qqmath}} in the \pkg{lattice} package to draw Quantile-Quantile plots
+#' of the residuals at a chosen level of a multilevel model against a
+#' theoretical distribution.
+#'  
+#' @param resi A \code{\link{mlwinfitIGLS-class}} or 
+#' \code{\link{mlwinfitIGLS-class}} object (model must be fitted specifying
+#' \code{resi.store = TRUE} and including \code{"variances"} in the list of
+#' \code{resioptions} (both in \code{estoptions}) to not return an error).
+#' @param lev An integer scalar specifying the level of a multilevel model
+#' for which to produce a plot for.
+#' 
+#' @return See \code{\link[lattice]{qqmath}}.
+#' 
+#' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
+#' W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
+#' 
+#' @seealso \code{\link{caterpillarR}}, \code{\link[lattice]{qqmath}}
+#' 
+#' @examples
+#' 
+#' \dontrun{
+#' library(R2MLwiN)
+#' # NOTE: if MLwiN not saved where R2MLwiN defaults to:
+#' # options(MLwiN_path="path/to/MLwiN vX.XX/")
+#' # If using R2MLwiN via WINE, the path may look like:
+#' # options(MLwiN_path = "/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN vX.XX/") 
+#' 
+#' # Example using tutorial dataset
+#' data(tutorial, package = "R2MLwiN")
+#' mymodel <- runMLwiN(normexam ~ 1 + (school|1) + (student|1),
+#'                     estoptions = list(resi.store = T),
+#'                     data = tutorial)
+#' # Caterpillar plot
+#' caterpillarR(mymodel["residual"], lev = 2)
+#' }
+#' 
+#' @export
 caterpillarR <- function(resi, lev=2){
-  ##produce caterpillar plots for the random effects(level>=2)
-  ##using qqmath() method in lme4 package
-  ##Only work with full covariance specified
+  ## produce caterpillar plots for the random effects(level>=2)
+  ## using qqmath() method in lattice package
+  ## Only work with full covariance specified
   qqmath.ranef.mer <-  function (x, data, main = TRUE, ...) 
   {
       prepanel.ci <- function(x, y, se, subscripts, ...) {
