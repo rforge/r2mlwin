@@ -1,3 +1,156 @@
+#' Writes MLwiN macros to fit models using the iterative generalized least
+#' squares (IGLS) algorithm.
+#' 
+#' MacroScript1 is an internal function which creates an MLwiN macro file to
+#' fit a multilevel model using IGLS. 
+#' 
+#' @param indata A data.frame object containing the data to be modelled.
+#' @param dtafile The name of the temporary file used to send the data to MLwiN, which
+#' is in Stata format (i.e. with extension .dta).
+#' @param oldsyntax Specified as \code{FALSE} if new syntax has been used in
+#' \code{Formula} object, else specified as \code{TRUE} (to enable
+#' back-compatibility).
+#' @param resp A character string (vector) of the response variable name(s).
+#' @param levID A character string (vector) of the specified level ID name(s). The
+#' ID(s) should be sorted in the descending order of levels (e.g.
+#' \code{levID = c('level2', 'level1')} where \code{'level2'} is the higher
+#' level).
+#' @param expl A character string (vector) of explanatory (predictor)
+#' variable name(s).
+#' @param rp A character string (vector) of random part of random variable name(s).
+#' @param D A vector specifying the type of distribution to be modelled, which
+#' can include \code{"Normal"} (the default), \code{"Binomial"}, \code{"Poisson"},
+#' \code{"Unordered Multinomial"}, \code{"Ordered Multinomial"},
+#' \code{"Multivariate Normal"}, or \code{"Mixed"}.
+#' @param nonlinear LINEarise mode N order M. \code{N = 0} specifies marginal
+#' quasi-likelihood linearization (MQL), whilst \code{N = 1} specifies penalised
+#' quasi-likelihood linearization (PQL); \code{M = 1} specifies first order
+#' approximation, whilst \code{M = 2} specifies second order approximation.
+#' \code{nonlinear = c(N = 0, M = 1)} by default.
+#' @param categ Specifies categorical variable(s) as a matrix. Each column
+#' corresponds to a categorical variable; the first row specifies the name(s)
+#' of variable(s); the second row specifies the name(s) of reference group(s),
+#' \code{NA}(s) if no reference group; the third row states the number of
+#' categories for each variable. Supports back-compatibility with \pkg{R2MLwiN}
+#' versions <0.8-0.
+#' @param notation Specifies the model subscript notation to be used in the
+#' MLwiN equations window. \code{"class"} means no multiple subscripts, whereas
+#' \code{"level"} has multiple subscripts.
+#' @param nonfp Removes the fixed part of random variable(s). \code{NA} if no
+#' variable to be removed.
+#' @param clre A matrix used to define which elements of the random effects matrix
+#' to remove (hold constant at zero). Removes
+#' from the random part at level <first row> the covariance matrix element(s)
+#' defined by the pair(s) of rows <second row> <third row>. Each column
+#' corresponds to a removed entry of the covariance matrix. See e.g. \code{demo(UserGuide07)}
+#' for an example.
+#' @param Meth Specifies which maximum likelihood estimation method to be used.
+#' If \code{Meth = 0} estimation method is set to RIGLS. If \code{Meth = 1}
+#' estimation method is set to IGLS (the default setting).
+#' @param extra If \code{TRUE}, extra binomial, extra negative binomial,
+#' extra Poisson or extra multinomial distributions assumed, else \code{FALSE}.
+#' @param reset A vector of \code{length(levID)} specifying the action to be
+#' taken, at each level, if a variance parameter is estimated at a particular
+#' iteration to be negative during estimation. Values specified in
+#' ascending order of level hierarchy: if \code{0} a negative variance
+#' estimate is reset to zero and so are any associated covariances; if \code{1}
+#' a negative variance estimate is reset to zero but not the associated
+#' covariances; if \code{2} no resetting takes place. E.g. \code{reset = c(0, 1)}
+#' to assign value \code{0} to level 1 and value \code{1} to level 2 of
+#' two-level model.
+#' @param rcon Matrix specifying constraints on the random parameters as
+#' specified in \code{random.ui} and \code{random.ci} in the \code{constraints}
+#' option within \code{estoptions} (see \code{\link{runMLwiN}}). \code{random.ci}
+#' is appended to the bottom row of \code{random.ui}.
+#' @param fcon Matrix specifying constraints on the fixed coefficients as
+#' specified in \code{fixed.ui} and \code{fixed.ci} in the \code{constraints}
+#' option within \code{estoptions} (see \code{\link{runMLwiN}}). \code{fixed.ci}
+#' is appended to the bottom row of \code{fixed.ui}.
+#' @param maxiter Numeric value specifying the maximum number of iterations, from
+#' the start, before estimation halts.
+#' @param convtol Numeric value specifying the convergence criterion, as
+#' specified in the \code{tol} option within \code{estoptions} (see
+#' \code{\link{runMLwiN}}). If value of \code{convtol} is m, estimation will be
+#' deemed to have converged when the relative change in the estimate for all
+#' parameter from one iteration to the next is less than 10(-m). Defaults to
+#' value of \code{2} for m if not otherwise specified.
+#' @param BUGO If the first entry of the vector is \code{TRUE}, the current
+#' model is outputted in BUGS code. \code{version = 4} specifies WinBUGS 1.4
+#' format, whilst \code{version = 3} corresponds to WinBUGS 1.3 format.
+#' \code{n.chains} specifies the number of chains to be used in
+#' WinBUGS/OpenBUGS, \code{n.chains = 1} by default. \code{debug} specifies
+#' whether BUGS is left open once the model has run, or not (\code{debug = F} by
+#' default). \code{seed} sets the random number generator in BUGS. \code{bugs}
+#' specifies the location of the WinBUGS/OpenBUGS executable.
+#' If \code{OpenBugs = TRUE} OpenBUGS is used, if \code{FALSE} (the default)
+#' WinBUGS is used.
+#' @param mem.init If calling MacroScript1 directly, if wish to use defaults, value needs to be
+#' specified as \code{"default"}, else specify a vector of length 5 corresponding
+#' to the following order: number of levels; worksheet size in thousands of cells;
+#' the number of columns; the number of explanatory variables; the number of group
+#' labels. 
+#' @param optimat This option instructs MLwiN to limit the maximum matrix size
+#' that can be allocated by the (R)IGLS algorithm. Specify \code{optimat = TRUE}
+#' if MLwiN gives the following error message "Overflow allocating smatrix".
+#' This error message arises if one more higher-level units is extremely large
+#' (contains more than 800 lower-level units). In this situation \pkg{R2MLwiN}'s
+#' default behaviour is to instruct MLwiN to allocate a larger matrix size to
+#' the (R)IGLS algorithm than is currently possible. Specifying
+#' \code{optimat = TRUE} caps the maximum matrix size at 800 lower-level units,
+#' circumventing the MLwiN error message, and allowing most MLwiN
+#' functionality.
+#' @param weighting A list of two items, one of which is a list called \code{weightvar}
+#' the length of which corresponds
+#' to the number of levels in the model, in descending order from highest level first.
+#' The other is an option \code{standardised} which is \code{TRUE} or \code{FALSE}.
+#' @param fpsandwich Specifies standard error type for fixed parameters. If
+#' \code{fpsandwich = TRUE}, robust or `sandwich' standard errors based on raw
+#' residuals are used, if \code{fpsandwich = FALSE} (default) then standard,
+#' uncorrected, IGLS or RIGLS computation used.
+#' @param rpsandwich  Specifies standard error type for random parameters. If
+#' \code{rpsandwich = TRUE}, robust or `sandwich' standard errors based on raw
+#' residuals are used, if \code{rpsandwich = FALSE} (default) then standard,
+#' uncorrected, IGLS or RIGLS `plug in' estimates used.
+#' @param modelfile A file name where the WinBUGS model will be saved in .txt
+#' format.
+#' @param initfile A file name where the WinBUGS initial values will be saved
+#' in .txt format.
+#' @param datafile A file name where the WinBUGS data will be saved in .txt
+#' format.
+#' @param macrofile A file name where the MLwiN macro file will be saved. The
+#' default location is in the temporary folder.
+#' @param IGLSfile A file name where the parameter estimates will be saved. The
+#' default location is in the temporary folder.
+#' @param resifile A file name where the residuals will be saved. The default
+#' location is in the temporary folder.
+#' @param resi.store A logical value to indicate if the residuals are to be
+#' stored (\code{TRUE}) or not (\code{FALSE}).
+#' @param resioptions A string vector to specify the various residual options.
+#' The \code{"variances"} option calculates the posterior variances instead of
+#' the posterior standard errors; the \code{"standardised"}, \code{"leverage"},
+#' \code{"influence"} and \code{"deletion"} options calculate standardised,
+#' leverage, influence and deletion residuals respectively; the
+#' \code{"sampling"} option calculates the sampling variance covariance matrix
+#' for the residuals; the \code{"norecode"} option prevents residuals with
+#' values exceedingly close or equal to zero from being recoded to missing; the
+#' reflate option returns unshrunken residuals. Note that the default option is
+#' \code{resioptions = c("variance", "sampling")}; \code{"variance"} cannot be used together
+#' with the other options to calculate standardised, leverage, influence and
+#' deletion residuals.
+#' @param debugmode A logical value determining whether MLwiN is run in the
+#' background or not. The default value is \code{FALSE}: i.e. MLwiN is run in
+#' the background. If \code{TRUE} the MLwiN GUI is opened, and then pauses after the model
+#' has been set-up, allowing user to check starting values; pressing "Resume macro"
+#' will then fit the model. Once fit, pressing "Resume macro" once more will save
+#' the outputs to the \code{workdir} ready to be read by \pkg{R2MLwiN}. Users can
+#' instead opt to "Abort macro" in which case...
+#' @param startval
+#' 
+#' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
+#' W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
+#' 
+#' @seealso \code{\link{MacroScript2}}
+#' 
 MacroScript1 <- function(indata,dtafile,oldsyntax=FALSE,resp,levID,expl,rp,D='Normal',nonlinear=c(0,1),categ=NULL,notation=NULL,
                          nonfp=NA,clre=NULL,Meth=1,extra=FALSE,reset,rcon=NULL,fcon=NULL,maxiter=20,convtol=2,
                          mem.init="default",optimat=FALSE,weighting=NULL,fpsandwich=FALSE,rpsandwich=FALSE,modelfile,initfile,datafile,
