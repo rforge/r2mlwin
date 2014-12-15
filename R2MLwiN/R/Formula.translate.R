@@ -5,10 +5,10 @@
 #' 
 #' @param Formula A \code{\link[stats]{formula}} object specifying a multilevel model. See `Details'
 #' section below.
-#' @param levID A character (vector) specifying the level ID(s).
 #' @param D A character string/vector specifying the distribution to be
-#' modelled.
+#' modelled; defaults to \code{Normal}.
 #' @param indata A data.frame object containing the data to be modelled.
+#' Optional (can \code{\link[base]{attach}} as an alternative) but recommended.
 #'
 #' @details With regard to the \code{Formula} object in \pkg{R2MLwiN}, \code{\link[stats]{formula}}
 #' provides notes on general usage with further details below.
