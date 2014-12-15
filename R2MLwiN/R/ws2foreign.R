@@ -1,3 +1,43 @@
+#' Converts data from one format to another within MLwiN
+#' 
+#' This function converts data from one format to another within MLwiN, via
+#' MLwiN macro language. The \code{foreign} package allows R to read data files
+#' for most of these formats.
+#' 
+#' MLwiN supports conversion between MLwiN (*.wsz, *.ws), Minitab (*.mtw), SAS
+#' (*.xpt), SPSS (*.sav), and Stata (*.dta) files.
+#' 
+#' @param wsfile A file name specifying the data file (with a specific
+#' extension) to be converted. 
+#' @param foreignfile A file name specifying the data file (with a specific
+#' extension) after conversion.
+#' @param MLwiNPath A path to the MLwiN folder. By default, \code{MLwiNPath = NULL}
+#' and path set by \code{options("MLwiN_path")}, the default for which can be
+#' changed via \code{options(MLwiN_path = "path/to/MLwiN vX.XX/")}).
+#' @param x64 A logical value indicating whether the 64 bit version of MLwiN is
+#' used. If \code{FALSE} (by default), the 32 bit version is called.
+#'
+#' @return The converted data file (with a specific extension) will be saved to the file
+#' specified by \code{foreignfile}. CHANGE THIS TO AN ENTRY IN DETAILS.
+#' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
+#' W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
+#'
+#' @seealso \cite{\link[foreign]{read.dta}}
+#'
+#' @examples
+#' 
+#' \dontrun{
+#' library(R2MLwiN)
+#' ## Modify the following path as appropriate.
+#' wsfile="C:/Program Files (x86)/MLwiN v2.30/samples/tutorial.ws"
+#' ## the tutorial.dta will be save under the temporary folder
+#' inputfile=paste(tempdir(),"/tutorial.dta",sep="")
+#' ws2foreign(wsfile, foreignfile=inputfile)
+#' indata=read.dta(inputfile)
+#' str(indata)
+#' }
+#' 
+#' @export
 ws2foreign <- function(wsfile, foreignfile, MLwiNPath = NULL, x64=NULL){
   ## Convert MLwiN worksheet file to other data file which is used in Minitab, SAS, SPSS, or Stata
   temptfile =gsub("\\", "/", tempfile("coversion_",fileext=".txt"),fixed=TRUE)
