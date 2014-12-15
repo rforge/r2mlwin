@@ -1,3 +1,62 @@
+#' This function captures output files from MLwiN for estimation in
+#' WinBUGS/OpenBUGS.
+#' 
+#' This function allows R to call WinBUGS using the output files from MLwiN.
+#' This function uses functionalities in the \code{\link[rbugs]{rbugs}}
+#' package.
+#' 
+#' @param D A vector specifying the type of distribution used in the model.
+#' @param levID A character (vector) specifies the level ID(s).
+#' @param datafile A file name where the BUGS data file will be saved in
+#' .txt format.
+#' @param initfile A file name where the BUGS initial values will be saved
+#' in .txt format.
+#' @param modelfile A file name where the BUGS model will be saved in .txt
+#' format.
+#' @param bugEst A file name where the estimates from BUGS will be stored in
+#' .txt format.
+#' @param fact A list of objects used to specify factor analysis. See `Details'
+#' below.
+#' @param addmore A vector of strings specifying additional coefficients to be
+#' monitored.
+#' @param n.chains The number of chains to be monitored.
+#' @param n.iter The number of iterations for each chain
+#' @param n.burnin The length of burn-in for each chain
+#' @param n.thin Thinning rate
+#' @param debug A logical value indicating whether (\code{TRUE}) or not
+#' (\code{FALSE}; the default) to close the BUGS window after completion of the
+#' model run
+#' @param bugs The full name (including the path) of the BUGS executable
+#' @param bugsWorkingDir A directory where all the intermediate files are to be
+#' stored; defaults to \code{tempdir()}.
+#' @param OpenBugs If \code{TRUE}, OpenBUGS is used, if \code{FALSE} (the
+#' default) WinBUGS is used.
+#' @param cleanBugsWorkingDir If \code{TRUE}, the generated files will be
+#' removed from the \code{bugsWorkingDir}; defaults to \code{FALSE}.
+#' @param seed An integer specifying the random seed.
+#'
+#' @return A list of objects to specify factor analysis, as used in the
+#' argument \code{fact}: \item{nfact}{Specifies the number of factors}
+#' \item{lev.fact}{Specifies the level/classification for the random part of
+#' the factor for each factor.} \item{nfactor}{Specifies the number of
+#' correlated factors} \item{factor}{A vector specifying the correlated
+#' factors} \tabular{ll}{ (1)\tab the first factor number; \cr (2)\tab the
+#' second factor number; \cr (3)\tab the starting value for the covariance
+#' and\cr (4)\tab an indicator of whether this covariance is constrained
+#' (\code{1}) or not (\code{0}).\cr } \item{loading}{A matrix specifying the
+#' starting values for the factor loadings and the starting value of the factor
+#' variance. Each row corresponds to a factor.} \item{constr}{A matrix
+#' specifying indicators of whether the factor loadings and the factor variance
+#' are constrained (\code{1}) or not (\code{0}).}
+#'
+#' @note This function is derived from \code{\link[rbugs]{rbugs}} (written by
+#' Jun Yan and Marcos Prates).
+#'
+#' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
+#' W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
+#'
+#' @seealso \code{\link{runMLwiN}},\code{\link[rbugs]{rbugs}}
+#'
 mlwin2bugs <- function(D,levID, datafile, initfile, modelfile, bugEst, fact, addmore, n.chains, n.iter, n.burnin, n.thin, debug=F, bugs,
                        bugsWorkingDir=tempdir(), OpenBugs = F, cleanBugsWorkingDir = FALSE, seed = NULL){
   
