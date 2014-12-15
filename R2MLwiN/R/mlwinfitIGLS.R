@@ -1,19 +1,71 @@
-# An S4 class that stores the outputs of the fitted model.
-# @slot a contains an R object
-# @export
+#' An S4 class that stores the outputs of the fitted model.
+#'
+#' ADD DESCRIPTION
+#'
+#' @section An instance of the Class:
+#'  An instance is created by calling function \code{\link{runMLwiN}}.
+#'
+#' @slot Nobs Computes the number of complete observations.
+#' @slot DataLength Total number of cases.
+#' @slot Hierarchy For each higher level of a multilevel model, returns the number of units at that level, together with the minimum, mean and maximum number of lower-level units nested within units of the current level.
+#' @slot D A vector specifying the type of distribution to be modelled, which can include \code{"Normal"}, \code{"Binomial"} \code{"Poisson"}, \code{"Multinomial"}, \code{"Multivariate Normal"}, or \code{"Mixed"}.
+#' @slot Formula A formula object (or a character string) specifying a multilevel model.
+#' @slot levID A character string (vector) of the specified level ID(s).
+#' @slot FP Displays the fixed part estimates.
+#' @slot RP Displays the random part estimates.
+#' @slot FP.cov Displays a covariance matrix of the fixed part estimates.
+#' @slot RP.cov Displays a covariance matrix of the random part estimates.
+#' @slot elapsed.time Calculates the CPU time used for fitting the model.
+#' @slot call The matched call.
+#' @slot LIKE The deviance statistic (-2*log(like)).
+#' @slot Converged TO ADD
+#' @slot Iterations TO ADD
+#' @slot Meth TO ADD
+#' @slot residual If \code{resi.store} is \code{TRUE}, then the residual estimates at all levels are returned.
+#' @slot data TO ADD
+#'
+#' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
+#' W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
+#'
+#' @seealso
+#' \code{\link{runMLwiN}}
+#'
+#' @examples
+#' \dontrun{
+#' library(R2MLwiN)
+#' #NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
+#' #...so please change relevant line if different
+#' #if using R2MLwiN via WINE, the path may look like 
+#' #options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/") 
+#' 
+#' ## Example: tutorial
+#' data(tutorial)
+#' formula=normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)
+#' levID=c('school','student')
+#' ## Choose option(s) for inference
+#' estoptions= list(EstM=0)
+#' ## Fit the model
+#' mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions)
+#' 
+#' ##summary method
+#' summary(mymodel)
+#' 
+#' ##get method
+#' mymodel["LIKE"]
+#' }
+#'
 setClass(Class = "mlwinfitIGLS", representation = representation(version="character",Nobs="numeric",DataLength="numeric",Hierarchy="ANY",
                                                                  D="ANY", Formula="ANY", levID="character",
                                                                  FP="numeric", RP="numeric", RP.cov="matrix", FP.cov="matrix", LIKE="ANY",
                                                                  elapsed.time="numeric", call="ANY", residual="list",
                                                                  Converged="logical", Iterations="numeric", Meth="numeric", nonlinear="numeric", data="data.frame"))
 
-# extract parts of mlwinfitIGLS
-#
-# @name [
-# @aliases [,mlwinfitIGLS-method
-# @docType methods
-# @rdname extract-methods
-#
+
+#' Extract parts of mlwinfitIGLS
+#' @name [
+#' @rdname extract-methods
+#' @aliases [[,mlwinfitIGLS-method
+#' @docType methods
 setMethod(
   f= "[",
   signature="mlwinfitIGLS",
@@ -41,13 +93,12 @@ setMethod(
     if(i=="data"){return(x@data)}else {}
   }
 )
-# extract parts of mlwinfitIGLS
-#
-# @name [
-# @aliases [,mlwinfitIGLS-method
-# @docType methods
-# @rdname extract-methods
-#
+
+#' Extract parts of mlwinfitIGLS
+#' @name [[
+#' @rdname extract-methods
+#' @aliases [,mlwinfitIGLS-method
+#' @docType methods
 setMethod(
   f= "[[",
   signature="mlwinfitIGLS",
@@ -75,12 +126,11 @@ setMethod(
   }
 )
 
-# replace names of mlwinfitIGLS
-#
-# @name [
-# @aliases [<-,mlwinfitIGLS-method
-# @docType methods
-# @rdname extract-methods
+#' Replace names of mlwinfitIGLS
+#' @name [
+#' @rdname extract-methods
+#' @aliases [<-,mlwinfitIGLS-method
+#' @docType methods
 setReplaceMethod(
   f= "[",
   signature="mlwinfitIGLS",
@@ -109,12 +159,12 @@ setReplaceMethod(
     return (x)
   }
 )
-# replace names of mlwinfitIGLS
-#
-# @name [
-# @aliases [<-,mlwinfitIGLS-method
-# @docType methods
-# @rdname extract-methods
+
+#' Replace names of mlwinfitIGLS
+#' @name [[
+#' @rdname extract-methods
+#' @aliases [<-,mlwinfitIGLS-method
+#' @docType methods
 setReplaceMethod(
   f= "[[",
   signature="mlwinfitIGLS",
