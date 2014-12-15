@@ -1,3 +1,275 @@
+#' Writes MLwiN macros to fit models using Markov chain Monte Carlo (MCMC)
+#' methods
+#' 
+#' MacroScript2 is an internal function which creates an MLwiN macro file to
+#' fit models using MCMC.
+#' 
+#' @param indata A data.frame object containing the data to be modelled.
+#' @param dtafile The file name of the dataset to be imported into MLwiN, which
+#' is in Stata format (i.e. with extension .dta).
+#' @param oldsyntax Specified as \code{FALSE} if new syntax has been used in
+#' \code{Formula} object, else specified as \code{TRUE} (to enable
+#' backcompatibility).
+#' @param resp A character string (vector) of response variable(s).
+#' @param levID A character string (vector) of the specified level ID(s). The
+#' ID(s) should be sorted in the descending order of levels (e.g.
+#' \code{levID = c('level2', 'level1')} where \code{'level2'} is the higher
+#' level).
+#' @param expl A character string (vector) of explanatory (predictor)
+#' variable(s).
+#' @param rp A character string (vector) of random part of random variable(s).
+#' @param D A vector specifying the type of distribution to be modelled, which
+#' can include \code{"Normal"}, \code{"Binomial"} \code{"Poisson"},
+#' \code{"Unordered Multinomial"}, \code{"Ordered Multinomial"},
+#' \code{"Multivariate Normal"}, or \code{"Mixed"}.
+#' @param nonlinear LINEarise mode N order M. \code{N = 0} specifies marginal
+#' quasi-likelihood linearization (MQL), whilst \code{N = 1} specifies penalised
+#' quasi-likelihood linearization (PQL); \code{M = 1} specifies first order
+#' approximation, whilst \code{M = 2} specifies second order approximation.
+#' \code{nonlinear = c(N = 0, M = 1)} by default.
+#' @param categ Specifies categorical variable(s) as a matrix. Each column
+#' corresponds to a categorical variable; the first row specifies the name(s)
+#' of variable(s); the second row specifies the name(s) of reference group(s),
+#' \code{NA}(s) if no reference group; the third row states the number of
+#' categories for each variable.
+#' @param notation Specifies the model subscript notation to be used in the
+#' MLwiN equations window. \code{"class"} means no multiple subscripts, whereas
+#' \code{"level"} has multiple subscripts.
+#' @param nonfp Removes the fixed part of random variable(s). \code{NA} if no
+#' variable is removed.
+#' @param clre A matrix used to estimate some, but not all, of the variances
+#' and covariances for a set of coefficients at a particular level. Remove from
+#' the random part at level <first row> the covariance matrix element(s)
+#' defined by the pair(s) of rows <second row> <third row>. Each row
+#' corresponds to a removed entry of the covariance matrix.
+#' @param Meth Specifies which maximum likelihood estimation method to be used.
+#' If \code{Meth = 0} estimation method is set to RIGLS. If \code{Meth = 1}
+#' estimation method is set to IGLS (the default setting). If \code{Meth} is
+#' absent, alternate between IGLS and RIGLS.
+#' @param merr A vector which sets-up measurement errors on predictor
+#' variables. The first element \code{N} defines the number of variables that
+#' have measurement errors. Then, for each variable with measurement error, a
+#' pair of inputs is required: the first of which is the explanatory variable
+#' name as a character string, and the second of which is the variance of
+#' the measurement error for this variable.
+#' @param carcentre If CAR model (i.e. if \code{car} is non-\code{NULL}),
+#' \code{carcentre = TRUE} mean-centres all random effects at that level.
+#' @param maxiter Numeric value specifying the total number of iterations, from
+#' the start, before IGLS estimation halts (if \code{startval = NULL}).
+#' @param convtol Numeric value specifying the IGLS convergence criterion, as
+#' specified in the \code{tol} option within \code{estoptions}, where
+#' \code{startval = NULL}) (see \code{\link{runMLwiN}}). If value of
+#' \code{convtol} is m, estimation will be deemed to have converged when the
+#' relative change in the estimate for any parameter from one iteration to the
+#' next is less than 10(-m). Defaults to value of \code{2} for m if not
+#' otherwise specified.
+#' @param seed An integer specifying the random seed in MLwiN.
+#' @param iterations An integer specifying the number of iterations after
+#' burn-in.
+#' @param burnin An integer specifying length of the burn-in.
+#' @param scale An integer specifying the scale factor of proposed variances;
+#' this number will be multiplied by the estimated
+#' parameter variance (from IGLS/RIGLS) to give the proposal distribution variance.
+#' @param thinning An integer specifying the frequency with which successive
+#' values in the Markov chain are stored. By default \code{thinning = 1}.
+#' @param priorParam A vector specifying the informative priors used, as output
+#' from \code{\link{prior2macro}}.
+#' @param refresh An integer specifying how frequently the parameter estimates
+#' are refreshed on the screen during iterations; only applies if
+#' \code{debugmode = TRUE)} and \code{nopause = TRUE)} in \code{estoptions}:
+#' see \code{\link[R2MLwiN]{runMLwiN}}.
+#' @param fixM Specifies the fixed effect method: \code{1} for Gibbs Sampling,
+#' \code{2} for univariate MH Sampling and \code{3} for multivariate MH
+#' Sampling.
+#' @param residM Specifies the residual method: \code{1} for Gibbs Sampling,
+#' \code{2} for univariate MH Sampling and \code{3} for multivariate MH
+#' Sampling.
+#' @param Lev1VarM Specifies the level 1 variance method: \code{1} for Gibbs
+#' Sampling, \code{2} for univariate MH Sampling and \code{3} for multivariate
+#' MH Sampling.
+#' @param OtherVarM Specifies the variance method for other levels: \code{1}
+#' for Gibbs Sampling, \code{2} for univariate MH Sampling and \code{3} for
+#' multivariate MH Sampling.
+#' @param adaption \code{adaption = 1} indicates adaptation is to be used;
+#' \code{0} otherwise.
+#' @param priorcode An integer indicating which default priors are to be used
+#' for the variance parameters. This parameter takes the value \code{1} for
+#' Gamma priors or \code{0} for Uniform on the variance scale priors. See the
+#' section on "Priors" in the MLwiN help system for more details on the meaning
+#' of these default priors.
+#' @param rate An integer specifying the acceptance rate (as a percentage);
+#' this command is ignored if \code{adaption = 0}.
+#' @param tol An integer specifying tolerance (as a percentage) for the acceptance rate.
+#' @param lclo This command toggles on/off the possible forms of complex level
+#' 1 variation when using MCMC. \code{lclo = 0} expresses the level
+#' 1 variation as a function of the predictors, whereas \code{lclo = 1} expresses the
+#' log of the level 1 precision (1/variance) as a function of the predictors.
+#' @param mcmcOptions A list of other MCMC options used. See `Details' below.
+#' @param fact A list of objects specified for factor analysis. See `Details'
+#' below.
+#' @param xc Indicates whether model is cross-classified (\code{TRUE}) or
+#' nested (\code{FALSE}). \code{xc = NULL} by default (corresponding to
+#' \code{FALSE}), unless either \code{mm} or \code{car} are not null, in
+#' which case \code{xc = TRUE}.
+#' @param mm A list specifying structure of multiple membership model. Each
+#' element of the list corresponds to a level (classification) of the model,
+#' in descending order. If a level is not a multiple membership classification,
+#' then \code{NA} is specified. Otherwise, lists need to be assigned to
+#' \code{mmvar} and \code{weights}, with the former containing columns
+#' specifying the classification units, and the latter containing columns
+#' specifying the weights. See \code{demo(MCMCGuide16)} for examples.
+#' \code{mm = NULL} by default.
+#' @param car A list specifying structure of a conditional autoregressive (CAR)
+#' model. Each element of the list corresponds to a level (classification) of
+#' the model, in descending order. If a level is not a spatial classification,
+#' then \code{NA} is specified. Otherwise, lists need to be assigned to
+#' \code{carvar} and \code{weights}, with the former containing columns
+#' specifying the spatial classification units, and the latter containing
+#' columns specifying the weights. See \code{demo(MCMCGuide17)} for examples.
+#' \code{car = NULL} by default.
+#' @param BUGO If non-\code{NULL} uses BUGS for MCMC estimation using files
+#' specified in \code{modelfile}, \code{initfile} and \code{datafile}.
+#' @param mem.init A vector which sets and displays worksheet capacities for
+#' the current MLwiN session according to the value(s) specified. By default,
+#' the number of levels is \code{nlev}+1; worksheet size in thousands of cells
+#' is 6000; the number of columns is 2500; the number of explanatory variables
+#' is \code{num_vars}+10; the number of group labels is 20. \code{nlev} is the
+#' number of levels specified by \code{levID}, and \code{num_vars} is
+#' approximately the number of explanatory variables calculated initially.
+#' @param optimat This option instructs MLwiN to limit the maximum matrix size
+#' that can be allocated by the (R)IGLS algorithm. Specify \code{optimat = TRUE}
+#' if MLwiN gives the following error message "Overflow allocating smatrix".
+#' This error message arises if one more higher-level units is extremely large
+#' (contains more than 800 lower-level units).  In this situation runmlwin's
+#' default behaviour is to instruct MLwiN to allocate a larger matrix size to
+#' the (R)IGLS algorithm than is currently possible. Specifying
+#' \code{optimat = TRUE} caps the maximum matrix size at 800 lower-level units,
+#' circumventing the MLwiN error message, and allowing most MLwiN
+#' functionality.
+#' @param nopause A logical value specifying whether the estimates are to be
+#' updated on screen or not, in MLwiN.
+#' @param modelfile A file name where the BUGS model will be saved in .txt
+#' format.
+#' @param initfile A file name where the BUGS initial values will be saved
+#' in .txt format.
+#' @param datafile A file name where the BUGS data will be saved in .txt
+#' format.
+#' @param macrofile A file name where the MLwiN macro file will be saved.
+#' @param IGLSfile A file name where the IGLS estimates will be saved.
+#' @param MCMCfile A file name where the MCMC estimates will be saved.
+#' @param chainfile A file name where the MCMC chains will be saved.
+#' @param MIfile A file name where the missing values will be saved.
+#' @param resifile A file name where the residual estimates will be saved.
+#' @param resi.store A logical value to indicate if residuals are to be stored
+#' (\code{TRUE}) or not (\code{FALSE}).
+#' @param resioptions A string vector to specify the various residual options.
+#' The \code{"variance"} option calculates the posterior variances instead of
+#' the posterior standard errors; the \code{"standardised"} calculates standardised
+#' residuals; the \code{"norecode"} option prevents residuals with
+#' values exceedingly close or equal to zero from being recoded to missing.
+#' @param resichains A file name where the residual chains will be saved.
+#' @param FACTchainfile A file name where the factor chains will be saved.
+#' @param resi.store.levs An integer vector indicating the levels at which the
+#' residual chains are to be stored.
+#' @param debugmode A logical value determining whether MLwiN is run in the
+#' background or not. The default value is \code{FALSE}: i.e. MLwiN is run in
+#' the background. If \code{TRUE} MLwiN remains open after the model has run,
+#' allowing the user to interact with MLwiN directly (but note that output will
+#' not be returned to R until MLwiN is closed).
+#' @param startval A list of numeric vectors specifying the starting values
+#' when using MCMC. \code{FP.b} corresponds to the estimates for the fixed
+#' part; \code{FP.v} specifies the variance/covariance estimates for the fixed
+#' part; \code{RP.b} specifies the variance estimates for the random part;
+#' \code{RP.v} corresponds to the variance/covariance matrix of the variance
+#' estimates for the random part.
+#' @param dami This command outputs a complete (i.e. including non-missing
+#' responses) response variable y. If \code{dami = c(0, <iter1>, <iter2>,...)} then
+#' the response variables returned will be the value of y at the iterations
+#' quoted (as integers \code{<iter1>, <iter2>}, etc.); these can be used for
+#' multiple imputation. If \code{dami = 1} the value of y will be the mean
+#' estimate from the iterations produced. \code{dami = 2} is as for \code{dami = 1}
+#' but with the standard errors of the estimate additionally being stored.
+#' 
+#' @details A list of other MCMC options as used in the argument
+#' \code{mcmcOptions}:
+#' \itemize{
+#' \item \code{orth}: If \code{orth = 1}, orthogonal fixed effect
+#' vectors are used; zero otherwise.
+#' \item \code{hcen}: An integer specifying the
+#' level where we use hierarchical centering.
+#' \item \code{smcm}: If \code{smcm = 1},
+#' structured MCMC is used; zero otherwise.
+#' \item \code{smvn}: If \code{smvn = 1}, the
+#' structured MVN framework is used; zero otherwise.
+#' \item \code{paex}: A matrix of Nx2; in each row, if the second digit is \code{1}, parameter expansion
+#' is used at level <the first digit>.
+#' \item \code{mcco}: This
+#' command allows the user to have constrained settings for the lowest level
+#' variance matrix in a multivariate Normal model. If value is \code{0},
+#' it estimates distinct variances for each residual error and distinct covariances
+#' for each residual error pair. Four other
+#' settings are currently available:\cr
+#' \tabular{ll}{\code{1} \tab fits stuctured errors with a common correlation paramater and a common variance parameter;\cr
+#' \code{2} \tab fits AR1 errors with a common variance parameter;\cr \code{3} \tab fits structured errors with a common
+#' correlation parameter and independent variance parameters;\cr \code{4} \tab fits AR1 errors with independent variance
+#' parameters.\cr }
+#' }
+#' 
+#' A list of objects specified for cross-classified and/or multiple membership
+#' models, as used in the argument \code{xclass}: NEEDS UPDATING... SEE runMLwiN????
+#' \itemize{
+#' \item \code{class}: An integer
+#' (vector) of the specified class(es).
+#' \item \code{N1}: This defines a multiple
+#' membership across \code{N1} units at level \code{class}. \code{N1}>1 if
+#' there is multiple membership.
+#' \item \code{weight}: If there is multiple
+#' membership then the column number \code{weight}, which is the length of the
+#' dataset, will contain the first set of weights for the multiple membership.
+#' Note that there should be \code{N1} weight columns and they should be
+#' sequential in the worksheet starting from \code{weight}.
+#' \item \code{id}: If the
+#' response is multivariate then the column number \code{id} must be input and
+#' this contains the first set of identifiers for the classification. Note that
+#' for a p-variate model each lowest level unit contains p records and the
+#' identifiers (sequence numbers) for each response variate need to be
+#' extracted into \code{id} and following columns. There should be \code{N1} of
+#' these identifier columns and they should be sequential starting from
+#' \code{id} in the multivariate case.
+#' \item \code{car}: \code{car = TRUE} indicates
+#' the spatial CAR model; \code{FALSE} otherwise. \code{car = FALSE} if ignored.
+#' }
+#' 
+#' A list of objects specified for factor analysis, as used in the argument
+#' \code{fact}:
+#' \itemize{
+#' \item \code{nfact}: Specifies the number of factors
+#' \item \code{lev.fact}: Specifies the level/classification for the random part of
+#' the factor for each factor.
+#' \item \code{nfactcor}: Specifies the number of
+#' correlated factors
+#' \item \code{factcor}: A vector specifying the correlated factors:
+#' \tabular{ll}{\code{1} \tab the first factor number; \cr \code{2} \tab the
+#' second factor number; \cr \code{3} \tab the starting value for the covariance
+#' and\cr \code{4} \tab an indicator of whether this covariance is constrained
+#' (\code{1}) or not (\code{0}).}
+#' \item \code{loading}: A matrix specifying the
+#' starting values for the factor loadings and the starting value of the factor
+#' variance. Each row corresponds to a factor.
+#' \item \code{constr}: A matrix
+#' specifying indicators of whether the factor loadings and the factor variance
+#' are constrained (\code{1}) or not (\code{0}).
+#' }
+#' 
+#' @note Note that for \code{FixM}, \code{residM}, \code{Lev1VarM} and
+#' \code{OtherVarM}, not all combinations of methods are available for all sets
+#' of parameters and all models.
+#' 
+#' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
+#' W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
+#' 
+#' @seealso \code{\link{MacroScript1}}
+#' 
 MacroScript2 <- function(indata,dtafile,oldsyntax=FALSE,resp,levID,expl,rp,D='Normal',nonlinear=c(0,1),categ=NULL,notation=NULL,
                          nonfp=NULL,clre=NULL,Meth=1,merr=NULL,carcentre=FALSE,maxiter=20,convtol=2,
                          seed=1,iterations=5000,burnin=500,scale=5.8,thinning=1,priorParam="default",refresh=50,fixM=1,residM=1,Lev1VarM=1, 
