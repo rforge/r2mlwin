@@ -1,3 +1,19 @@
+#' Converts numerical values from double precision to single precision.
+#' 
+#' This function converts numeric column(s) of a data frame object, matrix or
+#' vector from double precision to single precision, e.g. to avoid warning
+#' from MLwiN which currently only stores data in single precision.
+#' 
+#' @param x A data frame object, matrix or vector to be converted. Column(s)
+#' of these objects will be ignored during conversion if they are not
+#' numeric.
+#' 
+#' @return An object of numerical values in single precision will be returned.
+#' 
+#' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
+#' W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
+#' 
+#' @export
 double2singlePrecision <- function(x) {
   ## A wrapped function is used to change double to single
   if(is.matrix(x)||is.data.frame(x)){
