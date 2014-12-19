@@ -1326,13 +1326,13 @@ MacroScript2 <- function(indata,dtafile,oldsyntax=FALSE,resp,levID,expl,rp,D='No
       wrt(paste("JOIN ",paste(startval$FP.b, collapse=" "), " '_FP_b'",sep=""))
     }
     if (!is.null(startval$FP.v)){
-      wrt(paste("JOIN ",paste(startval$RP.v[!upper.tri(startval$RP.v)], collapse=" "), " '_FP_v'",sep=""))
+      wrt(paste("JOIN ",paste(startval$FP.v[!lower.tri(startval$FP.v)], collapse=" "), " '_FP_v'",sep=""))
     }
     if (!is.null(startval$RP.b)){
       wrt(paste("JOIN ",paste(startval$RP.b, collapse=" "), " '_RP_b'",sep=""))
     }
     if (!is.null(startval$RP.v)){
-      wrt(paste("JOIN ",paste(startval$RP.v[!upper.tri(startval$RP.v)], collapse=" "), " '_RP_v'",sep=""))
+      wrt(paste("JOIN ",paste(startval$RP.v[!lower.tri(startval$RP.v)], collapse=" "), " '_RP_v'",sep=""))
     }
   } else {
     wrt(paste("TOLE", convtol))
