@@ -1183,17 +1183,24 @@ Formula.translate <- function(Formula, D='Normal', indata){
       if (length(fixc)!=0){
         delpos <- numeric(0)
         addterms <- numeric(0)
+        addccid <- numeric(0)
         for (ii in 1:length(fixc)){
           replacepos <- fixc[ii]%in%categstr0
           if (replacepos){
             taddterms <- categstr3[[fixc[ii]]]
+            len.taddterms <- length(taddterms)
+            taddccid <- matrix(rep(ccid.mat[fixc[ii],],len.taddterms), nrow=len.taddterms, byrow=TRUE)
+            rownames(taddccid) <- taddterms
             delpos <- c(delpos, ii)
             addterms <- c(addterms, taddterms)
+            addccid <- rbind(addccid, taddccid)
           }
         }
         if (length(delpos)>0){
           fixc <- fixc[-delpos]
           fixc <- c(fixc, addterms)
+          ccid.mat <- ccid.mat[-delpos,]
+          ccid.mat <- rbind(ccid.mat, addccid)
         }  
       }
       if (length(nonfpc)!=0){
