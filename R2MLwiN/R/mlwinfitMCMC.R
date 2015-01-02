@@ -33,7 +33,8 @@
 #' @slot MIdata If \code{dami} is not empty, then the complete response variable \code{y} are returned.
 #' @slot residual If \code{resi.store} is \code{TRUE}, then the residual estimates at all levels are returned.
 #' @slot resi.chains If \code{resi.store.levs} is not empty, then the residual chains at these levels are returned.
-#' @slot data
+#' @slot version TO ADD
+#' @slot data TO ADD
 #'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2014) Centre for Multilevel Modelling, University of Bristol.

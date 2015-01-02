@@ -1,10 +1,10 @@
 #' Draws predicted lines using a fitted model object
-#' 
+#'
 #' This function draws predicted lines against an explanatory variable for
 #' selected groups at a higher (>=2) level.
-#' 
-#' @param object Either an \code{\link{mlwinfitIGLS}} or \code{\link{mlwinfitMCMC}}
-#' class object.
+#'
+#' @param object Either an \code{\link{mlwinfitIGLS-class}} or \code{\link{mlwinfitMCMC-class}}
+#' object.
 #' @param indata A data.frame object containing the data. If not specified, data is extracted from
 #' the \code{object}.
 #' @param xname The name of the variable to be plotted.
@@ -15,7 +15,7 @@
 #' level are included.
 #' @param probs A numeric vector of probabilities with values in \code{[0, 1]}
 #' used to calculate the lower and upper quantiles from which the error bars
-#' are plotted. Currently, this is only available for an \code{\link{mlwinfitMCMC}} object.
+#' are plotted. Currently, this is only available for an \code{\link{mlwinfitMCMC-class}} object.
 #' @param legend A logical value indicating whether a legend is to be added.
 #' @param legend.space A character string specifies one of the four sides,
 #' which can be one of \code{"top"}, \code{"bottom"}, \code{"left"} and \code{"right"}.  Default,
@@ -24,32 +24,32 @@
 #' divided into blocks, each containing some rows. Default,
 #' \code{legend.ncol = 2}.
 #' @param ...  Other arguments to be pased to \code{\link[lattice]{xyplot}}.
-#' 
+#'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
-#' 
+#'
 #' @seealso \code{\link{predCurves}}
-#' 
+#'
 #' @examples
-#' 
+#'
 #' \dontrun{
 #' library(R2MLwiN)
 #' #NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
 #' #...so please change relevant line if different
-#' #if using R2MLwiN via WINE, the path may look like 
-#' #options(MLwiN_path = "/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/") 
-#' 
+#' #if using R2MLwiN via WINE, the path may look like
+#' #options(MLwiN_path = "/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/")
+#'
 #' ## Example: tutorial
 #' data(tutorial)
 #' formula = normexam ~ (0|cons + standlrt) + (2|cons + standlrt) + (1|cons)
 #' levID = c('school', 'student')
 #' estoptions = list(EstM = 1,resi.store.levs = 2)
 #' mymodel = runMLwiN(formula, levID, indata = tutorial, estoptions = estoptions)
-#' 
+#'
 #' predLines(mymodel, indata = tutorial, xname = "standlrt", lev = 2,
 #' selected = c(30, 44, 53, 59), probs = c(.025, .975))
 #' }
-#' 
+#'
 #' @export
 predLines <- function(object, indata=NULL, xname, lev=2, selected=NULL, probs=c(.025,.975),
                       legend=TRUE, legend.space="top", legend.ncol=4, ...){

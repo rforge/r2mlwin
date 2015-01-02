@@ -23,6 +23,8 @@
 #' @slot Meth TO ADD
 #' @slot residual If \code{resi.store} is \code{TRUE}, then the residual estimates at all levels are returned.
 #' @slot data TO ADD
+#' @slot nonlinear TO ADD
+#' @slot version TO ADD
 #'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
@@ -35,9 +37,9 @@
 #' library(R2MLwiN)
 #' #NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
 #' #...so please change relevant line if different
-#' #if using R2MLwiN via WINE, the path may look like 
-#' #options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/") 
-#' 
+#' #if using R2MLwiN via WINE, the path may look like
+#' #options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/")
+#'
 #' ## Example: tutorial
 #' data(tutorial)
 #' formula=normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)
@@ -46,10 +48,10 @@
 #' estoptions= list(EstM=0)
 #' ## Fit the model
 #' mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions)
-#' 
+#'
 #' ##summary method
 #' summary(mymodel)
-#' 
+#'
 #' ##get method
 #' mymodel["LIKE"]
 #' }

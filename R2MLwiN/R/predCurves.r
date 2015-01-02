@@ -1,10 +1,10 @@
 #' Draws predicted curves (lines) using estimates from the fixed part of a
 #' fitted model.
-#' 
+#'
 #' This function draws predicted curves (lines) against an explanatory variable
 #' for each category of a categorical variable.
-#'  
-#' @param object Either an \code{\link{mlwinfitIGLS}} or \code{\link{mlwinfitMCMC}} class object.
+#'
+#' @param object Either an \code{\link{mlwinfitIGLS-class}} or \code{\link{mlwinfitMCMC-class}} object.
 #' @param indata A data.frame object containing the data. If not specified, data is extracted from
 #' the \code{object}.
 #' @param xname The name of variable to be plotted.
@@ -19,34 +19,34 @@
 #' divided into blocks, each containing some rows. Default,
 #' \code{legend.ncol = 2}.
 #' @param ...  Other arguments to be passed to \code{\link[lattice]{xyplot}}.
-#' 
+#'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
-#' 
+#'
 #' @seealso \code{\link{predLines}}
-#' 
+#'
 #' @examples
-#' 
+#'
 #' \dontrun{
 #' library(R2MLwiN)
-#' 
+#'
 #' ## Read alevchem data
 #' data(alevchem)
-#' 
+#'
 #' alevchem["gcseav"] = double2singlePrecision(alevchem["gcse-tot"] / alevchem["gcse-no"] - 6)
 #' alevchem["gcse^2"] = double2singlePrecision(alevchem["gcseav"]^2)
 #' alevchem["gcse^3"] = double2singlePrecision(alevchem["gcseav"]^3)
-#' 
+#'
 #' ## Example: A-level Chemistry
 #' formula = a-point ~ (0|cons + gcseav + gcse^2 + gcse^3 + gender) + (1|cons)
 #' levID = 'pupil'
 #' estoptions = list(EstM = 1)
 #' ## Fit the model
 #' mymodel = runMLwiN(formula, levID, indata = alevchem, estoptions = estoptions)
-#' 
+#'
 #' predCurves(mymodel, indata, xname = "gcseav", group = "gender")
 #' }
-#' 
+#'
 #' @export
 predCurves <- function(object, indata=NULL, xname, group=NULL, legend=T, legend.space="top", legend.ncol=2, ...){
   ## This function is to draw predicted lines using fixed part estimates

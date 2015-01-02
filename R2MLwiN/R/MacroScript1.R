@@ -74,16 +74,6 @@
 #' deemed to have converged when the relative change in the estimate for all
 #' parameter from one iteration to the next is less than 10(-m). Defaults to
 #' value of \code{2} for m if not otherwise specified.
-#' @param BUGO If the first entry of the vector is \code{TRUE}, the current
-#' model is outputted in BUGS code. \code{version = 4} specifies WinBUGS 1.4
-#' format, whilst \code{version = 3} corresponds to WinBUGS 1.3 format.
-#' \code{n.chains} specifies the number of chains to be used in
-#' WinBUGS/OpenBUGS, \code{n.chains = 1} by default. \code{debug} specifies
-#' whether BUGS is left open once the model has run, or not (\code{debug = F} by
-#' default). \code{seed} sets the random number generator in BUGS. \code{bugs}
-#' specifies the location of the WinBUGS/OpenBUGS executable.
-#' If \code{OpenBugs = TRUE} OpenBUGS is used, if \code{FALSE} (the default)
-#' WinBUGS is used.
 #' @param mem.init If calling MacroScript1 directly, if wish to use defaults, value needs to be
 #' specified as \code{"default"}, else specify a vector of length 5 corresponding
 #' to the following order: number of levels; worksheet size in thousands of cells;
@@ -144,7 +134,7 @@
 #' will then fit the model. Once fit, pressing "Resume macro" once more will save
 #' the outputs to the \code{workdir} ready to be read by \pkg{R2MLwiN}. Users can
 #' instead opt to "Abort macro" in which case...
-#' @param startval
+#' @param startval TO ADD
 #' 
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
