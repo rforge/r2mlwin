@@ -221,7 +221,10 @@ Formula.translate <- function(Formula, D='Normal', indata){
       Iterms <- sapply(regmatches(Iterms, gregexpr("\\[{1}([[:digit:]]|\\,|[[:space:]])*\\]{1}", Iterms), invert = TRUE),
                        function(x) paste(x, collapse=""))
       tform <- as.formula(paste0("~0+",paste(Iterms, collapse="+")))
+      na_act <- options("na.action")[[1]]
+      options(na.action="na.pass")
       dataplus <- model.matrix(object=tform, data=indata)
+      options(na.action=na_act)
       dataplus <- as.data.frame(dataplus)
       dataplus.names <- names(dataplus)
       if (anycurly){
@@ -355,16 +358,17 @@ Formula.translate <- function(Formula, D='Normal', indata){
       for (ii in 1:ncategstr1){
         f.ext <- as.formula(eval(paste("~0+",categstr1[ii])))
         contrMat <- attr(indata[[categstr1[ii]]], "contrasts")
+        na_act <- options("na.action")[[1]]
+        options(na.action="na.pass")
         if(is.null(contrMat)){
           data.ext <- model.matrix(f.ext, indata)[,-1, drop=F]
-          colnames(data.ext) <- gsub("\\.", "\\_", colnames(data.ext))
-          categstr2[[categstr1[ii]]] <- colnames(data.ext)
         }else{
           keeppos <- rowSums(contrMat)>0
           data.ext <- model.matrix(f.ext, indata)[,keeppos, drop=F]
-          colnames(data.ext) <- gsub("\\.", "\\_", colnames(data.ext))
-          categstr2[[categstr1[ii]]] <- colnames(data.ext)
         }
+        options(na.action=na_act)
+        colnames(data.ext) <- gsub("\\.", "\\_", colnames(data.ext))
+        categstr2[[categstr1[ii]]] <- colnames(data.ext)
         indata <- cbind(indata, as.data.frame(data.ext))  
       }
       for (ii in 1:ncategstr0){
