@@ -303,9 +303,10 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
     }
     starstr
   }
-  
-  FP.names=names(object@FP)
-  RP.names=names(object@RP)
+
+  chainnames=varnames(object@chains)
+  FP.names=grep("^FP_", chainnames, value=TRUE)
+  RP.names=grep("^RP_", chainnames, value=TRUE)
   ESS=effectiveSize(object@chains)
   levID0=object@levID
   cat("\n")
