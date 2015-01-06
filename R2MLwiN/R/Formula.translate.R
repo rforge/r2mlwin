@@ -1186,24 +1186,31 @@ Formula.translate <- function(Formula, D='Normal', indata){
         
       if (length(fixc)!=0){
         delpos <- numeric(0)
+        delpos2 <- numeric(0)
         addterms <- numeric(0)
         addccid <- numeric(0)
         for (ii in 1:length(fixc)){
           replacepos <- fixc[ii]%in%categstr0
+          repeated <- sum(fixc[ii]==fixc)>1
           if (replacepos){
-            taddterms <- categstr3[[fixc[ii]]]
-            len.taddterms <- length(taddterms)
-            taddccid <- matrix(rep(ccid.mat[fixc[ii],],len.taddterms), nrow=len.taddterms, byrow=TRUE)
-            rownames(taddccid) <- taddterms
+            taddterms <- categstr3[[fixc[ii]]]        
+            if (!repeated){
+              len.taddterms <- length(taddterms)
+              taddccid <- matrix(rep(ccid.mat[fixc[ii],],len.taddterms), nrow=len.taddterms, byrow=TRUE)
+              rownames(taddccid) <- taddterms
+              addccid <- rbind(addccid, taddccid)
+              delpos2 <- c(delpos2, ii)
+            }
             delpos <- c(delpos, ii)
             addterms <- c(addterms, taddterms)
-            addccid <- rbind(addccid, taddccid)
           }
         }
         if (length(delpos)>0){
           fixc <- fixc[-delpos]
           fixc <- c(fixc, addterms)
-          ccid.mat <- ccid.mat[-delpos,]
+        }
+        if (length(delpos2)>0){
+          ccid.mat <- ccid.mat[-delpos2,]
           ccid.mat <- rbind(ccid.mat, addccid)
         }  
       }
