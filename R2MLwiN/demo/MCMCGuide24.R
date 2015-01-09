@@ -92,6 +92,7 @@ mymodel <- runMLwiN(logit(votecons,cons)~1+defence+unemp+taxes+privat+(area|1), 
                     estoptions=list(EstM=1, mcmcMeth=list(priorcode=0), mcmcOptions=list(paex=c(2,1)), show.file=T),
                     BUGO=c(version=4, n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=bes83)
 
+summary(mymodel)
 effectiveSize(mymodel)
 sixway(mymodel[,"sigma2.u2",drop=FALSE],acf.maxlag=250)
 sixway(mymodel[,"sigma2.v2",drop=FALSE],acf.maxlag=100)

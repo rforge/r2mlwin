@@ -2676,7 +2676,6 @@ version:date:md5:filename:x64:trial
     }
     else{
       finalClean(clean.files)
-      print(summary(chains.bugs.mcmc))
       return(chains.bugs.mcmc)
     }
   }

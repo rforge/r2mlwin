@@ -51,6 +51,7 @@ while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file
 mymodel1 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),
                      estoptions=list(EstM=1, show.file=T), BUGO=c(version=4,n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=tutorial)
 
+summary(mymodel1)
 summary(mymodel1[,"beta[2]"])
 sixway(mymodel1[,"beta[2]",drop=FALSE])
 

@@ -53,6 +53,7 @@ mymodel <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),
                     estoptions=list(EstM=1, mcmcOptions=list(hcen=2), show.file=T),
                     BUGO=c(version=4, n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=tutorial)
 
+summary(mymodel)
 sixway(mymodel[,"beta[1]",drop=FALSE])
 
 # 25.3 Binomial hierarchical centering algorithm . . . . . . . . . . . . 408
