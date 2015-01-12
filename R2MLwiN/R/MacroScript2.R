@@ -18,15 +18,26 @@
 #' @param expl A character string (vector) of explanatory (predictor)
 #' variable(s).
 #' @param rp A character string (vector) of random part of random variable(s).
-#' @param D A vector specifying the type of distribution to be modelled, which
-#' can include \code{"Normal"}, \code{"Binomial"} \code{"Poisson"},
-#' \code{"Unordered Multinomial"}, \code{"Ordered Multinomial"},
-#' \code{"Multivariate Normal"}, or \code{"Mixed"}.
-#' @param nonlinear LINEarise mode N order M. \code{N = 0} specifies marginal
-#' quasi-likelihood linearization (MQL), whilst \code{N = 1} specifies penalised
-#' quasi-likelihood linearization (PQL); \code{M = 1} specifies first order
+#' @param D A character string/vector specifying the type of distribution to be modelled, which
+#' can include \code{"Normal"} (the default), \code{"Binomial"}, \code{"Poisson"},
+#' \code{"Negbinom"}, \code{"Unordered Multinomial"}, \code{"Ordered Multinomial"},
+#' \code{"Multivariate Normal"}, or \code{"Mixed"}. In the case of the latter, 
+#' \code{"Mixed"} precedes the response types which also need to be listed in 
+#' \code{D}, e.g. \code{c("Mixed", "Normal", "Binomial")}; these need to be
+#' be listed in the same order to which they are referred to in the
+#' \code{Formula} object (see \code{\link{runMLwiN}}, \code{\link{formula.translate}},
+#' \code{\link{formula.translate.compat}}. \code{"Mixed"} combinations can only consist of
+#' \code{"Normal"} and \code{"Binomial"} for MCMC estimation.
+#' @param nonlinear A character vector specifying linearisation method for IGLS
+#' starting values for discrete
+#' response models (see Chapter 9 of Rasbash et al 2014, and Goldstein 2011).
+#' \code{N = 0} specifies marginal quasi-likelihood
+#' linearization (MQL), whilst \code{N = 1} specifies penalised quasi-
+#' likelihood linearization (PQL); \code{M = 1} specifies first order
 #' approximation, whilst \code{M = 2} specifies second order approximation.
-#' \code{nonlinear = c(N = 0, M = 1)} by default.
+#' \code{nonlinear = c(N = 0, M = 1)} by default. First order marginal
+#' quasi-likelihood (MQL1) only option for single-level discrete response
+#' models.
 #' @param categ Specifies categorical variable(s) as a matrix. Each column
 #' corresponds to a categorical variable; the first row specifies the name(s)
 #' of variable(s); the second row specifies the name(s) of reference group(s),
@@ -42,7 +53,8 @@
 #' the random part at level <first row> the covariance matrix element(s)
 #' defined by the pair(s) of rows <second row> <third row>. Each row
 #' corresponds to a removed entry of the covariance matrix.
-#' @param Meth Specifies which maximum likelihood estimation method to be used.
+#' @param Meth Specifies the maximum likelihood estimation method to be used
+#' when generating starting values via (R)IGLS.
 #' If \code{Meth = 0} estimation method is set to RIGLS. If \code{Meth = 1}
 #' estimation method is set to IGLS (the default setting). If \code{Meth} is
 #' absent, alternate between IGLS and RIGLS.
@@ -51,12 +63,15 @@
 #' have measurement errors. Then, for each variable with measurement error, a
 #' pair of inputs is required: the first of which is the explanatory variable
 #' name as a character string, and the second of which is the variance of
-#' the measurement error for this variable.
+#' the measurement error for this variable. See \code{demo(MCMCGuide14)} for an
+#' example.
 #' @param carcentre If CAR model (i.e. if \code{car} is non-\code{NULL}),
 #' \code{carcentre = TRUE} mean-centres all random effects at that level.
-#' @param maxiter Numeric value specifying the total number of iterations, from
+#' @param maxiter When generating starting values via (R)IGLS, a numeric
+#' value specifying the total number of iterations, from
 #' the start, before IGLS estimation halts (if \code{startval = NULL}).
-#' @param convtol Numeric value specifying the IGLS convergence criterion, as
+#' @param convtol When generating starting values via (R)IGLS, a numeric
+#' value specifying the IGLS convergence criterion, as
 #' specified in the \code{tol} option within \code{estoptions}, where
 #' \code{startval = NULL}) (see \code{\link{runMLwiN}}). If value of
 #' \code{convtol} is m, estimation will be deemed to have converged when the
@@ -76,7 +91,7 @@
 #' from \code{\link{prior2macro}}.
 #' @param refresh An integer specifying how frequently the parameter estimates
 #' are refreshed on the screen during iterations; only applies if
-#' \code{debugmode = TRUE)} and \code{nopause = TRUE)} in \code{estoptions}:
+#' \code{debugmode = TRUE} in \code{estoptions}:
 #' see \code{\link[R2MLwiN]{runMLwiN}}.
 #' @param fixM Specifies the fixed effect method: \code{1} for Gibbs Sampling,
 #' \code{2} for univariate MH Sampling and \code{3} for multivariate MH
@@ -111,14 +126,25 @@
 #' nested (\code{FALSE}). \code{xc = NULL} by default (corresponding to
 #' \code{FALSE}), unless either \code{mm} or \code{car} are not null, in
 #' which case \code{xc = TRUE}.
-#' @param mm A list specifying structure of multiple membership model. Each
+#' @param mm Specifies the structure of a multiple membership model.
+#' Can be a list of variable names, a list of vectors, or a matrix (e.g. see
+#' \code{\link{df2matrix}}). In the case of the former, each
 #' element of the list corresponds to a level (classification) of the model,
 #' in descending order. If a level is not a multiple membership classification,
 #' then \code{NA} is specified. Otherwise, lists need to be assigned to
 #' \code{mmvar} and \code{weights}, with the former containing columns
 #' specifying the classification units, and the latter containing columns
-#' specifying the weights. See \code{demo(MCMCGuide16)} for examples.
-#' \code{mm = NULL} by default.
+#' specifying the weights. Ignored if \code{EstM = 0}, i.e. only applicable to models estimated via
+#' MCMC. \code{mm = NULL} by default. Supersedes deprecated \code{xclass}. 
+#' E.g. (from \code{demo(MCMCGuide16)}) for
+#' \code{logearn ~ 1 + age_40 + sex + parttime + (company|1) + (id|1)}, if
+#' \code{company} is a multiple membership classification with the variables
+#' indicating the classifications in \code{company}, \code{company2},
+#' \code{company3}, \code{company4} and their weights in \code{weight1}, \code{weight2},
+#' \code{weight3} and \code{weight4} then 
+#' \code{mm = list(list(mmvar = list("company", "company2", "company3", "company4"),}
+#' \code{weights = list("weight1", "weight2", "weight3", "weight4")), NA)}
+#' with the \code{NA}, listed last, corresponding to the level 1 identifier (\code{id}).
 #' @param car A list specifying structure of a conditional autoregressive (CAR)
 #' model. Each element of the list corresponds to a level (classification) of
 #' the model, in descending order. If a level is not a spatial classification,
@@ -146,8 +172,6 @@
 #' \code{optimat = TRUE} caps the maximum matrix size at 800 lower-level units,
 #' circumventing the MLwiN error message, and allowing most MLwiN
 #' functionality.
-#' @param nopause A logical value specifying whether the estimates are to be
-#' updated on screen or not, in MLwiN.
 #' @param modelfile A file name where the BUGS model will be saved in .txt
 #' format.
 #' @param initfile A file name where the BUGS initial values will be saved
@@ -164,7 +188,7 @@
 #' (\code{TRUE}) or not (\code{FALSE}).
 #' @param resioptions A string vector to specify the various residual options.
 #' The \code{"variance"} option calculates the posterior variances instead of
-#' the posterior standard errors; the \code{"standardised"} calculates standardised
+#' the posterior standard errors; the \code{"standardised"} option calculates standardised
 #' residuals; the \code{"norecode"} option prevents residuals with
 #' values exceedingly close or equal to zero from being recoded to missing.
 #' @param resichains A file name where the residual chains will be saved.
@@ -173,9 +197,15 @@
 #' residual chains are to be stored.
 #' @param debugmode A logical value determining whether MLwiN is run in the
 #' background or not. The default value is \code{FALSE}: i.e. MLwiN is run in
-#' the background. If \code{TRUE} MLwiN remains open after the model has run,
-#' allowing the user to interact with MLwiN directly (but note that output will
-#' not be returned to R until MLwiN is closed).
+#' the background. If \code{TRUE} the MLwiN GUI is opened, and then pauses after the model
+#' has been set-up, allowing user to check starting values; pressing "Resume macro"
+#' will then fit the model. Once fit, pressing "Resume macro" once more will save
+#' the outputs to the \code{workdir} ready to be read by \pkg{R2MLwiN}. Users can
+#' instead opt to "Abort macro" in which case the outputs are not saved to the
+#' \code{workdir}. This option currently
+#' works for 32 bit version of MLwiN only (automatically switches unless
+#' \code{MLwiNPath} or \code{options(MLwiNPath)}
+#' has been set directly to the executable).
 #' @param startval A list of numeric vectors specifying the starting values
 #' when using MCMC. \code{FP.b} corresponds to the estimates for the fixed
 #' part; \code{FP.v} specifies the variance/covariance estimates for the fixed
@@ -216,7 +246,7 @@
 #' }
 #' 
 #' A list of objects specified for cross-classified and/or multiple membership
-#' models, as used in the argument \code{xclass}: NEEDS UPDATING... SEE runMLwiN????
+#' models, as used in the argument \code{xclass}:
 #' \itemize{
 #' \item \code{class}: An integer
 #' (vector) of the specified class(es).
@@ -248,11 +278,13 @@
 #' the factor for each factor.
 #' \item \code{nfactcor}: Specifies the number of
 #' correlated factors
-#' \item \code{factcor}: A vector specifying the correlated factors:
-#' \tabular{ll}{\code{1} \tab the first factor number; \cr \code{2} \tab the
-#' second factor number; \cr \code{3} \tab the starting value for the covariance
-#' and\cr \code{4} \tab an indicator of whether this covariance is constrained
-#' (\code{1}) or not (\code{0}).}
+#' \item \code{factcor}: a vector specifying the correlated
+#' factors: the first element corresponds to the first factor number, the
+#' second to the second factor number, the third element corresponds to the
+#' starting value for the covariance and the fourth element to whether this
+#' covariance is constrained
+#' (\code{1}) or not (\code{0}). If more than one pair of factors is correlated,
+#' then repeat this sequence for each pair.
 #' \item \code{loading}: A matrix specifying the
 #' starting values for the factor loadings and the starting value of the factor
 #' variance. Each row corresponds to a factor.
@@ -265,6 +297,12 @@
 #' \code{OtherVarM}, not all combinations of methods are available for all sets
 #' of parameters and all models.
 #' 
+#' @references
+#' Goldstein, H. (2011) Multilevel Statistical Models. 4th Edition. London: John Wiley and Sons.
+#' 
+#' Rasbash, J., Steele, F., Browne, W. J., Goldstein, H. (2014). A User's Guide to MLwiN, v2.26
+#' (Revised Edition). Bristol: Centre for Multilevel Modelling, University of Bristol.
+#' 
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
 #' 
@@ -274,7 +312,7 @@ MacroScript2 <- function(indata,dtafile,oldsyntax=FALSE,resp,levID,expl,rp,D='No
                          nonfp=NULL,clre=NULL,Meth=1,merr=NULL,carcentre=FALSE,maxiter=20,convtol=2,
                          seed=1,iterations=5000,burnin=500,scale=5.8,thinning=1,priorParam="default",refresh=50,fixM=1,residM=1,Lev1VarM=1, 
                          OtherVarM=1,adaption=1,priorcode=1,rate=50,tol=10,lclo=0,mcmcOptions,fact=NULL,xc=NULL,mm=NULL,car=NULL,BUGO=NULL,mem.init="default",optimat=FALSE,
-                         nopause=FALSE,modelfile,initfile,datafile,macrofile,IGLSfile,MCMCfile,
+                         modelfile,initfile,datafile,macrofile,IGLSfile,MCMCfile,
                          chainfile,MIfile,resifile,resi.store=FALSE,resioptions,resichains,
                          FACTchainfile,resi.store.levs=NULL,debugmode=FALSE,startval=NULL,dami=NULL){
   
@@ -1326,13 +1364,13 @@ MacroScript2 <- function(indata,dtafile,oldsyntax=FALSE,resp,levID,expl,rp,D='No
       wrt(paste("JOIN ",paste(startval$FP.b, collapse=" "), " '_FP_b'",sep=""))
     }
     if (!is.null(startval$FP.v)){
-      wrt(paste("JOIN ",paste(startval$FP.v[!lower.tri(startval$FP.v)], collapse=" "), " '_FP_v'",sep=""))
+      wrt(paste("JOIN ",paste(startval$RP.v[!upper.tri(startval$RP.v)], collapse=" "), " '_FP_v'",sep=""))
     }
     if (!is.null(startval$RP.b)){
       wrt(paste("JOIN ",paste(startval$RP.b, collapse=" "), " '_RP_b'",sep=""))
     }
     if (!is.null(startval$RP.v)){
-      wrt(paste("JOIN ",paste(startval$RP.v[!lower.tri(startval$RP.v)], collapse=" "), " '_RP_v'",sep=""))
+      wrt(paste("JOIN ",paste(startval$RP.v[!upper.tri(startval$RP.v)], collapse=" "), " '_RP_v'",sep=""))
     }
   } else {
     wrt(paste("TOLE", convtol))
@@ -1585,7 +1623,7 @@ MacroScript2 <- function(indata,dtafile,oldsyntax=FALSE,resp,levID,expl,rp,D='No
       wrt("LINK 0 G24")
       wrt(paste("ERAS  ",paste(mvnames,collapse=" "),sep=""))
     }else{
-      if (debugmode&&(!nopause)){
+      if (debugmode){
         for (i in 1:floor((iterations/thinning)/refresh)){
           wrt(paste("MCMC 1 ",refresh," ",thinning," c1090 c1091 c1003 c1004 1 ",DD,sep="") )
           wrt("PUPN c1003 c1004")
