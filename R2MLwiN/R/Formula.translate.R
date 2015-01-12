@@ -3,63 +3,23 @@
 #' A model formula, as a formula object written in R-type syntax, is translated
 #' into an R list object.
 #' 
-#' @param Formula A \code{\link[stats]{formula}} object specifying a multilevel model. See `Details'
-#' section below.
-#' @param D A character string/vector specifying the distribution to be
-#' modelled; defaults to \code{Normal}.
+#' @param Formula A \code{\link[stats]{formula}} object specifying a multilevel model.
+#' See \code{\link[stats]{formula}} for notes on general usage, and \code{\link{runMLwiN}} for
+#' further details.
+#' @param D A character string/vector specifying the type of distribution to be modelled, which
+#' can include \code{"Normal"} (the default), \code{"Binomial"}, \code{"Poisson"},
+#' \code{"Unordered Multinomial"}, \code{"Ordered Multinomial"},
+#' \code{"Multivariate Normal"}, or \code{"Mixed"}. In the case of the latter, 
+#' \code{"Mixed"} precedes the response types which also need to be listed in 
+#' \code{D}, e.g. \code{c("Mixed", "Normal", "Binomial")}; these need to be
+#' be listed in the same order to which they are referred to in the
+#' \code{Formula} object.
 #' @param indata A data.frame object containing the data to be modelled.
 #' Optional (can \code{\link[base]{attach}} as an alternative) but recommended.
-#'
-#' @details With regard to the \code{Formula} object in \pkg{R2MLwiN}, \code{\link[stats]{formula}}
-#' provides notes on general usage with further details below.
-#'
-#' The random part of the model is specified in sets of parentheses arranged in
-#' descending order with respect to their hierarchy. E.g. in the case of a 3-level
-#' model, the variable containing the level 3 ID is specified first, then
-#' the variable containing the level 2 ID, etc. Note that the variable containing
-#' the level 1 ID also needs to be explicitly specified unless
-#' it is a discrete response model (in which case you should not specify it).
-#' 
-#' The table below summarises the options for the \code{Formula} argument in
-#' \pkg{R2MLwiN}. They assume an intercept is added (via \code{~ 1}, for alternative
-#' specifications see \code{\link[stats]{formula}}). \code{<link>} denotes the link function,
-#' \code{<y1>}, \code{<y2>}, etc. represent response variables, \code{<denom>} denotes
-#' the denominator, \code{<offset>} the offset, \code{<L2>}, \code{<L1>}, etc. the
-#' variables containing the level 2 and level 1 identifying codes, and \code{<ref_cat>}
-#' represents the reference category of a categorical response variable. Explanatory variables
-#' are specified as e.g. \code{<x1> + <x2>}. For \code{"Ordered Multinomial"},
-#' \code{"Multivariate Normal"} and \code{"Mixed"} responses, \code{[<common>]} indicates
-#' a common coefficient (i.e. the same for each category) is to be fitted; here \code{<common>}
-#' takes the form of a numeric identifier indicating the responses for which a common
-#' coefficient is to be added (e.g. \code{[1:5]} to fit a common coefficient for
-#' categories \code{1} to \code{5} of a 6-point ordered variable, \code{[1]} to fit a common
-#' coefficient for the response variable specified first in the \code{Formula} object
-#' for a \code{"Mixed"} response model, etc.) Otherwise a separate coefficient
-#' (i.e. one for each category) is added. For \code{"Mixed"} response models, the
-#' \code{Formula} arguments need to be grouped in the order the distributions
-#' are listed in \code{D}. * denotes IGLS only.
-#' 
-#' FOR UNORDERED MULTINOMIAL, CHECK HOW SPECIFY REF CAT (ASSUME AUTOMATICALLY TAKES SMALLEST / LARGEST,
-#' AND THEREFORE SPECIFY BY MANIPULATING THE VARIABLE?) - ALSO COMMON COEFFICIENT EVER APPROPRIATE?
-#' 
-#' \tabular{lll}{
-#' \strong{Distribution} \tab \strong{Format of \code{Formula} object} \tab \strong{Where \code{<link>} can equal...}\cr
-#' \code{"Normal"} \tab \code{<y1> ~ 1 + <x1> + (<L2>|1) + (<L1>|1) + ...} \tab (identity link assumed)\cr
-#' \code{"Poisson"} \tab \code{<link>(<y1>, <offset>) ~ 1 + <x1> + (<L2>|1) + ...} \tab \code{log}\cr
-#' \code{"Binomial"} \tab \code{<link>(<y1>, <denom>) ~ 1 + <x1> + (<L2>|1) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
-#' \code{"Negbinom"}* \tab \code{<link>(<y1>, <offset>) ~ 1 + <x1> + (<L2>|1) + ...} \tab \code{log}\cr
-#' \code{"Unordered Multinomial"} \tab \code{<link>(<y1>, <denom>) ~ 1 + <x1> + (<L2|1) + ...} \tab \code{logit} - to check\cr
-#' \code{"Ordered Multinomial"} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
-#' \code{"Multivariate Normal"} \tab \code{c(<y1>, <y2>, ...) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + (<L1>|1) + ...} \tab (identity link assumed)\cr
-#' \code{c("Mixed", "Normal", "Binomial")} \tab \code{c(<y1>, ..., <link> (<y2>, <denom>), ...) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + (<L1>|1) + ...} \tab \code{logit}*,\code{probit},\code{cloglog}*\cr
-#' \code{c("Mixed", "Normal", "Poisson")}* \tab \code{c(<y1>, ..., <link>(<y2>, <offset>), ...) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + (<L1>|1) + ...} \tab \code{log}\cr
-#' }
 #' 
 #' @return Outputs an R list object, which is then used as the input for
 #' \code{\link{MacroScript1}} or \code{\link{MacroScript2}}.
 #'
-#' @note DO WE NEED ANY NOTES ON WHICH CHARACTERS NOT TO USE IN THE VARIABLE
-#' OR FACTOR LEVEL NAMES? (SEE Formula.translate.compat.Rd)
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
 #' @seealso
