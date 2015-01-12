@@ -18,15 +18,25 @@
 #' @param expl A character string (vector) of explanatory (predictor)
 #' variable name(s).
 #' @param rp A character string (vector) of random part of random variable name(s).
-#' @param D A vector specifying the type of distribution to be modelled, which
+#' @param D A character string/vector specifying the type of distribution to be modelled, which
 #' can include \code{"Normal"} (the default), \code{"Binomial"}, \code{"Poisson"},
-#' \code{"Unordered Multinomial"}, \code{"Ordered Multinomial"},
-#' \code{"Multivariate Normal"}, or \code{"Mixed"}.
-#' @param nonlinear LINEarise mode N order M. \code{N = 0} specifies marginal
-#' quasi-likelihood linearization (MQL), whilst \code{N = 1} specifies penalised
-#' quasi-likelihood linearization (PQL); \code{M = 1} specifies first order
+#' \code{"Negbinom"}, \code{"Unordered Multinomial"}, \code{"Ordered Multinomial"},
+#' \code{"Multivariate Normal"}, or \code{"Mixed"}. In the case of the latter, 
+#' \code{"Mixed"} precedes the response types which also need to be listed in 
+#' \code{D}, e.g. \code{c("Mixed", "Normal", "Binomial")}; these need to be
+#' be listed in the same order to which they are referred to in the
+#' \code{Formula} object (see \code{\link{runMLwiN}}, \code{\link{formula.translate}},
+#' \code{\link{formula.translate.compat}}. \code{"Mixed"} combinations can consist of
+#' \code{"Normal"} and \code{"Binomial"} or \code{"Normal"} and \code{"Poisson"}.
+#' @param nonlinear A character vector specifying linearisation method for discrete
+#' response models (see Chapter 9 of Rasbash et al 2014, and Goldstein 2011).
+#' \code{N = 0} specifies marginal quasi-likelihood
+#' linearization (MQL), whilst \code{N = 1} specifies penalised quasi-
+#' likelihood linearization (PQL); \code{M = 1} specifies first order
 #' approximation, whilst \code{M = 2} specifies second order approximation.
-#' \code{nonlinear = c(N = 0, M = 1)} by default.
+#' \code{nonlinear = c(N = 0, M = 1)} by default. First order marginal
+#' quasi-likelihood (MQL1) only option for single-level discrete response
+#' models.
 #' @param categ Specifies categorical variable(s) as a matrix. Each column
 #' corresponds to a categorical variable; the first row specifies the name(s)
 #' of variable(s); the second row specifies the name(s) of reference group(s),
@@ -39,7 +49,7 @@
 #' @param nonfp Removes the fixed part of random variable(s). \code{NA} if no
 #' variable to be removed.
 #' @param clre A matrix used to define which elements of the random effects matrix
-#' to remove (hold constant at zero). Removes
+#' to remove (i.e. hold constant at zero). Removes
 #' from the random part at level <first row> the covariance matrix element(s)
 #' defined by the pair(s) of rows <second row> <third row>. Each column
 #' corresponds to a removed entry of the covariance matrix. See e.g. \code{demo(UserGuide07)}
@@ -72,7 +82,7 @@
 #' specified in the \code{tol} option within \code{estoptions} (see
 #' \code{\link{runMLwiN}}). If value of \code{convtol} is m, estimation will be
 #' deemed to have converged when the relative change in the estimate for all
-#' parameter from one iteration to the next is less than 10(-m). Defaults to
+#' parameters from one iteration to the next is less than 10(-m). Defaults to
 #' value of \code{2} for m if not otherwise specified.
 #' @param mem.init If calling MacroScript1 directly, if wish to use defaults, value needs to be
 #' specified as \code{"default"}, else specify a vector of length 5 corresponding
@@ -101,12 +111,6 @@
 #' \code{rpsandwich = TRUE}, robust or `sandwich' standard errors based on raw
 #' residuals are used, if \code{rpsandwich = FALSE} (default) then standard,
 #' uncorrected, IGLS or RIGLS `plug in' estimates used.
-#' @param modelfile A file name where the WinBUGS model will be saved in .txt
-#' format.
-#' @param initfile A file name where the WinBUGS initial values will be saved
-#' in .txt format.
-#' @param datafile A file name where the WinBUGS data will be saved in .txt
-#' format.
 #' @param macrofile A file name where the MLwiN macro file will be saved. The
 #' default location is in the temporary folder.
 #' @param IGLSfile A file name where the parameter estimates will be saved. The
@@ -133,8 +137,23 @@
 #' has been set-up, allowing user to check starting values; pressing "Resume macro"
 #' will then fit the model. Once fit, pressing "Resume macro" once more will save
 #' the outputs to the \code{workdir} ready to be read by \pkg{R2MLwiN}. Users can
-#' instead opt to "Abort macro" in which case...
-#' @param startval TO ADD
+#' instead opt to "Abort macro" in which case the outputs are not saved to the
+#' \code{workdir}. This option currently
+#' works for 32 bit version of MLwiN only (automatically switches unless
+#' \code{MLwiNPath} or \code{options(MLwiNPath)}
+#' has been set directly to the executable).
+#' @param startval A list of numeric vectors specifying the starting values.
+#' \code{FP.b} corresponds to the estimates for the fixed
+#' part; \code{FP.v} specifies the variance/covariance estimates for the fixed
+#' part; \code{RP.b} specifies the variance estimates for the random part;
+#' \code{RP.v} corresponds to the variance/covariance matrix of the variance
+#' estimates for the random part.
+#' 
+#' @references
+#' Goldstein, H. (2011) Multilevel Statistical Models. 4th Edition. London: John Wiley and Sons.
+#' 
+#' Rasbash, J., Steele, F., Browne, W. J., Goldstein, H. (2014). A User's Guide to MLwiN, v2.26
+#' (Revised Edition). Bristol: Centre for Multilevel Modelling, University of Bristol.
 #' 
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
@@ -143,7 +162,7 @@
 #' 
 MacroScript1 <- function(indata,dtafile,oldsyntax=FALSE,resp,levID,expl,rp,D='Normal',nonlinear=c(0,1),categ=NULL,notation=NULL,
                          nonfp=NA,clre=NULL,Meth=1,extra=FALSE,reset,rcon=NULL,fcon=NULL,maxiter=20,convtol=2,
-                         mem.init="default",optimat=FALSE,weighting=NULL,fpsandwich=FALSE,rpsandwich=FALSE,modelfile,initfile,datafile,
+                         mem.init="default",optimat=FALSE,weighting=NULL,fpsandwich=FALSE,rpsandwich=FALSE,
                          macrofile,IGLSfile,resifile,resi.store=FALSE,resioptions,debugmode=FALSE,startval=NULL){
   
   nlev=length(levID)
