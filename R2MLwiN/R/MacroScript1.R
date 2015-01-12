@@ -1228,17 +1228,17 @@ MacroScript1 <- function(indata,dtafile,oldsyntax=FALSE,resp,levID,expl,rp,D='No
     wrt("PREF   0")
     wrt("POST   0")
   }
+
+  wrt("NAME   c1098 '_FP_b'")
+  wrt("NAME   c1099 '_FP_v'")
+  wrt("NAME   c1096 '_RP_b'")
+  wrt("NAME   c1097 '_RP_v'")
   
   wrt("NOTE   Fit the model")
   wrt("ECHO 1")
   wrt("BATC 1")
   wrt("MAXI 2")
   wrt("STAR")
-
-  wrt("NAME   c1098 '_FP_b'")
-  wrt("NAME   c1099 '_FP_v'")
-  wrt("NAME   c1096 '_RP_b'")
-  wrt("NAME   c1097 '_RP_v'")
 
   if (!is.null(startval)){
     if (!is.null(startval$FP.b)){

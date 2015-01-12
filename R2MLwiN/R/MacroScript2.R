@@ -1312,14 +1312,14 @@ MacroScript2 <- function(indata,dtafile,oldsyntax=FALSE,resp,levID,expl,rp,D='No
     wrt("POST   0")
   }
   
-  wrt("NOTE   Fit the model")
-  wrt("ECHO 1")
-  wrt("STAR")
-
   wrt("NAME   c1098 '_FP_b'")
   wrt("NAME   c1099 '_FP_v'")
   wrt("NAME   c1096 '_RP_b'")
   wrt("NAME   c1097 '_RP_v'")
+
+  wrt("NOTE   Fit the model")
+  wrt("ECHO 1")
+  wrt("STAR")
 
   if (!is.null(startval)){
     if (!is.null(startval$FP.b)){
