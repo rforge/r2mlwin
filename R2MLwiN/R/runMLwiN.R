@@ -11,12 +11,18 @@
 #' in the \code{Formula} object.
 #' @param D A character string/vector specifying the type of distribution to be modelled, which
 #' can include \code{"Normal"} (the default), \code{"Binomial"}, \code{"Poisson"},
-#' \code{"Unordered Multinomial"}, \code{"Ordered Multinomial"},
+#' \code{"Negbinom"}, \code{"Unordered Multinomial"}, \code{"Ordered Multinomial"},
 #' \code{"Multivariate Normal"}, or \code{"Mixed"}. In the case of the latter, 
 #' \code{"Mixed"} precedes the response types which also need to be listed in 
 #' \code{D}, e.g. \code{c("Mixed", "Normal", "Binomial")}; these need to be
 #' be listed in the same order to which they are referred to in the
-#' \code{Formula} object.
+#' \code{Formula} object (see \code{\link{runMLwiN}}, \code{\link{formula.translate}},
+#' \code{\link{formula.translate.compat}}. For (R)IGLS estimation (i.e. \code{EstM = 0}
+#' in \code{estoptions}) \code{"Mixed"} combinations can consist of
+#' \code{"Normal"} and \code{"Binomial"} or \code{"Normal"} and \code{"Poisson"};
+#' for MCMC estimation (i.e. \code{EstM = 0}, on the other hand, only a combination
+#' of \code{"Normal"} and \code{"Binomial"} is available.
+#' 
 #' @param data A data.frame object containing the data to be modelled.
 #' Optional (but recommended): if empty, data taken from environment of
 #' \code{formula}.
@@ -48,8 +54,8 @@
 #' is instead referenced via \code{data}.
 #'
 #' @details
-#' With regard to the \code{Formula} object, \code{\link[stats]{formula}}
-#' provides notes on general usage with further details below.
+#' With regard to \pkg{runMLwiN}'s \code{Formula} object, see \code{\link[stats]{formula}}
+#' for notes on general usage, plus further details below.
 #'
 #' The random part of the model is specified in sets of parentheses arranged in
 #' descending order with respect to their hierarchy. E.g. in the case of a 3-level
@@ -64,8 +70,9 @@
 #' \code{<y1>}, \code{<y2>}, etc. represent response variables, \code{<denom>} denotes
 #' the denominator, \code{<offs>} the offset (optional), \code{<L2>}, \code{<L1>}, etc. the
 #' variables containing the level 2 and level 1 identifying codes, and \code{<ref_cat>}
-#' represents the reference category of a categorical response variable. Explanatory variables
-#' are specified as e.g. \code{<x1> + <x2>}. For \code{"Ordered Multinomial"},
+#' represents the reference category of a categorical response variable (optional:
+#' if unspecified the lowest level of the factor is used as the reference category).
+#' Explanatory variables are specified as e.g. \code{<x1> + <x2>}. For \code{"Ordered Multinomial"},
 #' \code{"Multivariate Normal"} and \code{"Mixed"} responses, \code{[<common>]} indicates
 #' a common coefficient (i.e. the same for each category) is to be fitted; here \code{<common>}
 #' takes the form of a numeric identifier indicating the responses for which a common
@@ -75,10 +82,9 @@
 #' for a \code{"Mixed"} response model, etc.) Otherwise a separate coefficient
 #' (i.e. one for each category) is added. For \code{"Mixed"} response models, the
 #' \code{Formula} arguments need to be grouped in the order the distributions
-#' are listed in \code{D}. * denotes IGLS only.
+#' are listed in \code{D}.
 #' 
-#' FOR UNORDERED MULTINOMIAL, CHECK HOW SPECIFY REF CAT (ASSUME AUTOMATICALLY TAKES SMALLEST / LARGEST,
-#' AND THEREFORE SPECIFY BY MANIPULATING THE VARIABLE?) - ALSO COMMON COEFFICIENT EVER APPROPRIATE?
+#' * denotes IGLS only in the table below.
 #' 
 #' \tabular{lll}{
 #' \strong{Distribution} \tab \strong{Format of \code{Formula} object} \tab \strong{Where \code{<link>} can equal...}\cr
@@ -86,7 +92,7 @@
 #' \code{"Poisson"} \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + <x1> + (<L2>|1) + ...} \tab \code{log}\cr
 #' \code{"Negbinom"}* \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + (<L2>|1) + ...} \tab \code{log}\cr
 #' \code{"Binomial"} \tab \code{<link>(<y1>, <denom>) ~ 1 + <x1> + (<L2>|1) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
-#' \code{"Unordered Multinomial"} \tab \code{<link>(<y1>, <denom>) ~ 1 + <x1> + (<L2|1) + ...} \tab \code{logit} - to check\cr
+#' \code{"Unordered Multinomial"} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + (<L2|1) + ...} \tab \code{logit} - to check\cr
 #' \code{"Ordered Multinomial"} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
 #' \code{"Multivariate Normal"} \tab \code{c(<y1>, <y2>, ...) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + (<L1>|1) + ...} \tab (identity link assumed)\cr
 #' \code{c("Mixed", "Normal", "Binomial")} \tab \code{c(<y1>, ..., <link> (<y2>, <denom>), ...) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + (<L1>|1) + ...} \tab \code{logit}*,\code{probit},\code{cloglog}*\cr
@@ -105,13 +111,15 @@
 #' 
 #' \item \code{resioptions}: a string vector to specify the various residual options.
 #' The \code{"variance"} option calculates the posterior variances instead of
-#' the posterior standard errors; the \code{"standardised"}, \code{"leverage"}
+#' the posterior standard errors; the \code{"standardised"}, \code{"leverage"}, \code{"influence"} 
 #' and \code{"deletion"} options calculate standardised,
-#' leverage, influence and deletion residuals respectively, and the
+#' leverage, influence and deletion residuals respectively; the
 #' \code{"sampling"} option calculates the sampling variance covariance matrix
-#' for the residuals. When \code{EstM = 1} (i.e. MCMC estimation) \code{"variance"}
-#' is default value and the only other permissible value is \code{"standarised"}
-#' (else function call stopped with appropriate error
+#' for the residuals; the \code{"norecode"} option prevents residuals with values exceedingly close or
+#' equal to zero from being recoded to missing.
+#' When \code{EstM = 1} (i.e. MCMC estimation) \code{"variance"}
+#' is default value, and the only other permissible values are \code{"standarised"}
+#' and \code{"norecode"} (else function call stopped with appropriate error
 #' message). When \code{EstM = 0} (i.e. (R)IGLS estimation), \code{"variance"}
 #' cannot be specified together with \code{"standardised"}, \code{"leverage"} or
 #' \code{"deletion"} (function call stopped with appropriate error message).
@@ -126,8 +134,12 @@
 #' 
 #' \item \code{debugmode}: a logical value determining whether MLwiN is run in the
 #' background or not. The default value is \code{FALSE}: i.e. MLwiN is run in
-#' the background. If \code{TRUE} MLwiN remains open after the model has run
-#' (and must be closed for the output to be returned to R). This option currently
+#' the background. If \code{TRUE} the MLwiN GUI is opened, and then pauses after the model
+#' has been set-up, allowing user to check starting values; pressing "Resume macro"
+#' will then fit the model. Once fit, pressing "Resume macro" once more will save
+#' the outputs to the \code{workdir} ready to be read by \pkg{R2MLwiN}. Users can
+#' instead opt to "Abort macro" in which case the outputs are not saved to the
+#' \code{workdir}. This option currently
 #' works for 32 bit version of MLwiN only (automatically switches unless
 #' \code{MLwiNPath} or \code{options(MLwiNPath)}
 #' has been set directly to the executable).
@@ -144,12 +156,12 @@
 #' \item \code{show.file}: a logical value indicating whether the output files (e.g.
 #' MLwiN macro file) are shown on the screen. Defaults to \code{FALSE}.
 #' 
-#' \item \code{clre}: a matrix used to estimate some, but not all, of the variances
-#' and covariances for a set of coefficients at a particular level. Remove
-#' from the random part at level <first row> the covariance matrix
-#' element(s) defined by the pair(s) of rows <second row> <third row>.
-#' Each row corresponds to a removed entry of the covariance matrix.
-#' NEEDS AN EXAMPLE - ALSO 'SOME, BUT NOT ALL', A BIT AMBIGUOUS.
+#' \item \code{clre}: a matrix used to define which elements of the random effects matrix
+#' to remove (i.e. hold constant at zero). Removes
+#' from the random part at level <first row> the covariance matrix element(s)
+#' defined by the pair(s) of rows <second row> <third row>. Each column
+#' corresponds to a removed entry of the covariance matrix. See e.g. \code{demo(UserGuide07)}
+#' for an example.
 #' 
 #' \item \code{notation}: specifies the model subscript notation
 #' to be used in the MLwiN equations window. \code{"class"} means no multiple
@@ -157,12 +169,13 @@
 #' \code{notation = NULL}, defaults to \code{"level"} if \code{"xc = NULL"} else
 #' defaults to \code{"class"}.
 #' 
-#' \item \code{mem.init}: a vector which sets and displays worksheet capacities for
-#' the current MLwiN session according to the value(s) specified. By default,
-#' the number of levels is (1 + the number of levels specified in the function
-#' call), worksheet size in thousands of cells is 6000, the number of columns is
-#' 2500, the number of explanatory variables is (10 + number of explanatory
-#' variables calculated initially), and the number of group labels is 20.
+#' \item \code{mem.init}: sets and displays worksheet capacities for
+#' the current MLwiN session. A vector of length 5 corresponding to
+#' the following order: number of levels (defaults to 1 + the number of
+#' levels specified in the function call); worksheet size in thousands of cells
+#' (default is 6000); the number of columns (default is 2500); the number of
+#' explanatory variables (default it 10 + number of explanatory variables
+#' calculated initially); the number of group labels (default is 20).
 #' 
 #' \item \code{optimat}: instructs MLwiN to limit the maximum matrix size
 #' that can be allocated by the (R)IGLS algorithm. Specify \code{optimat = TRUE}
@@ -175,39 +188,64 @@
 #' circumventing the MLwiN error message, and allowing most MLwiN
 #' functionality.
 #' 
-#' \item \code{nonlinear}: a vector specifying linearisation method for discrete
-#' response models. \code{N = 0} specifies marginal quasi-likelihood
+#' \item \code{nonlinear}: a character vector specifying linearisation method for discrete
+#' response models estimated via IGLS (see Chapter 9 of Rasbash et al 2014,
+#' and Goldstein 2011). \code{N = 0} specifies marginal quasi-likelihood
 #' linearization (MQL), whilst \code{N = 1} specifies penalised quasi-
 #' likelihood linearization (PQL); \code{M = 1} specifies first order
 #' approximation, whilst \code{M = 2} specifies second order approximation.
 #' \code{nonlinear = c(N = 0, M = 1)} by default. First order marginal
 #' quasi-likelihood (MQL1) only option for single-level discrete response
-#' models.
+#' models. Pertains to discrete response models estimated via IGLS: i.e. when
+#' \code{EstM = 0} in \code{estoptions}, and for starting values when estimated via IGLS
+#' for MCMC (\code{EstM = 1}).
 #' 
 #' \item \code{Meth}: specifies which maximum likelihood estimation method is to be
 #' used. If \code{Meth = 0} estimation method is set to RIGLS. If \code{Meth = 1}
-#' estimation method is set to IGLS (the default setting). If \code{Meth = 2},
-#' alternate between IGLS and RIGLS. DOES THAT STILL HAPPEN? I.E. ALTERNATE
-#' BW IGLS AND RIGLS IF Meth = 2 - SEEMS A BIT ODD?
+#' estimation method is set to IGLS (the default setting).  Pertains to models
+#' estimated via (R)IGLS: i.e. when \code{EstM = 0} in \code{estoptions}, and for starting
+#' values when estimated via (R)IGLS for MCMC (\code{EstM = 1}).
 #' 
 #' \item \code{merr}: a vector which sets-up measurement errors on predictor
-#' variables. The first element N defines the number of variables that have
-#' measurement errors. Then, for each variable with measurement error, a pair
-#' of inputs is required: value Na is the explanatory variable number for the
-#' Nth variable which has measurement error and value Nb is the variance of
-#' the measurement errors for the Nth variable. AN EXAMPLE WOULD BE HELPFUL.
+#' variables. The first element \code{N} defines the number of variables that
+#' have measurement errors. Then, for each variable with measurement error, a
+#' pair of inputs are required: the first of these is the explanatory variable
+#' name as a character string, and the second is the variance of
+#' the measurement error for this variable. See \code{demo(MCMCGuide14)} for an
+#' example.
 #' 
 #' \item \code{fact}: a list of objects specified for factor analysis,
-#' including \code{nfact}, \code{lev.fact}, \code{nfactor}, \code{factor},
-#' \code{loading} and \code{constr}. See \code{\link{MacroScript2}} for
-#' details.
+#' including:
+#' \itemize{
+#' \item \code{nfact}: Specifies the number of factors
+#' \item \code{lev.fact}: Specifies the level/classification for the random part of
+#' the factor for each factor.
+#' \item \code{nfactcor}: Specifies the number of
+#' correlated factors
+#' \item \code{factcor}: A vector specifying the correlated
+#' factors: the first element corresponds to the first factor number, the
+#' second to the second factor number, the third element corresponds to the
+#' starting value for the covariance and the fourth element to whether this
+#' covariance is constrained
+#' (\code{1}) or not (\code{0}). If more than one pair of factors is correlated,
+#' then repeat this sequence for each pair.
+#' \item \code{loading}: A matrix specifying the
+#' starting values for the factor loadings and the starting value of the factor
+#' variance. Each row corresponds to a factor.
+#' \item \code{constr}: A matrix
+#' specifying indicators of whether the factor loadings and the factor variance
+#' are constrained (\code{1}) or not (\code{0}).
+#' }
 #' 
 #' \item \code{weighting}: a deprecated option for specifying weights in IGLS estimation:
 #' see \code{fpsandwich} and \code{rpsandwich} for new method of doing so.
 #' \code{weighting} is a list of objects including \code{levels}, \code{weights},
 #' \code{mode}, \code{FSDE} and \code{RSDE}; see \code{\link{MacroScript1}} for details.
 #' 
-#' \item \code{centring}: specifies method by which explanatory variables are to be centred.
+#' \item \code{centring}: deprecated method (only applicable when using old syntax
+#' pre-\pkg{R2MLwiN} v.0.8-0) specifying function by
+#' which explanatory variables are to be centred (users can instead transform
+#' variables prior to \code{runMLwiN} call).
 #' If non-\code{NULL}, centring is used for the selected explanatory
 #' variables (\code{centring = NULL} by default). \code{centring} is a list of
 #' objects specifying the methods to be used to centre specific explanatory
@@ -216,8 +254,7 @@
 #' \code{list(age = c(2, 'district'), ...)} specifies that \code{age} is to be
 #' centred around its group mean, where group defined by the variable \code{district};
 #' and \code{list(age = c(3, 18), ...)} specifies that \code{age} is to
-#' be centred around the value \code{18}. REMOVED \code{'group'} is a string
-#' specifying the group binary indicator, i.e., a vector of (0, 1) - THAT TRUE?
+#' be centred around the value \code{18}.
 #' 
 #' \item \code{xclass}: a deprecated option for specifying cross-classified and/or
 #' multiple membership models; see \code{xc} and \code{mm} for new method of
@@ -225,8 +262,29 @@
 #' \code{N1}, \code{weight}, \code{id} and \code{car}; see \code{\link{MacroScript2}} for details.
 #'
 #' \item \code{mcmcOptions}: a list of objects specifying MCMC options, including the
-#' following:\cr \code{orth}, \code{hcen}, \code{smcm}, \code{smvn},
-#' \code{paex} and \code{mcco}. See \code{\link{MacroScript2}} for details.
+#' following:
+#' \itemize{
+#' \item \code{orth}: If \code{orth = 1}, orthogonal fixed effect
+#' vectors are used; zero otherwise.
+#' \item \code{hcen}: An integer specifying the
+#' level where we use hierarchical centering.
+#' \item \code{smcm}: If \code{smcm = 1},
+#' structured MCMC is used; zero otherwise.
+#' \item \code{smvn}: If \code{smvn = 1}, the
+#' structured MVN framework is used; zero otherwise.
+#' \item \code{paex}: A matrix of Nx2; in each row, if the second digit is \code{1}, parameter expansion
+#' is used at level <the first digit>.
+#' \item \code{mcco}: This
+#' command allows the user to have constrained settings for the lowest level
+#' variance matrix in a multivariate Normal model. If value is \code{0},
+#' it estimates distinct variances for each residual error and distinct covariances
+#' for each residual error pair. Four other
+#' settings are currently available:\cr
+#' \tabular{ll}{\code{1} \tab fits stuctured errors with a common correlation paramater and a common variance parameter;\cr
+#' \code{2} \tab fits AR1 errors with a common variance parameter;\cr \code{3} \tab fits structured errors with a common
+#' correlation parameter and independent variance parameters;\cr \code{4} \tab fits AR1 errors with independent variance
+#' parameters.\cr }
+#' }
 #' 
 #' \item \code{drop.data}: If \code{TRUE} (default) only the data involved in the model
 #' is passed to MLwiN, otherwise the entire dataset in \code{data} is passed.
@@ -246,14 +304,24 @@
 #' If the value of the second column is \code{1} then the random covariance matrix is
 #' set to be diagonal.
 #' 
-#' \item \code{maxiter}: a numeric value specifying the total number of (R)IGLS iterations, from
-#' the start, before estimation halts. Default is \code{20}. LOOK AT MS1?
+#' \item \code{maxiter}: a numeric value specifying the maximum number of iterations, from
+#' the start, before (R)IGLS estimation halts. Pertains to models
+#' estimated via (R)IGLS: i.e. when \code{EstM = 0} in \code{estoptions}, and for starting
+#' values when estimated via (R)IGLS for MCMC (\code{EstM = 1}).
 #' 
-#' \item \code{tol}: THIS IS IGLS THING - SEE MS1.
+#' \item \code{tol}: a numeric value specifying the convergence criterion.
+#' If value is m, estimation will be
+#' deemed to have converged when the relative change in the estimate for all
+#' parameters from one iteration to the next is less than 10(-m). Defaults to
+#' value of \code{2} for m if not otherwise specified.  Pertains to models
+#' estimated via (R)IGLS: i.e. when \code{EstM = 0} in \code{estoptions}, and for starting
+#' values when estimated via (R)IGLS for MCMC (\code{EstM = 1}).
 #' 
-#' \item \code{extra}: can only be specified for discrete response models (i.e. \code{"Poisson"},
-#' \code{"Binomial"}, \code{"Negbinom"}, \code{"Multinomial"}) estimated via (R)IGLS (i.e. \code{EstM = 0}.
-#' Default is \code{FALSE}. NOT SURE WHAT IT DOES, EXTRa NOT DOCUMENTED IN COMMAND MANUAL. LOOK AT MS1?
+#' \item \code{extra}: if \code{TRUE}, extra binomial, extra negative binomial,
+#' extra Poisson or extra multinomial distributions assumed, else \code{FALSE}.
+#' can only be specified for discrete response models (i.e. \code{"Binomial"},
+#' \code{"Negbinom"}, \code{"Poisson"}, \code{"Multinomial"})
+#' estimated via (R)IGLS (i.e. \code{EstM = 0}).
 #' 
 #' \item \code{reset}: a vector specifying the action to be
 #' taken, at each level, if a variance parameter is estimated at a particular
@@ -276,7 +344,9 @@
 #' \code{mm} or \code{car} are non-\code{NULL}, in which case \code{xc = TRUE}. Supersedes
 #' deprecated \code{xclass}.
 #' 
-#' \item \code{mm}: a list specifying structure of multiple membership model. Each
+#' \item \code{mm}: specifies the structure of a multiple membership model.
+#' Can be a list of variable names, a list of vectors, or a matrix (e.g. see
+#' \code{\link{df2matrix}}). In the case of the former, each
 #' element of the list corresponds to a level (classification) of the model,
 #' in descending order. If a level is not a multiple membership classification,
 #' then \code{NA} is specified. Otherwise, lists need to be assigned to
@@ -294,8 +364,10 @@
 #' \code{weights = list("weight1", "weight2", "weight3", "weight4")), NA)}
 #' with the \code{NA}, listed last, corresponding to the level 1 identifier (\code{id}).
 #' 
-#' \item \code{car}: a list specifying structure of a conditional autoregressive (CAR)
-#' model. Each element of the list corresponds to a level (classification) of
+#' \item \code{car}: specifies the structure of a conditional autoregressive (CAR)
+#' model. Can be a list of variable names, a list of vectors, or a matrix (e.g. see
+#' \code{\link{df2matrix}}). In the case of the former, each element of the list
+#' corresponds to a level (classification) of
 #' the model, in descending order. If a level is not a spatial classification,
 #' then \code{NA} is specified. Otherwise, lists need to be assigned to
 #' \code{carvar} and \code{weights}, with the former containing columns
@@ -305,8 +377,8 @@
 #' to models estimated via MCMC. \code{car = NULL} by default. Supersedes
 #' deprecated \code{xclass}. See \code{demo(MCMCGuide17)} for examples.
 #' 
-#' \item \code{carcentre}: TO ADD
-#' 
+#' \item \code{carcentre}: if CAR model (i.e. if \code{car} is non-\code{NULL}),
+#' \code{carcentre = TRUE} mean-centres all random effects at that level.
 #' \item \code{startval}: a list of numeric vectors specifying the starting values.
 #' \code{FP.b} corresponds to the estimates for the fixed
 #' part; \code{FP.v} specifies the variance/covariance estimates for the fixed
@@ -323,65 +395,82 @@
 #' keeping with the hierarchy implied by the model formula, and will return a warning
 #' if that is not the case.
 #' 
-#' \item \code{mcmcMeth}:  list of objects specifying MCMC methodology and prior
-#' options, including the following (see \code{\link{MacroScript2}} for further details):\tabular{ll}{
-#' \code{iterations} \tab Number of main iterations post-burnin (i.e. monitoring chain length), defaults to 5000.\cr
-#' \code{burnin} \tab Length of burnin, defaults to 500.\cr
-#' \code{thinning} \tab Thinning factor, defaults to 1.\cr
-#' \code{seed} \tab MCMC random number seed, defaults to 1.\cr
-#' \code{priorParam} \tab TO ADD.\cr
-#' \code{scale} \tab Scale factor for proposal variances: this number will be
+#' \item \code{mcmcMeth}: list of objects specifying MCMC methodology and prior
+#' options, including the following (see \code{\link{MacroScript2}} for further details):
+#' \itemize{
+#' \item \code{iterations}: Number of main iterations post-burnin (i.e. monitoring chain length), defaults to 5000.
+#' \item \code{burnin}: Length of burnin, defaults to 500.
+#' \item \code{thinning}: Thinning factor, defaults to 1.
+#' \item \code{seed}: MCMC random number seed, defaults to 1.
+#' \item \code{priorParam}: A list specifying informative priors. This includes:
+#' \code{fixe} -- for the fixed
+#' parameters, if proper normal priors are used for some parameters, a list of
+#' vectors of length two is provided, each of which specifies the mean and the
+#' standard deviation. If not given, default ('flat' or 'diffuse') priors are
+#' used for the parameters; \code{fixe.common} -- for multivariate normal,
+#' multinomial and mixed response models, if common coefficients are added, use
+#' \code{fixe.common} rather than \code{fixe}; \code{fixe.sep} -- if the common
+#' coefficients are added, use \code{fixe.sep} for the separate coefficients;
+#' \code{rp1} -- a list object specifying the Wishart or gamma prior for the
+#' covariance matrix or scalar variance at level 1 (this consists of: (1)
+#' \code{estimate} -- an estimate for the true value of the inverse of the
+#' covariance matrix; (2) \code{size} -- the number of rows in the covariance
+#' matrix. Note that this is a weakly-informative prior and the default prior
+#' is used if missing); \code {rp2} -- a list object specifying the Wishart or
+#' gamma prior for the covariance matrix or scalar variance at level 2 (this 
+#' consists of: (1) \code{estimate} -- an estimate for the true value of the
+#' inverse of the covariance matrix; (2) \code{size} -- the number of rows in
+#' the covariance matrix. Note that this is a weakly-informative prior and the
+#' default prior is used if missing).
+#' \item \code{scale}: Scale factor for proposal variances: this number will be
 #' multiplied by the estimated parameter variance (from IGLS/RIGLS) to give the
-#' proposal distribution variance. Defaults to 5.8.\cr
-#' \code{refresh} \tab Number of iterations after which screen (in MLwiN GUI) is
-#' to be refreshed. Defaults to 50.\cr
-#' \code{fixM} \tab Specifies the estimation method for the fixed effects:
+#' proposal distribution variance. Defaults to 5.8.
+#' \item \code{refresh}: Number of iterations after which screen (in MLwiN GUI) is
+#' to be refreshed. Defaults to 50.
+#' \item \code{fixM}: Specifies the estimation method for the fixed effects:
 #' \code{1} for Gibbs sampling, \code{2} for univariate Metropolis-Hastings (MH)
 #' sampling and \code{3} for multivariate MH sampling. Defaults to \code{2} if
-#' Poisson, Multinomial, Binomial or Mixed model, else defaults to \code{1}.\cr
-#' \code{residM} \tab Specifies the estimation method for the random effects
+#' Poisson, Multinomial, Binomial or Mixed model, else defaults to \code{1}.
+#' \item \code{residM}: Specifies the estimation method for the random effects
 #' (residuals): \code{1} for Gibbs sampling, \code{2} for univariate
 #' Metropolis-Hastings (MH) sampling and \code{3} for multivariate MH sampling.
 #' Defaults to \code{2} if Poisson, Multinomial, Binomial or Mixed model,
-#' else defaults to \code{1}.\cr
-#' \code{Lev1VarM} \tab Specifies the estimation method for the level 1 variance:
+#' else defaults to \code{1}.
+#' \item \code{Lev1VarM}: Specifies the estimation method for the level 1 variance:
 #' \code{1} for Gibbs sampling, \code{2} for univariate
 #' Metropolis-Hastings (MH) sampling and \code{3} for multivariate MH sampling.
 #' Defaults to \code{2} if Poisson, Multinomial, Binomial or Mixed model,
-#' else defaults to \code{1}.\cr
-#' \code{OtherVarM} \tab Specifies the estimation method for the higher level
+#' else defaults to \code{1}.
+#' \item \code{OtherVarM}: Specifies the estimation method for the higher level
 #' variance matrices: \code{1} for Gibbs sampling, \code{2} for univariate
 #' Metropolis-Hastings (MH) sampling and \code{3} for multivariate MH sampling.
-#' Defaults to \code{1}.\cr
-#' \code{adaption} \tab \code{adaption = 1} (the default) indicates adaptation is to be used,
-#' \code{adaption = 0} indicates it is not.\cr
-#' \code{tol} \tab An integer specifying tolerance (as a percentage; defaults to 10) when
-#' \code{adaption = 1} (ignored if \code{adaption = 0}).\cr
-#' \code{rate} \tab An integer specifying the acceptance rate (as a percentage; defaults
-#' to 50) when \code{adaption = 1} (ignored if \code{adaption = 0}).\cr
-#' \code{priorcode} \tab An integer indicating which default priors are to be used
+#' Defaults to \code{1}.
+#' \item \code{adaption}: \code{adaption = 1} (the default) indicates adaptation is to be used,
+#' \code{adaption = 0} indicates it is not.
+#' \item \code{tol}: An integer specifying tolerance (as a percentage; defaults to 10) when
+#' \code{adaption = 1} (ignored if \code{adaption = 0}).
+#' \item \code{rate}: An integer specifying the acceptance rate (as a percentage; defaults
+#' to 50) when \code{adaption = 1} (ignored if \code{adaption = 0}).
+#' \item \code{priorcode}: An integer indicating which default priors are to be used
 #' for the variance parameters. This parameter takes the value \code{1} (the default) for
 #' Gamma priors or \code{0} for Uniform on the variance scale priors. See the
 #' section on "Priors" in the MLwiN help system for more details on the meaning
-#' of these priors.\cr
-#' \code{startval} \tab Deprecated: starting values are now specified directly
-#' within \code{estoptions}.\cr
-#' \code{lclo} \tab Toggles on/off the possible forms of complex level
+#' of these priors.
+#' \item \code{startval}: Deprecated: starting values are now specified directly
+#' within \code{estoptions}.
+#' \item{lclo}: Toggles on/off the possible forms of complex level
 #' 1 variation when using MCMC. By default (\code{lclo = 0}) the level
 #' 1 variation is expressed as a function of the predictors. Else
 #' (\code{lclo = 1}) the log of the level 1 precision (1/variance) is expressed as
-#' a function of the predictors. Defaults to \code{lclo = 0}.\cr
-#' \code{nopause} \tab A logical value specifying whether the estimates are to be
-#' updated on screen or not, in MLwiN. Default \code{nopause = FALSE}, i.e. the
-#' screen is updated.\cr
-#' \code{dami} \tab Outputs a complete (i.e. including non-missing
+#' a function of the predictors. Defaults to \code{lclo = 0}.
+#' \item \code{dami}: Outputs a complete (i.e. including non-missing
 #' responses) response variable y. If \code{dami = c(0, <iter1>, <iter2>, ...)} then
 #' the response variables returned will be the value of y at the iterations
 #' quoted (as integers \code{<iter1>, <iter2>}, etc.); these can be used for
 #' multiple imputation. If \code{dami = 1} the value of y will be the mean
 #' estimate from the iterations produced. \code{dami = 2} is as for \code{dami = 1}
 #' but with the standard errors of the estimate additionally being stored.
-#' \code{dami = NULL} by default.\cr
+#' \code{dami = NULL} by default.
 #' }
 #' }
 #' The argument \code{BUGO} is a vector specifying BUGS options as follows:
@@ -403,60 +492,20 @@
 #' If \code{BUGO} is non-NULL then the output is an \code{\link{mcmc.list}}
 #' object.
 #' 
-#' TO UPDATE? If the IGLS algorithm is used, (i.e., \code{EstM = 0}), then the outputs are:
-#' JUST SAY RETURN mlwinfitIGLS object, and direct them there; likewise for mcmc.
-#' \itemize{
-#' \item \code{estIGLS}: captures the parameter estimates from MLwiN using the IGLS
-#' algorithm. <_FP_b column> has the fixed part estimates and its variances and
-#' covariances are stored in <_FP_v column>; <_RP_b column> has the random part
-#' estimates and its variances and covariances are stored in <_RP_v column>;
-#' The likelihood statistic is stored in <_Stats column>.
-#' \item \code{FP}: displays the fixed part estimates.
-#' \item \code{RP}: displays the random part estimates.
-#' \item \code{FP.cov}: displays a covariance matrix of the fixed part estimates.
-#' \item \code{RP.cov}: displays a covariance matrix of the random part estimates.
-#' \item \code{call}: the matched call.
-#' \item \code{LIKE}: the likelihood statistic (-2*log(like))
-#' \item \code{residual}: if \code{resi.store} is \code{TRUE}, then
-#' the residual estimates at all levels are returned.
-#' }
+#' If the IGLS algorithm is used (i.e., \code{EstM = 0}), then returns \code{\link{mlwinfitIGLS}};
+#' if MCMC estimation used (i.e., \code{EstM = 1}), then returns \code{\link{mlwinfitIGLS}}.
 #' 
-#' TO UPDATE? If the MCMC algorithm is used, (i.e., \code{EstM = 1}), then the outputs are
-#' \itemize{
-#' \item \code{estMCMC}: captures the parameter estimates from MLwiN using the MCMC
-#' algorithm. <_FP_b column> has the fixed part estimates and its variances and
-#' covariances are stored in <_FP_v column>; <_RP_b column> has the random part
-#' estimates and its variances and covariances are stored in <_RP_v column>;
-#' DIC and likelihood measures are stored in <_Stats column>.
-#' \item \code{chains}: captures the MCMC chains from MLwiN for all parameters.
-#' \item \code{FP}: displays the fixed part estimates.
-#' \item \code{RP}: displays the random part estimates.
-#' \item \code{FP.cov}: displays a covariance matrix of the
-#' fixed part estimates.
-#' \item \code{RP.cov}: displays a covariance matrix of the
-#' random part estimates.
-#' \item \code{call}: the matched call.
-#' \item \code{LIKE}: the
-#' likelihood statistic (-2*log(like))
-#' \item \code{BDIC}: Bayesian Deviance
-#' Information Criterion (DIC)
-#' \item \code{fact.loadings}: if \code{fact} is not
-#' empty, then the factor loadings are returned.
-#' \item \code{fact.cov}: if
-#' \code{fact} is not empty, then factor covariances are returned.
-#' \item \code{residual}: if \code{resi.store} is \code{TRUE}, then the residual
-#' estimates at all levels are returned.
-#' \item \code{resi.chains}: if \code{resi.store.levs} is not empty, then the residual chains at these
-#' levels are returned.
-#' \item \code{chains.bugs}: if \code{BUGO} is used, then the
-#' output chains from WinBUGS/OpenBUGS are returned.
-#' }
+#' @references
+#' Goldstein, H. (2011) Multilevel Statistical Models. 4th Edition. London: John Wiley and Sons.
 #' 
+#' Rasbash, J., Steele, F., Browne, W. J., Goldstein, H. (2014). A User's Guide to MLwiN, v2.26
+#' (Revised Edition). Bristol: Centre for Multilevel Modelling, University of Bristol.
+#'  
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
 #' 
 #' @seealso
-#' \code{\link{Formula.translate}}, \code{\link{MacroScript1}}, \code{\link{MacroScript2}}
+#' \code{\link[stats]{formula}}, \code{\link{Formula.translate}}, \code{\link{Formula.translate.compat}}, \code{\link{MacroScript1}}, \code{\link{MacroScript2}}
 #' 
 #' @examples
 #'  
@@ -734,10 +783,29 @@ version:date:md5:filename:x64:trial
   
   # the current function call
   cl <- match.call()
-
+  
+  centring = estoptions$centring
+  
   if (oldsyntax) {
+    if (!is.null(centring)){
+      for (p in names(centring)){
+        if(as.integer(centring[[p]][1])==1){
+          indata[[p]]=indata[[p]]-mean(indata[[p]])
+        }
+        if(as.integer(centring[[p]][1])==2){
+          grp=as.factor(indata[[centring[[p]][2]]])
+          indata[[p]]=indata[[p]]-tapply(indata[[p]],grp,mean,na.rm=T)[grp] #mean(indata[[p]][as.logical(indata[[centring[[p]][2]]])])
+        }
+        if(as.integer(centring[[p]][1])==3){
+          indata[[p]]=indata[[p]]-as.integer(centring[[p]][2])
+        }
+      }
+    }    
     invars = Formula.translate.compat(Formula, levID, D, indata)
   } else {
+    if (!is.null(centring)){
+      stop("Centring is not supported for new syntax")
+    }
     invars = Formula.translate(Formula, D, indata)
     newdata = invars$indata
     invars$indata <- NULL
@@ -954,6 +1022,9 @@ version:date:md5:filename:x64:trial
   if(is.null(categ)){
     categ=NULL
   }else{
+    if (oldsyntax == F){
+      stop("categ not supported in new syntax")
+    }
     if (is.null(rownames(categ))){
       rownames(categ)=c("var","ref","ncateg")
     }
@@ -1094,8 +1165,6 @@ version:date:md5:filename:x64:trial
 
   if (is.null(fpsandwich)) fpsandwich = FALSE
   if (is.null(rpsandwich)) rpsandwich = FALSE
-  
-  centring = estoptions$centring
   
   clean.files=estoptions$clean.files
   if (is.null(clean.files)) clean.files=T
@@ -1533,7 +1602,7 @@ version:date:md5:filename:x64:trial
 
   notation=estoptions$notation
   if(is.null(notation)) {
-    if (is.null(xc)) {
+    if (xc == FALSE) {
       notation="level"
     } else {
       notation="class"
@@ -1977,8 +2046,6 @@ version:date:md5:filename:x64:trial
     if (is.null(tol)) tol=10
     lclo=mcmcMeth$lclo
     if (is.null(lclo)) lclo =0
-    nopause=mcmcMeth$nopause
-    if (is.null(nopause)) nopause=F
     dami=mcmcMeth$dami
   }
 
@@ -2038,20 +2105,6 @@ version:date:md5:filename:x64:trial
   
   sort.ignore=estoptions$sort.ignore
   if (is.null(sort.ignore)) sort.ignore = FALSE
-  
-  if (!is.null(centring)){
-    for (p in names(centring)){
-      if(as.integer(centring[[p]][1])==1){
-        indata[[p]]=indata[[p]]-mean(indata[[p]])
-      }
-      if(as.integer(centring[[p]][1])==2){
-        indata[[p]]=indata[[p]]-mean(indata[[p]][as.logical(indata[[centring[[p]][2]]])])
-      }
-      if(as.integer(centring[[p]][1])==3){
-        indata[[p]]=indata[[p]]-as.integer(centring[[p]][2])
-      }
-    }
-  }
   
   if (D[1] == "Binomial") {
     if (!all(indata[[resp]] >= 0 && indata[[resp]] <= 1)) {
@@ -2308,7 +2361,7 @@ version:date:md5:filename:x64:trial
   }
   if (EstM==0){
     MacroScript1(outdata, dtafile,oldsyntax,resp, levID, expl, rp, D, nonlinear, categ,notation, nonfp, clre,Meth,extra,reset,rcon,fcon,maxiter,convtol,
-                 mem.init, optimat, weighting, fpsandwich, rpsandwich, modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,
+                 mem.init, optimat, weighting, fpsandwich, rpsandwich, macrofile=macrofile,
                  IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode,startval=startval)
     iterations=estoptions$mcmcMeth$iterations
     if(is.null(iterations)) iterations=5000
@@ -2371,7 +2424,7 @@ version:date:md5:filename:x64:trial
     MacroScript2(outdata, dtafile,oldsyntax,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,Meth,merr,carcentre,maxiter,convtol,
                  seed,iterations,burnin,scale,thinning,priorParam,refresh,fixM,residM,Lev1VarM, 
                  OtherVarM,adaption,priorcode,rate, tol,lclo,mcmcOptions,fact,xc,mm,car,BUGO,mem.init,optimat,
-                 nopause,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,MCMCfile=MCMCfile,
+                 modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,MCMCfile=MCMCfile,
                  chainfile=chainfile,MIfile=MIfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,
                  resichains=resichains,FACTchainfile=FACTchainfile,resi.store.levs=resi.store.levs,debugmode=debugmode,startval=startval, dami=dami)
     
