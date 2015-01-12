@@ -15,21 +15,23 @@
 #' @param ...  Other graphical parameters (see \code{\link[graphics]{par}} for
 #' details).
 #' 
-#' @return A variety of plots and statistics are displayed in an R graphic
-#' window, including the following: \item{trace plot}{the plotted trajectory of
-#' an MCMC chain for a model parameter;} \item{kernel density plot}{kernel density estimates are computed
-#' using \code{\link[stats]{density}};} \item{autocorrelation function}{the function
-#' \code{\link[stats]{acf}} is used to compute and plot estimates of the
-#' autocorrelation function;} \item{partial autocorrelation function}{the
-#' function \code{\link[stats]{pacf}} computes and plots estimates of the partial
-#' autocorrelation function;} \item{Monte Carlo standard error}{the estimated
+#' @details A variety of plots and statistics are displayed in an R graphic
+#' window, including the following:
+#' \itemize {
+#' \item a trace plot of the plotted trajectory of
+#' an MCMC chain for a model parameter;
+#' \item a kernel density plot; kernel density estimates are computed
+#' using \code{\link[stats]{density}};
+#' \item a plotted autocorrelation function (uses \code{\link[stats]{acf}});
+#' \item a plotted partial autocorrelation function (uses \code{\link[stats]{pacf}});
+#' \item a plot of the estimated
 #' Monte Carlo standard error (\code{\link{MCSE}}) of the posterior estimate of the
-#' mean is plotted against the number of iterations. As MCMC is a
+#' mean against the number of iterations. As MCMC is a
 #' simulation-based approach this induces (Monte Carlo) uncertainty due to the
 #' random numbers it uses. This uncertainty reduces with more
 #' iterations, and is measured by the MCSE, and so this graph details how long
-#' the chain needs to be run to achieve a specific MCSE;} \item{accuracy
-#' diagnostics}{the box contains two contrasting accuracy diagnostics. The
+#' the chain needs to be run to achieve a specific MCSE;
+#' \item a box contains two contrasting accuracy diagnostics. The
 #' Raftery-Lewis diagnostic (\code{\link[coda]{raftery.diag}}) is a diagnostic
 #' based on a particular quantile of the distribution. The diagnostic Nhat is
 #' used to estimate the length of Markov chain required to estimate a
@@ -37,9 +39,11 @@
 #' accuracy. The Brooks-Draper diagnostic (\code{\link{BD}}) is a diagnostic based on
 #' the mean of the distribution. It is used to estimate the length of Markov
 #' chain required to produce a mean estimate to k(=2) significant figures with
-#' a given accuracy;} \item{summary statistics}{this box provides summary
+#' a given accuracy;
+#' \item a box of summary
 #' statistics including the posterior mean, sd, mode, quantiles and the
-#' effective sample size (ESS) of the chain.}
+#' effective sample size (ESS) of the chain.
+#' }
 #' 
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
@@ -78,11 +82,11 @@ sixway <- function(chain,name=NULL,acf.maxlag=100,pacf.maxlag=10, ...){
   }
   
   if (nvar(chain) > 1) {
-    stop("Cannot to plot more than one parameter at a time")
+    stop("Cannot plot more than one parameter at a time")
   }
   
   if (is.mcmc.list(chain) && nchain(chain) > 1) {
-    warning("Sixway does not fully support multiple chains - diagnostics will be on concatinated chains")
+    warning("Sixway does not fully support multiple chains - diagnostics will be on concatenated chains")
   }
   
   if(length(args) > 0 && "mar" %in% names(args)) {
