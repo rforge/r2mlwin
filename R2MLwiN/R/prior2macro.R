@@ -5,7 +5,7 @@
 #' vector object to be used in an MLwiN macro.
 #'  
 #' @param prior An R list object containing prior information for a multilevel
-#' model. See `Details' below. NOTE PRIOR REPEATED THERE AS AN ITEM - SORT.
+#' model. See `Details' below.
 #' @param formula A formula object; see
 #' \code{\link{Formula.translate}} or \code{\link{Formula.translate.compat}}.
 #' @param levID A string vector specifying the level ID(s).
@@ -13,30 +13,34 @@
 #' current model.
 #' @param indata A data.frame object containing the variables to be modelled.
 #'
-#' SORT DETAILS OUT
-#'
-#' @return \item{prior}{Contains the prior information for a multilevel model.}
-#' \item{fixe}{For the fixed
+#' @details
+#' The \code{prior} list can contain the following:
+#' \itemize{
+#' \item{fixe}: For the fixed
 #' parameters, if proper normal priors are used for some parameters, a list of
 #' vectors of length two is provided, each of which specifies the mean and the
 #' standard deviation. If not given, default ('flat' or 'diffuse') priors are
-#' used for the parameters.} \item{fixe.common}{For multivariate normal,
+#' used for the parameters.
+#' \item{fixe.common}: For multivariate normal,
 #' multinomial and mixed response models, if common coefficients are added, use
-#' \code{fixe.common} rather than \code{fixe}.} \item{fixe.sep}{If the common
-#' coefficients are added, use \code{fixe.sep} for the separate coefficients.}
-#' \item{rp1}{A list object specifying the Wishart or gamma prior for the
+#' \code{fixe.common} rather than \code{fixe}.
+#' \item{fixe.sep}: If the common
+#' coefficients are added, use \code{fixe.sep} for the separate coefficients.
+#' \item{rp1}: A list object specifying the Wishart or gamma prior for the
 #' covariance matrix or scalar variance at level 1. Consists of: (1)
 #' \code{estimate} -- an estimate for the true value of the inverse of the
 #' covariance matrix; (2) \code{size} -- the number of rows in the covariance
 #' matrix. Note that this is a weakly-informative prior and the default prior
-#' is used if missing.} \item{rp2}{A list object specifying the Wishart or
+#' is used if missing.
+#' \item{rp2}: A list object specifying the Wishart or
 #' gamma prior for the covariance matrix or scalar variance at level 2.
 #' Consists of: (1) \code{estimate} -- an estimate for the true value of the
 #' inverse of the covariance matrix; (2) \code{size} -- the number of rows in
 #' the covariance matrix. Note that this is a weakly-informative prior and the
-#' default prior is used if missing.} \item{......}{}
+#' default prior is used if missing.
+#' }
 #' 
-#' THIS IS VALUE: A long vector is returned in the format of MLwiN macro language. This
+#' @return A long vector is returned in the format of MLwiN macro language. This
 #' includes all the specified prior parameters.
 #' 
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
