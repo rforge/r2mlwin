@@ -35,19 +35,31 @@
 #' removed from the \code{bugsWorkingDir}; defaults to \code{FALSE}.
 #' @param seed An integer specifying the random seed.
 #'
-#' @return A list of objects to specify factor analysis, as used in the
-#' argument \code{fact}: \item{nfact}{Specifies the number of factors}
-#' \item{lev.fact}{Specifies the level/classification for the random part of
-#' the factor for each factor.} \item{nfactor}{Specifies the number of
-#' correlated factors} \item{factor}{A vector specifying the correlated
-#' factors} \tabular{ll}{ (1)\tab the first factor number; \cr (2)\tab the
-#' second factor number; \cr (3)\tab the starting value for the covariance
-#' and\cr (4)\tab an indicator of whether this covariance is constrained
-#' (\code{1}) or not (\code{0}).\cr } \item{loading}{A matrix specifying the
+#' @details
+#' A list of objects to specify factor analysis, as used in the
+#' argument \code{fact}:
+#' \itemize{
+#' \item \code{nfact}: specifies the number of factors;
+#' \item \code{lev.fact}: Specifies the level/classification for the random part of
+#' the factor for each factor;
+#' \item \code{nfactcor}: specifies the number of
+#' correlated factors;
+#' \item \code{factcor}: a vector specifying the correlated
+#' factors: the first element corresponds to the first factor number, the
+#' second to the second factor number, the third element corresponds to the
+#' starting value for the covariance and the fourth element to whether this
+#' covariance is constrained
+#' (\code{1}) or not (\code{0}). If more than one pair of factors is correlated,
+#' then repeat this sequence for each pair.
+#' \item \code{loading}: a matrix specifying the
 #' starting values for the factor loadings and the starting value of the factor
-#' variance. Each row corresponds to a factor.} \item{constr}{A matrix
+#' variance. Each row corresponds to a factor.
+#' \item{constr}: a matrix
 #' specifying indicators of whether the factor loadings and the factor variance
-#' are constrained (\code{1}) or not (\code{0}).}
+#' are constrained (\code{1}) or not (\code{0}).
+#' }
+#'
+#' @return Returns an \code{\link[coda]{mcmc}} object.
 #'
 #' @note This function is derived from \code{\link[rbugs]{rbugs}} (written by
 #' Jun Yan and Marcos Prates).
