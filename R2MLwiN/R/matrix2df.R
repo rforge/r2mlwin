@@ -24,7 +24,7 @@ matrix2df <- function(mat, standardise=FALSE, idstub="id", weightstub="weight") 
   if (is.null(colnames(mat))) {
     colnames(mat) <- 1:ncol(mat)
   }
-  if (standardise == TRUE) {
+  if (isTRUE(standardise)) {
     mat <- mat / Matrix::rowSums(mat)
   }
   numvars <- max(Matrix::rowSums(mat!=0))

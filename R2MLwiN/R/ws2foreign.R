@@ -64,7 +64,7 @@ ws2foreign <- function(wsfile, foreignfile, MLwiNPath = NULL, x64=NULL){
     stop(paste0(MLwiNPath, " does not exist"))
   }
   
-  if (pathinfo$isdir == FALSE) {
+  if (!isTRUE(pathinfo$isdir)) {
     if (file.access(MLwiNPath, mode=1) == 0) {
       cmd <- MLwiNPath
     } else {
@@ -72,7 +72,7 @@ ws2foreign <- function(wsfile, foreignfile, MLwiNPath = NULL, x64=NULL){
     }
   }
   
-  if (pathinfo$isdir == TRUE) {
+  if (isTRUE(pathinfo$isdir)) {
     if (x64) {
       cmd <- paste0(MLwiNPath, "/x64/mlnscript.exe")
       if (file.access(cmd, mode=1) != 0) {

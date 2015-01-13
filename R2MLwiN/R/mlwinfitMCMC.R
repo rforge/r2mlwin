@@ -313,7 +313,7 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   cat(paste(rep("-",50),collapse="*"),"\n")
   cat(object@version, " multilevel model",paste("(",object@D[1],")",sep=""),"\n")
   if (!is.null(object@Hierarchy)) print(object@Hierarchy)
-  if (!is.null(object@xc) && object@xc == TRUE){
+  if (!is.null(object@xc) && isTRUE(object@xc)){
     cat("Estimation algorithm:  MCMC      Cross-classified              Elapsed time :",paste(round(object@elapsed.time,2),"s",sep=""), "\n")
   }else{
     cat("Estimation algorithm:  MCMC      Elapsed time :",paste(round(object@elapsed.time,2),"s",sep=""), "\n")

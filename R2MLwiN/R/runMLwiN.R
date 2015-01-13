@@ -663,7 +663,7 @@ runMLwiN <- function(Formula, levID=NULL, D="Normal", data=NULL, estoptions=list
     stop(paste0(MLwiNPath, " does not exist"))
   }
   
-  if (pathinfo$isdir == FALSE) {
+  if (!isTRUE(pathinfo$isdir)) {
     if (file.access(MLwiNPath, mode=1) == 0) {
       cmd <- MLwiNPath
     } else {
@@ -671,7 +671,7 @@ runMLwiN <- function(Formula, levID=NULL, D="Normal", data=NULL, estoptions=list
     }
   }
   
-  if (pathinfo$isdir == TRUE) {
+  if (isTRUE(pathinfo$isdir)) {
     if (debugmode) {
       cmd <- paste0(MLwiNPath, "/i386/mlwin.exe")
       if (file.access(cmd, mode=1) != 0) {
@@ -767,7 +767,7 @@ version:date:md5:filename:x64:trial
 2.31:Sep 2014:3a4c5904a21788262ef8244958eb5302:mlnscript.exe:TRUE:FALSE
 "
   versioninfo <- read.delim(textConnection(versioninfostr), header=TRUE, sep=":",strip.white=TRUE)
-  if (checkversion == TRUE) { # Allow disabling the version check if it is slowing things down (e.g. in a simulation study)
+  if (isTRUE(checkversion)) { # Allow disabling the version check if it is slowing things down (e.g. in a simulation study)
     currentver = versioninfo[versioninfo$md5==digest(cmd, algo="md5", file=TRUE),]  
     if (nrow(currentver) == 0) {
       versiontext = "MLwiN (version: unknown or >2.31)"
@@ -1022,7 +1022,7 @@ version:date:md5:filename:x64:trial
   if(is.null(categ)){
     categ=NULL
   }else{
-    if (oldsyntax == FALSE){
+    if (!isTRUE(oldsyntax)){
       stop("categ not supported in new syntax")
     }
     if (is.null(rownames(categ))){
@@ -1078,7 +1078,7 @@ version:date:md5:filename:x64:trial
     }
   }
 
-  if (needsint == TRUE) {
+  if (isTRUE(needsint)) {
     indata[["Intercept"]] <- rep(1, nrow(indata))
   }
      
@@ -1501,7 +1501,7 @@ version:date:md5:filename:x64:trial
         weightend = weightstart+(num-1)
         weightcols <- colnames(indata)[weightstart:weightend]
 
-        if (xclass$car == FALSE) {
+        if (!isTRUE(xclass$car)) {
           if (is.null(car)) car <- list(carvar=list(), weights=list())
           car[[lev]]$carvar <- as.list(idcols)
           car[[lev]]$weights <- as.list(weightcols)
@@ -1531,7 +1531,7 @@ version:date:md5:filename:x64:trial
         carcount <- carcount + 1
       }
     }
-    if (carcount > 1 && carcentre != TRUE) {
+    if (carcount > 1 && !isTRUE(carcentre)) {
       stop("CAR can only apply to one level unless CAR centring is turned on")
     }
   }
@@ -1602,7 +1602,7 @@ version:date:md5:filename:x64:trial
 
   notation=estoptions$notation
   if(is.null(notation)) {
-    if (xc == FALSE) {
+    if (!isTRUE(xc)) {
       notation="level"
     } else {
       notation="class"
@@ -2237,7 +2237,7 @@ version:date:md5:filename:x64:trial
     outdata <- indata
   }
   
-  if (sort.ignore == FALSE) {
+  if (!isTRUE(sort.ignore)) {
     # Don't enforce sorting on level-1 in cases where it isn't used
     if (D[1] == 'Normal' || D[1] == 'Binomial' || D[1] == 'Poisson' || D[1] == 'Negbinom') {
       outdata[["_sortindex"]] <- seq(1, nrow(outdata)) # replace with sequence to keep sorting stable
@@ -2246,10 +2246,10 @@ version:date:md5:filename:x64:trial
     }
     
     # Check/sort data as approriate
-    if (sort.force == TRUE) {
+    if (isTRUE(sort.force)) {
       outdata <- outdata[do.call(order, outdata[na.omit(levID)]), ]
     } else {
-      if (is.null(xc) && all(do.call(order, outdata[na.omit(levID)]) == seq(1, nrow(outdata))) == FALSE) {
+      if (is.null(xc) && !isTRUE(all(do.call(order, outdata[na.omit(levID)]) == seq(1, nrow(outdata))))) {
         stop("The input data are not sorted according to the model hierarchy")
       }
     }
@@ -2269,7 +2269,7 @@ version:date:md5:filename:x64:trial
         groupsize <- by(outdata, outdata[,shortID[lev]], nrow)
       } else {
         test <- require(reshape, quietly=TRUE)
-        if (test == TRUE) {
+        if (isTRUE(test)) {
           # If the level identifiers are factors with string labels then the following can produce the warning
           # "coercing argument of type 'list' to logical"
           # from within cbind2 in the reshape package.
