@@ -77,7 +77,7 @@ If \code{TRUE}, the generated files will be removed from the \code{workdir}.
 The argument \code{BUGO} is a vector specifying BUGS options as follows:
 \item{version}{This indicates the version of WinBUGS where \code{3} = version 1.3 and \code{4} = version 1.4.}
 \item{n.chains}{This specifies the number of chains used in the BUGS algorithm.}
-\item{debug}{This determines whether BUGS stays open following completion of the model run; \code{debug=F} by default.}
+\item{debug}{This determines whether BUGS stays open following completion of the model run; \code{debug=FALSE} by default.}
 \item{seed}{This sets the random number generator in BUGS.}
 \item{bugs}{This specifies the path of the BUGS executable.}
 \item{OpenBugs}{If \code{OpenBugs=TRUE}, OpenBUGS is used. Otherwise, WinBUGS is used.}

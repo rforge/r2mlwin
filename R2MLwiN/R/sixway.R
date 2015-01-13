@@ -143,7 +143,7 @@ sixway <- function(chain,name=NULL,acf.maxlag=100,pacf.maxlag=10, ...){
   Ndb=BD(mean(flatchain),var(flatchain),rho, k=2,alpha=0.05)
   
   screen(10)
-  plot(1, xlim=c(1,10),ylim=c(1,5),type="n", axes=F, xlab="", ylab="",frame.plot=T)
+  plot(1, xlim=c(1,10),ylim=c(1,5),type="n", axes=FALSE, xlab="", ylab="",frame.plot=TRUE)
   text(5,4.8, "Accuracy Diagnostics",cex=1.2)
   if(RL1$resmatrix[1]=="Error"){
     text(5,4,paste("RL diagnostic only available after ",RL1$resmatrix[2]," updates.",sep=""),cex=.8)
@@ -155,7 +155,7 @@ sixway <- function(chain,name=NULL,acf.maxlag=100,pacf.maxlag=10, ...){
   text(5,2.1,paste("Brooks-Draper (mean) : Nhat =",Ndb),cex=.8)
   text(5,1.2, "when k=2 sigfigs and alpha=0.05",cex=.8)
   screen(11)
-  plot(1, xlim=c(1,22),ylim=c(1,4),type="n", axes=F, xlab="", ylab="",frame.plot=T)
+  plot(1, xlim=c(1,22),ylim=c(1,4),type="n", axes=FALSE, xlab="", ylab="",frame.plot=TRUE)
   text(10,3.8, "Summary Statistics",cex=1.2)
   quants=round(quantile(flatchain,c(.025,.05,.5,.95,.975)),3)
   text(10,2.9, paste("param name :",name, "posterior mean =",round(mean(flatchain),3),"SD = ",round(sd(flatchain),3),"mode =",round(dens$x[which.max(dens$y)],3)),cex=.8)

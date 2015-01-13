@@ -70,7 +70,7 @@ while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file
 mymodel <- runMLwiN(log(obs)~0+perc_aff+offset(offs)+(area|1)+(area|0), D='Poisson',
                      estoptions=list(car=list(list(carvar=list("neigh1","neigh2","neigh3","neigh4","neigh5","neigh6","neigh7","neigh8","neigh9","neigh10","neigh11"),weights=list("wcar1","wcar2","wcar3","wcar4","wcar5","wcar6","wcar7","wcar8","wcar9","wcar10","wcar11")), NA, NA),
                                      EstM=1, mcmcMeth=list(iterations=50000)),
-                     BUGO=c(version=4, n.chains=1, bugs=openbugs, OpenBugs = T), data=lips1)
+                     BUGO=c(version=4, n.chains=1, bugs=openbugs, OpenBugs = TRUE), data=lips1)
 
 summary(mymodel)
 # 17.7 Including exchangeable random effects . . . . . . . . . . . . . . 259

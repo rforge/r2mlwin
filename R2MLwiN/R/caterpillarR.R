@@ -31,7 +31,7 @@
 #' # Example using tutorial dataset
 #' data(tutorial, package = "R2MLwiN")
 #' mymodel <- runMLwiN(normexam ~ 1 + (school|1) + (student|1),
-#'                     estoptions = list(resi.store = T),
+#'                     estoptions = list(resi.store = TRUE),
 #'                     data = tutorial)
 #' # Caterpillar plot
 #' caterpillarR(mymodel["residual"], lev = 2)
@@ -148,8 +148,8 @@ caterpillarR <- function(resi, lev=2){
     }
     tt=array(,c(d2,d2,d1))
     for (x in 1:d1){
-      tt[,,x][upper.tri(tt[,,x],diag=T)]=cov.lower[,x]
-      tt[,,x][lower.tri(tt[,,x],diag=F)]=t(tt[,,x])[lower.tri(tt[,,x],diag=F)]
+      tt[,,x][upper.tri(tt[,,x],diag=TRUE)]=cov.lower[,x]
+      tt[,,x][lower.tri(tt[,,x],diag=FALSE)]=t(tt[,,x])[lower.tri(tt[,,x],diag=FALSE)]
     }
   }
   

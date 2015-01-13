@@ -107,7 +107,7 @@ print(sdtable)
 
 ## Define the model
 mymodel9 <- runMLwiN(logit(use,denomb)~1+age+(district|1), D="Binomial",
-                     estoptions=list(EstM=1), BUGO=c(version=4, n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=bang1)
+                     estoptions=list(EstM=1), BUGO=c(version=4, n.chains=1, debug=FALSE, seed=1, bugs=openbugs, OpenBugs = TRUE), data=bang1)
 
 summary(mymodel9)
 summary(mymodel9[,"beta[1]"])

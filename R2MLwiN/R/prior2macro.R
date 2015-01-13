@@ -235,11 +235,11 @@ prior2macro <- function(prior,formula,levID,D, indata){
         f.ext <- as.formula(eval(paste("~0+",categstr1[ii])))
         contrMat <- attr(indata[[categstr1[ii]]], "contrasts")
         if(is.null(contrMat)){
-          data.ext <- model.matrix(f.ext, indata)[,-1, drop=F]
+          data.ext <- model.matrix(f.ext, indata)[,-1, drop=FALSE]
           categstr2[[categstr1[ii]]] <- colnames(data.ext)
         }else{
           keeppos <- rowSums(contrMat)>0
-          data.ext <- model.matrix(f.ext, indata)[,keeppos, drop=F]
+          data.ext <- model.matrix(f.ext, indata)[,keeppos, drop=FALSE]
           categstr2[[categstr1[ii]]] <- colnames(data.ext)
         }
         indata <- cbind(indata, as.data.frame(data.ext))
@@ -869,7 +869,7 @@ prior2macro <- function(prior,formula,levID,D, indata){
         tname=rp.names[i]
         mat=prior[[tname]]$estimate
         mat[upper.tri(mat)]=mat[lower.tri(mat)]
-        tt=c(as.vector(mat[upper.tri(mat, diag=T)]),prior[[tname]]$size)
+        tt=c(as.vector(mat[upper.tri(mat, diag=TRUE)]),prior[[tname]]$size)
         TT=c(TT,1,tt)
       }else{
         TT=c(TT,0)

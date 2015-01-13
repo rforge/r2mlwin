@@ -321,10 +321,10 @@ Formula.translate <- function(Formula, D='Normal', indata){
         na_act <- options("na.action")[[1]]
         options(na.action="na.pass")
         if(is.null(contrMat)){
-          data.ext <- model.matrix(f.ext, indata)[,-1, drop=F]
+          data.ext <- model.matrix(f.ext, indata)[,-1, drop=FALSE]
         }else{
           keeppos <- rowSums(contrMat)>0
-          data.ext <- model.matrix(f.ext, indata)[,keeppos, drop=F]
+          data.ext <- model.matrix(f.ext, indata)[,keeppos, drop=FALSE]
         }
         options(na.action=na_act)
         colnames(data.ext) <- gsub("\\.", "\\_", colnames(data.ext))
@@ -1062,7 +1062,7 @@ Formula.translate <- function(Formula, D='Normal', indata){
             tmp_pos <- grep(randc[[i]][j],tmpcidmat[,1])[1]
             randcid=tmpcidmat[tmp_pos,2]
             rptemp=c(rptemp, paste(randc[[i]][j],gsub(",","",randcid),sep="."))
-            tmpcidmat <- tmpcidmat[-tmp_pos,,drop=F]
+            tmpcidmat <- tmpcidmat[-tmp_pos,,drop=FALSE]
           }
           if(is.null(rp[[rp.name]])){
             rp[[rp.name]]=rptemp

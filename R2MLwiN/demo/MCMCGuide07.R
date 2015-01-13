@@ -49,7 +49,7 @@ while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file
 ## Uses the results from IGLS to create initial values for bugs
 ## Fit the model by calling openbugs using the rbugs package
 mymodel1 <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),
-                     estoptions=list(EstM=1, show.file=T), BUGO=c(version=4,n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=tutorial)
+                     estoptions=list(EstM=1, show.file=TRUE), BUGO=c(version=4,n.chains=1, debug=FALSE, seed=1, bugs=openbugs, OpenBugs = TRUE), data=tutorial)
 
 summary(mymodel1)
 summary(mymodel1[,"beta[2]"])
@@ -73,14 +73,14 @@ download.file("http://www.bristol.ac.uk/cmm/media/r2mlwin/tutorial1_data.txt", d
 bugEst <- paste0(tempdir(),"/tutorial1_log.txt")
 
 
-chains.bugs1 <- mlwin2bugs(D="t", levID=c('school','student'), datafile, initfile, modelfile, bugEst, fact=NULL, addmore=NULL, n.chains = 1, n.iter = 5500, n.burnin=500, n.thin=1, debug=T, bugs=openbugs,
-                           bugsWorkingDir=tempdir(), OpenBugs = T)
+chains.bugs1 <- mlwin2bugs(D="t", levID=c('school','student'), datafile, initfile, modelfile, bugEst, fact=NULL, addmore=NULL, n.chains = 1, n.iter = 5500, n.burnin=500, n.thin=1, debug=TRUE, bugs=openbugs,
+                           bugsWorkingDir=tempdir(), OpenBugs = TRUE)
 ## Close winbugs manually
 summary(chains.bugs1)
 sixway(chains.bugs1[,"df",drop=FALSE])
 
-chains.bugs2 <- mlwin2bugs(D="t", levID=c('school','student'), datafile, initfile, modelfile, bugEst, fact=NULL, addmore=NULL, n.chains = 1, n.iter = 12000, n.burnin=2000, n.thin=1, debug=T, bugs=openbugs,
-                           bugsWorkingDir=tempdir(), OpenBugs = T)
+chains.bugs2 <- mlwin2bugs(D="t", levID=c('school','student'), datafile, initfile, modelfile, bugEst, fact=NULL, addmore=NULL, n.chains = 1, n.iter = 12000, n.burnin=2000, n.thin=1, debug=TRUE, bugs=openbugs,
+                           bugsWorkingDir=tempdir(), OpenBugs = TRUE)
 ## Close winbugs manually
 summary(chains.bugs2)
 sixway(chains.bugs2[,"df",drop=FALSE])

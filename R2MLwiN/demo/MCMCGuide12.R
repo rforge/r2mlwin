@@ -77,7 +77,7 @@ sixway(pred2,"prob1")
 sixway(mymodel@chains[,"RP2_var_Intercept_1",drop=FALSE],"sigma2v0")
 
 RP3.cons <- matrix(,3,3)
-RP3.cons[upper.tri(RP3.cons,diag=T)] <- mymodel@RP[1:6]
+RP3.cons[upper.tri(RP3.cons,diag=TRUE)] <- mymodel@RP[1:6]
 RP3.cons[lower.tri(RP3.cons)] <- RP3.cons[upper.tri(RP3.cons)]
 round(cov2cor(RP3.cons),3)
 

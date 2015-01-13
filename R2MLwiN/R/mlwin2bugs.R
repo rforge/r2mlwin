@@ -69,8 +69,8 @@
 #'
 #' @seealso \code{\link{runMLwiN}},\code{\link[rbugs]{rbugs}}
 #'
-mlwin2bugs <- function(D,levID, datafile, initfile, modelfile, bugEst, fact, addmore, n.chains, n.iter, n.burnin, n.thin, debug=F, bugs,
-                       bugsWorkingDir=tempdir(), OpenBugs = F, cleanBugsWorkingDir = FALSE, seed = NULL){
+mlwin2bugs <- function(D,levID, datafile, initfile, modelfile, bugEst, fact, addmore, n.chains, n.iter, n.burnin, n.thin, debug=FALSE, bugs,
+                       bugsWorkingDir=tempdir(), OpenBugs = FALSE, cleanBugsWorkingDir = FALSE, seed = NULL){
   
   rbugs2 <- function (data.file, inits.files, paramSet, model, bugEst, fact, n.chains = 1, n.iter = 2000,
                       n.burnin = floor(n.iter/2), n.thin = max(1, floor(n.chains * (n.iter - n.burnin)/1000)), dic = FALSE, debug = FALSE,

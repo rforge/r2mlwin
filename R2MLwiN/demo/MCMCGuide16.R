@@ -53,7 +53,7 @@ tabulate(wage1$numjobs)
 
 ##Multiple membership
 (mymodel <- runMLwiN(logearn~1+age_40+sex+parttime+(company|1)+(id|1),
-                     estoptions=list(EstM=1, mm=list(list(mmvar=list("company","company2","company3","company4"),weights=list("weight1","weight2","weight3","weight4")), NA), resi.store=T, resi.store.levs=2), data=wage1))
+                     estoptions=list(EstM=1, mm=list(list(mmvar=list("company","company2","company3","company4"),weights=list("weight1","weight2","weight3","weight4")), NA), resi.store=TRUE, resi.store.levs=2), data=wage1))
 
 # 16.5 Residuals in multiple membership models . . . . . . . . . . . . . 240
 
@@ -68,7 +68,7 @@ resi0.hi <- resi0mean+1.4*resi0sd
 caterpillar(y=resi0mean[rankno],x=1:length(resi0mean),qtlow=resi0.lo[rankno],qtup=resi0.hi[rankno],ylim=c(-1,1.3))
 abline(h=0,lty="dotted")
 
-aa <- qqnorm(resi0mean,plot.it=F)
+aa <- qqnorm(resi0mean,plot.it=FALSE)
 plot(x=aa$x[rankno],y=resi0mean[rankno],pch=24,bg="black",xlab="nscore",ylab="cons")
 abline(h=0,lty="dotted")
 

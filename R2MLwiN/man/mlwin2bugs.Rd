@@ -8,8 +8,8 @@ This function allows R to call WinBUGS using the output files from MLwiN. This f
 }
 \usage{
 mlwin2bugs(D, levID, datafile, initfile, modelfile, bugEst, fact, addmore, 
-n.chains, n.iter, n.burnin, n.thin, debug = F, bugs, 
-bugsWorkingDir = tempdir(), OpenBugs = F, cleanBugsWorkingDir = FALSE, seed = NULL)
+n.chains, n.iter, n.burnin, n.thin, debug = FALSE, bugs, 
+bugsWorkingDir = tempdir(), OpenBugs = FALSE, cleanBugsWorkingDir = FALSE, seed = NULL)
 }
 \arguments{
   \item{D}{

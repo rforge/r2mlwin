@@ -12,8 +12,8 @@ MacroScript1 is an internal function which creates an MLwiN macro file to fit a 
 \usage{
 MacroScript1(indata, dtafile, resp, levID, expl, rp, D = "Normal", 
 nonlinear = c(0, 1), categ = NULL, notation = NULL,
-nonfp = NA, clre, smat, Meth = 1, extra = F, reset,
-rcon, fcon, BUGO = NULL, mem.init = "default", optimat = F,
+nonfp = NA, clre, smat, Meth = 1, extra = FALSE, reset,
+rcon, fcon, BUGO = NULL, mem.init = "default", optimat = FALSE,
 weighting = NULL, modelfile = modelfile, initfile = initfile,
 datafile = datafile, macrofile = macrofile, 
 IGLSfile = IGLSfile, resifile = resifile,
@@ -65,7 +65,7 @@ A matrix used to estimate some, but not all, of the variances and covariances fo
 Specifies which maximum likelihood estimation method to be used. If \code{Meth=0} estimation method is set to RIGLS. If \code{Meth=1} estimation method is set to IGLS (the default setting). If \code{Meth} is absent, alternate between IGLS and RIGLS.
 }
   \item{BUGO}{
-If the first entry of the vector is \code{TRUE}, the current model is outputted in BUGS code. \code{version=4} specifies WinBUGS 1.4 format, whilst \code{version=3} corresponds to WinBUGS 1.3 format. \code{n.chains} specifies the number of chains to be used in WinBUGS/OpenBUGS, \code{n.chains=1} by default. \code{debug} specifies whether BUGS is left open once the model has run, or not (\code{debug=F} by default). \code{seed} sets the random number generator in BUGS. \code{bugs} specifies the location of the WinBUGS/OpenBUGS executable. If\code{OpenBugs=TRUE} OpenBUGS is used, if \code{FALSE} (the default) WinBUGS is used.
+If the first entry of the vector is \code{TRUE}, the current model is outputted in BUGS code. \code{version=4} specifies WinBUGS 1.4 format, whilst \code{version=3} corresponds to WinBUGS 1.3 format. \code{n.chains} specifies the number of chains to be used in WinBUGS/OpenBUGS, \code{n.chains=1} by default. \code{debug} specifies whether BUGS is left open once the model has run, or not (\code{debug=FALSE} by default). \code{seed} sets the random number generator in BUGS. \code{bugs} specifies the location of the WinBUGS/OpenBUGS executable. If\code{OpenBugs=TRUE} OpenBUGS is used, if \code{FALSE} (the default) WinBUGS is used.
 }
   \item{optimat}{
 This option instructs MLwiN to limit the maximum matrix size that can be allocated by the (R)IGLS algorithm. Specify \code{optimat=TRUE} if MLwiN gives the following error message "Overflow allocating smatrix".  This error message arises if one more higher-level units is extremely large (contains more than 800 lower-level units).  In this situation runmlwin's default behaviour is to instruct MLwiN to allocate a larger matrix size to the (R)IGLS algorithm than is currently possible. Specifying \code{optimat=TRUE} caps the maximum matrix size at 800 lower-level units, circumventing the MLwiN error message, and allowing most MLwiN functionality.  

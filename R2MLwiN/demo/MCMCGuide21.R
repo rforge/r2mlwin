@@ -56,7 +56,7 @@ trajectories(mymodel,Range=c(1,500))
 # 21.4 Examining the residual chains . . . . . . . . . . . . . . . . . . 335
 
 (mymodel <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), 
-                     estoptions=list(EstM=1, resi.store=T, resi.store.levs=2, mcmcMeth=list(iterations=5001), mcmcOptions=list(smcm=1)), data=tutorial))
+                     estoptions=list(EstM=1, resi.store=TRUE, resi.store.levs=2, mcmcMeth=list(iterations=5001), mcmcOptions=list(smcm=1)), data=tutorial))
 
 ## Each row represents each iteration
 sixway(mymodel@resi.chains$resi_lev2[,1,drop=FALSE], name="school1")

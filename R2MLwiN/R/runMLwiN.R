@@ -479,7 +479,7 @@
 #' number of chains used by BUGS.
 #' \item \code{debug}: determines
 #' whether BUGS stays open following completion of the model run;
-#' \code{debug = F} by default.
+#' \code{debug = FALSE} by default.
 #' \item \code{seed}: sets the random number
 #' generator in BUGS.
 #' \item \code{bugs}: specifies the path of the BUGS
@@ -643,7 +643,7 @@ runMLwiN <- function(Formula, levID=NULL, D="Normal", data=NULL, estoptions=list
   
   # Check MLwiNPath is usable and set command/args
   debugmode=estoptions$debugmode
-  if(is.null(debugmode)) debugmode=F
+  if(is.null(debugmode)) debugmode=FALSE
   
   x64=estoptions$x64
   if(is.null(x64)) {
@@ -794,7 +794,7 @@ version:date:md5:filename:x64:trial
         }
         if(as.integer(centring[[p]][1])==2){
           grp=as.factor(indata[[centring[[p]][2]]])
-          indata[[p]]=indata[[p]]-tapply(indata[[p]],grp,mean,na.rm=T)[grp] #mean(indata[[p]][as.logical(indata[[centring[[p]][2]]])])
+          indata[[p]]=indata[[p]]-tapply(indata[[p]],grp,mean,na.rm=TRUE)[grp] #mean(indata[[p]][as.logical(indata[[centring[[p]][2]]])])
         }
         if(as.integer(centring[[p]][1])==3){
           indata[[p]]=indata[[p]]-as.integer(centring[[p]][2])
@@ -1022,7 +1022,7 @@ version:date:md5:filename:x64:trial
   if(is.null(categ)){
     categ=NULL
   }else{
-    if (oldsyntax == F){
+    if (oldsyntax == FALSE){
       stop("categ not supported in new syntax")
     }
     if (is.null(rownames(categ))){
@@ -1083,10 +1083,10 @@ version:date:md5:filename:x64:trial
   }
      
   show.file=estoptions$show.file
-  if (is.null(show.file)) show.file = F
+  if (is.null(show.file)) show.file = FALSE
   
   resi.store=estoptions$resi.store
-  if (is.null(resi.store)) resi.store=F
+  if (is.null(resi.store)) resi.store=FALSE
   
   resioptions=estoptions$resioptions
   if (is.null(resioptions)){
@@ -1123,9 +1123,9 @@ version:date:md5:filename:x64:trial
   # Convert old weight syntax
   if (!is.null(weighting) && (!is.null(weighting$levels) || !is.null(weighting$weights) || !is.null(weighting$mode) || !is.null(weighting$FSDE) || !is.null(weighting$RSDE))) {
     warning("Old IGLS weighting options specified, see the help file for new syntax")
-    if (weighting$FSDE == 2) fpsandwich = T
-    if (weighting$RSDE == 2) rpsandwich = T
-    if (weighting$mode == 2) weighting$standardised = T
+    if (weighting$FSDE == 2) fpsandwich = TRUE
+    if (weighting$RSDE == 2) rpsandwich = TRUE
+    if (weighting$mode == 2) weighting$standardised = TRUE
     if (!is.null(weighting$levels) && !is.null(weighting$weights)) {
       if (length(weighting$levels)!=length(weighting$weights)){
         stop("The length of levels does not match with the length of weights.")
@@ -1167,7 +1167,7 @@ version:date:md5:filename:x64:trial
   if (is.null(rpsandwich)) rpsandwich = FALSE
   
   clean.files=estoptions$clean.files
-  if (is.null(clean.files)) clean.files=T
+  if (is.null(clean.files)) clean.files=TRUE
    
   clre=estoptions$clre
   clre[2,] <- gsub("^1$", "Intercept", clre[2,])
@@ -1197,7 +1197,7 @@ version:date:md5:filename:x64:trial
   if(is.null(mem.init)) mem.init="default"
   
   optimat=estoptions$optimat
-  if(is.null(optimat)) optimat=F
+  if(is.null(optimat)) optimat=FALSE
 
   maxiter=estoptions$maxiter
   if(is.null(maxiter)) maxiter=20
@@ -1206,7 +1206,7 @@ version:date:md5:filename:x64:trial
   if(is.null(convtol)) convtol=2
 
   extra=estoptions$extra
-  if(is.null(extra)) extra=F
+  if(is.null(extra)) extra=FALSE
   if (extra == TRUE) {
     if (EstM != 0) {
       stop("extra can only be specified for (R)IGLS models")
@@ -2592,11 +2592,11 @@ version:date:md5:filename:x64:trial
     
     debug=as.logical(BUGO["debug"])
     if (is.na(debug)){
-      debug=F
+      debug=FALSE
     }
     OpenBugs=as.logical(BUGO["OpenBugs"])
     if (is.na(OpenBugs)){
-      OpenBugs=F
+      OpenBugs=FALSE
     }
     n.chains=as.integer(BUGO["n.chains"])
     if (is.na(n.chains)){

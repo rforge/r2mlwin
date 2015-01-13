@@ -48,7 +48,7 @@
 #' }
 #'
 #' @export
-predCurves <- function(object, indata=NULL, xname, group=NULL, legend=T, legend.space="top", legend.ncol=2, ...){
+predCurves <- function(object, indata=NULL, xname, group=NULL, legend=TRUE, legend.space="top", legend.ncol=2, ...){
   ## This function is to draw predicted lines using fixed part estimates
 
   cls <- class(object)

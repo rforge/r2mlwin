@@ -43,7 +43,7 @@ hist(alevchem$gcseav,breaks=20)
 
 ## Define the model
 ## Fit the model
-(mymodel <- runMLwiN(a_point~1+gcseav+I(gcseav^2)+I(gcseav^3)+gender+(pupil|1), estoptions=list(EstM=1, resi.store=T), data=alevchem))
+(mymodel <- runMLwiN(a_point~1+gcseav+I(gcseav^2)+I(gcseav^3)+gender+(pupil|1), estoptions=list(EstM=1, resi.store=TRUE), data=alevchem))
 
 predCurves(mymodel, xname="gcseav", group="genderfemale")
 

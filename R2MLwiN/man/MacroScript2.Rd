@@ -14,7 +14,7 @@ MacroScript2(indata, dtafile, resp, levID, expl, rp, D, nonlinear,
                  priorParam, refresh, fixM, residM, Lev1VarM,
                  OtherVarM, adaption, priorcode, rate, tol, lclo,
                  mcmcOptions, fact, xclass = NULL, BUGO = NULL,
-                 mem.init, optimat = F, nopause, modelfile = modelfile,
+                 mem.init, optimat = FALSE, nopause, modelfile = modelfile,
                  initfile = initfile, datafile = datafile, macrofile =
                  macrofile, IGLSfile = IGLSfile, MCMCfile = MCMCfile,
                  chainfile = chainfile, MIfile = MIfile, resifile =
@@ -131,7 +131,7 @@ A list of objects specified for factor analysis. See Value below.
 A list of objects specified for cross-classified and/or multiple membership models. See Value below.
 }
   \item{BUGO}{
-If the first entry of the vector is \code{TRUE}, the current model is outputted in BUGS code. \code{version=4} specifies WinBUGS 1.4 format, whilst \code{version=3} corresponds to WinBUGS 1.3 format. \code{n.chains} specifies the number of chains to be used in WinBUGS/OpenBUGS, \code{n.chains=1} by default. \code{debug} specifies whether BUGS is left open once the model has run, or not (\code{debug=F} by default). \code{seed} sets the random number generator in BUGS. \code{bugs} specifies the location of the WinBUGS/OpenBUGS executable. If\code{OpenBugs=TRUE} OpenBUGS is used, if \code{FALSE} (the default) WinBUGS is used.
+If the first entry of the vector is \code{TRUE}, the current model is outputted in BUGS code. \code{version=4} specifies WinBUGS 1.4 format, whilst \code{version=3} corresponds to WinBUGS 1.3 format. \code{n.chains} specifies the number of chains to be used in WinBUGS/OpenBUGS, \code{n.chains=1} by default. \code{debug} specifies whether BUGS is left open once the model has run, or not (\code{debug=FALSE} by default). \code{seed} sets the random number generator in BUGS. \code{bugs} specifies the location of the WinBUGS/OpenBUGS executable. If\code{OpenBugs=TRUE} OpenBUGS is used, if \code{FALSE} (the default) WinBUGS is used.
 }
   \item{mem.init}{
 A vector which sets and displays worksheet capacities for the current MLwiN session according to the value(s) specified. By default, the number of levels is \code{nlev}+1; worksheet size in thousands of cells is 6000; the number of columns is 2500; the number of explanatory variables is \code{num_vars}+10; the number of group labels is 20. \code{nlev} is the number of levels specified by \code{levID}, and \code{num_vars} is approximately the number of explanatory variables calculated initially.

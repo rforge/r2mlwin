@@ -7,7 +7,7 @@ Draws predicted curves (lines) using estimates from the fixed part of a fitted m
 This function draws predicted curves (lines) against an explanatory variable for each category of a categorical variable.
 }
 \usage{
-predCurves(object, indata, xname, group = NULL, legend = T, 
+predCurves(object, indata, xname, group = NULL, legend = TRUE, 
 legend.space="top", legend.ncol=2, ...)
 }
 %- maybe also 'usage' for other objects documented here.

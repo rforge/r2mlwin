@@ -199,7 +199,7 @@ Fri Sep 06 2013
    * Removed redundant creation of combined BUGS files (bugofile; all BUGS files still returned separately).
    * Calling BUGS now returns summary of mcmc.list instead of MLwiN IGLS output (chains.bugs no longer returned).
    * All chains returned from an MCMC run in MLwiN are now mcmc objects.
-   * Added option to display Bayesian one-sided p-value instead of z-ratio and its associated p-value in MCMC output from MLwiN (the default is z.ratio = T).
+   * Added option to display Bayesian one-sided p-value instead of z-ratio and its associated p-value in MCMC output from MLwiN (the default is z.ratio = TRUE).
    * Global options 'digits' and 'show.signif.stars' now enabled, allowing users to specify the number of digits to display in the summary model output, as well as whether to display the stars which signify p-value thresholds, or not.
    * MCSE now handles mcmc objects, and handles thinning appropriately.
    * sixway now takes an mcmc object.

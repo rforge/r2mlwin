@@ -132,7 +132,7 @@ while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file
 ##Orthogonal update (WinBUGS)
 
 mymodel <- runMLwiN(logit(use,denomb)~1+age+lc+urban+(district|1+urban), D="Binomial",
-                    estoptions=list(EstM=1, mcmcOptions=list(orth=1), show.file=T), BUGO=c(version=4, n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=bang1)
+                    estoptions=list(EstM=1, mcmcOptions=list(orth=1), show.file=TRUE), BUGO=c(version=4, n.chains=1, debug=FALSE, seed=1, bugs=openbugs, OpenBugs = TRUE), data=bang1)
 
 summary(mymodel)
 effectiveSize(mymodel)

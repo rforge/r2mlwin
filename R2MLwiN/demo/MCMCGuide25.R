@@ -50,8 +50,8 @@ while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file
 ## Hierarchical centring at level 2 (DO NOT USE VERSION 2.25; the bug has been fixed for VERSION 2.26)
 
 mymodel <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1),
-                    estoptions=list(EstM=1, mcmcOptions=list(hcen=2), show.file=T),
-                    BUGO=c(version=4, n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=tutorial)
+                    estoptions=list(EstM=1, mcmcOptions=list(hcen=2), show.file=TRUE),
+                    BUGO=c(version=4, n.chains=1, debug=FALSE, seed=1, bugs=openbugs, OpenBugs = TRUE), data=tutorial)
 
 summary(mymodel)
 sixway(mymodel[,"beta[1]",drop=FALSE])

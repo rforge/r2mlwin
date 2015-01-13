@@ -250,7 +250,7 @@ setMethod("summary",
             object
           }
 )
-printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars = getOption("show.signif.stars"), z.ratio = T,...)
+printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars = getOption("show.signif.stars"), z.ratio = TRUE,...)
 {
   
   object <- summary(x)
@@ -387,7 +387,7 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   
   t.stats=apply(object@chains,2,function(x) mean(x)/sd(x))
   
-  p.values=2*pnorm(abs(t.stats),lower.tail =F)
+  p.values=2*pnorm(abs(t.stats),lower.tail =FALSE)
   t.stat=NULL
   for (i in FP.names)  t.stat=c(t.stat, t.stats[[i]])
   p.value=NULL                

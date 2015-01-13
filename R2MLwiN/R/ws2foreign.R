@@ -42,10 +42,10 @@ ws2foreign <- function(wsfile, foreignfile, MLwiNPath = NULL, x64=NULL){
   ## Convert MLwiN worksheet file to other data file which is used in Minitab, SAS, SPSS, or Stata
   temptfile =gsub("\\", "/", tempfile("coversion_",fileext=".txt"),fixed=TRUE)
   cat(file=temptfile)
-  write("ECHO     0", temptfile, append=T)
-  write(paste("LOAD   '",wsfile,"'",sep=""), temptfile, append=T)
-  write(paste("STOR   '",foreignfile,"'",sep=""), temptfile, append=T)
-  write("EXIT", temptfile, append=T)
+  write("ECHO     0", temptfile, append=TRUE)
+  write(paste("LOAD   '",wsfile,"'",sep=""), temptfile, append=TRUE)
+  write(paste("STOR   '",foreignfile,"'",sep=""), temptfile, append=TRUE)
+  write("EXIT", temptfile, append=TRUE)
   
   if(is.null(x64)) {
     if (.Machine$sizeof.pointer == 8) {

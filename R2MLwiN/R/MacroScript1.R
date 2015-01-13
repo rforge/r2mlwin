@@ -254,7 +254,7 @@ MacroScript1 <- function(indata,dtafile,oldsyntax=FALSE,resp,levID,expl,rp,D='No
   }
   
   ## Write into macro file
-  wrt =function(x) write(x,macrofile, append = T)
+  wrt =function(x) write(x,macrofile, append = TRUE)
   
   cat(file=macrofile)
   wrt("ECHO    0")

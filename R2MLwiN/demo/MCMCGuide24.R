@@ -89,8 +89,8 @@ while (!file.access(openbugs,mode=0)==0||!file.access(openbugs,mode=1)==0||!file
 # winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
 
 mymodel <- runMLwiN(logit(votecons,cons)~1+defence+unemp+taxes+privat+(area|1), D="Binomial",
-                    estoptions=list(EstM=1, mcmcMeth=list(priorcode=0), mcmcOptions=list(paex=c(2,1)), show.file=T),
-                    BUGO=c(version=4, n.chains=1, debug=F, seed=1, bugs=openbugs, OpenBugs = T), data=bes83)
+                    estoptions=list(EstM=1, mcmcMeth=list(priorcode=0), mcmcOptions=list(paex=c(2,1)), show.file=TRUE),
+                    BUGO=c(version=4, n.chains=1, debug=FALSE, seed=1, bugs=openbugs, OpenBugs = TRUE), data=bes83)
 
 summary(mymodel)
 effectiveSize(mymodel)
