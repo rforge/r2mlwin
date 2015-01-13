@@ -18,29 +18,29 @@
 # 22.2 Using the SMVN framework in practice . . . . . . . . . . . . . . .344
 
 library(R2MLwiN)
-## Input the MLwiN tutorial data set
 # MLwiN folder
 mlwin <- getOption("MLwiN_path")
-while (!file.access(mlwin, mode=1)==0) {
+while (!file.access(mlwin, mode = 1) == 0) {
   cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
-  mlwin=scan(what=character(0),sep ="\n")
-  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
+  mlwin <- scan(what = character(0), sep = "\n")
+  mlwin <- gsub("\\", "/", mlwin, fixed = TRUE)
 }
-options(MLwiN_path=mlwin)
+options(MLwiN_path = mlwin)
 
 # User's input if necessary
 
 ## Read tutorial data
-data(tutorial, package="R2MLwiN")
+data(tutorial, package = "R2MLwiN")
 
 ## Define the model
 
-(mymodel <- runMLwiN(normexam~1+(school|1)+(student|1), estoptions=list(EstM=1), data=tutorial))
+(mymodel <- runMLwiN(normexam ~ 1 + (school | 1) + (student | 1), estoptions = list(EstM = 1), data = tutorial))
 
 
 ## Structured MVN
 
-(mymodel <- runMLwiN(normexam~1+(school|1)+(student|1), estoptions=list(EstM=1, mcmcOptions=list(smvn=1)), data=tutorial))
+(mymodel <- runMLwiN(normexam ~ 1 + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcOptions = list(smvn = 1)), 
+  data = tutorial))
 
 # 22.3 Model Comparison and structured MVN models . . . . . . . . . . . .349
 
@@ -48,39 +48,42 @@ data(tutorial, package="R2MLwiN")
 
 ## Gibbs
 
-(mymodel <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), estoptions=list(EstM=1), data=tutorial))
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1), data = tutorial))
 
 ## SMCMC
 
-(mymodel <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), estoptions=list(EstM=1, mcmcOptions=list(smcm=1)), data=tutorial))
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcOptions = list(smcm = 1)), 
+  data = tutorial))
 
 ## Structured MVN
 
-(mymodel <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), estoptions=list(EstM=1, mcmcOptions=list(smvn=1)), data=tutorial))
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcOptions = list(smvn = 1)), 
+  data = tutorial))
 
 # 22.4 Assessing the need for the level 2 variance . . . . . . . . . . . 350
 
-sixway(mymodel@chains[,"RP2_var_Intercept",drop=FALSE],"sigma2u0")
+sixway(mymodel@chains[, "RP2_var_Intercept", drop = FALSE], "sigma2u0")
 
 set.seed(1)
 tutorial$temp <- double2singlePrecision(rnorm(4059))
 
 ## Define the model
 
-##IGLS
+## IGLS
 
-(mymodel <- runMLwiN(temp~1+standlrt+(school|1)+(student|1), data=tutorial))
+(mymodel <- runMLwiN(temp ~ 1 + standlrt + (school | 1) + (student | 1), data = tutorial))
 
 ## Gibbs
 
-(mymodel <- runMLwiN(temp~1+standlrt+(school|1)+(student|1), estoptions=list(EstM=1), data=tutorial))
+(mymodel <- runMLwiN(temp ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1), data = tutorial))
 
 ## Structured MVN
 
-(mymodel <- runMLwiN(temp~1+standlrt+(school|1)+(student|1), estoptions=list(EstM=1, mcmcOptions=list(smvn=1)), data=tutorial))
+(mymodel <- runMLwiN(temp ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcOptions = list(smvn = 1)), 
+  data = tutorial))
 
-summary(mymodel@chains[,"RP2_var_Intercept"])
-sixway(mymodel@chains[,"RP2_var_Intercept",drop=FALSE],"sigma2u0")
+summary(mymodel@chains[, "RP2_var_Intercept"])
+sixway(mymodel@chains[, "RP2_var_Intercept", drop = FALSE], "sigma2u0")
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .355
 

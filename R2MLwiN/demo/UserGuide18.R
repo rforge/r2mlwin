@@ -15,18 +15,15 @@
 ############################################################################
 
 library(R2MLwiN)
-## Input the MLwiN tutorial data set
 # MLwiN folder
 mlwin <- getOption("MLwiN_path")
-while (!file.access(mlwin, mode=1)==0) {
+while (!file.access(mlwin, mode = 1) == 0) {
   cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
-  mlwin=scan(what=character(0),sep ="\n")
-  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
+  mlwin <- scan(what = character(0), sep = "\n")
+  mlwin <- gsub("\\", "/", mlwin, fixed = TRUE)
 }
-options(MLwiN_path=mlwin)
+options(MLwiN_path = mlwin)
 
-# Double return HERE
-# User's input if necessary
 
 # 18.1 An introduction to cross-classification . . . . . . . . . . . . . 271
 
@@ -39,10 +36,10 @@ options(MLwiN_path=mlwin)
 # 18.4 Modelling a two-way classification: An example . . . . . . . . . .275
 
 
-data(xc, package="R2MLwiN")
+data(xc, package = "R2MLwiN")
 summary(xc)
 
-sid_dummy <- model.matrix(~factor(xc$SID)-1)
+sid_dummy <- model.matrix(~factor(xc$SID) - 1)
 sid_dummy_names <- paste0("s", 1:19)
 colnames(sid_dummy) <- sid_dummy_names
 xc <- cbind(xc, sid_dummy)
@@ -57,12 +54,13 @@ for (i in 1:19) {
 }
 
 random.ui <- matrix(0, 21, 18)
-random.ui[1,] <- 1
-random.ui[2:19,] <- diag(18)*-1
+random.ui[1, ] <- 1
+random.ui[2:19, ] <- diag(18) * -1
 random.ci <- rep(0, 18)
 
-(mymode1 <- runMLwiN(ATTAIN~1+(CONS|s1+s2+s3+s4+s5+s6+s7+s8+s9+s10+s11+s12+s13+s14+s15+s16+s17+s18+s19)+(PID|1)+(PUPIL|1),
-                     estoptions=list(clre=covmatrix, constraints=list(random.ui=random.ui, random.ci=random.ci)), data=xc))
+(mymode1 <- runMLwiN(ATTAIN ~ 1 + (CONS | s1 + s2 + s3 + s4 + s5 + s6 + s7 + s8 + s9 + s10 + s11 + s12 + s13 + s14 + 
+  s15 + s16 + s17 + s18 + s19) + (PID | 1) + (PUPIL | 1), estoptions = list(clre = covmatrix, constraints = list(random.ui = random.ui, 
+  random.ci = random.ci)), data = xc))
 
 
 # 18.5 Other aspects of the SETX command . . . . . . . . . . . . . . . . 277
@@ -84,14 +82,17 @@ for (i in 1:38) {
 }
 
 random.ui <- matrix(0, 40, 36)
-random.ui[1,1:18] <- 1
-random.ui[2:19,1:18] <- diag(18)*-1
-random.ui[20,19:36] <- 1
-random.ui[21:38,19:36] <- diag(18)*-1
+random.ui[1, 1:18] <- 1
+random.ui[2:19, 1:18] <- diag(18) * -1
+random.ui[20, 19:36] <- 1
+random.ui[21:38, 19:36] <- diag(18) * -1
 random.ci <- rep(0, 36)
 
-(mymodel2 <- runMLwiN(ATTAIN~1+(CONS|s1+s2+s3+s4+s5+s6+s7+s8+s9+s10+s11+s12+s13+s14+s15+s16+s17+s18+s19+s1Xvrq+s2Xvrq+s3Xvrq+s4Xvrq+s5Xvrq+s6Xvrq+s7Xvrq+s8Xvrq+s9Xvrq+s10Xvrq+s11Xvrq+s12Xvrq+s13Xvrq+s14Xvrq+s15Xvrq+s16Xvrq+s17Xvrq+s18Xvrq+s19Xvrq)+(PID|CONS)+(PUPIL|CONS),
-                      estoptions=list(clre=covmatrix, constraints=list(random.ui=random.ui, random.ci=random.ci)), data=xc))
+(mymodel2 <- runMLwiN(ATTAIN ~ 1 + (CONS | s1 + s2 + s3 + s4 + s5 + s6 + s7 + s8 + s9 + s10 + s11 + s12 + s13 + s14 + 
+  s15 + s16 + s17 + s18 + s19 + s1Xvrq + s2Xvrq + s3Xvrq + s4Xvrq + s5Xvrq + s6Xvrq + s7Xvrq + s8Xvrq + s9Xvrq + 
+  s10Xvrq + s11Xvrq + s12Xvrq + s13Xvrq + s14Xvrq + s15Xvrq + s16Xvrq + s17Xvrq + s18Xvrq + s19Xvrq) + (PID | CONS) + 
+  (PUPIL | CONS), estoptions = list(clre = covmatrix, constraints = list(random.ui = random.ui, random.ci = random.ci)), 
+  data = xc))
 
 # Note: The final models in this section of the manual are for demonstration only.
 # The models presented in the manual do not converge with the current data.
@@ -104,12 +105,12 @@ findClust <- function(data, var1, var2) {
   moreclust <- TRUE
   while (moreclust) {
     found <- FALSE
-    for (i in (length(grplist)-1):1) {
+    for (i in (length(grplist) - 1):1) {
       if (length(grplist) == 1) {
         moreclust <- FALSE
         break
       }
-      for (j in length(grplist):(i+1)) {
+      for (j in length(grplist):(i + 1)) {
         if (length(intersect(grplist[[i]][[var2]], grplist[[j]][[var2]])) != 0) {
           grplist[[i]] <- rbind(grplist[[i]], grplist[[j]])
           grplist[[j]] <- NULL
@@ -124,34 +125,35 @@ findClust <- function(data, var1, var2) {
     }
   }
   
-  cat(paste0("Number of clusters: ", length(grplist),"\n"))
+  cat(paste0("Number of clusters: ", length(grplist), "\n"))
   
   ids <- NULL
   for (i in 1:length(grplist)) {
     ids <- rbind(ids, cbind(unique(grplist[[i]][[var1]]), i))
   }
   colnames(ids) <- c(var1, "id")
-  merge(data[,c(var1,var2)], ids, sort=FALSE)$id
+  merge(data[, c(var1, var2)], ids, sort = FALSE)$id
 }
 
-if (!require(doBy)) install.packages("doBy"); library(doBy)
+if (!require(doBy)) install.packages("doBy")
+library(doBy)
 
-data(xc, package="R2MLwiN")
+data(xc, package = "R2MLwiN")
 
 xc$region <- findClust(xc, "SID", "PID")
 xc$region <- NULL
 
-numchildren <- summaryBy(CONS~SID+PID, FUN=length, data=xc)
+numchildren <- summaryBy(CONS ~ SID + PID, FUN = length, data = xc)
 colnames(numchildren) <- c("SID", "PID", "numchildren")
-xc <- merge(xc, numchildren, sort=FALSE)
+xc <- merge(xc, numchildren, sort = FALSE)
 
-xc <- xc[order(xc$SID,xc$PID),]
+xc <- xc[order(xc$SID, xc$PID), ]
 
-xc <- xc[xc$numchildren > 2,]
+xc <- xc[xc$numchildren > 2, ]
 
 xc$region <- findClust(xc, "SID", "PID")
 
-xc <- xc[order(xc$region, xc$SID),]
+xc <- xc[order(xc$region, xc$SID), ]
 
 xc$rsid <- rep(1, nrow(xc))
 
@@ -171,7 +173,7 @@ for (i in 2:nrow(xc)) {
   xc$rsid[i] <- id
 }
 
-rs_dummy <- model.matrix(~factor(xc$rsid)-1)
+rs_dummy <- model.matrix(~factor(xc$rsid) - 1)
 rs_dummy_names <- paste0("rs", 1:8)
 colnames(rs_dummy) <- rs_dummy_names
 xc <- cbind(xc, rs_dummy)
@@ -186,14 +188,14 @@ for (i in 1:8) {
 }
 
 random.ui <- matrix(0, 10, 7)
-random.ui[1,] <- 1
-random.ui[2:8,] <- diag(7)*-1
+random.ui[1, ] <- 1
+random.ui[2:8, ] <- diag(7) * -1
 random.ci <- rep(0, 7)
 
 xc <- xc[order(xc$region, xc$PID, xc$PUPIL), ]
 
-(mymode1 <- runMLwiN(ATTAIN~1+(region|rs1+rs2+rs3+rs4+rs5+rs6+rs7+rs8)+(PID|1)+(PUPIL|1),
-                     estoptions=list(clre=covmatrix, constraints=list(random.ui=random.ui, random.ci=random.ci)), data=xc))
+(mymode1 <- runMLwiN(ATTAIN ~ 1 + (region | rs1 + rs2 + rs3 + rs4 + rs5 + rs6 + rs7 + rs8) + (PID | 1) + (PUPIL | 
+  1), estoptions = list(clre = covmatrix, constraints = list(random.ui = random.ui, random.ci = random.ci)), data = xc))
 
 # 18.7 Modelling a multi-way cross-classification . . . . . . . . . . . .280
 

@@ -7,7 +7,7 @@
 #' uses its \code{thin} argument, otherwise assumes thinning = 1), storing the
 #' MCMC chain for a chosen parameter.
 #' @param name The parameter name. If \code{name = NULL}, the column name of \code{chain} will
-#' be used, unless that is also NULL in which case "x" is used.
+#' be used, unless that is also NULL in which case 'x' is used.
 #' @param acf.maxlag Maximum lag at which to calculate the auto-correlation
 #' function. \code{acf.maxlag = 100} by default. See \code{\link[stats]{acf}}.
 #' @param pacf.maxlag Maximum lag at which to calculate the partial
@@ -58,7 +58,7 @@
 #' #NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
 #' #...so please change relevant line if different
 #' #if using R2MLwiN via WINE, the path may look like 
-#' #options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/") 
+#' #options(MLwiN_path='/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/') 
 #' 
 #' ## Example: tutorial
 #' data(tutorial)
@@ -67,17 +67,17 @@
 #' estoptions= list(EstM=1,resi.store.levs=2)
 #' mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions)
 #' 
-#' chain=mymodel["chains"][,"FP_standlrt"]
-#' sixway(chain,"beta_1")
+#' chain=mymodel@chains[, 'FP_standlrt']
+#' sixway(chain, 'beta_1')
 #' }
 #' 
 #' @export
-sixway <- function(chain,name=NULL,acf.maxlag=100,pacf.maxlag=10, ...){
+sixway <- function(chain, name = NULL, acf.maxlag = 100, pacf.maxlag = 10, ...) {
   args <- list(...)
   
-  isMCMC = TRUE
+  isMCMC <- TRUE
   if (!is.mcmc(chain) && !is.mcmc.list(chain)) {
-    isMCMC = FALSE
+    isMCMC <- FALSE
     chain <- mcmc(chain)
   }
   
@@ -89,82 +89,85 @@ sixway <- function(chain,name=NULL,acf.maxlag=100,pacf.maxlag=10, ...){
     warning("Sixway does not fully support multiple chains - diagnostics will be on concatenated chains")
   }
   
-  if(length(args) > 0 && "mar" %in% names(args)) {
+  if (length(args) > 0 && "mar" %in% names(args)) {
     mar <- args[["mar"]]
-  }else{
+  } else {
     mar <- c(4, 4, 2, 1)/2
   }
   
-  if(length(args) > 0 && "mgp" %in% names(args)) {
+  if (length(args) > 0 && "mgp" %in% names(args)) {
     mgp <- args[["mgp"]]
-  }else{
-    mgp <- c(1,.25,0)
+  } else {
+    mgp <- c(1, 0.25, 0)
   }
   
   if (is.null(name)) {
     if (!is.null(varnames(chain))) {
-      name=varnames(chain)[1]
+      name <- varnames(chain)[1]
     } else {
-      name="x"
+      name <- "x"
     }
   }
   
   dev.new()
-  mypar <- par(mar = mar, mgp=mgp, ...)
+  mypar <- par(mar = mar, mgp = mgp, ...)
   on.exit(par(mypar))
-  split.screen( figs = c( 4, 1 ) )
-  split.screen( figs = c( 1, 2 ), screen = 1 )
-  split.screen( figs = c( 1, 2 ), screen = 2 )
-  split.screen( figs = c( 1, 2 ), screen = 3)
-  split.screen( figs = c( 1, 1 ), screen = 4)
+  split.screen(figs = c(4, 1))
+  split.screen(figs = c(1, 2), screen = 1)
+  split.screen(figs = c(1, 2), screen = 2)
+  split.screen(figs = c(1, 2), screen = 3)
+  split.screen(figs = c(1, 1), screen = 4)
   
   screen(5)
-  traceplot(chain,xlab="Iterations",ylab="parameter",type="l",tcl=-.1,cex.axis=.8,main="")
+  traceplot(chain, xlab = "Iterations", ylab = "parameter", type = "l", tcl = -0.1, cex.axis = 0.8, main = "")
   
   flatchain <- as.matrix(chain)
   
   screen(6)
-  dens=density(flatchain)
-  plot(dens,xlab="parameter value",ylab="kernel density",main="",tcl=-.1,cex.axis=.8)
+  dens <- density(flatchain)
+  plot(dens, xlab = "parameter value", ylab = "kernel density", main = "", tcl = -0.1, cex.axis = 0.8)
   
   screen(7)
-  aa=acf(flatchain,acf.maxlag,main="",mgp=c(1,.25,0),tcl=-.1,cex.axis=.8, ylim=c(0,1))
-  rho=aa$acf[2]
+  aa <- acf(flatchain, acf.maxlag, main = "", mgp = c(1, 0.25, 0), tcl = -0.1, cex.axis = 0.8, ylim = c(0, 1))
+  rho <- aa$acf[2]
   
   screen(8)
-  pacf(flatchain,pacf.maxlag,main="",mgp=c(1,.25,0),tcl=-.1,cex.axis=.8, ylim=c(0,1))
+  pacf(flatchain, pacf.maxlag, main = "", mgp = c(1, 0.25, 0), tcl = -0.1, cex.axis = 0.8, ylim = c(0, 1))
   
   screen(9)
-  mcse=MCSE(flatchain, rho, ll=.5, ul=20)
-  plot(mcse[,1],mcse[,2],type='l',xlab="updates",ylab="MCSE",tcl=-.1,cex.axis=.8)
+  mcse <- MCSE(flatchain, rho, ll = 0.5, ul = 20)
+  plot(mcse[, 1], mcse[, 2], type = "l", xlab = "updates", ylab = "MCSE", tcl = -0.1, cex.axis = 0.8)
   
-  RL1=raftery.diag(flatchain, q=0.025, r=0.005, s=0.95, converge.eps=0.001)
-  RL2=raftery.diag(flatchain, q=0.975, r=0.005, s=0.95, converge.eps=0.001)
-  Ndb=BD(mean(flatchain),var(flatchain),rho, k=2,alpha=0.05)
+  RL1 <- raftery.diag(flatchain, q = 0.025, r = 0.005, s = 0.95, converge.eps = 0.001)
+  RL2 <- raftery.diag(flatchain, q = 0.975, r = 0.005, s = 0.95, converge.eps = 0.001)
+  Ndb <- BD(mean(flatchain), var(flatchain), rho, k = 2, alpha = 0.05)
   
   screen(10)
-  plot(1, xlim=c(1,10),ylim=c(1,5),type="n", axes=FALSE, xlab="", ylab="",frame.plot=TRUE)
-  text(5,4.8, "Accuracy Diagnostics",cex=1.2)
-  if(RL1$resmatrix[1]=="Error"){
-    text(5,4,paste("RL diagnostic only available after ",RL1$resmatrix[2]," updates.",sep=""),cex=.8)
+  plot(1, xlim = c(1, 10), ylim = c(1, 5), type = "n", axes = FALSE, xlab = "", ylab = "", frame.plot = TRUE)
+  text(5, 4.8, "Accuracy Diagnostics", cex = 1.2)
+  if (RL1$resmatrix[1] == "Error") {
+    text(5, 4, paste("RL diagnostic only available after ", RL1$resmatrix[2], " updates.", sep = ""), cex = 0.8)
+  } else {
+    text(5, 4, paste("Raftery-Lewis (quantile) : Nhat =(", RL1$resmatrix[1, "N"], ",", RL2$resmatrix[1, "N"], 
+                     ")", sep = ""), cex = 0.8)
   }
-  else{
-    text(5,4,paste("Raftery-Lewis (quantile) : Nhat =(",RL1$resmatrix[1,"N"],",",RL2$resmatrix[1,"N"],")",sep=""),cex=.8)
-  }
-  text(5,3, "when q=(0.025,0.975), r=0.005 and s=0.95",cex=.8)
-  text(5,2.1,paste("Brooks-Draper (mean) : Nhat =",Ndb),cex=.8)
-  text(5,1.2, "when k=2 sigfigs and alpha=0.05",cex=.8)
+  text(5, 3, "when q=(0.025,0.975), r=0.005 and s=0.95", cex = 0.8)
+  text(5, 2.1, paste("Brooks-Draper (mean) : Nhat =", Ndb), cex = 0.8)
+  text(5, 1.2, "when k=2 sigfigs and alpha=0.05", cex = 0.8)
   screen(11)
-  plot(1, xlim=c(1,22),ylim=c(1,4),type="n", axes=FALSE, xlab="", ylab="",frame.plot=TRUE)
-  text(10,3.8, "Summary Statistics",cex=1.2)
-  quants=round(quantile(flatchain,c(.025,.05,.5,.95,.975)),3)
-  text(10,2.9, paste("param name :",name, "posterior mean =",round(mean(flatchain),3),"SD = ",round(sd(flatchain),3),"mode =",round(dens$x[which.max(dens$y)],3)),cex=.8)
-  text(10,2, paste("quantiles : 2.5% =",quants[1],"5% =",quants[2],"50% =",quants[3],"95% =",quants[4],"97.5% =",quants[5]),cex=.8)
-  if (isMCMC){
-    text(10,1.2, paste(niter(chain)*thin(chain),"actual iterations storing every ",paste(thin(chain),"th",sep="")," iteration. Effective Sample Size (ESS) =",round(effectiveSize(chain))),cex=.8)
+  plot(1, xlim = c(1, 22), ylim = c(1, 4), type = "n", axes = FALSE, xlab = "", ylab = "", frame.plot = TRUE)
+  text(10, 3.8, "Summary Statistics", cex = 1.2)
+  quants <- round(quantile(flatchain, c(0.025, 0.05, 0.5, 0.95, 0.975)), 3)
+  text(10, 2.9, paste("param name :", name, "posterior mean =", round(mean(flatchain), 3), "SD = ", round(sd(flatchain), 
+                                                                                                          3), "mode =", round(dens$x[which.max(dens$y)], 3)), cex = 0.8)
+  text(10, 2, paste("quantiles : 2.5% =", quants[1], "5% =", quants[2], "50% =", quants[3], "95% =", quants[4], 
+                    "97.5% =", quants[5]), cex = 0.8)
+  if (isMCMC) {
+    text(10, 1.2, paste(niter(chain) * thin(chain), "actual iterations storing every ", paste(thin(chain), "th", 
+                                                                                              sep = ""), " iteration. Effective Sample Size (ESS) =", round(effectiveSize(chain))), cex = 0.8)
+  } else {
+    text(10, 1.2, paste(length(chain), "actual iterations. Diagnostics assume storing every 1th iteration. Effective Sample Size (ESS) =", 
+                        round(effectiveSize(chain))), cex = 0.8)
   }
-  else{
-    text(10,1.2, paste(length(chain),"actual iterations. Diagnostics assume storing every 1th iteration. Effective Sample Size (ESS) =",round(effectiveSize(chain))),cex=.8)
-  }
-  close.screen( all.screens = TRUE )
-}
+  close.screen(all.screens = TRUE)
+} 

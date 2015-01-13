@@ -18,15 +18,14 @@
 # 8.2 Setting up the structure of the dataset . . . . . . . . . . . . . . 98
 
 library(R2MLwiN)
-## Input the MLwiN tutorial data set
 # MLwiN folder
 mlwin <- getOption("MLwiN_path")
-while (!file.access(mlwin, mode=1)==0) {
+while (!file.access(mlwin, mode = 1) == 0) {
   cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
-  mlwin=scan(what=character(0),sep ="\n")
-  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
+  mlwin <- scan(what = character(0), sep = "\n")
+  mlwin <- gsub("\\", "/", mlwin, fixed = TRUE)
 }
-options(MLwiN_path=mlwin)
+options(MLwiN_path = mlwin)
 
 # User's input if necessary
 
@@ -44,67 +43,73 @@ IGLS_array <- MCMC_array <- array(, c(3, 2, ns))
 MCMC_median <- data.frame(RP2_var_Intercept = rep(0, ns), RP1_var_Intercept = rep(0, ns))
 CounterMCMC <- rep(0, 3)
 Actual <- c(30, 10, 40)
-for(i in 1:ns){
+for (i in 1:ns) {
   u_short <- rnorm(6, 0, sqrt(Actual[2]))
   u <- rep(u_short, each = 18, len = 108)
   e <- rnorm(108, 0, sqrt(Actual[3]))
   resp <- Actual[1] * cons + u + e
   indata <- data.frame(cbind(pupil, school, cons, resp))
-  simModelIGLS <- runMLwiN(resp ~ 1 + (school|1) + (pupil|1), data=indata)
-  IGLS_array[,,i] <- cbind(coef(simModelIGLS), diag(vcov(simModelIGLS)))
-  simModelMCMC <- runMLwiN(resp ~ 1 + (school|1) + (pupil|1), estoptions = list(EstM = 1), data=indata)
-  MCMC_array[,,i] <- cbind(coef(simModelMCMC), diag(vcov(simModelMCMC)))
-  MCMC_median[i, ] <- c(median(simModelMCMC@chains[,"RP2_var_Intercept"]), median(simModelMCMC@chains[,"RP1_var_Intercept"]))
-  if (Actual[1] > quantile(simModelMCMC@chains[,"FP_Intercept"], 0.025) & Actual[1] < quantile(simModelMCMC@chains[,"FP_Intercept"], 0.975)) {
+  simModelIGLS <- runMLwiN(resp ~ 1 + (school | 1) + (pupil | 1), data = indata)
+  IGLS_array[, , i] <- cbind(coef(simModelIGLS), diag(vcov(simModelIGLS)))
+  simModelMCMC <- runMLwiN(resp ~ 1 + (school | 1) + (pupil | 1), estoptions = list(EstM = 1), data = indata)
+  MCMC_array[, , i] <- cbind(coef(simModelMCMC), diag(vcov(simModelMCMC)))
+  MCMC_median[i, ] <- c(median(simModelMCMC@chains[, "RP2_var_Intercept"]), median(simModelMCMC@chains[, "RP1_var_Intercept"]))
+  if (Actual[1] > quantile(simModelMCMC@chains[, "FP_Intercept"], 0.025) & Actual[1] < quantile(simModelMCMC@chains[, 
+    "FP_Intercept"], 0.975)) {
     CounterMCMC[1] <- CounterMCMC[1] + 1
   }
-  if (Actual[2] > quantile(simModelMCMC@chains[,"RP2_var_Intercept"], 0.025) & Actual[2] < quantile(simModelMCMC@chains[,"RP2_var_Intercept"], 0.975)) {
+  if (Actual[2] > quantile(simModelMCMC@chains[, "RP2_var_Intercept"], 0.025) & Actual[2] < quantile(simModelMCMC@chains[, 
+    "RP2_var_Intercept"], 0.975)) {
     CounterMCMC[2] <- CounterMCMC[2] + 1
   }
-  if (Actual[3] > quantile(simModelMCMC@chains[,"RP1_var_Intercept"], 0.025) & Actual[3] < quantile(simModelMCMC@chains[,"RP1_var_Intercept"], 0.975)) {
+  if (Actual[3] > quantile(simModelMCMC@chains[, "RP1_var_Intercept"], 0.025) & Actual[3] < quantile(simModelMCMC@chains[, 
+    "RP1_var_Intercept"], 0.975)) {
     CounterMCMC[3] <- CounterMCMC[3] + 1
   }
 }
 
-aa <- sapply(1:ns, function(x) na.omit(stack(as.data.frame(IGLS_array[,,x])))$values)
-counterIGLS <- rep(0,3)
+aa <- sapply(1:ns, function(x) na.omit(stack(as.data.frame(IGLS_array[, , x])))$values)
+counterIGLS <- rep(0, 3)
 for (i in 1:ns) {
-  if (Actual[1] > aa[1,i] - 1.96 * sqrt(aa[4,i]) & Actual[1] < aa[1,i] + 1.96 * sqrt(aa[4,i])) {
+  if (Actual[1] > aa[1, i] - 1.96 * sqrt(aa[4, i]) && Actual[1] < aa[1, i] + 1.96 * sqrt(aa[4, i])) {
     counterIGLS[1] <- counterIGLS[1] + 1
   }
-  if (Actual[2] > aa[2,i] - 1.96 * sqrt(aa[5,i]) & Actual[2] < aa[2,i] + 1.96 * sqrt(aa[5,i])) {
+  if (Actual[2] > aa[2, i] - 1.96 * sqrt(aa[5, i]) && Actual[2] < aa[2, i] + 1.96 * sqrt(aa[5, i])) {
     counterIGLS[2] <- counterIGLS[2] + 1
   }
-  if (Actual[3] > aa[3,i] - 1.96 * sqrt(aa[6,i]) & Actual[3] < aa[3,i] + 1.96 * sqrt(aa[6,i])) {
+  if (Actual[3] > aa[3, i] - 1.96 * sqrt(aa[6, i]) && Actual[3] < aa[3, i] + 1.96 * sqrt(aa[6, i])) {
     counterIGLS[3] <- counterIGLS[3] + 1
   }
 }
-Percent_interval_coverage <- (counterIGLS / ns) * 100
-Mean_across_simus <- round(c(mean(aa[1,]), mean(aa[2,]), mean(aa[3,])), 2)
-Percent_bias <- round(-100 * (1 - Mean_across_simus / Actual), 2)
+Percent_interval_coverage <- (counterIGLS/ns) * 100
+Mean_across_simus <- round(c(mean(aa[1, ]), mean(aa[2, ]), mean(aa[3, ])), 2)
+Percent_bias <- round(-100 * (1 - Mean_across_simus/Actual), 2)
 IGLS_results <- cbind(Mean_across_simus, Actual, Percent_bias, Percent_interval_coverage)
 rownames(IGLS_results) <- c("beta0", "sigma2_u", "sigma2_e")
-Percent_interval_coverage <- (CounterMCMC / ns) * 100
-bb <- sapply(1:ns, function(x) na.omit(stack(as.data.frame(MCMC_array[,,x])))$values)
-Mean_across_simus <- round(c(mean(bb[1,]), mean(bb[2,]), mean(bb[3,])), 2)
-Percent_bias <- round(-100 * (1 - Mean_across_simus / Actual), 2)
+Percent_interval_coverage <- (CounterMCMC/ns) * 100
+bb <- sapply(1:ns, function(x) na.omit(stack(as.data.frame(MCMC_array[, , x])))$values)
+Mean_across_simus <- round(c(mean(bb[1, ]), mean(bb[2, ]), mean(bb[3, ])), 2)
+Percent_bias <- round(-100 * (1 - Mean_across_simus/Actual), 2)
 MCMC_results <- cbind(Mean_across_simus, Actual, Percent_bias, Percent_interval_coverage)
 rownames(MCMC_results) <- c("beta0", "sigma2_u", "sigma2_e")
 
 # 8.5 Analysing the simulation results . . . . . . . . . . . . . . . . . 109
 
-cat("Simulation results using IGLS\n"); IGLS_results
-cat("Simulation results using MCMC\n"); MCMC_results
+cat("Simulation results using IGLS\n")
+IGLS_results
+cat("Simulation results using MCMC\n")
+MCMC_results
 
-# Investigating median estimates with Gamma(epsilon,epsilon) priors
+# Investigating median estimates with Gamma(epsilon, epsilon) priors
 
 Mean_across_simus <- round(c(mean(MCMC_median$RP2_var_Intercept), mean(MCMC_median$RP1_var_Intercept)), 2)
 Actual <- tail(Actual, -1)
-Percent_bias <- round(-100 * (1 - Mean_across_simus / Actual), 2)
+Percent_bias <- round(-100 * (1 - Mean_across_simus/Actual), 2)
 Percent_interval_coverage <- tail(Percent_interval_coverage, -1)
 MCMC_results2 <- cbind(Mean_across_simus, Actual, Percent_bias, Percent_interval_coverage)
 rownames(MCMC_results2) <- c("sigma2_u", "sigma2_e")
-cat("Simulation results based on median MCMC estimates\n"); MCMC_results2
+cat("Simulation results based on median MCMC estimates\n")
+MCMC_results2
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . . 96
 

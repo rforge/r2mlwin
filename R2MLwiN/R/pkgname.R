@@ -54,12 +54,12 @@
 #' library(R2MLwiN)
 #' ## Modify the following paths as appropriate.
 #' ## MLwiN folder
-#' mlwin ="C:/Program Files (x86)/MLwiN v2.29/"
+#' mlwin ='C:/Program Files (x86)/MLwiN v2.29/'
 #' ## MLwiN sample worksheet folder
-#' wspath=paste(mlwin,"/samples/",sep="")
+#' wspath=paste(mlwin,'/samples/',sep='')
 #' 
 #' ## MLwiN sample worksheet: tutorial dataset
-#' wsfile=paste(wspath,"tutorial.ws",sep="");inputfile=paste(tempdir(),"/tutorial.dta",sep="")
+#' wsfile=paste(wspath,'tutorial.ws',sep='');inputfile=paste(tempdir(),'/tutorial.dta',sep='')
 #' ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
 #' library(foreign);indata =read.dta(inputfile)
 #' 
@@ -106,7 +106,7 @@
 #' 
 #' ## Take Chapter03 as an example
 #' ## To find the location of a demo for Chapter03
-#' file.show(system.file("demo", "Chapter03.R", package="R2MLwiN"))
+#' file.show(system.file('demo', 'Chapter03.R', package='R2MLwiN'))
 #' 
 #' ## To run the demo for Chapter03
 #' demo(Chapter03)
@@ -134,4 +134,4 @@
 #' @docType package
 #' @name R2MLwiN
 NULL
-
+ 

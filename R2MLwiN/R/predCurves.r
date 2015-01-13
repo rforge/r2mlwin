@@ -13,8 +13,8 @@
 #' @param legend A logical value indicating whether a legend for \code{group}
 #' is to be added.
 #' @param legend.space A character string specifies one of the four sides,
-#' which can be one of \code{"top"}, \code{"bottom"}, \code{"left"} and \code{"right"}. Default,
-#' \code{legend.space = "top"}.
+#' which can be one of \code{'top'}, \code{'bottom'}, \code{'left'} and \code{'right'}. Default,
+#' \code{legend.space = 'top'}.
 #' @param legend.ncol An integer specifies a number of columns, possibly
 #' divided into blocks, each containing some rows. Default,
 #' \code{legend.ncol = 2}.
@@ -33,9 +33,9 @@
 #' ## Read alevchem data
 #' data(alevchem)
 #'
-#' alevchem["gcseav"] = double2singlePrecision(alevchem["gcse-tot"] / alevchem["gcse-no"] - 6)
-#' alevchem["gcse^2"] = double2singlePrecision(alevchem["gcseav"]^2)
-#' alevchem["gcse^3"] = double2singlePrecision(alevchem["gcseav"]^3)
+#' alevchem['gcseav'] = double2singlePrecision(alevchem['gcse-tot'] / alevchem['gcse-no'] - 6)
+#' alevchem['gcse^2'] = double2singlePrecision(alevchem['gcseav']^2)
+#' alevchem['gcse^3'] = double2singlePrecision(alevchem['gcseav']^3)
 #'
 #' ## Example: A-level Chemistry
 #' formula = a-point ~ (0|cons + gcseav + gcse^2 + gcse^3 + gender) + (1|cons)
@@ -44,70 +44,73 @@
 #' ## Fit the model
 #' mymodel = runMLwiN(formula, levID, indata = alevchem, estoptions = estoptions)
 #'
-#' predCurves(mymodel, indata, xname = "gcseav", group = "gender")
+#' predCurves(mymodel, indata, xname = 'gcseav', group = 'gender')
 #' }
 #'
 #' @export
-predCurves <- function(object, indata=NULL, xname, group=NULL, legend=TRUE, legend.space="top", legend.ncol=2, ...){
+predCurves <- function(object, indata = NULL, xname, group = NULL, legend = TRUE, legend.space = "top", legend.ncol = 2, 
+                       ...) {
   ## This function is to draw predicted lines using fixed part estimates
-
+  
   cls <- class(object)
-  if(!cls%in%c("mlwinfitIGLS", "mlwinfitMCMC"))
-    stop('need a "mlwinfitIGLS" or "mlwinfitMCMC" class object')
+  if (!cls %in% c("mlwinfitIGLS", "mlwinfitMCMC")) 
+    stop("need a \"mlwinfitIGLS\" or \"mlwinfitMCMC\" class object")
   
   FP <- object@FP
-  if (is.null(indata)){
+  if (is.null(indata)) {
     indata <- object@data
   }
   if (!xname %in% colnames(indata)) {
-    stop(paste(xname," does not exist in the data"))
+    stop(paste(xname, " does not exist in the data"))
   }
-  if (!is.null(group)){
-    if(is.character(group)) group <- indata[[group]]
-    if(!is.factor(group)) group <- as.factor(group)
+  if (!is.null(group)) {
+    if (is.character(group)) 
+      group <- indata[[group]]
+    if (!is.factor(group)) 
+      group <- as.factor(group)
   }
   
-  fp.names <- sub("FP_","",names(FP))
+  fp.names <- sub("FP_", "", names(FP))
   tval <- 0
-  for (i in 1:length(fp.names)){
-    if (is.factor(indata[[fp.names[i]]])){
-      indata[[fp.names[i]]] <- as.integer(indata[[fp.names[i]]])-1
+  for (i in 1:length(fp.names)) {
+    if (is.factor(indata[[fp.names[i]]])) {
+      indata[[fp.names[i]]] <- as.integer(indata[[fp.names[i]]]) - 1
     }
-    tval <- tval+as.numeric(indata[[fp.names[i]]])*FP[i]
+    tval <- tval + as.numeric(indata[[fp.names[i]]]) * FP[i]
   }
   
   pred.min <- min(tval)
   pred.max <- max(tval)
-  x=indata[[xname]]
-  x.min=min(x)
-  x.max=max(x)
+  x <- indata[[xname]]
+  x.min <- min(x)
+  x.max <- max(x)
   
-  if (legend && length(group)){
-    key=list(lines = Rows(trellis.par.get("superpose.line"),1:nlevels(group)),
-             text=list(lab=levels(group)), space=legend.space, columns=legend.ncol)
-  }else{
+  if (legend && length(group)) {
+    key <- list(lines = Rows(trellis.par.get("superpose.line"), 1:nlevels(group)), text = list(lab = levels(group)), 
+                space = legend.space, columns = legend.ncol)
+  } else {
     key <- NULL
   }
   
-  if (!is.null(group)){
-    levs=levels(group); nlev=length(levs)
-    trellis.obj <- xyplot(tval~x,
-                          prepanel = function(x,y,...){list(xlim=c(x.min, x.max), ylim=c(pred.min,pred.max))},
-                          groups=group,
-                          panel= function(x,y, groups,...){
-                            col <- Rows(trellis.par.get("superpose.line"),1:nlev)$col
-                            for (i in 1:nlev){
-                              ypred <- y[groups==levs[i]]
-                              panel.xyplot(x=sort(x[groups==levs[i]]),y=ypred[order(x[groups==levs[i]])], col=col[i], type="l", ...)
-                            }
-                          },key=key, ylab="ypred", xlab=xname, ...)
-  }else{
-    trellis.obj <- xyplot(tval~x,
-                          prepanel = function(x,y,...){list(xlim=c(x.min, x.max), ylim=c(pred.min,pred.max))},
-                          panel= function(x,y,...){
-                            panel.xyplot(x=sort(x),y=y[order(x)], type="l", ...)
-                          }, ylab="ypred", xlab=xname, ...)
+  if (!is.null(group)) {
+    levs <- levels(group)
+    nlev <- length(levs)
+    trellis.obj <- xyplot(tval ~ x, prepanel = function(x, y, ...) {
+      list(xlim = c(x.min, x.max), ylim = c(pred.min, pred.max))
+    }, groups = group, panel = function(x, y, groups, ...) {
+      col <- Rows(trellis.par.get("superpose.line"), 1:nlev)$col
+      for (i in 1:nlev) {
+        ypred <- y[groups == levs[i]]
+        panel.xyplot(x = sort(x[groups == levs[i]]), y = ypred[order(x[groups == levs[i]])], col = col[i], type = "l", ...)
+      }
+    }, key = key, ylab = "ypred", xlab = xname, ...)
+  } else {
+    trellis.obj <- xyplot(tval ~ x, prepanel = function(x, y, ...) {
+      list(xlim = c(x.min, x.max), ylim = c(pred.min, pred.max))
+    }, panel = function(x, y, ...) {
+      panel.xyplot(x = sort(x), y = y[order(x)], type = "l", ...)
+    }, ylab = "ypred", xlab = xname, ...)
   }
   print(trellis.obj)
   invisible(trellis.obj)
-}
+} 

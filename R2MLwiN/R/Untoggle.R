@@ -21,18 +21,18 @@
 #' # NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
 #' # ...so please change relevant line if different
 #' # if using R2MLwiN via WINE, the path may look like 
-#' # options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/") 
+#' # options(MLwiN_path='/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/') 
 #' 
 #' # Example: tutorial
 #' data(tutorial)
 #' names(tutorial)
-#' tutorial = cbind(tutorial, Untoggle(tutorial[["school"]], "school"))
+#' tutorial = cbind(tutorial, Untoggle(tutorial$school, 'school'))
 #' names(tutorial)
 #' }
 #' 
 #' @export
-Untoggle <- function (categrv, name = NULL){
-  ## this function will untoggle categorical variable into a few separate binary variables  
+Untoggle <- function(categrv, name = NULL) {
+  ## this function will untoggle categorical variable into a few separate binary variables
   vars <- unique(categrv)
   N <- length(vars)
   rvs <- sapply(1:N, function(x) as.integer(categrv == vars[x]))
@@ -45,4 +45,4 @@ Untoggle <- function (categrv, name = NULL){
   }
   colnames(rvs) <- cnames
   rvs
-}
+} 

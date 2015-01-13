@@ -12,8 +12,8 @@
 #' @param foreignfile A file name specifying the data file (with a specific
 #' extension) after conversion.
 #' @param MLwiNPath A path to the MLwiN folder. By default, \code{MLwiNPath = NULL}
-#' and path set by \code{options("MLwiN_path")}, the default for which can be
-#' changed via \code{options(MLwiN_path = "path/to/MLwiN vX.XX/")}).
+#' and path set by \code{options('MLwiN_path')}, the default for which can be
+#' changed via \code{options(MLwiN_path = 'path/to/MLwiN vX.XX/')}).
 #' @param x64 A logical value indicating whether the 64 bit version of MLwiN is
 #' used. If \code{FALSE} (by default), the 32 bit version is called.
 #'
@@ -29,29 +29,29 @@
 #' \dontrun{
 #' library(R2MLwiN)
 #' ## Modify the following path as appropriate.
-#' wsfile="C:/Program Files (x86)/MLwiN v2.30/samples/tutorial.ws"
+#' wsfile='C:/Program Files (x86)/MLwiN v2.30/samples/tutorial.ws'
 #' ## the tutorial.dta will be save under the temporary folder
-#' inputfile=paste(tempdir(),"/tutorial.dta",sep="")
+#' inputfile=paste(tempdir(),'/tutorial.dta',sep='')
 #' ws2foreign(wsfile, foreignfile=inputfile)
 #' indata=read.dta(inputfile)
 #' str(indata)
 #' }
 #' 
 #' @export
-ws2foreign <- function(wsfile, foreignfile, MLwiNPath = NULL, x64=NULL){
+ws2foreign <- function(wsfile, foreignfile, MLwiNPath = NULL, x64 = NULL) {
   ## Convert MLwiN worksheet file to other data file which is used in Minitab, SAS, SPSS, or Stata
-  temptfile =gsub("\\", "/", tempfile("coversion_",fileext=".txt"),fixed=TRUE)
-  cat(file=temptfile)
-  write("ECHO     0", temptfile, append=TRUE)
-  write(paste("LOAD   '",wsfile,"'",sep=""), temptfile, append=TRUE)
-  write(paste("STOR   '",foreignfile,"'",sep=""), temptfile, append=TRUE)
-  write("EXIT", temptfile, append=TRUE)
+  temptfile <- gsub("\\", "/", tempfile("coversion_", fileext = ".txt"), fixed = TRUE)
+  cat(file = temptfile)
+  write("ECHO     0", temptfile, append = TRUE)
+  write(paste("LOAD   '", wsfile, "'", sep = ""), temptfile, append = TRUE)
+  write(paste("STOR   '", foreignfile, "'", sep = ""), temptfile, append = TRUE)
+  write("EXIT", temptfile, append = TRUE)
   
-  if(is.null(x64)) {
+  if (is.null(x64)) {
     if (.Machine$sizeof.pointer == 8) {
-      x64=TRUE
+      x64 <- TRUE
     } else {
-      x64=FALSE
+      x64 <- FALSE
     }
   }
   
@@ -65,7 +65,7 @@ ws2foreign <- function(wsfile, foreignfile, MLwiNPath = NULL, x64=NULL){
   }
   
   if (!isTRUE(pathinfo$isdir)) {
-    if (file.access(MLwiNPath, mode=1) == 0) {
+    if (file.access(MLwiNPath, mode = 1) == 0) {
       cmd <- MLwiNPath
     } else {
       stop(paste0(MLwiNPath, " is not executable"))
@@ -75,20 +75,20 @@ ws2foreign <- function(wsfile, foreignfile, MLwiNPath = NULL, x64=NULL){
   if (isTRUE(pathinfo$isdir)) {
     if (x64) {
       cmd <- paste0(MLwiNPath, "/x64/mlnscript.exe")
-      if (file.access(cmd, mode=1) != 0) {
+      if (file.access(cmd, mode = 1) != 0) {
         cmd <- paste0(MLwiNPath, "/i386/mlnscript.exe")
-        if (file.access(cmd, mode=1) != 0) {
+        if (file.access(cmd, mode = 1) != 0) {
           cmd <- paste0(MLwiNPath, "/mlwin.exe")
-          if (file.access(cmd, mode=1) != 0) {
+          if (file.access(cmd, mode = 1) != 0) {
             stop("Cannot find valid MLwiN executable")
           }
         }
       }
     } else {
       cmd <- paste0(MLwiNPath, "/i386/mlnscript.exe")
-      if (file.access(cmd, mode=1) != 0) {
+      if (file.access(cmd, mode = 1) != 0) {
         cmd <- paste0(MLwiNPath, "/mlwin.exe")
-        if (file.access(cmd, mode=1) != 0) {
+        if (file.access(cmd, mode = 1) != 0) {
           stop("Cannot find valid MLwiN executable")
         }
       }
@@ -96,7 +96,7 @@ ws2foreign <- function(wsfile, foreignfile, MLwiNPath = NULL, x64=NULL){
   }
   
   args <- paste0("/nogui /run ", "\"", temptfile, "\"")
-  system2(cmd, args=args, stdout=stdout, stderr=stderr)
+  system2(cmd, args = args, stdout = stdout, stderr = stderr)
   file.remove(temptfile)
   cat("\n")
-}
+} 

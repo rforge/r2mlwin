@@ -15,59 +15,56 @@
 ############################################################################
 
 library(R2MLwiN)
-## Input the MLwiN tutorial data set
 # MLwiN folder
 mlwin <- getOption("MLwiN_path")
-while (!file.access(mlwin, mode=1)==0) {
+while (!file.access(mlwin, mode = 1) == 0) {
   cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
-  mlwin=scan(what=character(0),sep ="\n")
-  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
+  mlwin <- scan(what = character(0), sep = "\n")
+  mlwin <- gsub("\\", "/", mlwin, fixed = TRUE)
 }
-options(MLwiN_path=mlwin)
+options(MLwiN_path = mlwin)
 
-# Double return HERE
-# User's input if necessary
 
-data(tutorial, package="R2MLwiN")
+data(tutorial, package = "R2MLwiN")
 
-(mymodel1 <- runMLwiN(normexam~1+standlrt+(school|1+standlrt)+(student|1), data=tutorial))
+(mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1), data = tutorial))
 
 # 6.1 The impact of school gender on girls' achievement . . . . . . . . . 80
 
-(mymodel2 <- runMLwiN(normexam~1+standlrt+sex+schgend+(school|1+standlrt)+(student|1), data=tutorial))
+(mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + sex + schgend + (school | 1 + standlrt) + (student | 1), data = tutorial))
 
-(mymodel3 <- runMLwiN(normexam~1+standlrt+sex+schgend+schgend:standlrt+(school|1+standlrt)+(student|1),
-                      estoptions=list(startval=list(FP.b=mymodel2@FP, FP.v=mymodel2@FP.cov, RP.b=mymodel2@RP, RP.v=mymodel2@RP.cov)), data=tutorial))
+(mymodel3 <- runMLwiN(normexam ~ 1 + standlrt + sex + schgend + schgend:standlrt + (school | 1 + standlrt) + (student | 
+  1), estoptions = list(startval = list(FP.b = mymodel2@FP, FP.v = mymodel2@FP.cov, RP.b = mymodel2@RP, RP.v = mymodel2@RP.cov)), 
+  data = tutorial))
 
 
 # 6.2 Contextual effects of school intake ability averages . . . . . . . .83
 
-(mymodel4 <- runMLwiN(normexam~1+standlrt+sex+schgend+schav+(school|1+standlrt)+(student|1), data=tutorial))
+(mymodel4 <- runMLwiN(normexam ~ 1 + standlrt + sex + schgend + schav + (school | 1 + standlrt) + (student | 1), data = tutorial))
 
-(mymodel5 <- runMLwiN(normexam~1+standlrt+sex+schgend+schav+standlrt:schav+(school|1+standlrt)+(student|1), data=tutorial))
+(mymodel5 <- runMLwiN(normexam ~ 1 + standlrt + sex + schgend + schav + standlrt:schav + (school | 1 + standlrt) + 
+  (student | 1), data = tutorial))
 
-pred <- predict(mymodel5, params=c("FP_schavhigh", "FP_standlrt:schavhigh"), se.fit=TRUE)
+pred <- predict(mymodel5, params = c("FP_schavhigh", "FP_standlrt:schavhigh"), se.fit = TRUE)
 
 hilodiff <- pred$fit
 hilodiff_se <- pred$se.fit
 
-hilodiff_lo <- hilodiff - 1.96*hilodiff_se
-hilodiff_hi <- hilodiff + 1.96*hilodiff_se
+hilodiff_lo <- hilodiff - 1.96 * hilodiff_se
+hilodiff_hi <- hilodiff + 1.96 * hilodiff_se
 
-highdata <- as.data.frame(cbind(mymodel5@data$schavhigh, mymodel5@data[["standlrt:schavhigh"]], hilodiff, hilodiff_lo, hilodiff_hi)[order(mymodel5@data[["standlrt:schavhigh"]]), ])
+highdata <- as.data.frame(cbind(mymodel5@data$schavhigh, mymodel5@data[["standlrt:schavhigh"]], hilodiff, hilodiff_lo, 
+  hilodiff_hi)[order(mymodel5@data[["standlrt:schavhigh"]]), ])
 colnames(highdata) <- c("schavhigh", "standlrt:schavhigh", "hilodiff", "hilodiff_lo", "hilodiff_hi")
-highdata <- highdata[highdata$schavhigh==1, ]
+highdata <- highdata[highdata$schavhigh == 1, ]
 
-plot(highdata[["standlrt:schavhigh"]], highdata$hilodiff, type="l")
+plot(highdata[["standlrt:schavhigh"]], highdata$hilodiff, type = "l")
 
-xyplot(hilodiff~`standlrt:schavhigh`,
-       panel=function(x, y, subscripts){
-         panel.xyplot(x, y, type="l")
-         panel.xyplot(x, highdata$hilodiff_hi, type="l", lty=2)
-         panel.xyplot(x, highdata$hilodiff_lo, type="l", lty=2)
-       },
-       data=highdata
-)
+xyplot(hilodiff ~ `standlrt:schavhigh`, panel = function(x, y, subscripts) {
+  panel.xyplot(x, y, type = "l")
+  panel.xyplot(x, highdata$hilodiff_hi, type = "l", lty = 2)
+  panel.xyplot(x, highdata$hilodiff_lo, type = "l", lty = 2)
+}, data = highdata)
 
 #     Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . 87
 

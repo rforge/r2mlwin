@@ -25,7 +25,7 @@ df2matrix <- function(data, idcols, weightcols) {
   }
   id <- data[, idcols]
   weight <- data[, weightcols]
-  id[weight==0] <- NA
+  id[weight == 0] <- NA
   
   a <- NULL
   for (i in 1:ncol(id)) {
@@ -42,13 +42,13 @@ df2matrix <- function(data, idcols, weightcols) {
     for (j in 1:ncol(id)) {
       if (!is.na(id[i, j])) {
         indi[ind] <- i
-        indj[ind] <- which(a==id[i, j])
+        indj[ind] <- which(a == id[i, j])
         dat[ind] <- weight[i, j]
         ind <- ind + 1
       }
     }
   }
   
-  c <- sparseMatrix(indi, indj, x=dat, dimnames=list(1:nrow(id), a))
+  c <- sparseMatrix(indi, indj, x = dat, dimnames = list(1:nrow(id), a))
   c
-}
+} 

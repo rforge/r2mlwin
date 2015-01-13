@@ -15,36 +15,33 @@
 ############################################################################
 
 library(R2MLwiN)
-## Input the MLwiN tutorial data set
 # MLwiN folder
 mlwin <- getOption("MLwiN_path")
-while (!file.access(mlwin, mode=1)==0) {
+while (!file.access(mlwin, mode = 1) == 0) {
   cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
-  mlwin=scan(what=character(0),sep ="\n")
-  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
+  mlwin <- scan(what = character(0), sep = "\n")
+  mlwin <- gsub("\\", "/", mlwin, fixed = TRUE)
 }
-options(MLwiN_path=mlwin)
+options(MLwiN_path = mlwin)
 
-# Double return HERE
-# User's input if necessary
 
 # 3.1 What are multilevel residuals? . . . . . . . . . . . . . . . . . . .37
 
-data(tutorial, package="R2MLwiN")
+data(tutorial, package = "R2MLwiN")
 
-(mymodel1 <- runMLwiN(normexam~1+(school|1)+(student|1), data=tutorial, estoptions=list(resi.store=TRUE)))
+(mymodel1 <- runMLwiN(normexam ~ 1 + (school | 1) + (student | 1), data = tutorial, estoptions = list(resi.store = TRUE)))
 
 
 
 # 3.2 Calculating residuals in MLwiN . . . . . . . . . . . . . . . . . . .40
 
-caterpillarR(mymodel1, lev=2)
+caterpillarR(mymodel1, lev = 2)
 
 # 3.3 Normal plots . . . . . . . . . . . . . . . . . . . . . . . . . . . .43
 
 e0 <- mymodel1@residual$lev_1_resi_est_Intercept
 
-e0std <- (e0 - mean(e0)) / sd(e0)
+e0std <- (e0 - mean(e0))/sd(e0)
 
 e0rank <- rank(e0)
 
@@ -52,12 +49,12 @@ e0uniform <- (e0rank - 0.5)/length(e0rank)
 
 e0nscore <- qnorm(e0uniform)
 
-plot(e0nscore, e0std, asp=1)
+plot(e0nscore, e0std, asp = 1)
 
 
 u0 <- mymodel1@residual$lev_2_resi_est_Intercept
 
-u0std <- (u0 - mean(u0)) / sd(u0)
+u0std <- (u0 - mean(u0))/sd(u0)
 
 u0rank <- rank(u0)
 
@@ -65,7 +62,7 @@ u0uniform <- (u0rank - 0.5)/length(u0rank)
 
 u0nscore <- qnorm(u0uniform)
 
-plot(u0nscore, u0std, asp=1)
+plot(u0nscore, u0std, asp = 1)
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . . 45
 

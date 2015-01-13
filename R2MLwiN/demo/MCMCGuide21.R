@@ -18,57 +18,59 @@
 # 21.2 Fitting the model using MLwiN . . . . . . . . . . . . . . . . . . 330
 
 library(R2MLwiN)
-## Input the MLwiN tutorial data set
 # MLwiN folder
 mlwin <- getOption("MLwiN_path")
-while (!file.access(mlwin, mode=1)==0) {
+while (!file.access(mlwin, mode = 1) == 0) {
   cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
-  mlwin=scan(what=character(0),sep ="\n")
-  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
+  mlwin <- scan(what = character(0), sep = "\n")
+  mlwin <- gsub("\\", "/", mlwin, fixed = TRUE)
 }
-options(MLwiN_path=mlwin)
+options(MLwiN_path = mlwin)
 
 # User's input if necessary
 
 ## Read tutorial data
-data(tutorial, package="R2MLwiN")
+data(tutorial, package = "R2MLwiN")
 
 ## Define the model
 
-(mymodel <- runMLwiN(normexam~1+(school|1)+(student|1), estoptions=list(EstM=1), data=tutorial))
+(mymodel <- runMLwiN(normexam ~ 1 + (school | 1) + (student | 1), estoptions = list(EstM = 1), data = tutorial))
 
-summary(mymodel@chains[,"FP_Intercept"])
-sixway(mymodel@chains[,"FP_Intercept",drop=FALSE],"beta_0")
+summary(mymodel@chains[, "FP_Intercept"])
+sixway(mymodel@chains[, "FP_Intercept", drop = FALSE], "beta_0")
 
 ## Structured MCMC
 
-(mymodel <- runMLwiN(normexam~1+(school|1)+(student|1), estoptions=list(EstM=1, mcmcOptions=list(smcm=1)), data=tutorial))
+(mymodel <- runMLwiN(normexam ~ 1 + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcOptions = list(smcm = 1)), 
+  data = tutorial))
 
-summary(mymodel@chains[,"FP_Intercept"])
-sixway(mymodel@chains[,"FP_Intercept",drop=FALSE],"beta_0")
+summary(mymodel@chains[, "FP_Intercept"])
+sixway(mymodel@chains[, "FP_Intercept", drop = FALSE], "beta_0")
 
 # 21.3 A random intercepts model . . . . . . . . . . . . . . . . . . . . 334
 
-(mymodel <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), estoptions=list(EstM=1, mcmcOptions=list(smcm=1)), data=tutorial))
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcOptions = list(smcm = 1)), 
+  data = tutorial))
 
-trajectories(mymodel,Range=c(1,500))
+trajectories(mymodel, Range = c(1, 500))
 
 # 21.4 Examining the residual chains . . . . . . . . . . . . . . . . . . 335
 
-(mymodel <- runMLwiN(normexam~1+standlrt+(school|1)+(student|1), 
-                     estoptions=list(EstM=1, resi.store=TRUE, resi.store.levs=2, mcmcMeth=list(iterations=5001), mcmcOptions=list(smcm=1)), data=tutorial))
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, resi.store = TRUE, 
+  resi.store.levs = 2, mcmcMeth = list(iterations = 5001), mcmcOptions = list(smcm = 1)), data = tutorial))
 
 ## Each row represents each iteration
-sixway(mymodel@resi.chains$resi_lev2[,1,drop=FALSE], name="school1")
+sixway(mymodel@resi.chains$resi_lev2[, 1, drop = FALSE], name = "school1")
 
 # 21.5 Random slopes model theory . . . . . . . . . . . . . . . . . . . .336
 
 # 21.6 Random Slopes model practice . . . . . . . . . . . . . . . . . . .338
 
-(mymodel <- runMLwiN(normexam~1+standlrt+(school|1+standlrt)+(student|1), estoptions=list(EstM=1, mcmcOptions=list(smcm=1)), data=tutorial))
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1), estoptions = list(EstM = 1, 
+  mcmcOptions = list(smcm = 1)), data = tutorial))
 
-sixway(mymodel@chains[,"FP_Intercept",drop=FALSE],"beta_0")
-sixway(mymodel@chains[,"FP_standlrt",drop=FALSE],"beta_1")
+sixway(mymodel@chains[, "FP_Intercept", drop = FALSE], "beta_0")
+sixway(mymodel@chains[, "FP_standlrt", drop = FALSE], "beta_1")
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .340
 

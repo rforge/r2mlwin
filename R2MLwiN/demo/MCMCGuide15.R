@@ -22,33 +22,31 @@
 library(R2MLwiN)
 # MLwiN folder
 mlwin <- getOption("MLwiN_path")
-while (!file.access(mlwin, mode=1)==0) {
+while (!file.access(mlwin, mode = 1) == 0) {
   cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
-  mlwin=scan(what=character(0),sep ="\n")
-  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)  
+  mlwin <- scan(what = character(0), sep = "\n")
+  mlwin <- gsub("\\", "/", mlwin, fixed = TRUE)
 }
-options(MLwiN_path=mlwin)
-
-# User's input if necessary
+options(MLwiN_path = mlwin)
 
 ## Read xc1 data
-data(xc1, package="R2MLwiN")
+data(xc1, package = "R2MLwiN")
 
-(mymodel <- runMLwiN(attain~1+(sid|1)+(pupil|1), estoptions=list(EstM=1), data=xc1))
+(mymodel <- runMLwiN(attain ~ 1 + (sid | 1) + (pupil | 1), estoptions = list(EstM = 1), data = xc1))
 
 # 15.4 A Cross-classified model . . . . . . . . . . . . . . . . . . . . .220
 
-(mymodel <- runMLwiN(attain~1+(sid|1)+(pid|1)+(pupil|1),
-                     estoptions=list(xc=TRUE, EstM=1, resi.store=TRUE, resi.store.levs=c(2,3)), data=xc1))
+(mymodel <- runMLwiN(attain ~ 1 + (sid | 1) + (pid | 1) + (pupil | 1), estoptions = list(xc = TRUE, EstM = 1, resi.store = TRUE, 
+  resi.store.levs = c(2, 3)), data = xc1))
 
 # 15.5 Residuals . . . . . . . . . . . . . . . . . . . . . . . . . . . . 223
 
-lencateg <- length(unique(xc1[["sid"]]))
+lencateg <- length(unique(xc1$sid))
 resi.chain0 <- mymodel@resi.chains$resi_lev3
-residual0 <- apply(resi.chain0,2,mean)
+residual0 <- apply(resi.chain0, 2, mean)
 rankno <- order(residual0)
-plot(x=1:lencateg,y=residual0[rankno],pch=24,bg="black",xlab="rank",ylab="cons")
-abline(h=0,lty="dotted")
+plot(x = 1:lencateg, y = residual0[rankno], pch = 24, bg = "black", xlab = "rank", ylab = "cons")
+abline(h = 0, lty = "dotted")
 
 ## Common caterpillar
 #lencateg <- length(unique(xc1[["sid"]]))
@@ -61,12 +59,12 @@ abline(h=0,lty="dotted")
 #rankno <- order(u0rankmn)
 #caterpillar(y=u0rankmn[rankno],x=1:lencateg,qtlow=u0ranklo[rankno],qtup=u0rankhi[rankno]],ylim=c(0,20))
 
-lencateg <- length(unique(xc1[["pid"]]))
+lencateg <- length(unique(xc1$pid))
 resi.chain1 <- mymodel@resi.chains$resi_lev2
-residual1 <- apply(resi.chain1,2,mean)
+residual1 <- apply(resi.chain1, 2, mean)
 rankno <- order(residual1)
-plot(x=1:length(residual1),y=residual1[rankno],pch=24,bg="black",xlab="rank",ylab="cons")
-abline(h=0,lty="dotted")
+plot(x = 1:length(residual1), y = residual1[rankno], pch = 24, bg = "black", xlab = "rank", ylab = "cons")
+abline(h = 0, lty = "dotted")
 
 ## Common caterpillar
 #lencateg <- length(unique(xc1[["pid"]]))
@@ -81,23 +79,23 @@ abline(h=0,lty="dotted")
 
 # 15.6 Adding predictors to the model . . . . . . . . . . . . . . . . . .225
 
-(mymodel <- runMLwiN(attain~1+vrq+(sid|1)+(pid|1)+(pupil|1),
-                     estoptions=list(xc=TRUE, EstM=1, resi.store=TRUE, resi.store.levs=c(2,3)), data=xc1))
+(mymodel <- runMLwiN(attain ~ 1 + vrq + (sid | 1) + (pid | 1) + (pupil | 1), estoptions = list(xc = TRUE, EstM = 1, 
+  resi.store = TRUE, resi.store.levs = c(2, 3)), data = xc1))
 
-(mymodel <- runMLwiN(attain~1+vrq+sc+fed+med+choice+(sid|1)+(pid|1)+(pupil|1),
-                     estoptions=list(xc=TRUE, EstM=1, resi.store=TRUE, resi.store.levs=c(2,3)), data=xc1))
+(mymodel <- runMLwiN(attain ~ 1 + vrq + sc + fed + med + choice + (sid | 1) + (pid | 1) + (pupil | 1), estoptions = list(xc = TRUE, 
+  EstM = 1, resi.store = TRUE, resi.store.levs = c(2, 3)), data = xc1))
 
 lencateg <- length(unique(xc1$sid))
 resi.chain0 <- mymodel@resi.chains$resi_lev3
-residual0 <- apply(resi.chain0,2,mean)
+residual0 <- apply(resi.chain0, 2, mean)
 rankno <- order(residual0)
-plot(x=1:lencateg,y=residual0[rankno],pch=24,bg="black",xlab="rank",ylab="cons")
-abline(h=0,lty="dotted")
+plot(x = 1:lencateg, y = residual0[rankno], pch = 24, bg = "black", xlab = "rank", ylab = "cons")
+abline(h = 0, lty = "dotted")
 
-xc1$school19=as.integer(xc1$sid==19)
+xc1$school19 <- as.integer(xc1$sid == 19)
 
-(mymodel=runMLwiN(attain~1+vrq+sc+fed+med+choice+school19+(sid|0)+(pid|1)+(pupil|1),
-                  estoptions=list(xc=TRUE, EstM=1), data=xc1))
+(mymodel <- runMLwiN(attain ~ 1 + vrq + sc + fed + med + choice + school19 + (sid | 0) + (pid | 1) + (pupil | 1), 
+  estoptions = list(xc = TRUE, EstM = 1), data = xc1))
 
 # 15.7 Current restrictions for cross-classified models . . . . . . . . .229
 

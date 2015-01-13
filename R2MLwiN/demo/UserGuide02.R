@@ -15,24 +15,21 @@
 ############################################################################
 
 library(R2MLwiN)
-## Input the MLwiN tutorial data set
 # MLwiN folder
 mlwin <- getOption("MLwiN_path")
-while (!file.access(mlwin, mode=1)==0) {
+while (!file.access(mlwin, mode = 1) == 0) {
   cat("Please specify the root MLwiN folder or the full path to the MLwiN executable:\n")
-  mlwin=scan(what=character(0),sep ="\n")
-  mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
+  mlwin <- scan(what = character(0), sep = "\n")
+  mlwin <- gsub("\\", "/", mlwin, fixed = TRUE)
 }
-options(MLwiN_path=mlwin)
+options(MLwiN_path = mlwin)
 
-# Double return HERE
-# User's input if necessary
 
 # 2.1 The tutorial data set . . . . . . . . . . . . . . . . . . . . . . . .9
 
 # 2.2 Opening the worksheet and looking at the data . . . . . . . . . . . 10
 
-data(tutorial, package="R2MLwiN")
+data(tutorial, package = "R2MLwiN")
 
 summary(tutorial)
 
@@ -42,36 +39,38 @@ head(tutorial)
 
 # 2.3 Comparing two groups . . . . . . . . . . . . . . . . . . . . . . . .13
 
-tab <- cbind(tapply(tutorial$normexam, tutorial$sex, length), tapply(tutorial$normexam, tutorial$sex, mean), tapply(tutorial$normexam, tutorial$sex, sd))
+tab <- cbind(tapply(tutorial$normexam, tutorial$sex, length), tapply(tutorial$normexam, tutorial$sex, mean), tapply(tutorial$normexam, 
+  tutorial$sex, sd))
 tab <- rbind(tab, c(length(tutorial$normexam), mean(tutorial$normexam), sd(tutorial$normexam)))
 colnames(tab) <- c("N", "Mean", "SD")
 rownames(tab)[3] <- "Total"
 
 tab
 
-t.test(normexam~sex, data=tutorial, var.equal=TRUE)
+t.test(normexam ~ sex, data = tutorial, var.equal = TRUE)
 
-(mymodel1 <- runMLwiN(normexam~1+sex+(student|1), data=tutorial))
+(mymodel1 <- runMLwiN(normexam ~ 1 + sex + (student | 1), data = tutorial))
 
 # 2.4 Comparing more than two groups: Fixed effects models . . . . . . . .20
 
-mean_normexam <- aggregate(normexam ~ school, mean, data=tutorial)$normexam
+mean_normexam <- aggregate(normexam ~ school, mean, data = tutorial)$normexam
 
 hist(mean_normexam)
 
-mymodel2 <- runMLwiN(normexam~1+(student|1), data=tutorial)
+mymodel2 <- runMLwiN(normexam ~ 1 + (student | 1), data = tutorial)
 
 tutorial$school <- relevel(tutorial$school, 65)
 
-(mymodel3 <- runMLwiN(normexam~1+school+(student|1), data=tutorial))
+(mymodel3 <- runMLwiN(normexam ~ 1 + school + (student | 1), data = tutorial))
 
-aov(normexam ~ school, data=tutorial)
+aov(normexam ~ school, data = tutorial)
 
-if (!require(lmtest)) install.packages("lmtest"); library(lmtest)
+if (!require(lmtest)) install.packages("lmtest")
+library(lmtest)
 
 lrtest(mymodel2, mymodel3)
 
-(mymodel4 <- runMLwiN(normexam~1+school+schgend+(student|1), data=tutorial))
+(mymodel4 <- runMLwiN(normexam ~ 1 + school + schgend + (student | 1), data = tutorial))
 
 
 
@@ -79,9 +78,9 @@ lrtest(mymodel2, mymodel3)
 
 tutorial$school <- as.numeric(levels(tutorial$school))[tutorial$school]
 
-(mymodel5 <- runMLwiN(normexam~1+(school|1)+(student|1), data=tutorial))
+(mymodel5 <- runMLwiN(normexam ~ 1 + (school | 1) + (student | 1), data = tutorial))
 
-(mymodel6 <- runMLwiN(normexam~1+schgend+(school|1)+(student|1), data=tutorial))
+(mymodel6 <- runMLwiN(normexam ~ 1 + schgend + (school | 1) + (student | 1), data = tutorial))
 
 
 #     Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . 35

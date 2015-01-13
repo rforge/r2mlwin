@@ -10,18 +10,18 @@
 #' syntax: by default this is \code{NULL} and level ID(s) are specified
 #' in the \code{Formula} object.
 #' @param D A character string/vector specifying the type of distribution to be modelled, which
-#' can include \code{"Normal"} (the default), \code{"Binomial"}, \code{"Poisson"},
-#' \code{"Negbinom"}, \code{"Unordered Multinomial"}, \code{"Ordered Multinomial"},
-#' \code{"Multivariate Normal"}, or \code{"Mixed"}. In the case of the latter, 
-#' \code{"Mixed"} precedes the response types which also need to be listed in 
-#' \code{D}, e.g. \code{c("Mixed", "Normal", "Binomial")}; these need to be
+#' can include \code{'Normal'} (the default), \code{'Binomial'}, \code{'Poisson'},
+#' \code{'Negbinom'}, \code{'Unordered Multinomial'}, \code{'Ordered Multinomial'},
+#' \code{'Multivariate Normal'}, or \code{'Mixed'}. In the case of the latter, 
+#' \code{'Mixed'} precedes the response types which also need to be listed in 
+#' \code{D}, e.g. \code{c('Mixed', 'Normal', 'Binomial')}; these need to be
 #' be listed in the same order to which they are referred to in the
 #' \code{Formula} object (see \code{\link{runMLwiN}}, \code{\link{formula.translate}},
 #' \code{\link{formula.translate.compat}}. For (R)IGLS estimation (i.e. \code{EstM = 0}
-#' in \code{estoptions}) \code{"Mixed"} combinations can consist of
-#' \code{"Normal"} and \code{"Binomial"} or \code{"Normal"} and \code{"Poisson"};
+#' in \code{estoptions}) \code{'Mixed'} combinations can consist of
+#' \code{'Normal'} and \code{'Binomial'} or \code{'Normal'} and \code{'Poisson'};
 #' for MCMC estimation (i.e. \code{EstM = 0}, on the other hand, only a combination
-#' of \code{"Normal"} and \code{"Binomial"} is available.
+#' of \code{'Normal'} and \code{'Binomial'} is available.
 #' 
 #' @param data A data.frame object containing the data to be modelled.
 #' Optional (but recommended): if empty, data taken from environment of
@@ -32,11 +32,11 @@
 #' WinBUGS/OpenBUGS, in conjunction with MLwiN, are used for modelling. Non-null
 #' only applicable if \code{EstM = 1}. See `Details', below.
 #' @param MLwiNPath A path to the MLwiN folder. By default, \code{MLwiNPath = NULL}
-#' and path set by \code{options("MLwiN_path")}, the default for which can be
-#' changed via \code{options(MLwiN_path = "path/to/MLwiN vX.XX/")}).
-#' @param stdout See \code{\link[base]{system2}}; \code{""} by default (i.e.
+#' and path set by \code{options('MLwiN_path')}, the default for which can be
+#' changed via \code{options(MLwiN_path = 'path/to/MLwiN vX.XX/')}).
+#' @param stdout See \code{\link[base]{system2}}; \code{''} by default (i.e.
 #' output to \code{stdout} sent to R console).
-#' @param stderr See \code{\link[base]{system2}}; \code{""} by default (i.e.
+#' @param stderr See \code{\link[base]{system2}}; \code{''} by default (i.e.
 #' output to \code{stderr} sent to R console).
 #' @param workdir A path to the folder where the output files are to be saved.
 #' If the folder specified does not exist, a new folder of that name is
@@ -72,15 +72,15 @@
 #' variables containing the level 2 and level 1 identifying codes, and \code{<ref_cat>}
 #' represents the reference category of a categorical response variable (optional:
 #' if unspecified the lowest level of the factor is used as the reference category).
-#' Explanatory variables are specified as e.g. \code{<x1> + <x2>}. For \code{"Ordered Multinomial"},
-#' \code{"Multivariate Normal"} and \code{"Mixed"} responses, \code{[<common>]} indicates
+#' Explanatory variables are specified as e.g. \code{<x1> + <x2>}. For \code{'Ordered Multinomial'},
+#' \code{'Multivariate Normal'} and \code{'Mixed'} responses, \code{[<common>]} indicates
 #' a common coefficient (i.e. the same for each category) is to be fitted; here \code{<common>}
 #' takes the form of a numeric identifier indicating the responses for which a common
 #' coefficient is to be added (e.g. \code{[1:5]} to fit a common coefficient for
 #' categories \code{1} to \code{5} of a 6-point ordered variable, \code{[1]} to fit a common
 #' coefficient for the response variable specified first in the \code{Formula} object
-#' for a \code{"Mixed"} response model, etc.) Otherwise a separate coefficient
-#' (i.e. one for each category) is added. For \code{"Mixed"} response models, the
+#' for a \code{'Mixed'} response model, etc.) Otherwise a separate coefficient
+#' (i.e. one for each category) is added. For \code{'Mixed'} response models, the
 #' \code{Formula} arguments need to be grouped in the order the distributions
 #' are listed in \code{D}.
 #' 
@@ -88,15 +88,15 @@
 #' 
 #' \tabular{lll}{
 #' \strong{Distribution} \tab \strong{Format of \code{Formula} object} \tab \strong{Where \code{<link>} can equal...}\cr
-#' \code{"Normal"} \tab \code{<y1> ~ 1 + <x1> + (<L2>|1) + (<L1>|1) + ...} \tab (identity link assumed)\cr
-#' \code{"Poisson"} \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + <x1> + (<L2>|1) + ...} \tab \code{log}\cr
-#' \code{"Negbinom"}* \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + (<L2>|1) + ...} \tab \code{log}\cr
-#' \code{"Binomial"} \tab \code{<link>(<y1>, <denom>) ~ 1 + <x1> + (<L2>|1) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
-#' \code{"Unordered Multinomial"} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + (<L2|1) + ...} \tab \code{logit} - to check\cr
-#' \code{"Ordered Multinomial"} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
-#' \code{"Multivariate Normal"} \tab \code{c(<y1>, <y2>, ...) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + (<L1>|1) + ...} \tab (identity link assumed)\cr
-#' \code{c("Mixed", "Normal", "Binomial")} \tab \code{c(<y1>, ..., <link> (<y2>, <denom>), ...) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + (<L1>|1) + ...} \tab \code{logit}*,\code{probit},\code{cloglog}*\cr
-#' \code{c("Mixed", "Normal", "Poisson")}* \tab \code{c(<y1>, ..., <link>(<y2>, <offset>), ...) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + (<L1>|1) + ...} \tab \code{log}\cr
+#' \code{'Normal'} \tab \code{<y1> ~ 1 + <x1> + (<L2>|1) + (<L1>|1) + ...} \tab (identity link assumed)\cr
+#' \code{'Poisson'} \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + <x1> + (<L2>|1) + ...} \tab \code{log}\cr
+#' \code{'Negbinom'}* \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + (<L2>|1) + ...} \tab \code{log}\cr
+#' \code{'Binomial'} \tab \code{<link>(<y1>, <denom>) ~ 1 + <x1> + (<L2>|1) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
+#' \code{'Unordered Multinomial'} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + (<L2|1) + ...} \tab \code{logit} - to check\cr
+#' \code{'Ordered Multinomial'} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
+#' \code{'Multivariate Normal'} \tab \code{c(<y1>, <y2>, ...) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + (<L1>|1) + ...} \tab (identity link assumed)\cr
+#' \code{c('Mixed', 'Normal', 'Binomial')} \tab \code{c(<y1>, ..., <link> (<y2>, <denom>), ...) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + (<L1>|1) + ...} \tab \code{logit}*,\code{probit},\code{cloglog}*\cr
+#' \code{c('Mixed', 'Normal', 'Poisson')}* \tab \code{c(<y1>, ..., <link>(<y2>, <offset>), ...) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + (<L1>|1) + ...} \tab \code{log}\cr
 #' }
 #' 
 #' The argument \code{estoptions} is a list which can contain the
@@ -110,21 +110,21 @@
 #' stored or not. Defaults to \code{FALSE}.
 #' 
 #' \item \code{resioptions}: a string vector to specify the various residual options.
-#' The \code{"variance"} option calculates the posterior variances instead of
-#' the posterior standard errors; the \code{"standardised"}, \code{"leverage"}, \code{"influence"} 
-#' and \code{"deletion"} options calculate standardised,
+#' The \code{'variance'} option calculates the posterior variances instead of
+#' the posterior standard errors; the \code{'standardised'}, \code{'leverage'}, \code{'influence'} 
+#' and \code{'deletion'} options calculate standardised,
 #' leverage, influence and deletion residuals respectively; the
-#' \code{"sampling"} option calculates the sampling variance covariance matrix
-#' for the residuals; the \code{"norecode"} option prevents residuals with values exceedingly close or
+#' \code{'sampling'} option calculates the sampling variance covariance matrix
+#' for the residuals; the \code{'norecode'} option prevents residuals with values exceedingly close or
 #' equal to zero from being recoded to missing.
-#' When \code{EstM = 1} (i.e. MCMC estimation) \code{"variance"}
-#' is default value, and the only other permissible values are \code{"standarised"}
-#' and \code{"norecode"} (else function call stopped with appropriate error
-#' message). When \code{EstM = 0} (i.e. (R)IGLS estimation), \code{"variance"}
-#' cannot be specified together with \code{"standardised"}, \code{"leverage"} or
-#' \code{"deletion"} (function call stopped with appropriate error message).
-#' Default when \code{EstM = 0} is \code{resioptions = c("variance", "sampling")}; default
-#' when \code{EstM = 1} is \code{resioptions = c("variance")}.
+#' When \code{EstM = 1} (i.e. MCMC estimation) \code{'variance'}
+#' is default value, and the only other permissible values are \code{'standarised'}
+#' and \code{'norecode'} (else function call stopped with appropriate error
+#' message). When \code{EstM = 0} (i.e. (R)IGLS estimation), \code{'variance'}
+#' cannot be specified together with \code{'standardised'}, \code{'leverage'} or
+#' \code{'deletion'} (function call stopped with appropriate error message).
+#' Default when \code{EstM = 0} is \code{resioptions = c('variance', 'sampling')}; default
+#' when \code{EstM = 1} is \code{resioptions = c('variance')}.
 #' 
 #' \item \code{resi.store.levs}: an integer vector indicating the levels at which the
 #' residual chains are to be stored (\code{NULL} by default). Non-\code{NULL} values
@@ -135,10 +135,10 @@
 #' \item \code{debugmode}: a logical value determining whether MLwiN is run in the
 #' background or not. The default value is \code{FALSE}: i.e. MLwiN is run in
 #' the background. If \code{TRUE} the MLwiN GUI is opened, and then pauses after the model
-#' has been set-up, allowing user to check starting values; pressing "Resume macro"
-#' will then fit the model. Once fit, pressing "Resume macro" once more will save
+#' has been set-up, allowing user to check starting values; pressing 'Resume macro'
+#' will then fit the model. Once fit, pressing 'Resume macro' once more will save
 #' the outputs to the \code{workdir} ready to be read by \pkg{R2MLwiN}. Users can
-#' instead opt to "Abort macro" in which case the outputs are not saved to the
+#' instead opt to 'Abort macro' in which case the outputs are not saved to the
 #' \code{workdir}. This option currently
 #' works for 32 bit version of MLwiN only (automatically switches unless
 #' \code{MLwiNPath} or \code{options(MLwiNPath)}
@@ -164,10 +164,10 @@
 #' for an example.
 #' 
 #' \item \code{notation}: specifies the model subscript notation
-#' to be used in the MLwiN equations window. \code{"class"} means no multiple
-#' subscripts, whereas \code{"level"} has multiple subscripts. If
-#' \code{notation = NULL}, defaults to \code{"level"} if \code{"xc = NULL"} else
-#' defaults to \code{"class"}.
+#' to be used in the MLwiN equations window. \code{'class'} means no multiple
+#' subscripts, whereas \code{'level'} has multiple subscripts. If
+#' \code{notation = NULL}, defaults to \code{'level'} if \code{'xc = NULL'} else
+#' defaults to \code{'class'}.
 #' 
 #' \item \code{mem.init}: sets and displays worksheet capacities for
 #' the current MLwiN session. A vector of length 5 corresponding to
@@ -179,7 +179,7 @@
 #' 
 #' \item \code{optimat}: instructs MLwiN to limit the maximum matrix size
 #' that can be allocated by the (R)IGLS algorithm. Specify \code{optimat = TRUE}
-#' if MLwiN gives the following error message "Overflow allocating smatrix".
+#' if MLwiN gives the following error message 'Overflow allocating smatrix'.
 #' This error message arises if one or more higher-level units is/are extremely
 #' large (containing more than 800 lower-level units). In this situation \code{runMLwiN}'s
 #' default behaviour is to instruct MLwiN to allocate a larger matrix size to
@@ -319,8 +319,8 @@
 #' 
 #' \item \code{extra}: if \code{TRUE}, extra binomial, extra negative binomial,
 #' extra Poisson or extra multinomial distributions assumed, else \code{FALSE}.
-#' can only be specified for discrete response models (i.e. \code{"Binomial"},
-#' \code{"Negbinom"}, \code{"Poisson"}, \code{"Multinomial"})
+#' can only be specified for discrete response models (i.e. \code{'Binomial'},
+#' \code{'Negbinom'}, \code{'Poisson'}, \code{'Multinomial'})
 #' estimated via (R)IGLS (i.e. \code{EstM = 0}).
 #' 
 #' \item \code{reset}: a vector specifying the action to be
@@ -360,8 +360,8 @@
 #' indicating the classifications in \code{company}, \code{company2},
 #' \code{company3}, \code{company4} and their weights in \code{weight1}, \code{weight2},
 #' \code{weight3} and \code{weight4} then 
-#' \code{mm = list(list(mmvar = list("company", "company2", "company3", "company4"),}
-#' \code{weights = list("weight1", "weight2", "weight3", "weight4")), NA)}
+#' \code{mm = list(list(mmvar = list('company', 'company2', 'company3', 'company4'),}
+#' \code{weights = list('weight1', 'weight2', 'weight3', 'weight4')), NA)}
 #' with the \code{NA}, listed last, corresponding to the level 1 identifier (\code{id}).
 #' 
 #' \item \code{car}: specifies the structure of a conditional autoregressive (CAR)
@@ -454,7 +454,7 @@
 #' \item \code{priorcode}: An integer indicating which default priors are to be used
 #' for the variance parameters. This parameter takes the value \code{1} (the default) for
 #' Gamma priors or \code{0} for Uniform on the variance scale priors. See the
-#' section on "Priors" in the MLwiN help system for more details on the meaning
+#' section on 'Priors' in the MLwiN help system for more details on the meaning
 #' of these priors.
 #' \item \code{startval}: Deprecated: starting values are now specified directly
 #' within \code{estoptions}.
@@ -543,65 +543,66 @@
 #' #25 Hierarchical Centring
 #' 
 #' \dontrun{
-#' ## Take Chapter03 as an example
-#' ## To find the location of a demo for Chapter03
-#' file.show(system.file("demo", "Chapter03.R", package="R2MLwiN"))
+#' ## Take MCMCGuide03 as an example
+#' ## To find the location of a demo for MCMCGuide03
+#' file.show(system.file('demo', 'MCMCGuide03.R', package='R2MLwiN'))
 #' 
 #' ## MLwiN folder
-#' mlwin = "C:/Program Files (x86)/MLwiN v2.29/"
+#' mlwin = 'C:/Program Files (x86)/MLwiN v2.29/'
 #' 
-#' ## To run the demo for Chapter03
-#' demo(Chapter03)
+#' ## To run the demo for MCMCGuide03
+#' demo(MCMCGuide03)
 #' }
 #' 
 #' @export
-runMLwiN <- function(Formula, levID=NULL, D="Normal", data=NULL, estoptions=list(EstM=0), BUGO=NULL, MLwiNPath=NULL,stdout="",stderr="",workdir=tempdir(),checkversion=TRUE, indata=NULL) {
+runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoptions = list(EstM = 0), BUGO = NULL, MLwiNPath = NULL, 
+                     stdout = "", stderr = "", workdir = tempdir(), checkversion = TRUE, indata = NULL) {
   if (!is.null(indata) && !is.null(data)) {
     stop("Only one of data and indata can be specified")
   }
   if (!is.null(data)) {
     indata <- data
   }
-
+  
   if (is.null(levID)) {
-    oldsyntax = FALSE
+    oldsyntax <- FALSE
   } else {
-    oldsyntax = TRUE
+    oldsyntax <- TRUE
     warning("This syntax has been superseded, see help for guidance on converting it.")
   }
-
-  drop.data=estoptions$drop.data
+  
+  drop.data <- estoptions$drop.data
   if (is.null(drop.data)) {
     if (oldsyntax) {
-      drop.data=FALSE
+      drop.data <- FALSE
     } else {
-      drop.data=TRUE
+      drop.data <- TRUE
     }
   }
-
+  
   if (oldsyntax) {
-    if(is.character(Formula)){
-      Formula <- gsub('\\{','\\(',Formula)
-      Formula <- gsub('\\}','\\)',Formula)
-      Formula <- gsub('[[:space:]]','',Formula)
-      cc=c(0:length(levID))
-      if(sum(grepl("\\({1}[[:digit:]]+\\|{2}", Formula))>0){
-        for (i in cc){
-          Formula=sub(paste(i,"\\|{2}",sep=""),paste("\\`",i,"c`\\|",sep=""),Formula)
-          Formula=sub(paste(i,"\\|",sep=""),paste("\\`",i,"s`\\|",sep=""),Formula)
+    if (is.character(Formula)) {
+      Formula <- gsub("\\{", "\\(", Formula)
+      Formula <- gsub("\\}", "\\)", Formula)
+      Formula <- gsub("[[:space:]]", "", Formula)
+      cc <- c(0:length(levID))
+      if (sum(grepl("\\({1}[[:digit:]]+\\|{2}", Formula)) > 0) {
+        for (i in cc) {
+          Formula <- sub(paste(i, "\\|{2}", sep = ""), paste("\\`", i, "c`\\|", sep = ""), Formula)
+          Formula <- sub(paste(i, "\\|", sep = ""), paste("\\`", i, "s`\\|", sep = ""), Formula)
         }
       }
-      if(sum(grepl("\\({1}[[:digit:]]+[[:alpha:]]{1}\\|",Formula))>0){
-        for (i in cc){
-          Formula=sub(paste(i,"s\\|",sep=""),paste("\\`",i,"s`\\|",sep=""),Formula)
-          Formula=sub(paste(i,"c\\|",sep=""),paste("\\`",i,"c`\\|",sep=""),Formula)
+      if (sum(grepl("\\({1}[[:digit:]]+[[:alpha:]]{1}\\|", Formula)) > 0) {
+        for (i in cc) {
+          Formula <- sub(paste(i, "s\\|", sep = ""), paste("\\`", i, "s`\\|", sep = ""), Formula)
+          Formula <- sub(paste(i, "c\\|", sep = ""), paste("\\`", i, "c`\\|", sep = ""), Formula)
         }
       }
       Formula <- as.formula(Formula)
     }
   } else {
-    tmpvarnames <- unique(unlist(strsplit(all.vars(Formula),"\\.")))
-    tForm <- as.formula(paste0("~",paste(tmpvarnames, collapse="+")))
+    tmpvarnames <- unique(unlist(strsplit(all.vars(Formula), "\\.")))
+    tForm <- as.formula(paste0("~", paste(tmpvarnames, collapse = "+")))
     if (drop.data) {
       indata <- get_all_vars(tForm, indata)
     } else {
@@ -612,15 +613,17 @@ runMLwiN <- function(Formula, levID=NULL, D="Normal", data=NULL, estoptions=list
       }
     }
   }
-
-  EstM=estoptions$EstM
-  if (is.null(EstM)) EstM=0
+  
+  EstM <- estoptions$EstM
+  if (is.null(EstM)) 
+    EstM <- 0
   if (EstM != 0 && EstM != 1) {
     stop("Invalid EstM option (can be zero or one)")
   }
-
+  
   if (length(D) == 1) {
-    if (!(D %in% c("Normal", "Binomial", "Poisson", "Negbinom", "Multivariate Normal", "Ordered Multinomial", "Unordered Multinomial"))) {
+    if (!(D %in% c("Normal", "Binomial", "Poisson", "Negbinom", "Multivariate Normal", "Ordered Multinomial", 
+                   "Unordered Multinomial"))) {
       stop("Invalid distribution specified")
     }
   } else {
@@ -642,15 +645,16 @@ runMLwiN <- function(Formula, levID=NULL, D="Normal", data=NULL, estoptions=list
   }
   
   # Check MLwiNPath is usable and set command/args
-  debugmode=estoptions$debugmode
-  if(is.null(debugmode)) debugmode=FALSE
+  debugmode <- estoptions$debugmode
+  if (is.null(debugmode)) 
+    debugmode <- FALSE
   
-  x64=estoptions$x64
-  if(is.null(x64)) {
+  x64 <- estoptions$x64
+  if (is.null(x64)) {
     if (.Machine$sizeof.pointer == 8) {
-      x64=TRUE
+      x64 <- TRUE
     } else {
-      x64=FALSE
+      x64 <- FALSE
     }
   }
   
@@ -664,7 +668,7 @@ runMLwiN <- function(Formula, levID=NULL, D="Normal", data=NULL, estoptions=list
   }
   
   if (!isTRUE(pathinfo$isdir)) {
-    if (file.access(MLwiNPath, mode=1) == 0) {
+    if (file.access(MLwiNPath, mode = 1) == 0) {
       cmd <- MLwiNPath
     } else {
       stop(paste0(MLwiNPath, " is not executable"))
@@ -674,12 +678,12 @@ runMLwiN <- function(Formula, levID=NULL, D="Normal", data=NULL, estoptions=list
   if (isTRUE(pathinfo$isdir)) {
     if (debugmode) {
       cmd <- paste0(MLwiNPath, "/i386/mlwin.exe")
-      if (file.access(cmd, mode=1) != 0) {
+      if (file.access(cmd, mode = 1) != 0) {
         cmd <- paste0(MLwiNPath, "/mlwin.exe")
       } else {
-        if (file.access(cmd, mode=1) != 0) {
+        if (file.access(cmd, mode = 1) != 0) {
           cmd <- paste0(MLwiNPath, "/i386/mlnscript.exe")
-          if (file.access(cmd, mode=1) != 0) {
+          if (file.access(cmd, mode = 1) != 0) {
             stop("Cannot find valid MLwiN executable")
           }
         }
@@ -687,29 +691,29 @@ runMLwiN <- function(Formula, levID=NULL, D="Normal", data=NULL, estoptions=list
     } else {
       if (x64) {
         cmd <- paste0(MLwiNPath, "/x64/mlnscript.exe")
-        if (file.access(cmd, mode=1) != 0) {
+        if (file.access(cmd, mode = 1) != 0) {
           cmd <- paste0(MLwiNPath, "/i386/mlnscript.exe")
-          if (file.access(cmd, mode=1) != 0) {
+          if (file.access(cmd, mode = 1) != 0) {
             cmd <- paste0(MLwiNPath, "/mlwin.exe")
-            if (file.access(cmd, mode=1) != 0) {
+            if (file.access(cmd, mode = 1) != 0) {
               stop("Cannot find valid MLwiN executable")
             }
           }
         }
       } else {
         cmd <- paste0(MLwiNPath, "/i386/mlnscript.exe")
-        if (file.access(cmd, mode=1) != 0) {
+        if (file.access(cmd, mode = 1) != 0) {
           cmd <- paste0(MLwiNPath, "/mlwin.exe")
-          if (file.access(cmd, mode=1) != 0) {
+          if (file.access(cmd, mode = 1) != 0) {
             stop("Cannot find valid MLwiN executable")
           }
         }
       }
     }
-  }  
+  }
   
   
-  versioninfostr <- "
+  versioninfostr <- '
 version:date:md5:filename:x64:trial
 1.10:Jun 2001:44e840796f3c43113c45ac8fe7e0633a:mlwin.exe:FALSE:FALSE
 1.10:Jul 2001:21e3a2d85e6f9c4bb8d926658981a020:mlwin.exe:FALSE:FALSE
@@ -765,51 +769,53 @@ version:date:md5:filename:x64:trial
 2.31:Sep 2014:6038ba228ddde891b4673cae4b7aaa0c:mlwin.exe:FALSE:TRUE
 2.31:Sep 2014:bfa10218aa4635ea2e5a4197faef98e7:mlnscript.exe:FALSE:FALSE
 2.31:Sep 2014:3a4c5904a21788262ef8244958eb5302:mlnscript.exe:TRUE:FALSE
-"
-  versioninfo <- read.delim(textConnection(versioninfostr), header=TRUE, sep=":",strip.white=TRUE)
-  if (isTRUE(checkversion)) { # Allow disabling the version check if it is slowing things down (e.g. in a simulation study)
-    currentver = versioninfo[versioninfo$md5==digest(cmd, algo="md5", file=TRUE),]  
+'
+  versioninfo <- read.delim(textConnection(versioninfostr), header = TRUE, sep = ":", strip.white = TRUE)
+  if (isTRUE(checkversion)) {
+    # Allow disabling the version check if it is slowing things down (e.g. in a simulation study)
+    currentver <- versioninfo[versioninfo$md5 == digest(cmd, algo = "md5", file = TRUE), ]
     if (nrow(currentver) == 0) {
-      versiontext = "MLwiN (version: unknown or >2.31)"
+      versiontext <- "MLwiN (version: unknown or >2.31)"
     } else {
-      if (currentver$version < 2.28) { # Block versions >year older than current release
+      if (currentver$version < 2.28) {
+        # Block versions >year older than current release
         stop("The current version of MLwiN is too old, please update it from http://www.bris.ac.uk/cmm/software/mlwin/download/upgrades.html")
       }
-      versiontext = paste0("MLwiN (version: ", currentver$version, ")")
+      versiontext <- paste0("MLwiN (version: ", currentver$version, ")")
     }
   } else {
-    versiontext = "MLwiN (version: unchecked)"
+    versiontext <- "MLwiN (version: unchecked)"
   }
   
   # the current function call
   cl <- match.call()
   
-  centring = estoptions$centring
+  centring <- estoptions$centring
   
   if (oldsyntax) {
-    if (!is.null(centring)){
-      for (p in names(centring)){
-        if(as.integer(centring[[p]][1])==1){
-          indata[[p]]=indata[[p]]-mean(indata[[p]])
+    if (!is.null(centring)) {
+      for (p in names(centring)) {
+        if (as.integer(centring[[p]][1]) == 1) {
+          indata[[p]] <- indata[[p]] - mean(indata[[p]])
         }
-        if(as.integer(centring[[p]][1])==2){
-          grp=as.factor(indata[[centring[[p]][2]]])
-          indata[[p]]=indata[[p]]-tapply(indata[[p]],grp,mean,na.rm=TRUE)[grp] #mean(indata[[p]][as.logical(indata[[centring[[p]][2]]])])
+        if (as.integer(centring[[p]][1]) == 2) {
+          grp <- as.factor(indata[[centring[[p]][2]]])
+          indata[[p]] <- indata[[p]] - tapply(indata[[p]], grp, mean, na.rm = TRUE)[grp]  #mean(indata[[p]][as.logical(indata[[centring[[p]][2]]])])
         }
-        if(as.integer(centring[[p]][1])==3){
-          indata[[p]]=indata[[p]]-as.integer(centring[[p]][2])
+        if (as.integer(centring[[p]][1]) == 3) {
+          indata[[p]] <- indata[[p]] - as.integer(centring[[p]][2])
         }
       }
-    }    
-    invars = Formula.translate.compat(Formula, levID, D, indata)
+    }
+    invars <- Formula.translate.compat(Formula, levID, D, indata)
   } else {
-    if (!is.null(centring)){
+    if (!is.null(centring)) {
       stop("Centring is not supported for new syntax")
     }
-    invars = Formula.translate(Formula, D, indata)
-    newdata = invars$indata
+    invars <- Formula.translate(Formula, D, indata)
+    newdata <- invars$indata
     invars$indata <- NULL
-    if (!is.null(newdata)){
+    if (!is.null(newdata)) {
       newvars <- setdiff(colnames(newdata), colnames(indata))
       for (var in newvars) {
         indata[[var]] <- newdata[[var]]
@@ -818,20 +824,20 @@ version:date:md5:filename:x64:trial
     rm(newdata)
   }
   
-  resp = invars$resp
-
+  resp <- invars$resp
+  
   if (D[1] == "Normal") {
     if (is.factor(indata[[resp]])) {
       warning("You have specified a factor variable as a continuous response, you may wish to check its numeric values")
     }
   }
-
+  
   if (D[1] == "Ordered Multinomial" || D[1] == "Unordered Multinomial") {
     if (!is.factor(indata[[resp]])) {
       indata[[resp]] <- as.factor(indata[[resp]])
     }
   }
-
+  
   if (D[1] == "Binomial") {
     if (is.logical(indata[[resp]])) {
       indata[[resp]] <- as.integer(indata[[resp]])
@@ -847,17 +853,17 @@ version:date:md5:filename:x64:trial
   if (D[1] == "Mixed") {
     for (i in 2:length(D)) {
       if (D[[i]][[1]] == "Normal") {
-        if (is.factor(indata[[resp[i-1]]])) {
+        if (is.factor(indata[[resp[i - 1]]])) {
           warning("You have specified a factor variable as a continuous response, you may wish to check its numeric values")
         }
       }
       if (D[[i]][[1]] == "Binomial") {
-        if (is.logical(indata[[resp[i-1]]])) {
-          indata[[resp[i-1]]] <- as.integer(indata[[resp[i-1]]])
+        if (is.logical(indata[[resp[i - 1]]])) {
+          indata[[resp[i - 1]]] <- as.integer(indata[[resp[i - 1]]])
         }
-        if (is.factor(indata[[resp[i-1]]])) {
-          if (length(levels(indata[[resp[i-1]]])) == 2) {
-            indata[[resp[i-1]]] <- as.integer(indata[[resp[i-1]]] == max(levels(indata[[resp[i-1]]])))
+        if (is.factor(indata[[resp[i - 1]]])) {
+          if (length(levels(indata[[resp[i - 1]]])) == 2) {
+            indata[[resp[i - 1]]] <- as.integer(indata[[resp[i - 1]]] == max(levels(indata[[resp[i - 1]]])))
           } else {
             stop("Binomial responses must have two unique values")
           }
@@ -865,10 +871,10 @@ version:date:md5:filename:x64:trial
       }
     }
   }
-
-  expl = invars$expl
-
-  D = invars$D
+  
+  expl <- invars$expl
+  
+  D <- invars$D
   if (EstM == 0) {
     if (!is.element(D[1], c("Normal", "Binomial", "Poisson", "Negbinom", "Multivariate Normal", "Mixed", "Multinomial"))) {
       stop(cat("Invalid distribution specified:", D[1], "\n"))
@@ -889,11 +895,11 @@ version:date:md5:filename:x64:trial
     if (D[1] == "Mixed") {
       for (i in 2:length(D)) {
         if (!is.element(D[[i]][[1]], c("Normal", "Binomial", "Poisson"))) {
-          stop(cat("Invalid distribution specified:", D[[i]][[1]],"\n"))
+          stop(cat("Invalid distribution specified:", D[[i]][[1]], "\n"))
         }
         if (D[[i]][[1]] == "Binomial") {
           if (!is.element(D[[i]][[2]], c("logit", "probit", "cloglog"))) {
-            stop(cat("Invalid link function specified:", D[[i]][[2]],"\n"))
+            stop(cat("Invalid link function specified:", D[[i]][[2]], "\n"))
           }
           if (is.na(D[[i]][[3]])) {
             stop("A denominator must be specified for Binomial responses")
@@ -901,19 +907,22 @@ version:date:md5:filename:x64:trial
         }
         if (D[[i]][[1]] == "Poisson") {
           if (!is.element(D[[i]][[2]], c("log"))) {
-            stop(cat("Invalid link function specified:", D[[i]][[2]],"\n"))
+            stop(cat("Invalid link function specified:", D[[i]][[2]], "\n"))
           }
         }
       }
     }
     if (D[1] == "Multinomial") {
-      if (D[4] == 0) { # Unordered
-        if (D[2] == "log") D[2] = "logit" # Backward compatibilty fix
+      if (D[4] == 0) {
+        # Unordered
+        if (D[2] == "log") 
+          D[2] <- "logit"  # Backward compatibilty fix
         if (D[2] != "logit") {
           stop("Invalid link function specified:", D[2])
         }
       }
-      if (D[4] == 1) { # Ordered
+      if (D[4] == 1) {
+        # Ordered
         if (!is.element(D[2], c("logit", "probit", "cloglog"))) {
           stop(cat("Invalid link function specified:", D[2], "\n"))
         }
@@ -925,7 +934,7 @@ version:date:md5:filename:x64:trial
     }
     if (D[1] == "Binomial") {
       if (!is.element(D[2], c("logit", "probit", "cloglog"))) {
-          stop(cat("Invalid link function specified", D[2], "\n"))
+        stop(cat("Invalid link function specified", D[2], "\n"))
       }
       if (is.na(D[3])) {
         stop("A denominator must be specified for a Binomial response")
@@ -933,7 +942,7 @@ version:date:md5:filename:x64:trial
     }
     if (D[1] == "Poisson") {
       if (!is.element(D[2], c("log"))) {
-          stop(cat("Invalid link function specified:", D[2], "\n"))
+        stop(cat("Invalid link function specified:", D[2], "\n"))
       }
     }
     if (D[1] == "Mixed") {
@@ -952,20 +961,23 @@ version:date:md5:filename:x64:trial
       }
     }
     if (D[1] == "Multinomial") {
-      if (D[4] == 0) { # Unordered
-        if (D[2] == "log") D[2] = "logit" # Backward compatibilty fix
+      if (D[4] == 0) {
+        # Unordered
+        if (D[2] == "log") 
+          D[2] <- "logit"  # Backward compatibilty fix
         if (D[2] != "logit") {
           stop("Invalid link function specified", D[2], "\n")
         }
       }
-      if (D[4] == 1) { # Ordered
+      if (D[4] == 1) {
+        # Ordered
         if (!is.element(D[2], c("logit", "probit", "cloglog"))) {
           stop(cat("Invalid link function specified", D[2], "\n"))
         }
       }
     }
   }
-
+  
   if (is.null(levID)) {
     levID <- invars$levID
     isdiscrete <- D[1] %in% c("Binomial", "Poisson", "Negbinom", "Multinomial")
@@ -980,27 +992,32 @@ version:date:md5:filename:x64:trial
       indata[["l1id"]] <- 1:nrow(indata)
     }
   }
-
-  rp = invars$rp
+  
+  rp <- invars$rp
   if (D[1] != "Normal" || D[1] != "Mixed") {
     if (D[1] == "Binomial") {
-      if (any(rp$rp1 != "bcons.1")) stop("Variables cannot be made random at level one in Binomial models")
+      if (any(rp$rp1 != "bcons.1")) 
+        stop("Variables cannot be made random at level one in Binomial models")
     }
     if (D[1] == "Poisson") {
-      if (any(rp$rp1 != "bcons.1")) stop("Variables cannot be made random at level one in Poisson models")
+      if (any(rp$rp1 != "bcons.1")) 
+        stop("Variables cannot be made random at level one in Poisson models")
     }
     if (D[1] == "Negbinom") {
-      if (suppressWarnings(any(rp$rp1 != c("bcons.1", "bcons2.1")))) stop("Variables cannot be made random at level one in Negative-binomial models")
+      if (suppressWarnings(any(rp$rp1 != c("bcons.1", "bcons2.1")))) 
+        stop("Variables cannot be made random at level one in Negative-binomial models")
     }
     if (D[1] == "Mixed") {
       for (i in 2:length(D)) {
         if (D[[i]][[1]] == "Binomial") {
-          rp1 <- rp$rp1[names(rp$rp1) == resp[i-1]]
-          if (length(rp1) > 0) stop("Variables cannot be made random at level one for Binomial responses")
+          rp1 <- rp$rp1[names(rp$rp1) == resp[i - 1]]
+          if (length(rp1) > 0) 
+            stop("Variables cannot be made random at level one for Binomial responses")
         }
         if (D[[i]][[1]] == "Poisson") {
-          rp1 <- rp$rp1[names(rp$rp1) == resp[i-1]]
-          if (length(rp1) > 0) stop("Variables cannot be made random at level one for Poisson responses")
+          rp1 <- rp$rp1[names(rp$rp1) == resp[i - 1]]
+          if (length(rp1) > 0) 
+            stop("Variables cannot be made random at level one for Poisson responses")
         }
       }
     }
@@ -1010,32 +1027,32 @@ version:date:md5:filename:x64:trial
       }
     }
   }
-  nonfp = invars$nonfp
-  if(is.null(nonfp)) {
-    if(is.list(expl)){
-      nonfp = list("nonfp.sep"=NA,"nonfp.common"=NA)
-    }else{
-      nonfp = NA
+  nonfp <- invars$nonfp
+  if (is.null(nonfp)) {
+    if (is.list(expl)) {
+      nonfp <- list(nonfp.sep = NA, nonfp.common = NA)
+    } else {
+      nonfp <- NA
     }
   }
-  categ = invars$categ
-  if(is.null(categ)){
-    categ=NULL
-  }else{
-    if (!isTRUE(oldsyntax)){
+  categ <- invars$categ
+  if (is.null(categ)) {
+    categ <- NULL
+  } else {
+    if (!isTRUE(oldsyntax)) {
       stop("categ not supported in new syntax")
     }
-    if (is.null(rownames(categ))){
-      rownames(categ)=c("var","ref","ncateg")
+    if (is.null(rownames(categ))) {
+      rownames(categ) <- c("var", "ref", "ncateg")
     }
   }
   
-  if (D[1]=='Multinomial'||D[1]=='Multivariate Normal'||D[1]=='Mixed'){
-    levID=c(levID,NA)
+  if (D[1] == "Multinomial" || D[1] == "Multivariate Normal" || D[1] == "Mixed") {
+    levID <- c(levID, NA)
   }
-
+  
   needsint <- FALSE
-  if (is.list(expl)){
+  if (is.list(expl)) {
     if ("1" %in% expl$sep.coeff || "1" %in% expl$common.coeff) {
       needsint <- TRUE
       expl$sep.coeff[expl$sep.coeff == "1"] <- "Intercept"
@@ -1048,14 +1065,14 @@ version:date:md5:filename:x64:trial
       expl[expl == "1"] <- "Intercept"
     }
   }
-
-  if (is.list(nonfp)){
+  
+  if (is.list(nonfp)) {
     if ("1" %in% nonfp$nonfp.sep) {
       needsint <- TRUE
       nonfp$nonfp.sep[nonfp$nonfp.sep == "1"] <- "Intercept"
     }
     pos.cvar.one <- grepl("^1\\.{1}", nonfp$nonfp.common)
-    if (any(pos.cvar.one)){
+    if (any(pos.cvar.one)) {
       needsint <- TRUE
       nonfp$nonfp.common[pos.cvar.one] <- gsub("^1\\.", "Intercept.", nonfp$nonfp.common[pos.cvar.one])
     }
@@ -1065,7 +1082,7 @@ version:date:md5:filename:x64:trial
       nonfp[nonfp == "1"] <- "Intercept"
     }
   }
-
+  
   for (ii in 1:length(rp)) {
     pos.cvar.one <- grepl("^1\\.{1}", rp[[ii]])
     if (any(pos.cvar.one)) {
@@ -1077,43 +1094,46 @@ version:date:md5:filename:x64:trial
       rp[[ii]][rp[[ii]] == "1"] <- "Intercept"
     }
   }
-
+  
   if (isTRUE(needsint)) {
     indata[["Intercept"]] <- rep(1, nrow(indata))
   }
-     
-  show.file=estoptions$show.file
-  if (is.null(show.file)) show.file = FALSE
   
-  resi.store=estoptions$resi.store
-  if (is.null(resi.store)) resi.store=FALSE
+  show.file <- estoptions$show.file
+  if (is.null(show.file)) 
+    show.file <- FALSE
   
-  resioptions=estoptions$resioptions
-  if (is.null(resioptions)){
-    if (EstM==0){
-      resioptions = c("variance", "sampling")
-    }
-    else{
-      resioptions = c("variance")
+  resi.store <- estoptions$resi.store
+  if (is.null(resi.store)) 
+    resi.store <- FALSE
+  
+  resioptions <- estoptions$resioptions
+  if (is.null(resioptions)) {
+    if (EstM == 0) {
+      resioptions <- c("variance", "sampling")
+    } else {
+      resioptions <- c("variance")
     }
   }
-  if ("variance"%in%resioptions&&("standardised"%in%resioptions||"deletion"%in%resioptions||"leverage"%in%resioptions)){
+  if ("variance" %in% resioptions && ("standardised" %in% resioptions || "deletion" %in% resioptions || "leverage" %in% 
+                                        resioptions)) {
     stop("variance will not be calculated together with standardised or deletion or leverage. Please remove variance in resioptions, and then standard error will be calculated instead.")
   }
-
-  if (EstM == 1 && ("sampling" %in% resioptions || "leverage" %in% resioptions || "infleuence" %in% resioptions || "deletion" %in% resioptions)) {
+  
+  if (EstM == 1 && ("sampling" %in% resioptions || "leverage" %in% resioptions || "infleuence" %in% resioptions || 
+                      "deletion" %in% resioptions)) {
     stop("Invalid residual option specified for MCMC estimation")
   }
   
-  resi.store.levs = estoptions$resi.store.levs
+  resi.store.levs <- estoptions$resi.store.levs
   if (EstM == 0 && !is.null(resi.store.levs)) {
     stop("resi.store.levs option is not valid for (R)IGLS estimation")
   }
-
-  fpsandwich = estoptions$fpsandwich
-  rpsandwich = estoptions$rpsandwich
   
-  weighting = estoptions$weighting
+  fpsandwich <- estoptions$fpsandwich
+  rpsandwich <- estoptions$rpsandwich
+  
+  weighting <- estoptions$weighting
   if (EstM == 1 && !is.null(weighting)) {
     stop("weighting option is not valid for MCMC estimation")
   }
@@ -1121,19 +1141,23 @@ version:date:md5:filename:x64:trial
     stop("weighting can only be used in univariate models")
   }
   # Convert old weight syntax
-  if (!is.null(weighting) && (!is.null(weighting$levels) || !is.null(weighting$weights) || !is.null(weighting$mode) || !is.null(weighting$FSDE) || !is.null(weighting$RSDE))) {
+  if (!is.null(weighting) && (!is.null(weighting$levels) || !is.null(weighting$weights) || !is.null(weighting$mode) || 
+                                !is.null(weighting$FSDE) || !is.null(weighting$RSDE))) {
     warning("Old IGLS weighting options specified, see the help file for new syntax")
-    if (weighting$FSDE == 2) fpsandwich = TRUE
-    if (weighting$RSDE == 2) rpsandwich = TRUE
-    if (weighting$mode == 2) weighting$standardised = TRUE
+    if (weighting$FSDE == 2) 
+      fpsandwich <- TRUE
+    if (weighting$RSDE == 2) 
+      rpsandwich <- TRUE
+    if (weighting$mode == 2) 
+      weighting$standardised <- TRUE
     if (!is.null(weighting$levels) && !is.null(weighting$weights)) {
-      if (length(weighting$levels)!=length(weighting$weights)){
+      if (length(weighting$levels) != length(weighting$weights)) {
         stop("The length of levels does not match with the length of weights.")
       }
-      numlev = length(levID)
-      #weighting$weightvar = rep(NA, numlev)
+      numlev <- length(levID)
+      # weighting$weightvar = rep(NA, numlev)
       for (i in 1:length(weighting$levels)) {
-        weighting$weightvar[[(numlev - weighting$levels[i]) + 1]] = weighting$weights[i]
+        weighting$weightvar[[(numlev - weighting$levels[i]) + 1]] <- weighting$weights[i]
       }
     }
   }
@@ -1142,11 +1166,11 @@ version:date:md5:filename:x64:trial
     for (i in 1:length(weighting$weightvar)) {
       if (!is.na(weighting$weightvar[i])) {
         if (is.character(weighting$weightvar[[i]])) {
-            wtvar = model.frame(as.formula(paste0("~", weighting$weightvar[[i]])), data=data, na.action=NULL)
-            indata = cbind(indata, wtvar)
+          wtvar <- model.frame(as.formula(paste0("~", weighting$weightvar[[i]])), data = data, na.action = NULL)
+          indata <- cbind(indata, wtvar)
         } else {
           if (is.vector(weighting$weightvar[[i]])) {
-            indata = cbind(indata, weighting$weightvar[[i]])
+            indata <- cbind(indata, weighting$weightvar[[i]])
             wtname <- paste0("_WEIGHT", (length(weighting$weightvar) - i) + 1)
             vnames <- colnames(indata)
             vnames[length(vnames)] <- wtname
@@ -1158,23 +1182,29 @@ version:date:md5:filename:x64:trial
         }
       }
     }
-    if (is.null(fpsandwich)) fpsandwich = TRUE
-    if (is.null(rpsandwich)) rpsandwich = TRUE
-    if (is.null(weighting$standardised)) weighting$standardised = TRUE
+    if (is.null(fpsandwich)) 
+      fpsandwich <- TRUE
+    if (is.null(rpsandwich)) 
+      rpsandwich <- TRUE
+    if (is.null(weighting$standardised)) 
+      weighting$standardised <- TRUE
   }
-
-  if (is.null(fpsandwich)) fpsandwich = FALSE
-  if (is.null(rpsandwich)) rpsandwich = FALSE
   
-  clean.files=estoptions$clean.files
-  if (is.null(clean.files)) clean.files=TRUE
-   
-  clre=estoptions$clre
-  clre[2,] <- gsub("^1$", "Intercept", clre[2,])
-  clre[3,] <- gsub("^1$", "Intercept", clre[3,])
+  if (is.null(fpsandwich)) 
+    fpsandwich <- FALSE
+  if (is.null(rpsandwich)) 
+    rpsandwich <- FALSE
   
-  smat=estoptions$smat
-
+  clean.files <- estoptions$clean.files
+  if (is.null(clean.files)) 
+    clean.files <- TRUE
+  
+  clre <- estoptions$clre
+  clre[2, ] <- gsub("^1$", "Intercept", clre[2, ])
+  clre[3, ] <- gsub("^1$", "Intercept", clre[3, ])
+  
+  smat <- estoptions$smat
+  
   if (!is.null(smat)) {
     if (!is.matrix(smat)) {
       smat <- as.matrix(smat)
@@ -1184,29 +1214,35 @@ version:date:md5:filename:x64:trial
         lev <- smat[1, i]
         for (j in 1:length(rp[[paste0("rp", lev)]])) {
           for (k in 1:j) {
-            if (j != k) clre <- cbind(clre, c(lev, rp[[paste0("rp", lev)]][j], rp[[paste0("rp", lev)]][k]))
+            if (j != k) 
+              clre <- cbind(clre, c(lev, rp[[paste0("rp", lev)]][j], rp[[paste0("rp", lev)]][k]))
           }
         }
       }
     }
     smat <- NULL
   }
-
   
-  mem.init=estoptions$mem.init
-  if(is.null(mem.init)) mem.init="default"
   
-  optimat=estoptions$optimat
-  if(is.null(optimat)) optimat=FALSE
-
-  maxiter=estoptions$maxiter
-  if(is.null(maxiter)) maxiter=20
-
-  convtol=estoptions$tol
-  if(is.null(convtol)) convtol=2
-
-  extra=estoptions$extra
-  if(is.null(extra)) extra=FALSE
+  mem.init <- estoptions$mem.init
+  if (is.null(mem.init)) 
+    mem.init <- "default"
+  
+  optimat <- estoptions$optimat
+  if (is.null(optimat)) 
+    optimat <- FALSE
+  
+  maxiter <- estoptions$maxiter
+  if (is.null(maxiter)) 
+    maxiter <- 20
+  
+  convtol <- estoptions$tol
+  if (is.null(convtol)) 
+    convtol <- 2
+  
+  extra <- estoptions$extra
+  if (is.null(extra)) 
+    extra <- FALSE
   if (extra == TRUE) {
     if (EstM != 0) {
       stop("extra can only be specified for (R)IGLS models")
@@ -1216,32 +1252,34 @@ version:date:md5:filename:x64:trial
     }
   }
   
-  nonlinear=estoptions$nonlinear
+  nonlinear <- estoptions$nonlinear
   if (!is.null(nonlinear)) {
     if (D[1] == "Normal" || D[1] == "Multivariate Normal") {
       stop("Nonlinear options are not valid for normal models")
     }
   }
-  if (is.null(nonlinear)) nonlinear=c(0,1)
-  if (length(na.omit(levID)) == 1 && any(nonlinear != c(0,1))) {
+  if (is.null(nonlinear)) 
+    nonlinear <- c(0, 1)
+  if (length(na.omit(levID)) == 1 && any(nonlinear != c(0, 1))) {
     stop("Only MQL1 is valid for one-level discrete models")
   }
-
+  
   if (nonlinear[1] < 0 || nonlinear[1] > 1) {
     stop("Invalid nonlinear option")
   }
-
+  
   if (nonlinear[2] < 1 || nonlinear[2] > 2) {
     stop("Invalid nonlinear option")
   }
   
-  Meth=estoptions$Meth
-  if(is.null(Meth)) Meth=1
+  Meth <- estoptions$Meth
+  if (is.null(Meth)) 
+    Meth <- 1
   
-  reset=estoptions$reset
+  reset <- estoptions$reset
   if (is.null(reset)) {
     if (EstM == 0) {
-      reset=rep(0, length(levID))
+      reset <- rep(0, length(levID))
       reset[1] <- 2
     }
   }
@@ -1252,12 +1290,12 @@ version:date:md5:filename:x64:trial
       if (length(reset) != length(levID)) {
         stop("reset vector is wrong length")
       }
-      if (any(reset<0 || reset>2)) {
+      if (any(reset < 0 || reset > 2)) {
         stop("Invalid reset value")
       }
     }
   }
-
+  
   fcon <- NULL
   rcon <- NULL
   if (!is.null(estoptions$constraints)) {
@@ -1271,21 +1309,22 @@ version:date:md5:filename:x64:trial
         if (ncol(estoptions$constraints$fixed.ui) != length(estoptions$constraints$fixed.ci)) {
           stop("number of columns in fixed.ui and fixed.ci must be equal for fixed constaints")
         }
-
+        
         if (!is.list(expl)) {
           numfp <- length(setdiff(expl, nonfp))
         } else {
-          numfp <- length(setdiff(expl$sep.coeff, nonfp$sep))*length(resp) + setdiff(expl$common.coeff, nonfp.common)
+          numfp <- length(setdiff(expl$sep.coeff, nonfp$sep)) * length(resp) + setdiff(expl$common.coeff, 
+                                                                                       nonfp.common)
         }
-
+        
         if (!is.vector(estoptions$constraints$fixed.ci)) {
           stop("fixed.ci should be a vector")
         }
-
+        
         if (nrow(estoptions$constraints$fixed.ui) != numfp) {
           stop(paste("number of rows for fixed.ci must equal the number of fixed parameters:", numfp))
         }
-
+        
         fcon <- rbind(estoptions$constraints$fixed.ui, estoptions$constraints$fixed.ci)
       }
       if (!is.null(estoptions$constraints$random.ui) || !is.null(estoptions$constraints$random.ci)) {
@@ -1295,74 +1334,76 @@ version:date:md5:filename:x64:trial
         if (ncol(estoptions$constraints$random.ui) != length(estoptions$constraints$random.ci)) {
           stop("number of columns in random.ui and random.ci must be equal for random constaints")
         }
-
+        
         numrp <- 0
         for (ii in 1:length(rp)) {
-          numrp <- numrp + (length(rp[[ii]])*(length(rp[[ii]])+1)/2)
+          numrp <- numrp + (length(rp[[ii]]) * (length(rp[[ii]]) + 1)/2)
         }
-
-        if (!is.null(clre)){
+        
+        if (!is.null(clre)) {
           numrp <- numrp - ncol(clre)
         }
-
+        
         if (!is.vector(estoptions$constraints$random.ci)) {
           stop("random.ci should be a vector")
         }
-
+        
         if (nrow(estoptions$constraints$random.ui) != numrp) {
           stop(paste("number of rows for random.ui must equal the number of random parameters", numrp))
         }
-
+        
         rcon <- rbind(estoptions$constraints$random.ui, estoptions$constraints$random.ci)
       }
     }
   }
-
-  fact=estoptions$fact
+  
+  fact <- estoptions$fact
   if (EstM == 0 && !is.null(fact)) {
     stop("Factor models not available with (R)IGLS estimation")
   }
   if (!is.null(fact) && D[1] != "Multivariate Normal") {
     stop("Factor models can only be defined for multivariate models")
   }
-
+  
   if (!is.null(fact)) {
     for (i in 1:fact$nfact) {
       for (j in 1:length(rp[[paste0("rp", fact$lev.fact[i])]])) {
         for (k in 1:j) {
-          if (j != k) clre <- cbind(clre, c(fact$lev.fact[i], rp[[paste0("rp", fact$lev.fact[i])]][j], rp[[paste0("rp", fact$lev.fact[i])]][k]))
+          if (j != k) 
+            clre <- cbind(clre, c(fact$lev.fact[i], rp[[paste0("rp", fact$lev.fact[i])]][j], rp[[paste0("rp", 
+                                                                                                        fact$lev.fact[i])]][k]))
         }
       }
     }
   }
-
-  xclass=estoptions$xclass
-
+  
+  xclass <- estoptions$xclass
+  
   if (!is.null(xclass)) {
     warning("Old cross-classification option specified, see the help file for new syntax")
   }
-
+  
   if (EstM == 0 && !is.null(xclass)) {
     stop("Cross-classification is not available with (R)IGLS estimation")
   }
-
-  xc=estoptions$xc
+  
+  xc <- estoptions$xc
   if (is.null(xc)) {
     xc <- FALSE
   }
-
-  mm=estoptions$mm
+  
+  mm <- estoptions$mm
   if (!is.null(mm)) {
     xc <- TRUE
     for (i in 1:length(mm)) {
       if (!any(is.na(mm[[i]]))) {
         if (is.matrix(mm[[i]]) || is(mm[[i]], "sparseMatrix")) {
-          idstub <- paste0("id_", length(mm)-i, "_")
-          weightstub <- paste0("weight_", length(mm)-i, "_")
-          mmdf <- matrix2df(mm[[i]], standardise=TRUE, idstub=idstub, weightstub=weightstub)
+          idstub <- paste0("id_", length(mm) - i, "_")
+          weightstub <- paste0("weight_", length(mm) - i, "_")
+          mmdf <- matrix2df(mm[[i]], standardise = TRUE, idstub = idstub, weightstub = weightstub)
           indata <- cbind(indata, mmdf)
-          numids <- ncol(mmdf) / 2
-          mm[[i]] <- list(mmvar=paste0(idstub, 1:numids), weights=paste0(weightstub, 1:numids))
+          numids <- ncol(mmdf)/2
+          mm[[i]] <- list(mmvar = paste0(idstub, 1:numids), weights = paste0(weightstub, 1:numids))
           levID[i] <- paste0(idstub[1], 1)
         } else {
           if (length(mm[[i]]$mmvar) != length(mm[[i]]$weights)) {
@@ -1372,12 +1413,13 @@ version:date:md5:filename:x64:trial
           for (j in 1:length(mm[[i]]$mmvar)) {
             var <- mm[[i]]$mmvar[[j]]
             if (is.character(var)) {
-              if (var %in% colnames(indata)) indata[[var]] <- NULL
-              mmvar = model.frame(as.formula(paste0("~", var)), data=data, na.action=NULL)
-              indata = cbind(indata, mmvar)
+              if (var %in% colnames(indata)) 
+                indata[[var]] <- NULL
+              mmvar <- model.frame(as.formula(paste0("~", var)), data = data, na.action = NULL)
+              indata <- cbind(indata, mmvar)
             } else {
               if (is.vector(var)) {
-                indata = cbind(indata, var)
+                indata <- cbind(indata, var)
                 mmname <- paste0("_MMID", (length(mm) - i) + 1, "_", j)
                 vnames <- colnames(indata)
                 vnames[length(vnames)] <- mmname
@@ -1391,12 +1433,13 @@ version:date:md5:filename:x64:trial
           for (j in 1:length(mm[[i]]$weights)) {
             var <- mm[[i]]$weights[[j]]
             if (is.character(var)) {
-              if (var %in% colnames(indata)) indata[[var]] <- NULL
-              mmweight = model.frame(as.formula(paste0("~", var)), data=data, na.action=NULL)
-              indata = cbind(indata, mmweight)
+              if (var %in% colnames(indata)) 
+                indata[[var]] <- NULL
+              mmweight <- model.frame(as.formula(paste0("~", var)), data = data, na.action = NULL)
+              indata <- cbind(indata, mmweight)
             } else {
               if (is.vector(var)) {
-                indata = cbind(indata, var)
+                indata <- cbind(indata, var)
                 mmwname <- paste0("_MMWEIGHT", (length(mm) - i) + 1, "_", j)
                 vnames <- colnames(indata)
                 vnames[length(vnames)] <- mmwname
@@ -1411,19 +1454,19 @@ version:date:md5:filename:x64:trial
       }
     }
   }
-
-  car=estoptions$car
+  
+  car <- estoptions$car
   if (!is.null(car)) {
     xc <- TRUE
     for (i in 1:length(car)) {
       if (!any(is.na(car[[i]]))) {
         if (is.matrix(car[[i]]) || is(car[[i]], "sparseMatrix")) {
-          idstub <- paste0("id_", length(car)-i, "_")
-          weightstub <- paste0("weight_", length(car)-i, "_")
-          cardf <- matrix2df(car[[i]], standardise=TRUE, idstub=idstub, weightstub=weightstub)
+          idstub <- paste0("id_", length(car) - i, "_")
+          weightstub <- paste0("weight_", length(car) - i, "_")
+          cardf <- matrix2df(car[[i]], standardise = TRUE, idstub = idstub, weightstub = weightstub)
           indata <- cbind(indata, cardf)
-          numids <- ncol(cardf) / 2
-          car[[i]] <- list(carvar=paste0(idstub, 1:numids), weights=paste0(weightstub, 1:numids))
+          numids <- ncol(cardf)/2
+          car[[i]] <- list(carvar = paste0(idstub, 1:numids), weights = paste0(weightstub, 1:numids))
           levID[i] <- paste0(idstub[1], 1)
         } else {
           if (length(car[[i]]$carvar) != length(car[[i]]$weights)) {
@@ -1436,11 +1479,11 @@ version:date:md5:filename:x64:trial
               if (var %in% colnames(indata)) {
                 indata[[var]] <- NULL
               }
-              carvar = model.frame(as.formula(paste0("~", var)), data=data, na.action=NULL)
-              indata = cbind(indata, carvar)
+              carvar <- model.frame(as.formula(paste0("~", var)), data = data, na.action = NULL)
+              indata <- cbind(indata, carvar)
             } else {
               if (is.vector(var)) {
-                indata = cbind(indata, var)
+                indata <- cbind(indata, var)
                 carname <- paste0("_CARID", (length(car) - i) + 1, "_", j)
                 vnames <- colnames(indata)
                 vnames[length(vnames)] <- carname
@@ -1454,12 +1497,13 @@ version:date:md5:filename:x64:trial
           for (j in 1:length(car[[i]]$weights)) {
             var <- car[[i]]$weights[[j]]
             if (is.character(var)) {
-              if (var %in% colnames(indata)) indata[[var]] <- NULL
-              carweight = model.frame(as.formula(paste0("~", var)), data=data, na.action=NULL)
-              indata = cbind(indata, carweight)
+              if (var %in% colnames(indata)) 
+                indata[[var]] <- NULL
+              carweight <- model.frame(as.formula(paste0("~", var)), data = data, na.action = NULL)
+              indata <- cbind(indata, carweight)
             } else {
               if (is.vector(var)) {
-                indata = cbind(indata, var)
+                indata <- cbind(indata, var)
                 carwname <- paste0("_CARWEIGHT", (length(car) - i) + 1, "_", j)
                 vnames <- colnames(indata)
                 vnames[length(vnames)] <- carwname
@@ -1474,12 +1518,12 @@ version:date:md5:filename:x64:trial
       }
     }
   }
-
-  carcentre=estoptions$carcentre
+  
+  carcentre <- estoptions$carcentre
   if (is.null(carcentre)) {
     carcentre <- FALSE
   }
-
+  
   # Convert old version of syntax
   if (!is.null(xclass)) {
     xc <- TRUE
@@ -1487,34 +1531,36 @@ version:date:md5:filename:x64:trial
       num <- as.numeric(xclass$N1[i])
       if (num > 1) {
         lev <- as.numeric(xclass$class[i])
-
+        
         weightcol <- xclass$weight[i]
         idcol <- xclass$id[i]
         if (is.null(idcol) || is.na(idcol)) {
           idcol <- rev(na.omit(levID))[lev]
         }
-        idstart = which(colnames(indata) == idcol)
-        idend = idstart+(num-1)
+        idstart <- which(colnames(indata) == idcol)
+        idend <- idstart + (num - 1)
         idcols <- colnames(indata)[idstart:idend]
-
-        weightstart = which(colnames(indata) == weightcol)
-        weightend = weightstart+(num-1)
+        
+        weightstart <- which(colnames(indata) == weightcol)
+        weightend <- weightstart + (num - 1)
         weightcols <- colnames(indata)[weightstart:weightend]
-
+        
         if (!isTRUE(xclass$car)) {
-          if (is.null(car)) car <- list(carvar=list(), weights=list())
+          if (is.null(car)) 
+            car <- list(carvar = list(), weights = list())
           car[[lev]]$carvar <- as.list(idcols)
           car[[lev]]$weights <- as.list(weightcols)
         } else {
-          if (is.null(mm)) mm <- list(mmvar=list(), weights=list())
+          if (is.null(mm)) 
+            mm <- list(mmvar = list(), weights = list())
           mm[[lev]]$mmvar <- as.list(idcols)
           mm[[lev]]$weights <- as.list(weightcols)
         }
       }
     }
   }
-
-
+  
+  
   if (!is.null(car) && !is.null(mm)) {
     mmlev <- max(length(car), length(mm))
     for (i in 1:mmlev) {
@@ -1523,7 +1569,7 @@ version:date:md5:filename:x64:trial
       }
     }
   }
-
+  
   if (!is.null(car)) {
     carcount <- 0
     for (i in 1:length(car)) {
@@ -1535,8 +1581,8 @@ version:date:md5:filename:x64:trial
       stop("CAR can only apply to one level unless CAR centring is turned on")
     }
   }
-
-
+  
+  
   if (!is.null(mm)) {
     for (k in 1:length(mm)) {
       if (!any(is.na(mm[[k]]))) {
@@ -1544,11 +1590,11 @@ version:date:md5:filename:x64:trial
         weightnames <- unlist(mm[[k]]$weights)
         idmat <- indata[, varnames]
         weightmat <- indata[, weightnames]
-        if (!all(idmat[,1] == indata[, levID[k]])) {
+        if (!all(idmat[, 1] == indata[, levID[k]])) {
           stop("The first multiple membership column should match the ID column")
         }
         levID[k] <- mm[[k]]$mmvar[[1]]
-
+        
         # NOTE: These checks could probably be vectorised
         for (i in 1:nrow(idmat)) {
           for (j in 1:ncol(idmat)) {
@@ -1570,7 +1616,7 @@ version:date:md5:filename:x64:trial
       }
     }
   }
-
+  
   if (!is.null(car)) {
     for (i in 1:length(car)) {
       if (!any(is.na(car[[i]]))) {
@@ -1599,68 +1645,68 @@ version:date:md5:filename:x64:trial
       }
     }
   }
-
-  notation=estoptions$notation
-  if(is.null(notation)) {
+  
+  notation <- estoptions$notation
+  if (is.null(notation)) {
     if (!isTRUE(xc)) {
-      notation="level"
+      notation <- "level"
     } else {
-      notation="class"
+      notation <- "class"
     }
   }
-
-  merr=estoptions$merr
+  
+  merr <- estoptions$merr
   if (EstM == 0 && !is.null(merr)) {
     stop("Measurement error is not available with (R)IGLS estimation")
   }
   if (!is.null(merr) && (!is.element(D[1], c("Normal", "Poisson", "Binomial", "Negbinom")))) {
     stop("measurement error can only be used in univariate models")
   }
-  mcmcMeth=estoptions$mcmcMeth
+  mcmcMeth <- estoptions$mcmcMeth
   if (EstM == 0 && !is.null(merr)) {
     stop("MCMC method options cannot be specified with (R)IGLS estimation")
   }
-
-  FP.names=NULL
   
-  if (D[1]=='Multinomial'){
-    nresp=length(levels(indata[,resp]))-1
-    resp.names=levels(indata[,resp])[-as.numeric(D[5])]
+  FP.names <- NULL
+  
+  if (D[1] == "Multinomial") {
+    nresp <- length(levels(indata[, resp])) - 1
+    resp.names <- levels(indata[, resp])[-as.numeric(D[5])]
     
-    if (is.list(expl)){
-      nonfp.sep=nonfp$nonfp.sep
-      nonfp.s=nonfp.sep
-      for (i in 1:length(resp.names)){
-        if (D['mode']==0){
-          nonfp.s=gsub(paste(".",resp.names[i],sep=""),"", nonfp.s)
+    if (is.list(expl)) {
+      nonfp.sep <- nonfp$nonfp.sep
+      nonfp.s <- nonfp.sep
+      for (i in 1:length(resp.names)) {
+        if (D["mode"] == 0) {
+          nonfp.s <- gsub(paste(".", resp.names[i], sep = ""), "", nonfp.s)
         }
-        if (D['mode']==1){
-          nonfp.s=gsub(paste(".(>=",resp.names[i],")",sep=""),"", nonfp.s)
+        if (D["mode"] == 1) {
+          nonfp.s <- gsub(paste(".(>=", resp.names[i], ")", sep = ""), "", nonfp.s)
         }
       }
-      nonfp.s=unique(nonfp.s)
-      if (!is.na(expl$sep.coeff[1])){
-        for (p in expl$sep.coeff){
-          if (is.na(nonfp.sep[1])||sum(p==nonfp.s)==0){
-            if (is.null(categ)|| sum(p==categ["var",])==0){
-              for (j in 1:nresp){
-                FP.names=c(FP.names, paste("FP_",chartr(".","_",p),"_",resp.names[j],sep=""))
+      nonfp.s <- unique(nonfp.s)
+      if (!is.na(expl$sep.coeff[1])) {
+        for (p in expl$sep.coeff) {
+          if (is.na(nonfp.sep[1]) || sum(p == nonfp.s) == 0) {
+            if (is.null(categ) || sum(p == categ["var", ]) == 0) {
+              for (j in 1:nresp) {
+                FP.names <- c(FP.names, paste("FP_", chartr(".", "_", p), "_", resp.names[j], sep = ""))
               }
-            }else{
-              if (is.na(categ["ref",which(p==categ["var",])])){
-                categ.names=levels(indata[[p]])
-                for (j in 1:nresp){
-                  for (i in 1:as.numeric(categ["ncateg",which(p==categ["var",])])){
-                    FP.names=c(FP.names,  paste("FP_",chartr(".","_",categ.names[i]),"_",resp.names[j],sep=""))
+            } else {
+              if (is.na(categ["ref", which(p == categ["var", ])])) {
+                categ.names <- levels(indata[[p]])
+                for (j in 1:nresp) {
+                  for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
+                    FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], sep = ""))
                   }
                 }
-              }else{
-                categ.names=levels(indata[[p]])
-                refx=categ["ref",which(p==categ["var",])]
-                categ.names=categ.names[-which(refx==categ.names)]
-                for (j in 1:nresp){
-                  for (i in 1:(as.numeric(categ["ncateg",which(p==categ["var",])])-1)){
-                    FP.names=c(FP.names, paste("FP_",chartr(".","_",categ.names[i]),"_",resp.names[j],sep=""))
+              } else {
+                categ.names <- levels(indata[[p]])
+                refx <- categ["ref", which(p == categ["var", ])]
+                categ.names <- categ.names[-which(refx == categ.names)]
+                for (j in 1:nresp) {
+                  for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
+                    FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], sep = ""))
                   }
                 }
               }
@@ -1669,69 +1715,67 @@ version:date:md5:filename:x64:trial
         }
       }
       kk <- 1
-      tempid=1:(nresp+1)
-      tempid=tempid[-as.numeric(D["ref.cat"])]
-      for (p in expl$common.coeff){
-        newp <- paste(p, paste(tempid[as.logical(expl$common.coeff.id[kk,])], collapse=""), sep=".")
+      tempid <- 1:(nresp + 1)
+      tempid <- tempid[-as.numeric(D["ref.cat"])]
+      for (p in expl$common.coeff) {
+        newp <- paste(p, paste(tempid[as.logical(expl$common.coeff.id[kk, ])], collapse = ""), sep = ".")
         kk <- kk + 1
-        nonfp.common=nonfp$nonfp.common
-        nonfp.c=nonfp.common
-#        for (i in 1:length(nonfp.c)){
-#          nonfp.c[i]=gsub("\\.[[:digit:]]+$","",nonfp.c[i])
-#        }
-        if (is.na(nonfp.common[1])||sum(newp==nonfp.c)==0){
-          if (is.null(categ)|| sum(p==categ["var",])==0){
-            FP.names=c(FP.names, paste("FP_",chartr(".","_",newp),sep=""))
-          }else{
-            if (is.na(categ["ref",which(p==categ["var",])])){
-              categ.names=levels(indata[[p]])
-              for (i in 1:as.numeric(categ["ncateg",which(p==categ["var",])])){
-                FP.names=c(FP.names, paste("FP_",chartr(".","_",categ.names[i]),sep=""))
+        nonfp.common <- nonfp$nonfp.common
+        nonfp.c <- nonfp.common
+        if (is.na(nonfp.common[1]) || sum(newp == nonfp.c) == 0) {
+          if (is.null(categ) || sum(p == categ["var", ]) == 0) {
+            FP.names <- c(FP.names, paste("FP_", chartr(".", "_", newp), sep = ""))
+          } else {
+            if (is.na(categ["ref", which(p == categ["var", ])])) {
+              categ.names <- levels(indata[[p]])
+              for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
+                FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), sep = ""))
               }
-            }else{
-              categ.names=levels(indata[[p]])
-              refx=categ["ref",which(p==categ["var",])]
-              categ.names=categ.names[-which(refx==categ.names)]
-              for (i in 1:(as.numeric(categ["ncateg",which(p==categ["var",])])-1)){
-                FP.names=c(FP.names, paste("FP_",chartr(".","_",categ.names[i]),sep=""))
+            } else {
+              categ.names <- levels(indata[[p]])
+              refx <- categ["ref", which(p == categ["var", ])]
+              categ.names <- categ.names[-which(refx == categ.names)]
+              for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
+                FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), sep = ""))
               }
             }
           }
         }
       }
-    }else{
-      nonfp.s=nonfp
-      for (i in 1:length(resp.names)){
-        if (D['mode']==0){
-          nonfp.s=gsub(paste(".",resp.names[i],sep=""),"", nonfp.s)
+    } else {
+      nonfp.s <- nonfp
+      for (i in 1:length(resp.names)) {
+        if (D["mode"] == 0) {
+          nonfp.s <- gsub(paste(".", resp.names[i], sep = ""), "", nonfp.s)
         }
-        if (D['mode']==1){
-          nonfp.s=gsub(paste(".(>=",resp.names[i],")",sep=""),"", nonfp.s)
+        if (D["mode"] == 1) {
+          nonfp.s <- gsub(paste(".(>=", resp.names[i], ")", sep = ""), "", nonfp.s)
         }
       }
-      nonfp.s=unique(nonfp.s)
-      expla=expl
-      for (p in expla){
-        if (is.na(nonfp[1])||sum(p==nonfp.s)==0){
-          if (is.null(categ)|| sum(p==categ["var",])==0){
-            for (j in 1:nresp){
-              FP.names=c(FP.names, paste("FP_",chartr(".","_",p),"_",resp.names[j],sep=""))
+      nonfp.s <- unique(nonfp.s)
+      expla <- expl
+      for (p in expla) {
+        if (is.na(nonfp[1]) || sum(p == nonfp.s) == 0) {
+          if (is.null(categ) || sum(p == categ["var", ]) == 0) {
+            for (j in 1:nresp) {
+              FP.names <- c(FP.names, paste("FP_", chartr(".", "_", p), "_", resp.names[j], sep = ""))
             }
-          }else{
-            if (is.na(categ["ref",which(p==categ["var",])])){
-              categ.names=levels(indata[[p]])
-              for (j in 1:nresp){
-                for (i in 1:as.numeric(categ["ncateg",which(p==categ["var",])])){
-                  FP.names=c(FP.names,  paste("FP_",chartr(".","_",categ.names[i]),"_",resp.names[j],sep=""))
+          } else {
+            if (is.na(categ["ref", which(p == categ["var", ])])) {
+              categ.names <- levels(indata[[p]])
+              for (j in 1:nresp) {
+                for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
+                  FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], sep = ""))
                 }
               }
-            }else{
-              categ.names=levels(indata[[p]])
-              refx=categ["ref",which(p==categ["var",])]
-              categ.names=categ.names[-which(refx==categ.names)]
-              for (j in 1:nresp){
-                for (i in 1:(as.numeric(categ["ncateg",which(p==categ["var",])])-1)){
-                  FP.names=c(FP.names, paste("FP_",chartr(".","_",categ.names[i]),"_",resp.names[j],sep=""))
+            } else {
+              categ.names <- levels(indata[[p]])
+              refx <- categ["ref", which(p == categ["var", ])]
+              categ.names <- categ.names[-which(refx == categ.names)]
+              for (j in 1:nresp) {
+                for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
+                  FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], 
+                                                sep = ""))
                 }
               }
             }
@@ -1739,40 +1783,42 @@ version:date:md5:filename:x64:trial
         }
       }
     }
-  }else{
-    if (D[1]=="Multivariate Normal"||D[1]=="Mixed"){
-      nresp=length(resp)
+  } else {
+    if (D[1] == "Multivariate Normal" || D[1] == "Mixed") {
+      nresp <- length(resp)
       
-      if (is.list(expl)){
-        nonfp.sep=nonfp$nonfp.sep
-        nonfp.s=nonfp.sep
-        for (i in 1:length(resp)){
-          nonfp.s=gsub(paste(".",resp[i],sep=""),"", nonfp.s)
+      if (is.list(expl)) {
+        nonfp.sep <- nonfp$nonfp.sep
+        nonfp.s <- nonfp.sep
+        for (i in 1:length(resp)) {
+          nonfp.s <- gsub(paste(".", resp[i], sep = ""), "", nonfp.s)
         }
-        nonfp.s=unique(nonfp.s)
-        if (!is.na(expl$sep.coeff[1])){
-          for (p in expl$sep.coeff){
-            if (is.na(nonfp.sep[1])||sum(p==nonfp.s)==0){
-              if (is.null(categ)|| sum(p==categ["var",])==0){
-                for (j in 1:nresp){
-                  FP.names=c(FP.names, paste("FP_",chartr(".","_",p),"_",resp[j],sep=""))
+        nonfp.s <- unique(nonfp.s)
+        if (!is.na(expl$sep.coeff[1])) {
+          for (p in expl$sep.coeff) {
+            if (is.na(nonfp.sep[1]) || sum(p == nonfp.s) == 0) {
+              if (is.null(categ) || sum(p == categ["var", ]) == 0) {
+                for (j in 1:nresp) {
+                  FP.names <- c(FP.names, paste("FP_", chartr(".", "_", p), "_", resp[j], sep = ""))
                 }
-              }else{
-                if (is.na(categ["ref",which(p==categ["var",])])){
-                  categ.names=levels(indata[[p]])
-                  for (j in 1:nresp){
-                    for (i in 1:as.numeric(categ["ncateg",which(p==categ["var",])])){
-                      FP.names=c(FP.names,  paste("FP_",chartr(".","_",categ.names[i]),"_",resp.names[j],sep=""))
+              } else {
+                if (is.na(categ["ref", which(p == categ["var", ])])) {
+                  categ.names <- levels(indata[[p]])
+                  for (j in 1:nresp) {
+                    for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
+                      FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], 
+                                                    sep = ""))
                     }
                   }
                   
-                }else{
-                  categ.names=levels(indata[[p]])
-                  refx=categ["ref",which(p==categ["var",])]
-                  categ.names=categ.names[-which(refx==categ.names)]
-                  for (j in 1:nresp){
-                    for (i in 1:(as.numeric(categ["ncateg",which(p==categ["var",])])-1)){
-                      FP.names=c(FP.names, paste("FP_",chartr(".","_",categ.names[i]),"_",resp.names[j],sep=""))
+                } else {
+                  categ.names <- levels(indata[[p]])
+                  refx <- categ["ref", which(p == categ["var", ])]
+                  categ.names <- categ.names[-which(refx == categ.names)]
+                  for (j in 1:nresp) {
+                    for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
+                      FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], 
+                                                    sep = ""))
                     }
                   }
                 }
@@ -1781,64 +1827,64 @@ version:date:md5:filename:x64:trial
           }
         }
         kk <- 1
-        for (p in expl$common.coeff){
-          newp <- paste(p, paste(which(as.logical(expl$common.coeff.id[kk,])), collapse=""), sep=".")
+        for (p in expl$common.coeff) {
+          newp <- paste(p, paste(which(as.logical(expl$common.coeff.id[kk, ])), collapse = ""), sep = ".")
           kk <- kk + 1
-          nonfp.common=nonfp$nonfp.common
-          nonfp.c=nonfp.common
-#          for (i in 1:length(nonfp.c)){
-#            nonfp.c[i]=gsub("\\.[[:digit:]]+$","",nonfp.c[i])
-#          }
-          if (is.na(nonfp.common[1])||sum(newp==nonfp.c)==0){
-            if (is.null(categ)|| sum(p==categ["var",])==0){
-              FP.names=c(FP.names, paste("FP_",chartr(".","_",newp),sep=""))
-            }else{
-              if (is.na(categ["ref",which(p==categ["var",])])){
-                categ.names=levels(indata[[p]])
-                for (i in 1:as.numeric(categ["ncateg",which(p==categ["var",])])){
-                  FP.names=c(FP.names, paste("FP_",chartr(".","_",categ.names[i]),sep=""))
+          nonfp.common <- nonfp$nonfp.common
+          nonfp.c <- nonfp.common
+          # for (i in 1:length(nonfp.c)){ nonfp.c[i]=gsub('\\.[[:digit:]]+$','',nonfp.c[i]) }
+          if (is.na(nonfp.common[1]) || sum(newp == nonfp.c) == 0) {
+            if (is.null(categ) || sum(p == categ["var", ]) == 0) {
+              FP.names <- c(FP.names, paste("FP_", chartr(".", "_", newp), sep = ""))
+            } else {
+              if (is.na(categ["ref", which(p == categ["var", ])])) {
+                categ.names <- levels(indata[[p]])
+                for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
+                  FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), sep = ""))
                 }
-              }else{
-                categ.names=levels(indata[[p]])
-                refx=categ["ref",which(p==categ["var",])]
-                categ.names=categ.names[-which(refx==categ.names)]
-                for (i in 1:(as.numeric(categ["ncateg",which(p==categ["var",])])-1)){
-                  FP.names=c(FP.names, paste("FP_",chartr(".","_",categ.names[i]),sep=""))
+              } else {
+                categ.names <- levels(indata[[p]])
+                refx <- categ["ref", which(p == categ["var", ])]
+                categ.names <- categ.names[-which(refx == categ.names)]
+                for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
+                  FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), sep = ""))
                 }
               }
             }
           }
         }
-      }else{
-        nonfp.s=nonfp
-        for (i in 1:length(resp)){
-          nonfp.s=gsub(paste(".",resp[i],sep=""),"", nonfp.s)
+      } else {
+        nonfp.s <- nonfp
+        for (i in 1:length(resp)) {
+          nonfp.s <- gsub(paste(".", resp[i], sep = ""), "", nonfp.s)
         }
-        nonfp.s=unique(nonfp.s)
+        nonfp.s <- unique(nonfp.s)
         
-        expla=expl
-        for (p in expla){
-          if (is.na(nonfp[1])||sum(p==nonfp.s)==0){
-            if (is.null(categ)|| sum(p==categ["var",])==0){
-              for (j in 1:nresp){
-                FP.names=c(FP.names, paste("FP_",chartr(".","_",p),"_",resp[j],sep=""))
+        expla <- expl
+        for (p in expla) {
+          if (is.na(nonfp[1]) || sum(p == nonfp.s) == 0) {
+            if (is.null(categ) || sum(p == categ["var", ]) == 0) {
+              for (j in 1:nresp) {
+                FP.names <- c(FP.names, paste("FP_", chartr(".", "_", p), "_", resp[j], sep = ""))
               }
               
-            }else{
-              if (is.na(categ["ref",which(p==categ["var",])])){
-                categ.names=levels(indata[[p]])
-                for (j in 1:nresp){
-                  for (i in 1:as.numeric(categ["ncateg",which(p==categ["var",])])){
-                    FP.names=c(FP.names,  paste("FP_",chartr(".","_",categ.names[i]),"_",resp.names[j],sep=""))
+            } else {
+              if (is.na(categ["ref", which(p == categ["var", ])])) {
+                categ.names <- levels(indata[[p]])
+                for (j in 1:nresp) {
+                  for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
+                    FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], 
+                                                  sep = ""))
                   }
                 }
-              }else{
-                categ.names=levels(indata[[p]])
-                refx=categ["ref",which(p==categ["var",])]
-                categ.names=categ.names[-which(refx==categ.names)]
-                for (j in 1:nresp){
-                  for (i in 1:(as.numeric(categ["ncateg",which(p==categ["var",])])-1)){
-                    FP.names=c(FP.names, paste("FP_",chartr(".","_",categ.names[i]),"_",resp.names[j],sep=""))
+              } else {
+                categ.names <- levels(indata[[p]])
+                refx <- categ["ref", which(p == categ["var", ])]
+                categ.names <- categ.names[-which(refx == categ.names)]
+                for (j in 1:nresp) {
+                  for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
+                    FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], 
+                                                  sep = ""))
                   }
                 }
               }
@@ -1846,24 +1892,24 @@ version:date:md5:filename:x64:trial
           }
         }
       }
-    }else{
-      expla=expl
-      for (p in expla){
-        if (is.na(nonfp[1])||sum(p==nonfp)==0){
-          if (is.null(categ)|| sum(p==categ["var",])==0){
-            FP.names=c(FP.names, paste("FP_",chartr(".","_",p),sep=""))
-          }else{
-            if (is.na(categ["ref",which(p==categ["var",])])){
-              categ.names=levels(indata[[p]])
-              for (i in 1:as.numeric(categ["ncateg",which(p==categ["var",])])){
-                FP.names=c(FP.names, paste("FP_",chartr(".","_",categ.names[i]),sep=""))
+    } else {
+      expla <- expl
+      for (p in expla) {
+        if (is.na(nonfp[1]) || sum(p == nonfp) == 0) {
+          if (is.null(categ) || sum(p == categ["var", ]) == 0) {
+            FP.names <- c(FP.names, paste("FP_", chartr(".", "_", p), sep = ""))
+          } else {
+            if (is.na(categ["ref", which(p == categ["var", ])])) {
+              categ.names <- levels(indata[[p]])
+              for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
+                FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), sep = ""))
               }
-            }else{
-              categ.names=levels(indata[[p]])
-              refx=categ["ref",which(p==categ["var",])]
-              categ.names=categ.names[-which(refx==categ.names)]
-              for (i in 1:(as.numeric(categ["ncateg",which(p==categ["var",])])-1)){
-                FP.names=c(FP.names, paste("FP_",chartr(".","_",categ.names[i]),sep=""))
+            } else {
+              categ.names <- levels(indata[[p]])
+              refx <- categ["ref", which(p == categ["var", ])]
+              categ.names <- categ.names[-which(refx == categ.names)]
+              for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
+                FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), sep = ""))
               }
             }
           }
@@ -1871,32 +1917,33 @@ version:date:md5:filename:x64:trial
       }
     }
   }
-
-  resid.names=function(rpx, resid.lev,RP){
-    nrpx=length(rpx)
-    for (j in 1: nrpx){
-      for (i in 1:j){
-        if (i==j){
-          RP=c(RP, paste("RP",resid.lev,"_var_",chartr(".", "_", rpx[i]),sep=""))
-        }else{
-          RP=c(RP, paste("RP",resid.lev,"_cov_",chartr(".", "_", rpx[i]),"_",chartr(".", "_", rpx[j]),sep=""))
+  
+  resid.names <- function(rpx, resid.lev, RP) {
+    nrpx <- length(rpx)
+    for (j in 1:nrpx) {
+      for (i in 1:j) {
+        if (i == j) {
+          RP <- c(RP, paste("RP", resid.lev, "_var_", chartr(".", "_", rpx[i]), sep = ""))
+        } else {
+          RP <- c(RP, paste("RP", resid.lev, "_cov_", chartr(".", "_", rpx[i]), "_", chartr(".", "_", rpx[j]), sep = ""))
         }
       }
     }
     RP
   }
   
-  resid2.names=function(rpx, resid.lev, clre,RP){
-    nrpx=length(rpx)
-    nclre=ncol(clre)
-    k=1
-    for (j in 1: nrpx){
-      for (i in 1:j){
-        if (!any(as.numeric(clre[1,])==resid.lev & ((clre[2,]==rpx[i] & clre[3,]==rpx[j]) | (clre[2,]==rpx[j] & clre[3,]==rpx[i])))) {
-          if (i==j) {
-            RP=c(RP, paste("RP",resid.lev,"_var_",chartr(".", "_", rpx[i]),sep=""))
-          }else{
-            RP=c(RP, paste("RP",resid.lev,"_cov_",chartr(".", "_", rpx[i]),"_",chartr(".", "_", rpx[j]),sep=""))
+  resid2.names <- function(rpx, resid.lev, clre, RP) {
+    nrpx <- length(rpx)
+    nclre <- ncol(clre)
+    k <- 1
+    for (j in 1:nrpx) {
+      for (i in 1:j) {
+        if (!any(as.numeric(clre[1, ]) == resid.lev & ((clre[2, ] == rpx[i] & clre[3, ] == rpx[j]) | (clre[2, ] == rpx[j] & clre[3, ] == rpx[i])))) {
+          if (i == j) {
+            RP <- c(RP, paste("RP", resid.lev, "_var_", chartr(".", "_", rpx[i]), sep = ""))
+          } else {
+            RP <- c(RP, paste("RP", resid.lev, "_cov_", chartr(".", "_", rpx[i]), "_", chartr(".", "_", rpx[j]), 
+                              sep = ""))
           }
         }
       }
@@ -1904,77 +1951,72 @@ version:date:md5:filename:x64:trial
     RP
   }
   
-  RP.names =NULL
-  if (length(rp)>0){
-    for (ii in 1:length(rp)){
-      if (is.null(clre)){
-        RP.names=resid.names(rp[[ii]],as.numeric(sub("rp","",names(rp)[ii])),RP.names)
-      }else{
-        RP.names=resid2.names(rp[[ii]],as.numeric(sub("rp","",names(rp)[ii])), clre,RP.names)
+  RP.names <- NULL
+  if (length(rp) > 0) {
+    for (ii in 1:length(rp)) {
+      if (is.null(clre)) {
+        RP.names <- resid.names(rp[[ii]], as.numeric(sub("rp", "", names(rp)[ii])), RP.names)
+      } else {
+        RP.names <- resid2.names(rp[[ii]], as.numeric(sub("rp", "", names(rp)[ii])), clre, RP.names)
       }
     }
   }
-
-
-  if (D[1]=='Multinomial') {
-    RP.names=c(RP.names, "RP1_bcons_1")
-    if (EstM == 0 && as.numeric(D[4])==0) {
-      RP.names=c(RP.names, "RP1_bcons_2")
+  
+  
+  if (D[1] == "Multinomial") {
+    RP.names <- c(RP.names, "RP1_bcons_1")
+    if (EstM == 0 && as.numeric(D[4]) == 0) {
+      RP.names <- c(RP.names, "RP1_bcons_2")
     }
   }
-
-
-  levID0=levID
-  #if (is.na(levID0[length(levID0)])){
-  #  tmp.RP.names=gsub("RP","",RP.names)
-  #  for (i in 1:length(RP.names)){
-  #    tmpstrlist=unlist(strsplit(tmp.RP.names[i],"\\_"))
-  #    tmpno=as.integer(tmpstrlist[1])-1
-  #    RP.names[i]=paste0("RP",tmpno,"_",paste(tmpstrlist[-1],collapse="_"))
-  #  }
-  #}
-
+  
+  
+  levID0 <- levID
+  # if (is.na(levID0[length(levID0)])){ tmp.RP.names=gsub('RP','',RP.names) for (i in 1:length(RP.names)){
+  # tmpstrlist=unlist(strsplit(tmp.RP.names[i],'\\_')) tmpno=as.integer(tmpstrlist[1])-1
+  # RP.names[i]=paste0('RP',tmpno,'_',paste(tmpstrlist[-1],collapse='_')) } }
+  
   FP <- rep(0, length(FP.names))
   names(FP) <- FP.names
-
-  FP.cov <- matrix(0,length(FP.names),length(FP.names))
+  
+  FP.cov <- matrix(0, length(FP.names), length(FP.names))
   colnames(FP.cov) <- FP.names
   rownames(FP.cov) <- FP.names
-
+  
   RP <- rep(0, length(RP.names))
   names(RP) <- RP.names
-
-  RP.cov <- matrix(0,length(RP.names),length(RP.names))
+  
+  RP.cov <- matrix(0, length(RP.names), length(RP.names))
   colnames(RP.cov) <- RP.names
   rownames(RP.cov) <- RP.names
-
+  
   sval <- estoptions$startval
   if (EstM == 1) {
     if (!is.null(mcmcMeth$startval)) {
       warning("startval is now specified directly within estoptions")
-      sval=mcmcMeth$startval
+      sval <- mcmcMeth$startval
     }
   }
-
+  
   if (!is.null(sval)) {
     if (!is.null(sval$FP.b) && is.null(names(sval$FP.b))) {
       names(sval$FP.b) <- FP.names
     }
-
+    
     if (!is.null(sval$FP.v) && (is.null(rownames(sval$FP.v)) || is.null(colnames(sval$FP.v)))) {
       rownames(sval$FP.v) <- FP.names
       colnames(sval$FP.v) <- FP.names
     }
-
+    
     if (!is.null(sval$RP.b) && is.null(names(sval$RP.b))) {
       names(sval$RP.b) <- RP.names
     }
-
+    
     if (!is.null(sval$RP.v) && (is.null(rownames(sval$RP.v)) || is.null(colnames(sval$RP.v)))) {
       rownames(sval$RP.v) <- RP.names
       colnames(sval$RP.v) <- RP.names
     }
-
+    
     sharedFP <- intersect(FP.names, names(sval$FP.b))
     if (!is.null(sval$FP.b) && !is.null(sharedFP)) {
       FP[sharedFP] <- sval$FP.b[sharedFP]
@@ -1989,87 +2031,101 @@ version:date:md5:filename:x64:trial
     if (!is.null(sval$RP.v) && !is.null(sharedRP)) {
       RP.cov[sharedRP, sharedRP] <- sval$RP.v[sharedRP, sharedRP]
     }
-    startval <- list(FP.b=FP, FP.v=FP.cov, RP.b=RP, RP.v=RP.cov)
+    startval <- list(FP.b = FP, FP.v = FP.cov, RP.b = RP, RP.v = RP.cov)
   } else {
     startval <- NULL
   }
-
+  
   if (EstM == 1) {
-    seed=mcmcMeth$seed
-    if(is.null(seed)) seed=1
-    iterations=mcmcMeth$iterations
-    if(is.null(iterations)) iterations=5000
-    burnin=mcmcMeth$burnin
-    if(is.null(burnin)) burnin=500
-    thinning=mcmcMeth$thinning
-    if(is.null(thinning)) thinning=1
-    priorParam=mcmcMeth$priorParam
-    if(is.list(priorParam)) priorParam=prior2macro(priorParam, Formula, levID, D, indata)
-    if(is.null(priorParam)) priorParam="default"
-    scale =mcmcMeth$scale
-    if(is.null(scale)) scale=5.8
-    refresh=mcmcMeth$refresh
-    if(is.null(refresh)) refresh=50
-    fixM=mcmcMeth$fixM
-    if(is.null(fixM)) {
-      if(D[1]=="Poisson"||D[1]=="Multinomial"||D[1]=="Binomial"||D[1]=="Mixed"){
-        fixM=2
-      }else{
-        fixM=1
+    seed <- mcmcMeth$seed
+    if (is.null(seed)) 
+      seed <- 1
+    iterations <- mcmcMeth$iterations
+    if (is.null(iterations)) 
+      iterations <- 5000
+    burnin <- mcmcMeth$burnin
+    if (is.null(burnin)) 
+      burnin <- 500
+    thinning <- mcmcMeth$thinning
+    if (is.null(thinning)) 
+      thinning <- 1
+    priorParam <- mcmcMeth$priorParam
+    if (is.list(priorParam)) 
+      priorParam <- prior2macro(priorParam, Formula, levID, D, indata)
+    if (is.null(priorParam)) 
+      priorParam <- "default"
+    scale <- mcmcMeth$scale
+    if (is.null(scale)) 
+      scale <- 5.8
+    refresh <- mcmcMeth$refresh
+    if (is.null(refresh)) 
+      refresh <- 50
+    fixM <- mcmcMeth$fixM
+    if (is.null(fixM)) {
+      if (D[1] == "Poisson" || D[1] == "Multinomial" || D[1] == "Binomial" || D[1] == "Mixed") {
+        fixM <- 2
+      } else {
+        fixM <- 1
       }
     }
-    residM=mcmcMeth$residM
-    if(is.null(residM)){
-      if(D[1]=="Poisson"||D[1]=="Multinomial"||D[1]=="Binomial"||D[1]=="Mixed"){
-        residM=2
-      }else{
-        residM=1
+    residM <- mcmcMeth$residM
+    if (is.null(residM)) {
+      if (D[1] == "Poisson" || D[1] == "Multinomial" || D[1] == "Binomial" || D[1] == "Mixed") {
+        residM <- 2
+      } else {
+        residM <- 1
       }
     }
-    Lev1VarM=mcmcMeth$Lev1VarM
-    if(is.null(Lev1VarM)){
-      if(D[1]=="Poisson"||D[1]=="Multinomial"||D[1]=="Binomial"||D[1]=="Mixed"){
-        Lev1VarM=2
-      }else{
-        Lev1VarM=1
+    Lev1VarM <- mcmcMeth$Lev1VarM
+    if (is.null(Lev1VarM)) {
+      if (D[1] == "Poisson" || D[1] == "Multinomial" || D[1] == "Binomial" || D[1] == "Mixed") {
+        Lev1VarM <- 2
+      } else {
+        Lev1VarM <- 1
       }
     }
-    OtherVarM=mcmcMeth$OtherVarM
-    if(is.null(OtherVarM)) OtherVarM=1
-    adaption=mcmcMeth$adaption
-    if(is.null(adaption)) adaption=1
-    priorcode=mcmcMeth$priorcode
-    if (is.null(priorcode)) priorcode=1
-    rate=mcmcMeth$rate
-    if (is.null(rate)) rate=50
-    tol=mcmcMeth$tol
-    if (is.null(tol)) tol=10
-    lclo=mcmcMeth$lclo
-    if (is.null(lclo)) lclo =0
-    dami=mcmcMeth$dami
+    OtherVarM <- mcmcMeth$OtherVarM
+    if (is.null(OtherVarM)) 
+      OtherVarM <- 1
+    adaption <- mcmcMeth$adaption
+    if (is.null(adaption)) 
+      adaption <- 1
+    priorcode <- mcmcMeth$priorcode
+    if (is.null(priorcode)) 
+      priorcode <- 1
+    rate <- mcmcMeth$rate
+    if (is.null(rate)) 
+      rate <- 50
+    tol <- mcmcMeth$tol
+    if (is.null(tol)) 
+      tol <- 10
+    lclo <- mcmcMeth$lclo
+    if (is.null(lclo)) 
+      lclo <- 0
+    dami <- mcmcMeth$dami
   }
-
-  mcmcOptions=estoptions$mcmcOptions
+  
+  mcmcOptions <- estoptions$mcmcOptions
   if (EstM == 0 && !is.null(merr)) {
     stop("MCMC options cannot be specified with (R)IGLS estimation")
   }
-
+  
   if (EstM == 1) {
-    if(!is.null(mcmcOptions)) {
-      if (D[1]=='Multivariate Normal'){
-        mcmcOptions2=list(orth=0,hcen=0, smcm=0,smvn=0, paex=c(2,0),mcco=0)
-        for (ii in names(mcmcOptions)) mcmcOptions2[[ii]]=mcmcOptions[[ii]]
-        mcmcOptions=mcmcOptions2
-      }else{
-        mcmcOptions2=list(orth=0,hcen=0, smcm=0,smvn=0, paex=c(2,0))
-        for (ii in names(mcmcOptions)) mcmcOptions2[[ii]]=mcmcOptions[[ii]]
-        mcmcOptions=mcmcOptions2
+    if (!is.null(mcmcOptions)) {
+      if (D[1] == "Multivariate Normal") {
+        mcmcOptions2 <- list(orth = 0, hcen = 0, smcm = 0, smvn = 0, paex = c(2, 0), mcco = 0)
+        for (ii in names(mcmcOptions)) mcmcOptions2[[ii]] <- mcmcOptions[[ii]]
+        mcmcOptions <- mcmcOptions2
+      } else {
+        mcmcOptions2 <- list(orth = 0, hcen = 0, smcm = 0, smvn = 0, paex = c(2, 0))
+        for (ii in names(mcmcOptions)) mcmcOptions2[[ii]] <- mcmcOptions[[ii]]
+        mcmcOptions <- mcmcOptions2
       }
-    }else{
-      if (D[1]=='Multivariate Normal'){
-        mcmcOptions=list(orth=0,hcen=0, smcm=0,smvn=0, paex=c(2,0),mcco=0)
-      }else{
-        mcmcOptions=list(orth=0,hcen=0, smcm=0,smvn=0, paex=c(2,0))
+    } else {
+      if (D[1] == "Multivariate Normal") {
+        mcmcOptions <- list(orth = 0, hcen = 0, smcm = 0, smvn = 0, paex = c(2, 0), mcco = 0)
+      } else {
+        mcmcOptions <- list(orth = 0, hcen = 0, smcm = 0, smvn = 0, paex = c(2, 0))
       }
     }
     if (mcmcOptions$hcen > 0) {
@@ -2095,43 +2151,45 @@ version:date:md5:filename:x64:trial
       }
     }
   }
-
+  
   if (EstM == 0 && !is.null(BUGO)) {
     stop("BUGO requires MCMC estimation to be selected")
   }
   
-  sort.force=estoptions$sort.force
-  if (is.null(sort.force)) sort.force = FALSE
+  sort.force <- estoptions$sort.force
+  if (is.null(sort.force)) 
+    sort.force <- FALSE
   
-  sort.ignore=estoptions$sort.ignore
-  if (is.null(sort.ignore)) sort.ignore = FALSE
+  sort.ignore <- estoptions$sort.ignore
+  if (is.null(sort.ignore)) 
+    sort.ignore <- FALSE
   
   if (D[1] == "Binomial") {
     if (!all(indata[[resp]] >= 0 && indata[[resp]] <= 1)) {
       stop("All values for a binomial response must lie between zero and one")
     }
   }
-
+  
   if (D[1] == "Poisson") {
     if (!all(indata[[resp]] >= 0) && all(as.integer(indata[[resp]]) == indata[[resp]])) {
       stop("All values for a Poisson response must be positive integers")
     }
   }
-
+  
   if (D[1] == "Mixed") {
     mixlink <- NULL
     discreteresp <- NULL
     for (i in 2:length(D)) {
       if (D[[i]][1] == "Binomial") {
-        if (!all(indata[[resp[i-1]]] >= 0 && indata[[resp[i-1]]] <= 1)) {
+        if (!all(indata[[resp[i - 1]]] >= 0 && indata[[resp[i - 1]]] <= 1)) {
           stop("All values for a binomial response must lie between zero and one")
         }
         discreteresp <- union(discreteresp, D[[i]][1])
         mixlink <- union(mixlink, D[[i]][2])
       }
-
+      
       if (D[[i]][1] == "Poisson") {
-        if (!all(indata[[resp[i-1]]] >= 0) && all(as.integer(indata[[resp[i-1]]]) == indata[[resp]])) {
+        if (!all(indata[[resp[i - 1]]] >= 0) && all(as.integer(indata[[resp[i - 1]]]) == indata[[resp]])) {
           stop("All values for a Poisson response must be positive integers")
         }
         discreteresp <- union(discreteresp, D[[i]][1])
@@ -2145,7 +2203,7 @@ version:date:md5:filename:x64:trial
       stop("Only one link type can be specified for mixed models")
     }
   }
-
+  
   if (D[1] == "Multinomial") {
     if (length(unique(indata[[resp]])) < 2) {
       stop("Responses must have at least two categories for multinomial models")
@@ -2153,16 +2211,18 @@ version:date:md5:filename:x64:trial
     if (is.na(D[5])) {
       stop("Invalid reference category")
     }
-    if (D[4] == 1) { # Ordered multinomial
-      if (as.integer(D[5]) != which(min(levels(indata[[resp]])) == levels(indata[[resp]])) && as.integer(D[5]) != which(max(levels(indata[[resp]])) == levels(indata[[resp]]))) {
+    if (D[4] == 1) {
+      # Ordered multinomial
+      if (as.integer(D[5]) != which(min(levels(indata[[resp]])) == levels(indata[[resp]])) && as.integer(D[5]) != 
+            which(max(levels(indata[[resp]])) == levels(indata[[resp]]))) {
         stop(paste("Invalid reference category:", D[5]))
       }
     }
   }
-
+  
   if (drop.data) {
     outvars <- c(resp)
-
+    
     # Multiple membership IDs if applicable
     if (!is.null(mm)) {
       for (i in 1:length(mm)) {
@@ -2174,7 +2234,7 @@ version:date:md5:filename:x64:trial
         }
       }
     }
-
+    
     # CAR membership IDs if applicable
     if (!is.null(car)) {
       for (i in 1:length(car)) {
@@ -2186,12 +2246,12 @@ version:date:md5:filename:x64:trial
         }
       }
     }
-
+    
     outvars <- union(outvars, na.omit(levID))
-    if(is.list(expl)) {
-      if (!is.na(expl$sep.coeff[1])){
+    if (is.list(expl)) {
+      if (!is.na(expl$sep.coeff[1])) {
         tsep.coeff <- expl$sep.coeff
-      }else{
+      } else {
         tsep.coeff <- NULL
       }
       xvars <- c(tsep.coeff, expl$common.coeff)
@@ -2199,24 +2259,24 @@ version:date:md5:filename:x64:trial
       xvars <- expl
     }
     outvars <- union(outvars, xvars)
-    interpos=grep("\\:",xvars)
+    interpos <- grep("\\:", xvars)
     if (length(interpos) != 0) {
       explx <- xvars[-interpos]
       outvars <- c(outvars, explx)
       # This intersect is a bit of a hack, but avoids variables generated by MLwiN being referenced
-      interx <- intersect(unlist(mapply(strsplit, expl[interpos], "\\:"), use.names=FALSE), colnames(indata))
+      interx <- intersect(unlist(mapply(strsplit, expl[interpos], "\\:"), use.names = FALSE), colnames(indata))
       outvars <- union(outvars, interx)
     }
     
     # Denominators/Offsets if applicable
-    if (D[1] == 'Binomial' || D[1] == 'Poisson' || D[1] == 'Multinomial' || D[1] == 'Negbinom') {
+    if (D[1] == "Binomial" || D[1] == "Poisson" || D[1] == "Multinomial" || D[1] == "Negbinom") {
       if (!is.na(D[[3]])) {
         outvars <- union(outvars, D[[3]])
       }
     }
-    if (D[1] == 'Mixed') {
+    if (D[1] == "Mixed") {
       for (i in 2:length(D)) {
-        if (D[[i]][1] == 'Binomial' || D[[i]][1] == 'Poisson')
+        if (D[[i]][1] == "Binomial" || D[[i]][1] == "Poisson") 
           if (!is.na(D[[i]][[3]])) {
             outvars <- union(outvars, D[[i]][[3]])
           }
@@ -2239,8 +2299,8 @@ version:date:md5:filename:x64:trial
   
   if (!isTRUE(sort.ignore)) {
     # Don't enforce sorting on level-1 in cases where it isn't used
-    if (D[1] == 'Normal' || D[1] == 'Binomial' || D[1] == 'Poisson' || D[1] == 'Negbinom') {
-      outdata[["_sortindex"]] <- seq(1, nrow(outdata)) # replace with sequence to keep sorting stable
+    if (D[1] == "Normal" || D[1] == "Binomial" || D[1] == "Poisson" || D[1] == "Negbinom") {
+      outdata[["_sortindex"]] <- seq(1, nrow(outdata))  # replace with sequence to keep sorting stable
       l1id <- levID[length(levID)]
       levID[length(levID)] <- "_sortindex"
     }
@@ -2255,31 +2315,29 @@ version:date:md5:filename:x64:trial
     }
     
     # Restore original level ID and drop temporary variable
-    if (D[1] == 'Normal' || D[1] == 'Binomial' || D[1] == 'Poisson' || D[1] == 'Negbinom') {
+    if (D[1] == "Normal" || D[1] == "Binomial" || D[1] == "Poisson" || D[1] == "Negbinom") {
       levID[length(levID)] <- l1id
       outdata[["_sortindex"]] <- NULL
     }
   }
-
+  
   hierarchy <- NULL
   shortID <- na.omit(rev(levID))
   if (length(shortID) > 1) {
     for (lev in length(shortID):2) {
       if (!is.null(xc)) {
-        groupsize <- by(outdata, outdata[,shortID[lev]], nrow)
+        groupsize <- by(outdata, outdata[, shortID[lev]], nrow)
       } else {
-        test <- require(reshape, quietly=TRUE)
+        test <- require(reshape, quietly = TRUE)
         if (isTRUE(test)) {
-          # If the level identifiers are factors with string labels then the following can produce the warning
-          # "coercing argument of type 'list' to logical"
-          # from within cbind2 in the reshape package.
-          # This is due to the call:
-          # "all(lapply(list(...), is.numeric))"
-          # as the lapply returns a list which all doesn't like.
-          # As the result is still correct a suppressWarnings() call is added below to prevent this being passed onto the user
-          groupsize <- as.vector(suppressWarnings(reshape::sparseby(outdata, outdata[,shortID[lev:length(shortID)]], nrow, GROUPNAMES=FALSE)))
+          # If the level identifiers are factors with string labels then the following can produce the warning 'coercing
+          # argument of type 'list' to logical' from within cbind2 in the reshape package.  This is due to the call:
+          # 'all(lapply(list(...), is.numeric))' as the lapply returns a list which all doesn't like.  As the result is
+          # still correct a suppressWarnings() call is added below to prevent this being passed onto the user
+          groupsize <- as.vector(suppressWarnings(reshape::sparseby(outdata, outdata[, shortID[lev:length(shortID)]], 
+                                                                    nrow, GROUPNAMES = FALSE)))
         } else {
-          groupsize <- na.omit(as.vector(by(outdata, outdata[,shortID[lev:length(shortID)]], nrow)))
+          groupsize <- na.omit(as.vector(by(outdata, outdata[, shortID[lev:length(shortID)]], nrow)))
         }
       }
       groupinfo <- cbind(length(groupsize), min(groupsize), mean(groupsize), max(groupsize))
@@ -2288,337 +2346,357 @@ version:date:md5:filename:x64:trial
       hierarchy <- rbind(hierarchy, groupinfo)
     }
   }
-
-  if (!file.access(workdir)==0) dir.create(workdir)
   
-  dtafile = gsub("\\", "/", tempfile("dtafile_",tmpdir =workdir, fileext=".dta"), fixed=TRUE)
-  macrofile = gsub("\\", "/", tempfile("macrofile_",tmpdir =workdir, fileext=".txt"), fixed=TRUE)
+  if (!file.access(workdir) == 0) 
+    dir.create(workdir)
   
-  IGLSfile = gsub("\\", "/", tempfile("IGLSfile_", tmpdir=workdir, fileext=".dta"), fixed=TRUE)
-  if (EstM==1) {
-    MCMCfile = gsub("\\", "/", tempfile("MCMCfile_", tmpdir=workdir, fileext=".dta"), fixed=TRUE)
-    chainfile = gsub("\\", "/", tempfile("chainfile_", tmpdir=workdir, fileext=".dta"), fixed=TRUE)
-    if (!is.null(dami)){
-      MIfile=gsub("\\", "/", tempfile("MIfile_",tmpdir =workdir, fileext=".dta"), fixed=TRUE)
-    }else{
-      dami=MIfile=NULL
+  dtafile <- gsub("\\", "/", tempfile("dtafile_", tmpdir = workdir, fileext = ".dta"), fixed = TRUE)
+  macrofile <- gsub("\\", "/", tempfile("macrofile_", tmpdir = workdir, fileext = ".txt"), fixed = TRUE)
+  
+  IGLSfile <- gsub("\\", "/", tempfile("IGLSfile_", tmpdir = workdir, fileext = ".dta"), fixed = TRUE)
+  if (EstM == 1) {
+    MCMCfile <- gsub("\\", "/", tempfile("MCMCfile_", tmpdir = workdir, fileext = ".dta"), fixed = TRUE)
+    chainfile <- gsub("\\", "/", tempfile("chainfile_", tmpdir = workdir, fileext = ".dta"), fixed = TRUE)
+    if (!is.null(dami)) {
+      MIfile <- gsub("\\", "/", tempfile("MIfile_", tmpdir = workdir, fileext = ".dta"), fixed = TRUE)
+    } else {
+      dami <- MIfile <- NULL
     }
-    if (!is.null(fact)){
-      FACTchainfile=gsub("\\", "/", tempfile("factchainfile_",tmpdir =workdir,fileext=".dta"), fixed=TRUE)
-    }else{
-      FACTchainfile=NULL
+    if (!is.null(fact)) {
+      FACTchainfile <- gsub("\\", "/", tempfile("factchainfile_", tmpdir = workdir, fileext = ".dta"), fixed = TRUE)
+    } else {
+      FACTchainfile <- NULL
     }
   }
   if (!is.null(BUGO)) {
-    modelfile = gsub("\\", "/", tempfile("modelfile_", tmpdir=workdir, fileext=".txt"), fixed=TRUE)
-    initfile = gsub("\\", "/", tempfile("initfile_", tmpdir=workdir,fileext=".txt"), fixed=TRUE)
-    datafile = gsub("\\", "/", tempfile("datafile_", tmpdir=workdir,fileext=".txt"), fixed=TRUE)
-    scriptfile = gsub("\\", "/", tempfile("scriptfile_", tmpdir=workdir,fileext=".txt"), fixed=TRUE)
-    bugEst = gsub("\\", "/", tempfile("bugEst_", tmpdir=workdir, fileext=".txt"), fixed=TRUE)
+    modelfile <- gsub("\\", "/", tempfile("modelfile_", tmpdir = workdir, fileext = ".txt"), fixed = TRUE)
+    initfile <- gsub("\\", "/", tempfile("initfile_", tmpdir = workdir, fileext = ".txt"), fixed = TRUE)
+    datafile <- gsub("\\", "/", tempfile("datafile_", tmpdir = workdir, fileext = ".txt"), fixed = TRUE)
+    scriptfile <- gsub("\\", "/", tempfile("scriptfile_", tmpdir = workdir, fileext = ".txt"), fixed = TRUE)
+    bugEst <- gsub("\\", "/", tempfile("bugEst_", tmpdir = workdir, fileext = ".txt"), fixed = TRUE)
   } else {
-    modelfile=NULL
-    initfile=NULL
-    datafile=NULL
+    modelfile <- NULL
+    initfile <- NULL
+    datafile <- NULL
   }
   if (resi.store) {
-    resifile = NULL
+    resifile <- NULL
     for (i in 1:length(rp)) {
-      resifile = c(resifile, gsub("\\", "/", tempfile(paste0("resifile_",i), tmpdir =workdir,fileext=".dta"), fixed=TRUE))
+      resifile <- c(resifile, gsub("\\", "/", tempfile(paste0("resifile_", i), tmpdir = workdir, fileext = ".dta"), 
+                                   fixed = TRUE))
     }
   }
-  if (!is.null(resi.store.levs)) resichains = gsub("\\", "/", tempfile("resichains_",tmpdir =workdir,fileext=".dta"), fixed=TRUE)
-
-  if ((D[1]=="Multivariate Normal"||D[1]=="Mixed"||D[1]=="Multinomial") && !is.null(clre)) {
-    clre[1,] <- as.numeric(clre[1,]) + 1
+  if (!is.null(resi.store.levs)) 
+    resichains <- gsub("\\", "/", tempfile("resichains_", tmpdir = workdir, fileext = ".dta"), fixed = TRUE)
+  
+  if ((D[1] == "Multivariate Normal" || D[1] == "Mixed" || D[1] == "Multinomial") && !is.null(clre)) {
+    clre[1, ] <- as.numeric(clre[1, ]) + 1
   }
-
-  args <- paste0("/run ", "\"" , macrofile, "\"")
-  if (!debugmode){
+  
+  args <- paste0("/run ", "\"", macrofile, "\"")
+  if (!debugmode) {
     args <- paste0("/nogui ", args)
   }
   
   write.dta(outdata, dtafile, version = 10)
   
-  finalClean <- function(clean.files){
-    if (clean.files){
+  finalClean <- function(clean.files) {
+    if (clean.files) {
       file.remove(dtafile)
       file.remove(macrofile)
       file.remove(IGLSfile)
-      if (EstM==1 && is.null(BUGO)) file.remove(MCMCfile)
-      if (EstM==1 && is.null(BUGO)) file.remove(chainfile)
-      if (!is.null(BUGO))  file.remove(modelfile)
-      if (resi.store&& is.null(BUGO)) {
+      if (EstM == 1 && is.null(BUGO)) 
+        file.remove(MCMCfile)
+      if (EstM == 1 && is.null(BUGO)) 
+        file.remove(chainfile)
+      if (!is.null(BUGO)) 
+        file.remove(modelfile)
+      if (resi.store && is.null(BUGO)) {
         for (i in 1:length(rp)) {
           file.remove(resifile[i])
         }
       }
-      if (EstM==1 && is.null(BUGO)){
-        if (!is.null(resi.store.levs)) file.remove(resichains)
-        if (!is.null(fact)) file.remove(FACTchainfile)
-        if (!is.null(dami)) file.remove(MIfile)
+      if (EstM == 1 && is.null(BUGO)) {
+        if (!is.null(resi.store.levs)) 
+          file.remove(resichains)
+        if (!is.null(fact)) 
+          file.remove(FACTchainfile)
+        if (!is.null(dami)) 
+          file.remove(MIfile)
       }
-    } 
+    }
   }
-  if (EstM==0){
-    MacroScript1(outdata, dtafile,oldsyntax,resp, levID, expl, rp, D, nonlinear, categ,notation, nonfp, clre,Meth,extra,reset,rcon,fcon,maxiter,convtol,
-                 mem.init, optimat, weighting, fpsandwich, rpsandwich, macrofile=macrofile,
-                 IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode,startval=startval)
-    iterations=estoptions$mcmcMeth$iterations
-    if(is.null(iterations)) iterations=5000
-    burnin=estoptions$mcmcMeth$burnin
-    if(is.null(burnin)) burnin=500
-    thinning=estoptions$mcmcMeth$thinning
-    if(is.null(thinning)) thinning=1
+  if (EstM == 0) {
+    MacroScript1(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre, 
+                 Meth, extra, reset, rcon, fcon, maxiter, convtol, mem.init, optimat, weighting, fpsandwich, rpsandwich, 
+                 macrofile = macrofile, IGLSfile = IGLSfile, resifile = resifile, resi.store = resi.store, resioptions = resioptions, 
+                 debugmode = debugmode, startval = startval)
+    iterations <- estoptions$mcmcMeth$iterations
+    if (is.null(iterations)) 
+      iterations <- 5000
+    burnin <- estoptions$mcmcMeth$burnin
+    if (is.null(burnin)) 
+      burnin <- 500
+    thinning <- estoptions$mcmcMeth$thinning
+    if (is.null(thinning)) 
+      thinning <- 1
     
-    time1=proc.time()
-    system2(cmd, args = args, stdout=stdout, stderr=stderr)
+    time1 <- proc.time()
+    system2(cmd, args = args, stdout = stdout, stderr = stderr)
     cat("\n")
-    time2=proc.time()-time1
+    time2 <- proc.time() - time1
     
     estIGLS <- read.dta(IGLSfile)
-
-    FP[] <- na.omit(estIGLS[,1])    
-
-    estIGLS2 <- na.omit(estIGLS[,2])
+    
+    FP[] <- na.omit(estIGLS[, 1])
+    
+    estIGLS2 <- na.omit(estIGLS[, 2])
     k <- 1
-    for (i in 1:length(FP)){
-      for (j in 1:i){
-        FP.cov[i,j] <- estIGLS2[k]
-        FP.cov[j,i] <- FP.cov[i,j]
-        k <- k+1
+    for (i in 1:length(FP)) {
+      for (j in 1:i) {
+        FP.cov[i, j] <- estIGLS2[k]
+        FP.cov[j, i] <- FP.cov[i, j]
+        k <- k + 1
       }
     }
-
-    RP[] <- na.omit(estIGLS[,3])
-
-    estIGLS4 <- na.omit(estIGLS[,4])
+    
+    RP[] <- na.omit(estIGLS[, 3])
+    
+    estIGLS4 <- na.omit(estIGLS[, 4])
     k <- 1
-    for (i in 1:length(RP)){
-      for (j in 1:i){
-        RP.cov[i,j] <- estIGLS4[k]
-        RP.cov[j,i] <- RP.cov[i,j]
-        k <- k+1
+    for (i in 1:length(RP)) {
+      for (j in 1:i) {
+        RP.cov[i, j] <- estIGLS4[k]
+        RP.cov[j, i] <- RP.cov[i, j]
+        k <- k + 1
       }
     }
-
-    LIKE <- estIGLS[,dim(estIGLS)[2]][3]
+    
+    LIKE <- estIGLS[, dim(estIGLS)[2]][3]
     if (!is.na(LIKE)) {
-      if (LIKE==1)
+      if (LIKE == 1) 
         LIKE <- NA
     }
-
-    NTotal <- estIGLS[,dim(estIGLS)[2]][1]
-    NUsed <- estIGLS[,dim(estIGLS)[2]][2]
-
-    if (estIGLS[,dim(estIGLS)[2]][8] == 1) {
+    
+    NTotal <- estIGLS[, dim(estIGLS)[2]][1]
+    NUsed <- estIGLS[, dim(estIGLS)[2]][2]
+    
+    if (estIGLS[, dim(estIGLS)[2]][8] == 1) {
       Converged <- TRUE
     } else {
       Converged <- FALSE
     }
-
-    Iterations <-  estIGLS[,dim(estIGLS)[2]][7]
+    
+    Iterations <- estIGLS[, dim(estIGLS)[2]][7]
   }
   
   # MCMC algorithm (using the starting values obtain from IGLS algorithm)
-  if (EstM==1){
-    MacroScript2(outdata, dtafile,oldsyntax,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,Meth,merr,carcentre,maxiter,convtol,
-                 seed,iterations,burnin,scale,thinning,priorParam,refresh,fixM,residM,Lev1VarM, 
-                 OtherVarM,adaption,priorcode,rate, tol,lclo,mcmcOptions,fact,xc,mm,car,BUGO,mem.init,optimat,
-                 modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,MCMCfile=MCMCfile,
-                 chainfile=chainfile,MIfile=MIfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,
-                 resichains=resichains,FACTchainfile=FACTchainfile,resi.store.levs=resi.store.levs,debugmode=debugmode,startval=startval, dami=dami)
+  if (EstM == 1) {
+    MacroScript2(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre, 
+                 Meth, merr, carcentre, maxiter, convtol, seed, iterations, burnin, scale, thinning, priorParam, refresh, 
+                 fixM, residM, Lev1VarM, OtherVarM, adaption, priorcode, rate, tol, lclo, mcmcOptions, fact, xc, mm, car, 
+                 BUGO, mem.init, optimat, modelfile = modelfile, initfile = initfile, datafile = datafile, macrofile = macrofile, 
+                 IGLSfile = IGLSfile, MCMCfile = MCMCfile, chainfile = chainfile, MIfile = MIfile, resifile = resifile, 
+                 resi.store = resi.store, resioptions = resioptions, resichains = resichains, FACTchainfile = FACTchainfile, 
+                 resi.store.levs = resi.store.levs, debugmode = debugmode, startval = startval, dami = dami)
     
     cat("MLwiN is running, please wait......\n")
-    time1=proc.time()
-    system2(cmd, args=args, stdout=stdout, stderr=stderr)
+    time1 <- proc.time()
+    system2(cmd, args = args, stdout = stdout, stderr = stderr)
     cat("\n")
-    time2=proc.time()-time1
+    time2 <- proc.time() - time1
     
-    nlev=length(levID)
-    if (is.null(BUGO)){
+    nlev <- length(levID)
+    if (is.null(BUGO)) {
       estMCMC <- read.dta(MCMCfile)
-
-      FP[] <- na.omit(estMCMC[,1])
-
-      estMCMC2 <- na.omit(estMCMC[,2])
+      
+      FP[] <- na.omit(estMCMC[, 1])
+      
+      estMCMC2 <- na.omit(estMCMC[, 2])
       k <- 1
-      for (i in 1:length(FP)){
-        for (j in 1:i){
-          FP.cov[i,j] <- estMCMC2[k]
-          FP.cov[j,i] <- FP.cov[i,j]
-          k <- k+1
+      for (i in 1:length(FP)) {
+        for (j in 1:i) {
+          FP.cov[i, j] <- estMCMC2[k]
+          FP.cov[j, i] <- FP.cov[i, j]
+          k <- k + 1
         }
       }
-
-      RP[] <- na.omit(estMCMC[,3])
-
-      estMCMC4 <- na.omit(estMCMC[,4])
+      
+      RP[] <- na.omit(estMCMC[, 3])
+      
+      estMCMC4 <- na.omit(estMCMC[, 4])
       k <- 1
-      for (i in 1:length(RP)){
-        for (j in 1:i){
-          RP.cov[i,j] <- estMCMC4[k]
-          RP.cov[j,i] <- RP.cov[i,j]
-          k <- k+1
+      for (i in 1:length(RP)) {
+        for (j in 1:i) {
+          RP.cov[i, j] <- estMCMC4[k]
+          RP.cov[j, i] <- RP.cov[i, j]
+          k <- k + 1
         }
       }
-
-
+      
+      
       chains <- read.dta(chainfile)
-
-      chains <- mcmc(data=chains[,-1], thin = thinning)       
+      
+      chains <- mcmc(data = chains[, -1], thin = thinning)
       chain.names <- colnames(chains)
-      chain.names[grep('RP',chain.names)] <- RP.names
+      chain.names[grep("RP", chain.names)] <- RP.names
       colnames(chains) <- chain.names
-
+      
       ESS <- effectiveSize(chains)
       
-      if (!(D[1]=="Mixed")&&is.null(merr)&&is.null(fact)){
-        BDIC <- estMCMC[,dim(estMCMC)[2]][c(5,6,4,3)]
-        BDIC.names <- c("Dbar", "D(thetabar)",  "pD", "DIC")
+      if (!(D[1] == "Mixed") && is.null(merr) && is.null(fact)) {
+        BDIC <- estMCMC[, dim(estMCMC)[2]][c(5, 6, 4, 3)]
+        BDIC.names <- c("Dbar", "D(thetabar)", "pD", "DIC")
         names(BDIC) <- BDIC.names
-      }else{
-        LIKE <- estMCMC[,dim(estMCMC)[2]][3]
-        if(!is.na(LIKE)){
-          if(LIKE==1) 
+      } else {
+        LIKE <- estMCMC[, dim(estMCMC)[2]][3]
+        if (!is.na(LIKE)) {
+          if (LIKE == 1) 
             LIKE <- NA
         }
       }
-
-      NTotal <- estMCMC[,dim(estMCMC)[2]][1]
-      NUsed <- estMCMC[,dim(estMCMC)[2]][2]
-      levID.display=""
-      if (is.na(levID0[length(levID0)])){
-        levID0=levID0[-length(levID0)]
+      
+      NTotal <- estMCMC[, dim(estMCMC)[2]][1]
+      NUsed <- estMCMC[, dim(estMCMC)[2]][2]
+      levID.display <- ""
+      if (is.na(levID0[length(levID0)])) {
+        levID0 <- levID0[-length(levID0)]
       }
-      for (i in 1:length(levID0)){
-        levID.display=paste(levID.display,"Level ",length(levID0)+1-i,": ",levID0[i],"     ",sep="")
+      for (i in 1:length(levID0)) {
+        levID.display <- paste(levID.display, "Level ", length(levID0) + 1 - i, ": ", levID0[i], "     ", 
+                               sep = "")
       }
-      if (!is.null(fact)){
-        loadings=na.omit(estMCMC[,5])
-        load.names=rep(NA,length(loadings))
-        k=1
-        for (i in 1:fact$nfact){
-          for (j in resp){
-            load.names[k]=paste("load",i,"_",j,sep="")
-            k=k+1
+      if (!is.null(fact)) {
+        loadings <- na.omit(estMCMC[, 5])
+        load.names <- rep(NA, length(loadings))
+        k <- 1
+        for (i in 1:fact$nfact) {
+          for (j in resp) {
+            load.names[k] <- paste("load", i, "_", j, sep = "")
+            k <- k + 1
           }
         }
-        loadings.sd=na.omit(estMCMC[,6])
+        loadings.sd <- na.omit(estMCMC[, 6])
         names(loadings) <- load.names
         names(loadings.sd) <- load.names
         
-        fact.cov=fact.cov.names=na.omit(estMCMC[,7])
-        fact.cov.sd=na.omit(estMCMC[,8])
-        k=1
-        for (i in 1:fact$nfact){
-          for(j in 1:i){
-            if(i==j){
-              fact.cov.names[k]=paste("var_fact",i,sep="")
-            }else{
-              fact.cov.names[k]=paste("cov_fact",i,"_fact",j,sep="")
+        fact.cov <- fact.cov.names <- na.omit(estMCMC[, 7])
+        fact.cov.sd <- na.omit(estMCMC[, 8])
+        k <- 1
+        for (i in 1:fact$nfact) {
+          for (j in 1:i) {
+            if (i == j) {
+              fact.cov.names[k] <- paste("var_fact", i, sep = "")
+            } else {
+              fact.cov.names[k] <- paste("cov_fact", i, "_fact", j, sep = "")
             }
-            k=k+1
+            k <- k + 1
           }
         }
         names(fact.cov) <- fact.cov.names
         names(fact.cov.sd) <- fact.cov.names
         
-        factchains=read.dta(FACTchainfile)
-        factscores=matrix(na.omit(factchains[,"_FACT_value_b"]), ncol=fact$nfact, byrow=FALSE)
-        factscores_v=matrix(na.omit(factchains[,"_FACT_value_v"]), ncol=fact$nfact, byrow=FALSE)
-        factloads=matrix(na.omit(factchains[,"_FACT_load_b_chain"]), nrow=iterations/thinning, byrow=TRUE)
-        factcovs=matrix(na.omit(factchains[,"_FACT_load_v_chain"]), nrow=iterations/thinning, byrow=TRUE)
-        nameloads=NULL
-        namefacts=NULL
-        namefacts_v=NULL
-        namecovs=NULL
-        for (i in 1:fact$nfact){
+        factchains <- read.dta(FACTchainfile)
+        factscores <- matrix(na.omit(factchains[, "_FACT_value_b"]), ncol = fact$nfact, byrow = FALSE)
+        factscores_v <- matrix(na.omit(factchains[, "_FACT_value_v"]), ncol = fact$nfact, byrow = FALSE)
+        factloads <- matrix(na.omit(factchains[, "_FACT_load_b_chain"]), nrow = iterations/thinning, byrow = TRUE)
+        factcovs <- matrix(na.omit(factchains[, "_FACT_load_v_chain"]), nrow = iterations/thinning, byrow = TRUE)
+        nameloads <- NULL
+        namefacts <- NULL
+        namefacts_v <- NULL
+        namecovs <- NULL
+        for (i in 1:fact$nfact) {
           if (fact$lev.fact[i] > 1) {
             nunit <- nrow(unique(indata[rev(na.omit(levID))[fact$lev.fact[i]]]))
             if (length(factscores) > nunit) {
-              factscores[(nunit+1):nrow(factscores),i] <- NA
+              factscores[(nunit + 1):nrow(factscores), i] <- NA
             }
           }
-          namefacts = c(namefacts, paste0("factorscores", i))
-          namefacts_v = c(namefacts_v, paste0("factorscores_var", i))
+          namefacts <- c(namefacts, paste0("factorscores", i))
+          namefacts_v <- c(namefacts_v, paste0("factorscores_var", i))
         }
-        colnames(factscores) = namefacts
-        colnames(factscores_v) = namefacts_v
-        colnames(factloads) = load.names
-        colnames(factcovs) = fact.cov.names
-        factChains = list(scores=factscores, scores_v=factscores_v, loadings=mcmc(data=factloads, thin = thinning), cov=mcmc(data=factcovs, thin = thinning))
-      }
-       
-      if (sum(grepl("bcons",colnames(chains)))>0){
-        bcons.pos=grep("bcons",colnames(chains))
-        chains[1,bcons.pos]=chains[1,bcons.pos]-0.001
+        colnames(factscores) <- namefacts
+        colnames(factscores_v) <- namefacts_v
+        colnames(factloads) <- load.names
+        colnames(factcovs) <- fact.cov.names
+        factChains <- list(scores = factscores, scores_v = factscores_v, loadings = mcmc(data = factloads, 
+                                                                                         thin = thinning), cov = mcmc(data = factcovs, thin = thinning))
       }
       
-      if (is.na(levID[length(levID)])){
-        mlwinlev=(nlev-1):1
-        levID2=levID0
-      }else{
-        mlwinlev=nlev:1
-        levID2=levID
+      if (sum(grepl("bcons", colnames(chains))) > 0) {
+        bcons.pos <- grep("bcons", colnames(chains))
+        chains[1, bcons.pos] <- chains[1, bcons.pos] - 0.001
+      }
+      
+      if (is.na(levID[length(levID)])) {
+        mlwinlev <- (nlev - 1):1
+        levID2 <- levID0
+      } else {
+        mlwinlev <- nlev:1
+        levID2 <- levID
       }
     }
   }
   
-  if (show.file) file.show(macrofile)
-  if ((!is.null(BUGO))&&!(D[1]=="Mixed")){
-    if (show.file) file.show(modelfile)
-    n.iter=iterations+burnin
-    addmore=NULL
-    if(EstM==1){
-      if(!is.null(car)){
-        addmore=c(addmore,"carmean")
-      }	
-      if(is.matrix(mcmcOptions$paex)){
-        if(sum(mcmcOptions$paex[,2])>0){
-          vx=sapply(2:nlev, function(x) paste("v",x,sep=""))
-          sigma2v=sapply(2:nlev, function(x) paste("sigma2.v",x,sep=""))
-          addmore=c(addmore,vx,sigma2v)
+  if (show.file) 
+    file.show(macrofile)
+  if ((!is.null(BUGO)) && !(D[1] == "Mixed")) {
+    if (show.file) 
+      file.show(modelfile)
+    n.iter <- iterations + burnin
+    addmore <- NULL
+    if (EstM == 1) {
+      if (!is.null(car)) {
+        addmore <- c(addmore, "carmean")
+      }
+      if (is.matrix(mcmcOptions$paex)) {
+        if (sum(mcmcOptions$paex[, 2]) > 0) {
+          vx <- sapply(2:nlev, function(x) paste("v", x, sep = ""))
+          sigma2v <- sapply(2:nlev, function(x) paste("sigma2.v", x, sep = ""))
+          addmore <- c(addmore, vx, sigma2v)
         }
-      }else{
-        if(is.vector(mcmcOptions$paex)&&length(mcmcOptions$paex)==2){
-          if(mcmcOptions$paex[2]>0){
-            vx=sapply(2:nlev, function(x) paste("v",x,sep=""))
-            sigma2v=sapply(2:nlev, function(x) paste("sigma2.v",x,sep=""))
-            addmore=c(addmore, vx,sigma2v)
+      } else {
+        if (is.vector(mcmcOptions$paex) && length(mcmcOptions$paex) == 2) {
+          if (mcmcOptions$paex[2] > 0) {
+            vx <- sapply(2:nlev, function(x) paste("v", x, sep = ""))
+            sigma2v <- sapply(2:nlev, function(x) paste("sigma2.v", x, sep = ""))
+            addmore <- c(addmore, vx, sigma2v)
           }
         }
       }
     }
     
-    debug=as.logical(BUGO["debug"])
-    if (is.na(debug)){
-      debug=FALSE
+    debug <- as.logical(BUGO["debug"])
+    if (is.na(debug)) {
+      debug <- FALSE
     }
-    OpenBugs=as.logical(BUGO["OpenBugs"])
-    if (is.na(OpenBugs)){
-      OpenBugs=FALSE
+    OpenBugs <- as.logical(BUGO["OpenBugs"])
+    if (is.na(OpenBugs)) {
+      OpenBugs <- FALSE
     }
-    n.chains=as.integer(BUGO["n.chains"])
-    if (is.na(n.chains)){
-      n.chains=1
+    n.chains <- as.integer(BUGO["n.chains"])
+    if (is.na(n.chains)) {
+      n.chains <- 1
     }
-    bugs.seed=BUGO["seed"]
-    bugs=BUGO["bugs"]
-    if (is.na(bugs.seed)){
-      bugs.seed=NULL
+    bugs.seed <- BUGO["seed"]
+    bugs <- BUGO["bugs"]
+    if (is.na(bugs.seed)) {
+      bugs.seed <- NULL
     }
-    if (is.na(bugs)){
+    if (is.na(bugs)) {
       stop("Need to specify path to the BUGS executable.")
     }
-    chains.bugs.mcmc=mlwin2bugs(D,levID, datafile, initfile, modelfile, bugEst, fact, addmore, n.chains = n.chains, n.iter = n.iter, n.burnin=burnin, n.thin=thinning, debug=debug, bugs=bugs,
-                                bugsWorkingDir=workdir, OpenBugs = OpenBugs, cleanBugsWorkingDir=clean.files, seed = bugs.seed)
-    time2=proc.time()-time1
-  }else{
-    if (D[1]=="Mixed"&&(!is.null(BUGO)))  warning("The Mixed response model is currently not implemented in WinBUGS/OpenBUGS.")
+    chains.bugs.mcmc <- mlwin2bugs(D, levID, datafile, initfile, modelfile, bugEst, fact, addmore, n.chains = n.chains, 
+                                   n.iter = n.iter, n.burnin = burnin, n.thin = thinning, debug = debug, bugs = bugs, bugsWorkingDir = workdir, 
+                                   OpenBugs = OpenBugs, cleanBugsWorkingDir = clean.files, seed = bugs.seed)
+    time2 <- proc.time() - time1
+  } else {
+    if (D[1] == "Mixed" && (!is.null(BUGO))) 
+      warning("The Mixed response model is currently not implemented in WinBUGS/OpenBUGS.")
   }
   
-  if (resi.store&& is.null(BUGO)){
-    resiraw=list()
+  if (resi.store && is.null(BUGO)) {
+    resiraw <- list()
     for (i in 1:length(rp)) {
       tmp <- as.list(read.dta(resifile[i]))
       for (j in names(tmp)) {
@@ -2627,109 +2705,108 @@ version:date:md5:filename:x64:trial
     }
   }
   
-  if (EstM==1 && is.null(BUGO) && !is.null(resi.store.levs)){
+  if (EstM == 1 && is.null(BUGO) && !is.null(resi.store.levs)) {
     residata <- read.dta(resichains)
     resiChains <- list()
     for (name in colnames(residata)) {
       lev <- as.integer(gsub("resi_lev", "", name))
       nunit <- nrow(unique(indata[rev(levID)[lev]]))
       pnames <- NULL
-      ucount = 0
+      ucount <- 0
       for (varname in rp[[paste0("rp", lev)]]) {
-        pnames <- c(pnames, paste("u", ucount, seq(1:nunit), sep="_"))
-        ucount = ucount +1
+        pnames <- c(pnames, paste("u", ucount, seq(1:nunit), sep = "_"))
+        ucount <- ucount + 1
       }
-      resiChains[[name]] <- mcmc(data=matrix(na.omit(residata[, name]), nrow=iterations/thinning, byrow=TRUE, dimnames=list(1:(iterations/thinning), pnames)), thin = thinning)
+      resiChains[[name]] <- mcmc(data = matrix(na.omit(residata[, name]), nrow = iterations/thinning, byrow = TRUE, 
+                                               dimnames = list(1:(iterations/thinning), pnames)), thin = thinning)
     }
   }
   
-  if (EstM==0){
-    if (is.null(BUGO)){
-      outIGLS=new("mlwinfitIGLS")
-      outIGLS["version"]=versiontext
-      outIGLS["Nobs"]=NUsed
-      outIGLS["DataLength"]=NTotal
-      outIGLS["Hierarchy"]=hierarchy
-      outIGLS["D"]=D
-      outIGLS["Formula"]=Formula
-      outIGLS["levID"]=levID
-      outIGLS["FP"]=FP
-      outIGLS["RP"]=RP
-      outIGLS["FP.cov"]=FP.cov
-      outIGLS["RP.cov"]=RP.cov
-      outIGLS["LIKE"]=LIKE
-      outIGLS["Meth"]=Meth
-      outIGLS["nonlinear"]=nonlinear
-      outIGLS["Converged"]=Converged
-      outIGLS["Iterations"]=Iterations
-      outIGLS["elapsed.time"]=time2[3]
-      outIGLS["call"]=cl
-      outIGLS["data"]=as.data.frame(outdata)
+  if (EstM == 0) {
+    if (is.null(BUGO)) {
+      outIGLS <- new("mlwinfitIGLS")
+      outIGLS["version"] <- versiontext
+      outIGLS["Nobs"] <- NUsed
+      outIGLS["DataLength"] <- NTotal
+      outIGLS["Hierarchy"] <- hierarchy
+      outIGLS["D"] <- D
+      outIGLS["Formula"] <- Formula
+      outIGLS["levID"] <- levID
+      outIGLS["FP"] <- FP
+      outIGLS["RP"] <- RP
+      outIGLS["FP.cov"] <- FP.cov
+      outIGLS["RP.cov"] <- RP.cov
+      outIGLS["LIKE"] <- LIKE
+      outIGLS["Meth"] <- Meth
+      outIGLS["nonlinear"] <- nonlinear
+      outIGLS["Converged"] <- Converged
+      outIGLS["Iterations"] <- Iterations
+      outIGLS["elapsed.time"] <- time2[3]
+      outIGLS["call"] <- cl
+      outIGLS["data"] <- as.data.frame(outdata)
       
-      if (resi.store){
-        outIGLS["residual"]=resiraw
+      if (resi.store) {
+        outIGLS["residual"] <- resiraw
       }
       
       finalClean(clean.files)
       return(outIGLS)
-    }
-    else{
+    } else {
       finalClean(clean.files)
       print(summary(chains.bugs.mcmc))
       return(chains.bugs.mcmc)
     }
   }
-  if (EstM==1){
-    if (is.null(BUGO)){
-      outMCMC=new("mlwinfitMCMC")
-      outMCMC["version"]=versiontext
-      outMCMC["Nobs"]=NUsed
-      outMCMC["DataLength"]=NTotal
-      outMCMC["Hierarchy"]=hierarchy
-      outMCMC["burnin"]=burnin
-      outMCMC["iterations"]=iterations
-      outMCMC["D"]=D
-      outMCMC["Formula"]=Formula
-      outMCMC["levID"]=levID
-      outMCMC["merr"]=merr
-      outMCMC["fact"]=fact
-      outMCMC["xc"]=xc
-      outMCMC["FP"]=FP
-      outMCMC["RP"]=RP
-      outMCMC["FP.cov"]=FP.cov
-      outMCMC["RP.cov"]=RP.cov
-      outMCMC["chains"]=chains
-      outMCMC["elapsed.time"]=time2[3]
-      outMCMC["call"]=cl
-      outMCMC["data"]=as.data.frame(outdata)
-      if (!(D[1]=="Mixed")&&is.null(merr)&&is.null(fact)){
-        outMCMC["BDIC"]=BDIC
-      }else{
-        outMCMC["LIKE"]=LIKE
+  if (EstM == 1) {
+    if (is.null(BUGO)) {
+      outMCMC <- new("mlwinfitMCMC")
+      outMCMC["version"] <- versiontext
+      outMCMC["Nobs"] <- NUsed
+      outMCMC["DataLength"] <- NTotal
+      outMCMC["Hierarchy"] <- hierarchy
+      outMCMC["burnin"] <- burnin
+      outMCMC["iterations"] <- iterations
+      outMCMC["D"] <- D
+      outMCMC["Formula"] <- Formula
+      outMCMC["levID"] <- levID
+      outMCMC["merr"] <- merr
+      outMCMC["fact"] <- fact
+      outMCMC["xc"] <- xc
+      outMCMC["FP"] <- FP
+      outMCMC["RP"] <- RP
+      outMCMC["FP.cov"] <- FP.cov
+      outMCMC["RP.cov"] <- RP.cov
+      outMCMC["chains"] <- chains
+      outMCMC["elapsed.time"] <- time2[3]
+      outMCMC["call"] <- cl
+      outMCMC["data"] <- as.data.frame(outdata)
+      if (!(D[1] == "Mixed") && is.null(merr) && is.null(fact)) {
+        outMCMC["BDIC"] <- BDIC
+      } else {
+        outMCMC["LIKE"] <- LIKE
       }
-      if (!is.null(fact)){
-        outMCMC["fact.loadings"]=loadings
-        outMCMC["fact.loadings.sd"]=loadings.sd
-        outMCMC["fact.cov"]=fact.cov
-        outMCMC["fact.cov.sd"]=fact.cov.sd
-        outMCMC["fact.chains"]=factChains
+      if (!is.null(fact)) {
+        outMCMC["fact.loadings"] <- loadings
+        outMCMC["fact.loadings.sd"] <- loadings.sd
+        outMCMC["fact.cov"] <- fact.cov
+        outMCMC["fact.cov.sd"] <- fact.cov.sd
+        outMCMC["fact.chains"] <- factChains
       }
-      if (!is.null(resi.store.levs)){
-        outMCMC["resi.chains"]=resiChains
+      if (!is.null(resi.store.levs)) {
+        outMCMC["resi.chains"] <- resiChains
       }
-      if (!is.null(dami)){
-        outMCMC["MIdata"]=read.dta(MIfile)
+      if (!is.null(dami)) {
+        outMCMC["MIdata"] <- read.dta(MIfile)
       }
       
-      if (resi.store){
-        outMCMC["residual"]=resiraw
+      if (resi.store) {
+        outMCMC["residual"] <- resiraw
       }
       finalClean(clean.files)
       return(outMCMC)
-    }
-    else{
+    } else {
       finalClean(clean.files)
       return(chains.bugs.mcmc)
     }
   }
-}
+} 

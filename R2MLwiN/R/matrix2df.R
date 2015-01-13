@@ -17,7 +17,7 @@
 #' 
 #' @seealso \code{\link{df2matrix}}
 #' @export
-matrix2df <- function(mat, standardise=FALSE, idstub="id", weightstub="weight") {
+matrix2df <- function(mat, standardise = FALSE, idstub = "id", weightstub = "weight") {
   if (!is.matrix(mat) && !is(mat, "sparseMatrix")) {
     stop("Invalid input data")
   }
@@ -25,9 +25,9 @@ matrix2df <- function(mat, standardise=FALSE, idstub="id", weightstub="weight") 
     colnames(mat) <- 1:ncol(mat)
   }
   if (isTRUE(standardise)) {
-    mat <- mat / Matrix::rowSums(mat)
+    mat <- mat/Matrix::rowSums(mat)
   }
-  numvars <- max(Matrix::rowSums(mat!=0))
+  numvars <- max(Matrix::rowSums(mat != 0))
   idcols <- data.frame(matrix(0, nrow(mat), numvars))
   rownames(idcols) <- 1:nrow(mat)
   colnames(idcols) <- paste0(idstub, 1:numvars)
@@ -36,10 +36,10 @@ matrix2df <- function(mat, standardise=FALSE, idstub="id", weightstub="weight") 
   rownames(weightcols) <- 1:nrow(mat)
   
   for (i in 1:nrow(mat)) {
-    row <- mat[i, mat[i,] != 0, drop=FALSE]
+    row <- mat[i, mat[i, ] != 0, drop = FALSE]
     idcols[i, 1:length(row)] <- colnames(row)
     weightcols[i, 1:length(row)] <- as.numeric(row)
   }
   
   cbind(idcols, weightcols)
-}
+} 
