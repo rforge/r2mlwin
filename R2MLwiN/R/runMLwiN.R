@@ -2398,6 +2398,10 @@ version:date:md5:filename:x64:trial
     args <- paste0("/nogui ", args)
   }
   
+  dups <- duplicated(tolower(colnames(outdata)))
+  if (any(dups)) {
+    stop(paste("variables name(s)", paste(colnames(outdata)[dups], collapse=","), "are duplicates when ignoring case"))
+  }
   write.dta(outdata, dtafile, version = 10)
   
   finalClean <- function(clean.files) {
