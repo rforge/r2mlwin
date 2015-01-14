@@ -1621,7 +1621,7 @@ MacroScript1 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
   }
   
   if (debugmode) {
-    wrt("WPMT "Do you want to close MLwiN?" b50")
+    wrt("WPMT 'Do you want to close MLwiN?' b50")
     wrt("SWITch b50")
     wrt("  CASE 1:")
     wrt("    EXIT ")
