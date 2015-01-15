@@ -38,7 +38,7 @@ hist(alevchem$gcseav, breaks = 20)
 
 (mymodel <- runMLwiN(a_point ~ 1 + (pupil | 1), estoptions = list(EstM = 1), data = alevchem))
 
-(mymodel <- runMLwiN(a_point ~ 1 + gcseav + I(gcseav^2) + I(gcseav^3) + gender + (pupil | 1), estoptions = list(EstM = 1, 
+(mymodel <- runMLwiN(a_point ~ 1 + gcseav + I(gcseav^2) + I(gcseav^3) + gender + (pupil | 1), estoptions = list(EstM = 1,
   resi.store = TRUE), data = alevchem))
 
 predCurves(mymodel, xname = "gcseav", group = "genderfemale")
@@ -53,26 +53,28 @@ predCurves(mymodel, xname = "gcseav", group = "genderfemale")
 
 # 13.4 Adding predictor variables . . . . . . . . . . . . . . . . . . . .191
 ##MCMC
-(mymodel <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseav[1:5] + I(gcseav^2)[1:5] + I(gcseav^3)[1:5] + gender[1:5], 
+(mymodel <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseav[1:5] + I(gcseav^2)[1:5] + I(gcseav^3)[1:5] + gender[1:5],
   D = "Ordered Multinomial", estoptions = list(EstM = 1), data = alevchem))
 
 # 13.5 Multilevel ordered response modelling . . . . . . . . . . . . . . 192
 
 # Note: Establishment codes on their own do not uniquely identify schools.
-# Schools are instead uniquely identified by LEA code, establishment ID 
-# combination. Thus, here we generated a unique school ID.alevchem$school <- as.numeric(factor(paste0(alevchem$lea, alevchem$estab)))
+# Schools are instead uniquely identified by LEA code, establishment ID
+# combination. Thus, here we generated a unique school ID.
+
+alevchem$school <- as.numeric(factor(paste0(alevchem$lea, alevchem$estab)))
 
 ##MCMC
-(mymodel <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseav[1:5] + I(gcseav^2)[1:5] + gender[1:5] + (school | 1[1:5]), 
+(mymodel <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseav[1:5] + I(gcseav^2)[1:5] + gender[1:5] + (school | 1[1:5]),
   D = "Ordered Multinomial", estoptions = list(EstM = 1), data = alevchem))
 
 ##MCMC
-(mymodel <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseav[1:5] + I(gcseav^2)[1:5] + gender[1:5] + (school | 1[1:5] + 
+(mymodel <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseav[1:5] + I(gcseav^2)[1:5] + gender[1:5] + (school | 1[1:5] +
   gcseav[1:5]), D = "Ordered Multinomial", estoptions = list(EstM = 1), data = alevchem))
 sixway(mymodel@chains[, "RP2_var_Intercept_12345", drop = FALSE], acf.maxlag = 300, "sigma2v6")
 
 ##Increases iterations to 50,000
-(mymodel <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseav[1:5] + I(gcseav^2)[1:5] + gender[1:5] + (school | 1[1:5] + 
+(mymodel <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseav[1:5] + I(gcseav^2)[1:5] + gender[1:5] + (school | 1[1:5] +
   gcseav[1:5]), D = "Ordered Multinomial", estoptions = list(EstM = 1, mcmcMeth = list(iterations = 50000)), data = alevchem))
 sixway(mymodel@chains[, "RP2_var_Intercept_12345", drop = FALSE], acf.maxlag = 300, "sigma2v6")
 
