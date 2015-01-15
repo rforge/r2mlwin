@@ -219,6 +219,7 @@
 #' multiple imputation. If \code{dami = 1} the value of y will be the mean
 #' estimate from the iterations produced. \code{dami = 2} is as for \code{dami = 1}
 #' but with the standard errors of the estimate additionally being stored.
+#' @param namemap A mapping of column names to DTA friendly shorter names
 #' 
 #' @details A list of other MCMC options as used in the argument
 #' \code{mcmcOptions}:
@@ -293,7 +294,10 @@
 #' are constrained (\code{1}) or not (\code{0}).
 #' }
 #' 
+#' @return Outputs a modified version of namemap containing newly generated
+#' short names.
 #' @note Note that for \code{FixM}, \code{residM}, \code{Lev1VarM} and
+#' 
 #' \code{OtherVarM}, not all combinations of methods are available for all sets
 #' of parameters and all models.
 #' 
@@ -314,7 +318,18 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
                          fixM = 1, residM = 1, Lev1VarM = 1, OtherVarM = 1, adaption = 1, priorcode = 1, rate = 50, tol = 10, lclo = 0, 
                          mcmcOptions, fact = NULL, xc = NULL, mm = NULL, car = NULL, BUGO = NULL, mem.init = "default", optimat = FALSE, 
                          modelfile, initfile, datafile, macrofile, IGLSfile, MCMCfile, chainfile, MIfile, resifile, resi.store = FALSE, 
-                         resioptions, resichains, FACTchainfile, resi.store.levs = NULL, debugmode = FALSE, startval = NULL, dami = NULL) {
+                         resioptions, resichains, FACTchainfile, resi.store.levs = NULL, debugmode = FALSE, startval = NULL, dami = NULL,
+                         namemap = sapply(colnames(indata), as.character)) {
+  
+  shortname <- function(...) {
+    name <- paste0(...)
+    if (!name %in% names(namemap)) {
+      sname <- paste0("v", digest(name, algo = "xxhash64", serialize = FALSE))
+      names(sname) <- name
+      namemap <<- c(namemap, sname)
+    }
+    return(namemap[[name]])
+  }
   
   nlev <- length(levID)
   
@@ -431,6 +446,13 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
   wrt("MONI    0")
   wrt("NOTE    Import the R data into MLwiN")
   wrt(paste("RSTA    '", dtafile, "'", sep = ""))
+  
+  wrt("NOTE    Correct column names")
+  for (name in names(namemap)) {
+    wrt(paste0("COLN '", namemap[[name]], "' b50"))
+    wrt(paste0("DESC cb50 '", name, "'"))
+    wrt(paste0("NAME cb50 '", name, "'"))
+  }
   
   if (notation == "class") {
     wrt("INDE 1")
@@ -1853,8 +1875,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
             if (is.null(categ) || sum(p == categ["var", ]) == 0) {
               for (j in 1:nresp) {
                 wrt("LINK 1 G25")
-                wrt(paste("NAME G25[1] 'FP_", chartr(".", "_", p), "_", resp.names[j], "'", sep = ""))
-                wrt(paste("DESC G25[1] 'FP:", chartr(".", "_", p), "_", resp.names[j], "'", sep = ""))
+                wrt(paste0("NAME G25[1] '", shortname("FP_", chartr(".", "_", p), "_", resp.names[j]), "'"))
+                wrt(paste0("DESC G25[1] 'FP:", chartr(".", "_", p), "_", resp.names[j], "'"))
                 wrt("GSET 2 G26 G25 G26")
                 wrt("LINK 0 G25")
               }
@@ -1864,10 +1886,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
                 for (j in 1:nresp) {
                   for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
                     wrt("LINK 1 G25")
-                    wrt(paste("NAME G25[1] 'FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], "'", 
-                              sep = ""))
-                    wrt(paste("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "_", resp.names[j], "'", 
-                              sep = ""))
+                    wrt(paste0("NAME G25[1] '", shortname("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j]), "'"))
+                    wrt(paste0("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "_", resp.names[j], "'"))
                     wrt("GSET 2 G26 G25 G26")
                     wrt("LINK 0 G25")
                   }
@@ -1879,10 +1899,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
                 for (j in 1:nresp) {
                   for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
                     wrt("LINK 1 G25")
-                    wrt(paste("NAME G25[1] 'FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], "'", 
-                              sep = ""))
-                    wrt(paste("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "_", resp.names[j], "'", 
-                              sep = ""))
+                    wrt(paste0("NAME G25[1] '", shortname("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j]), "'"))
+                    wrt(paste0("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "_", resp.names[j], "'"))
                     wrt("GSET 2 G26 G25 G26")
                     wrt("LINK 0 G25")
                   }
@@ -1902,8 +1920,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
           if (is.na(nonfp.common[1]) || sum(newp == nonfp.c) == 0) {
             if (is.null(categ) || sum(p == categ["var", ]) == 0) {
               wrt("LINK 1 G25")
-              wrt(paste("NAME G25[1] 'FP_", chartr(".", "_", newp), "'", sep = ""))
-              wrt(paste("DESC G25[1] 'FP:", chartr(".", "_", newp), "'", sep = ""))
+              wrt(paste0("NAME G25[1] '", shortname("FP_", chartr(".", "_", newp)), "'"))
+              wrt(paste0("DESC G25[1] 'FP:", chartr(".", "_", newp), "'"))
               wrt("GSET 2 G26 G25 G26")
               wrt("LINK 0 G25")
             } else {
@@ -1911,8 +1929,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
                 categ.names <- levels(indata[[p]])
                 for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
                   wrt("LINK 1 G25")
-                  wrt(paste("NAME G25[1] 'FP_", chartr(".", "_", categ.names[i]), "'", sep = ""))
-                  wrt(paste("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "'", sep = ""))
+                  wrt(paste0("NAME G25[1] '", shortname("FP_", chartr(".", "_", categ.names[i])), "'"))
+                  wrt(paste0("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "'"))
                   wrt("GSET 2 G26 G25 G26")
                   wrt("LINK 0 G25")
                 }
@@ -1922,8 +1940,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
                 categ.names <- categ.names[-which(refx == categ.names)]
                 for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
                   wrt("LINK 1 G25")
-                  wrt(paste("NAME G25[1] 'FP_", chartr(".", "_", categ.names[i]), "'", sep = ""))
-                  wrt(paste("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "'", sep = ""))
+                  wrt(paste0("NAME G25[1] '", shortname("FP_", chartr(".", "_", categ.names[i])), "'"))
+                  wrt(paste0("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "'"))
                   wrt("GSET 2 G26 G25 G26")
                   wrt("LINK 0 G25")
                 }
@@ -1948,8 +1966,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
             if (is.null(categ) || sum(p == categ["var", ]) == 0) {
               for (j in 1:nresp) {
                 wrt("LINK 1 G25")
-                wrt(paste("NAME G25[1] 'FP_", chartr(".", "_", p), "_", resp.names[j], "'", sep = ""))
-                wrt(paste("DESC G25[1] 'FP:", chartr(".", "_", p), "_", resp.names[j], "'", sep = ""))
+                wrt(paste0("NAME G25[1] '", shortname("FP_", chartr(".", "_", p), "_", resp.names[j]), "'"))
+                wrt(paste0("DESC G25[1] 'FP:", chartr(".", "_", p), "_", resp.names[j], "'"))
                 wrt("GSET 2 G26 G25 G26")
                 wrt("LINK 0 G25")
               }
@@ -1960,10 +1978,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
                 for (j in 1:nresp) {
                   for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
                     wrt("LINK 1 G25")
-                    wrt(paste("NAME G25[1] 'FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], "'", 
-                              sep = ""))
-                    wrt(paste("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "_", resp.names[j], "'", 
-                              sep = ""))
+                    wrt(paste0("NAME G25[1] '", shortname("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j]), "'"))
+                    wrt(paste0("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "_", resp.names[j], "'"))
                     wrt("GSET 2 G26 G25 G26")
                     wrt("LINK 0 G25")
                   }
@@ -1975,10 +1991,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
                 for (j in 1:nresp) {
                   for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
                     wrt("LINK 1 G25")
-                    wrt(paste("NAME G25[1] 'FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], "'", 
-                              sep = ""))
-                    wrt(paste("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "_", resp.names[j], "'", 
-                              sep = ""))
+                    wrt(paste0("NAME G25[1] '", shortname("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j]), "'"))
+                    wrt(paste0("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "_", resp.names[j], "'"))
                     wrt("GSET 2 G26 G25 G26")
                     wrt("LINK 0 G25")
                   }
@@ -2005,8 +2019,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
               if (is.null(categ) || sum(p == categ["var", ]) == 0) {
                 for (j in 1:nresp) {
                   wrt("LINK 1 G25")
-                  wrt(paste("NAME G25[1] 'FP_", chartr(".", "_", p), "_", resp[j], "'", sep = ""))
-                  wrt(paste("DESC G25[1] 'FP:", chartr(".", "_", p), "_", resp[j], "'", sep = ""))
+                  wrt(paste0("NAME G25[1] '", shortname("FP_", chartr(".", "_", p), "_", resp[j]), "'"))
+                  wrt(paste0("DESC G25[1] 'FP:", chartr(".", "_", p), "_", resp[j], "'"))
                   wrt("GSET 2 G26 G25 G26")
                   wrt("LINK 0 G25")
                 }
@@ -2016,10 +2030,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
                   for (j in 1:nresp) {
                     for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
                       wrt("LINK 1 G25")
-                      wrt(paste("NAME G25[1] 'FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], 
-                                "'", sep = ""))
-                      wrt(paste("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "_", resp.names[j], 
-                                "'", sep = ""))
+                      wrt(paste0("NAME G25[1] '", shortname("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j]), "'"))
+                      wrt(paste0("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "_", resp.names[j], "'"))
                       wrt("GSET 2 G26 G25 G26")
                       wrt("LINK 0 G25")
                     }
@@ -2031,10 +2043,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
                   for (j in 1:nresp) {
                     for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
                       wrt("LINK 1 G25")
-                      wrt(paste("NAME G25[1] 'FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], 
-                                "'", sep = ""))
-                      wrt(paste("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "_", resp.names[j], 
-                                "'", sep = ""))
+                      wrt(paste0("NAME G25[1] '", shortname("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j]), "'"))
+                      wrt(paste0("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "_", resp.names[j], "'"))
                       wrt("GSET 2 G26 G25 G26")
                       wrt("LINK 0 G25")
                     }
@@ -2052,8 +2062,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
             if (is.na(nonfp.common[1]) || sum(newp == nonfp.c) == 0) {
               if (is.null(categ) || sum(p == categ["var", ]) == 0) {
                 wrt("LINK 1 G25")
-                wrt(paste("NAME G25[1] 'FP_", chartr(".", "_", newp), "'", sep = ""))
-                wrt(paste("DESC G25[1] 'FP:", chartr(".", "_", newp), "'", sep = ""))
+                wrt(paste0("NAME G25[1] '", shortname("FP_", chartr(".", "_", newp)), "'"))
+                wrt(paste0("DESC G25[1] 'FP:", chartr(".", "_", newp), "'"))
                 wrt("GSET 2 G26 G25 G26")
                 wrt("LINK 0 G25")
               } else {
@@ -2061,8 +2071,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
                   categ.names <- levels(indata[[p]])
                   for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
                     wrt("LINK 1 G25")
-                    wrt(paste("NAME G25[1] 'FP_", chartr(".", "_", categ.names[i]), "'", sep = ""))
-                    wrt(paste("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "'", sep = ""))
+                    wrt(paste0("NAME G25[1] '", shortname("FP_", chartr(".", "_", categ.names[i])), "'"))
+                    wrt(paste0("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "'"))
                     wrt("GSET 2 G26 G25 G26")
                     wrt("LINK 0 G25")
                   }
@@ -2072,8 +2082,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
                   categ.names <- categ.names[-which(refx == categ.names)]
                   for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
                     wrt("LINK 1 G25")
-                    wrt(paste("NAME G25[1] 'FP_", chartr(".", "_", categ.names[i]), "'", sep = ""))
-                    wrt(paste("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "'", sep = ""))
+                    wrt(paste0("NAME G25[1] '", shortname("FP_", chartr(".", "_", categ.names[i])), "'"))
+                    wrt(paste0("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "'"))
                     wrt("GSET 2 G26 G25 G26")
                     wrt("LINK 0 G25")
                   }
@@ -2093,8 +2103,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
               if (is.null(categ) || sum(p == categ["var", ]) == 0) {
                 for (j in 1:nresp) {
                   wrt("LINK 1 G25")
-                  wrt(paste("NAME G25[1] 'FP_", chartr(".", "_", p), "_", resp[j], "'", sep = ""))
-                  wrt(paste("DESC G25[1] 'FP:", chartr(".", "_", p), "_", resp[j], "'", sep = ""))
+                  wrt(paste0("NAME G25[1] '", shortname("FP_", chartr(".", "_", p), "_", resp[j]), "'"))
+                  wrt(paste0("DESC G25[1] 'FP:", chartr(".", "_", p), "_", resp[j], "'"))
                   wrt("GSET 2 G26 G25 G26")
                   wrt("LINK 0 G25")
                 }
@@ -2104,10 +2114,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
                   for (j in 1:nresp) {
                     for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
                       wrt("LINK 1 G25")
-                      wrt(paste("NAME G25[1] 'FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], 
-                                "'", sep = ""))
-                      wrt(paste("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "_", resp.names[j], 
-                                "'", sep = ""))
+                      wrt(paste0("NAME G25[1] '", shortname("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j]), "'"))
+                      wrt(paste0("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "_", resp.names[j], "'"))
                       wrt("GSET 2 G26 G25 G26")
                       wrt("LINK 0 G25")
                     }
@@ -2119,10 +2127,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
                   for (j in 1:nresp) {
                     for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
                       wrt("LINK 1 G25")
-                      wrt(paste("NAME G25[1] 'FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], 
-                                "'", sep = ""))
-                      wrt(paste("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "_", resp.names[j], 
-                                "'", sep = ""))
+                      wrt(paste0("NAME G25[1] '", shortname("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j]), "'"))
+                      wrt(paste0("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "_", resp.names[j], "'"))
                       wrt("GSET 2 G26 G25 G26")
                       wrt("LINK 0 G25")
                     }
@@ -2138,8 +2144,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
           if (is.na(nonfp[1]) || sum(p == nonfp) == 0) {
             if (is.null(categ) || sum(p == categ["var", ]) == 0) {
               wrt("LINK 1 G25")
-              wrt(paste("NAME G25[1] 'FP_", p, "'", sep = ""))
-              wrt(paste("DESC G25[1] 'FP:", p, "'", sep = ""))
+              wrt(paste0("NAME G25[1] '", shortname("FP_", p), "'"))
+              wrt(paste0("DESC G25[1] 'FP:", p, "'"))
               wrt("GSET 2 G26 G25 G26")
               wrt("LINK 0 G25")
             } else {
@@ -2147,8 +2153,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
                 categ.names <- levels(indata[[p]])
                 for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
                   wrt("LINK 1 G25")
-                  wrt(paste("NAME G25[1] 'FP_", chartr(".", "_", categ.names[i]), "'", sep = ""))
-                  wrt(paste("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "'", sep = ""))
+                  wrt(paste0("NAME G25[1] '", shortname("FP_", chartr(".", "_", categ.names[i])), "'"))
+                  wrt(paste0("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "'"))
                   wrt("GSET 2 G26 G25 G26")
                   wrt("LINK 0 G25")
                 }
@@ -2158,8 +2164,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
                 categ.names <- categ.names[-which(refx == categ.names)]
                 for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
                   wrt("LINK 1 G25")
-                  wrt(paste("NAME G25[1] 'FP_", chartr(".", "_", categ.names[i]), "'", sep = ""))
-                  wrt(paste("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "'", sep = ""))
+                  wrt(paste0("NAME G25[1] '", shortname("FP_", chartr(".", "_", categ.names[i])), "'"))
+                  wrt(paste0("DESC G25[1] 'FP:", chartr(".", "_", categ.names[i]), "'"))
                   wrt("GSET 2 G26 G25 G26")
                   wrt("LINK 0 G25")
                 }
@@ -2176,16 +2182,14 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
         for (i in 1:j) {
           if (i == j) {
             wrt("LINK 1 G25")
-            wrt(paste("NAME G25[1] 'RP", resid.lev, "_var_", chartr(".", "_", rpx[i]), "'", sep = ""))
-            wrt(paste("DESC G25[1] 'RP", resid.lev, ":var(", chartr(".", "_", rpx[i]), ")'", sep = ""))
+            wrt(paste0("NAME G25[1] '", shortname("RP", resid.lev, "_var_", chartr(".", "_", rpx[i])), "'"))
+            wrt(paste0("DESC G25[1] 'RP", resid.lev, ":var(", chartr(".", "_", rpx[i]), ")'"))
             wrt("GSET 2 G26 G25 G26")
             wrt("LINK 0 G25")
           } else {
             wrt("LINK 1 G25")
-            wrt(paste("NAME G25[1] 'RP", resid.lev, "_cov_", chartr(".", "_", rpx[i]), "_", chartr(".", "_", 
-                                                                                                   rpx[j]), "'", sep = ""))
-            wrt(paste("DESC G25[1] 'RP", resid.lev, ":cov(", chartr(".", "_", rpx[i]), ",", chartr(".", "_", 
-                                                                                                   rpx[j]), ")'", sep = ""))
+            wrt(paste0("NAME G25[1] '", shortname("RP", resid.lev, "_cov_", chartr(".", "_", rpx[i]), "_", chartr(".", "_", rpx[j])), "'"))
+            wrt(paste0("DESC G25[1] 'RP", resid.lev, ":cov(", chartr(".", "_", rpx[i]), ",", chartr(".", "_", rpx[j]), ")'"))
             wrt("GSET 2 G26 G25 G26")
             wrt("LINK 0 G25")
           }
@@ -2205,8 +2209,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
                 k <- k + 1
             } else {
               wrt("LINK 1 G25")
-              wrt(paste("NAME G25[1] 'RP", resid.lev, "_var_", chartr(".", "_", rpx[i]), "'", sep = ""))
-              wrt(paste("DESC G25[1] 'RP", resid.lev, ":var(", chartr(".", "_", rpx[i]), ")'", sep = ""))
+              wrt(paste0("NAME G25[1] '", shortname("RP", resid.lev, "_var_", chartr(".", "_", rpx[i])), "'"))
+              wrt(paste0("DESC G25[1] 'RP", resid.lev, ":var(", chartr(".", "_", rpx[i]), ")'"))
               wrt("GSET 2 G26 G25 G26")
               wrt("LINK 0 G25")
             }
@@ -2217,10 +2221,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
                 k <- k + 1
             } else {
               wrt("LINK 1 G25")
-              wrt(paste("NAME G25[1] 'RP", resid.lev, "_cov_", chartr(".", "_", rpx[i]), "_", chartr(".", 
-                                                                                                     "_", rpx[j]), "'", sep = ""))
-              wrt(paste("DESC G25[1] 'RP", resid.lev, ":cov(", chartr(".", "_", rpx[i]), ",", chartr(".", 
-                                                                                                     "_", rpx[j]), ")'", sep = ""))
+              wrt(paste0("NAME G25[1] '", shortname("RP", resid.lev, "_cov_", chartr(".", "_", rpx[i]), "_", chartr(".", "_", rpx[j])), "'"))
+              wrt(paste0("DESC G25[1] 'RP", resid.lev, ":cov(", chartr(".", "_", rpx[i]), ",", chartr(".", "_", rpx[j]), ")'"))
               wrt("GSET 2 G26 G25 G26")
               wrt("LINK 0 G25")
             }
@@ -2235,8 +2237,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
         for (i in 1:j) {
           if (i == j) {
             wrt("LINK 1 G25")
-            wrt(paste("NAME G25[1] 'RP", resid.lev, "_var_", chartr(".", "_", rpx[i]), "'", sep = ""))
-            wrt(paste("DESC G25[1] 'RP", resid.lev, ":var(", chartr(".", "_", rpx[i]), ")'", sep = ""))
+            wrt(paste0("NAME G25[1] '", shortname("RP", resid.lev, "_var_", chartr(".", "_", rpx[i])), "'"))
+            wrt(paste0("DESC G25[1] 'RP", resid.lev, ":var(", chartr(".", "_", rpx[i]), ")'"))
             wrt("GSET 2 G26 G25 G26")
             wrt("LINK 0 G25")
           }
@@ -2260,8 +2262,8 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
     # Add in extra parameters ect.
     if (D[1] == "Multinomial" && as.numeric(D["mode"]) == 0) {
       wrt("LINK 1 G25")
-      wrt(paste("NAME G25[1] 'RP1_bcons_1'", sep = ""))
-      wrt(paste("DESC G25[1] 'RP1:bcons_1'", sep = ""))
+      wrt(paste0("NAME G25[1] 'RP1_bcons_1'"))
+      wrt(paste0("DESC G25[1] 'RP1:bcons_1'"))
       wrt("GSET 2 G26 G25 G26")
       wrt("LINK 0 G25")
     }
@@ -2303,14 +2305,14 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
       for (k in 1:len.rpx) {
         if (!is.null(clre)) {
           if (!(level == as.numeric(clre[1, ii]) && rpx[k] == clre[2, ii] && rpx[k] == clre[3, ii])) {
-            wrt(paste0("NAME G26[", k, "] ", paste0("'lev_", displevel, "_resi_est_", rpx[k], "'")))
+            wrt(paste0("NAME G26[", k, "] '", shortname("lev_", displevel, "_resi_est_", rpx[k]), "'"))
             wrt(paste0("DESC G26[", k, "] ", "'residual estimates'"))
           } else {
             if (ii < ncol(clre)) 
               ii <- ii + 1
           }
         } else {
-          wrt(paste0("NAME G26[", k, "] ", paste0("'lev_", displevel, "_resi_est_", rpx[k], "'")))
+          wrt(paste0("NAME G26[", k, "] '", shortname("lev_", displevel, "_resi_est_", rpx[k]), "'"))
           wrt(paste0("DESC G26[", k, "] ", "'residual estimates'"))
         }
       }
@@ -2321,14 +2323,14 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
         for (k in 1:len.rpx) {
           if (!is.null(clre)) {
             if (!(level == as.numeric(clre[1, ii]) && rpx[k] == clre[2, ii] && rpx[k] == clre[3, ii])) {
-              wrt(paste0("NAME G27[", k, "] ", paste0("'lev_", displevel, "_resi_variance_", rpx[k], "'")))
+              wrt(paste0("NAME G27[", k, "] '", shortname("lev_", displevel, "_resi_variance_", rpx[k]), "'"))
               wrt(paste0("DESC G27[", k, "] ", "'residual variance'"))
             } else {
               if (ii < ncol(clre)) 
                 ii <- ii + 1
             }
           } else {
-            wrt(paste0("NAME G27[", k, "] ", paste0("'lev_", displevel, "_resi_variance_", rpx[k], "'")))
+            wrt(paste0("NAME G27[", k, "] '", shortname("lev_", displevel, "_resi_variance_", rpx[k]), "'"))
             wrt(paste0("DESC G27[", k, "] ", "'residual variance'"))
           }
         }
@@ -2338,14 +2340,14 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
         for (k in 1:len.rpx) {
           if (!is.null(clre)) {
             if (!(level == as.numeric(clre[1, ii]) && rpx[k] == clre[2, ii] && rpx[k] == clre[3, ii])) {
-              wrt(paste0("NAME G27[", k, "] ", paste0("'lev_", displevel, "_resi_se_", rpx[k], "'")))
+              wrt(paste0("NAME G27[", k, "] '", shortname("lev_", displevel, "_resi_se_", rpx[k]), "'"))
               wrt(paste0("DESC G27[", k, "] ", "'residual standard error'"))
             } else {
               if (ii < ncol(clre)) 
                 ii <- ii + 1
             }
           } else {
-            wrt(paste0("NAME G27[", k, "] ", paste0("'lev_", displevel, "_resi_se_", rpx[k], "'")))
+            wrt(paste0("NAME G27[", k, "] '", shortname("lev_", displevel, "_resi_se_", rpx[k]), "'"))
             wrt(paste0("DESC G27[", k, "] ", "'residual standard error'"))
           }
         }
@@ -2365,14 +2367,14 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
         for (k in 1:len.rpx) {
           if (!is.null(clre)) {
             if (!(level == as.numeric(clre[1, ii]) && rpx[k] == clre[2, ii] && rpx[k] == clre[3, ii])) {
-              wrt(paste0("NAME G28[", k, "] ", paste0("'lev_", displevel, "_std_resi_est_", rpx[k], "'")))
+              wrt(paste0("NAME G28[", k, "] '", shortname("lev_", displevel, "_std_resi_est_", rpx[k]), "'"))
               wrt(paste0("DESC G28[", k, "] ", "'std standardised residual'"))
             } else {
               if (ii < ncol(clre)) 
                 ii <- ii + 1
             }
           } else {
-            wrt(paste0("NAME G28[", k, "] ", paste0("'lev_", displevel, "_std_resi_est_", rpx[k], "'")))
+            wrt(paste0("NAME G28[", k, "] '", shortname("lev_", displevel, "_std_resi_est_", rpx[k]), "'"))
             wrt(paste0("DESC G28[", k, "] ", "'std standardised residual'"))
           }
         }
@@ -2446,4 +2448,5 @@ MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
   } else {
     wrt("EXIT")
   }
+  return(namemap)
 } 

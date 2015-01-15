@@ -148,6 +148,10 @@
 #' part; \code{RP.b} specifies the variance estimates for the random part;
 #' \code{RP.v} corresponds to the variance/covariance matrix of the variance
 #' estimates for the random part.
+#' @param namemap A mapping of column names to DTA friendly shorter names
+#' 
+#' @return Outputs a modified version of namemap containing newly generated
+#' short names.
 #' 
 #' @references
 #' Goldstein, H. (2011) Multilevel Statistical Models. 4th Edition. London: John Wiley and Sons.
@@ -163,7 +167,18 @@
 MacroScript1 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp, D = "Normal", nonlinear = c(0, 1), categ = NULL,
                          notation = NULL, nonfp = NA, clre = NULL, Meth = 1, extra = FALSE, reset, rcon = NULL, fcon = NULL, 
                          maxiter = 20, convtol = 2, mem.init = "default", optimat = FALSE, weighting = NULL, fpsandwich = FALSE, rpsandwich = FALSE, 
-                         macrofile, IGLSfile, resifile, resi.store = FALSE, resioptions, debugmode = FALSE, startval = NULL) {
+                         macrofile, IGLSfile, resifile, resi.store = FALSE, resioptions, debugmode = FALSE, startval = NULL,
+                         namemap = sapply(colnames(indata), as.character)) {
+  
+  shortname <- function(...) {
+    name <- paste0(...)
+    if (!name %in% names(namemap)) {
+      sname <- paste0("v", digest(name, algo = "xxhash64", serialize = FALSE))
+      names(sname) <- name
+      namemap <<- c(namemap, sname)
+    }
+    return(namemap[[name]])
+  }
   
   nlev <- length(levID)
   
@@ -282,6 +297,13 @@ MacroScript1 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
   wrt("MONI    0")
   wrt("NOTE    Import the R data into MLwiN")
   wrt(paste("RSTA    '", dtafile, "'", sep = ""))
+  
+  wrt("NOTE    Correct column names")
+  for (name in names(namemap)) {
+    wrt(paste0("COLN '", namemap[[name]], "' b50"))
+    wrt(paste0("DESC cb50 '", name, "'"))
+    wrt(paste0("NAME cb50 '", name, "'"))
+  }
   
   if (notation == "class") {
     wrt("INDE 1")
@@ -1413,19 +1435,19 @@ MacroScript1 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
     
     wrt(paste("LINK", len.rpx, "G21"))
     for (k in 1:len.rpx) {
-      wrt(paste0("NAME G21[", k, "] ", paste0("'lev_", displevel, "_resi_est_", rpx[k], "'")))
+      wrt(paste0("NAME G21[", k, "] '", shortname("lev_", displevel, "_resi_est_", rpx[k]), "'"))
       wrt(paste0("DESC G21[", k, "] ", "'residual estimates'"))
     }
     
     wrt(paste("LINK", len.rpx, "G22"))
     if ("variance" %in% resioptions) {
       for (k in 1:len.rpx) {
-        wrt(paste0("NAME G22[", k, "] ", paste0("'lev_", displevel, "_resi_variance_", rpx[k], "'")))
+        wrt(paste0("NAME G22[", k, "] '", shortname("lev_", displevel, "_resi_variance_", rpx[k]), "'"))
         wrt(paste0("DESC G22[", k, "] ", "'residual variance'"))
       }
     } else {
       for (k in 1:len.rpx) {
-        wrt(paste0("NAME G22[", k, "] ", paste0("'lev_", displevel, "_resi_se_", rpx[k], "'")))
+        wrt(paste0("NAME G22[", k, "] '", shortname("lev_", displevel, "_resi_se_", rpx[k]), "'"))
         wrt(paste0("DESC G22[", k, "] ", "'residual standard error'"))
       }
     }
@@ -1441,7 +1463,7 @@ MacroScript1 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
     if ("standardised" %in% resioptions || "deletion" %in% resioptions || "leverage" %in% resioptions) {
       wrt(paste("LINK", len.rpx, "G23"))
       for (k in 1:len.rpx) {
-        wrt(paste0("NAME G23[", k, "] ", paste0("'lev_", displevel, "_std_resi_est_", rpx[k], "'")))
+        wrt(paste0("NAME G23[", k, "] '", shortname("lev_", displevel, "_std_resi_est_", rpx[k]), "'"))
         wrt(paste0("DESC G23[", k, "] ", "'std standardised residual'"))
       }
       
@@ -1460,7 +1482,7 @@ MacroScript1 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
       # influence requires leverage to be calculated
       wrt(paste("LINK", len.rpx, "G24"))
       for (k in 1:len.rpx) {
-        wrt(paste0("NAME G24[", k, "] ", paste0("'lev_", displevel, "_resi_leverage_", rpx[k], "'")))
+        wrt(paste0("NAME G24[", k, "] '", shortname("lev_", displevel, "_resi_leverage_", rpx[k]), "'"))
         wrt(paste0("DESC G24[", k, "] ", "'leverage residual'"))
       }
       outgroups <- c(outgroups, "G24")
@@ -1493,7 +1515,7 @@ MacroScript1 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
     if ("deletion" %in% resioptions || "influence" %in% resioptions) {
       wrt(paste("LINK", len.rpx, "G25"))
       for (k in 1:len.rpx) {
-        wrt(paste0("NAME G25[", k, "] ", paste0("'lev_", displevel, "_resi_deletion_", rpx[k], "'")))
+        wrt(paste0("NAME G25[", k, "] '", shortname("lev_", displevel, "_resi_deletion_", rpx[k]), "'"))
         wrt(paste0("DESC G25[", k, "] ", "'deletion residual'"))
       }
       outgroups <- c(outgroups, "G25")
@@ -1513,7 +1535,7 @@ MacroScript1 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
     if ("influence" %in% resioptions) {
       wrt(paste("LINK", len.rpx, "G26"))
       for (k in 1:len.rpx) {
-        wrt(paste0("NAME G26[", k, "] ", paste0("'lev_", displevel, "_resi_influence_", rpx[k], "'")))
+        wrt(paste0("NAME G26[", k, "] '", shortname("lev_", displevel, "_resi_influence_", rpx[k]), "'"))
         wrt(paste0("DESC G26[", k, "] ", "'influence residual'"))
       }
       outgroups <- c(outgroups, "G26")
@@ -1543,11 +1565,10 @@ MacroScript1 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
       for (i in 1:len.rpx) {
         for (j in 1:i) {
           if (i == j) {
-            wrt(paste0("NAME G26[", k, "] ", paste0("'lev_", displevel, "_resi_var_", rpx[i], "'")))
+            wrt(paste0("NAME G26[", k, "] '", shortname("lev_", displevel, "_resi_var_", rpx[i]), "'"))
             wrt(paste0("DESC G26[", k, "] ", "'sampling variance'"))
           } else {
-            wrt(paste0("NAME G26[", k, "] ", paste0("'lev_", displevel, "_resi_cov_", rpx[i], "_", rpx[j], 
-                                                    "'")))
+            wrt(paste0("NAME G26[", k, "] '", shortname("lev_", displevel, "_resi_cov_", rpx[i], "_", rpx[j]), "'"))
             wrt(paste0("DESC G26[", k, "] ", "'sampling covariance'"))
           }
           k <- k + 1
@@ -1628,4 +1649,5 @@ MacroScript1 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, 
   } else {
     wrt("EXIT")
   }
+  return(namemap)
 } 

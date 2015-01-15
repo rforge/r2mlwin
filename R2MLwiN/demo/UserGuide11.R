@@ -98,15 +98,15 @@ invlogit(mymodel12@FP["FP_Intercept_C"])
 
 invlogit(mymodel12@FP["FP_Intercept_B"])
 
-invlogit(mymodel12@FP["FP_Intercept_F"] + mymodel12@FP["FP_gcseavnormal"])
+invlogit(mymodel12@FP["FP_Intercept_F"] + mymodel12@FP["FP_gcseavnormal_12345"])
 
-invlogit(mymodel12@FP["FP_Intercept_E"] + mymodel12@FP["FP_gcseavnormal"])
+invlogit(mymodel12@FP["FP_Intercept_E"] + mymodel12@FP["FP_gcseavnormal_12345"])
 
-invlogit(mymodel12@FP["FP_Intercept_D"] + mymodel12@FP["FP_gcseavnormal"])
+invlogit(mymodel12@FP["FP_Intercept_D"] + mymodel12@FP["FP_gcseavnormal_12345"])
 
-invlogit(mymodel12@FP["FP_Intercept_C"] + mymodel12@FP["FP_gcseavnormal"])
+invlogit(mymodel12@FP["FP_Intercept_C"] + mymodel12@FP["FP_gcseavnormal_12345"])
 
-invlogit(mymodel12@FP["FP_Intercept_B"] + mymodel12@FP["FP_gcseavnormal"])
+invlogit(mymodel12@FP["FP_Intercept_B"] + mymodel12@FP["FP_gcseavnormal_12345"])
 
 (mymodel13 <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseavnormal[1:5] + gender[1:5] + I(gcseavnormal^2)[1:5] + (school | 
   +gcseavnormal[1:5] + gender[1:5]), D = "Ordered Multinomial", estoptions = list(nonlinear = c(N = 1, M = 2), startval = list(FP.b = mymodel12@FP, 

@@ -2402,7 +2402,12 @@ version:date:md5:filename:x64:trial
   if (any(dups)) {
     stop(paste("variables name(s)", paste(colnames(outdata)[dups], collapse=","), "are duplicates when ignoring case"))
   }
+  
+  long2shortname <- sapply(colnames(outdata), digest, algo="xxhash64", serialize = FALSE)
+  long2shortname[] <- paste0("v", long2shortname)
+  colnames(outdata) <- long2shortname
   write.dta(outdata, dtafile, version = 10)
+  colnames(outdata) <- names(long2shortname)
   
   finalClean <- function(clean.files) {
     if (clean.files) {
@@ -2431,10 +2436,10 @@ version:date:md5:filename:x64:trial
     }
   }
   if (EstM == 0) {
-    MacroScript1(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre, 
+    long2shortname <- MacroScript1(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre, 
                  Meth, extra, reset, rcon, fcon, maxiter, convtol, mem.init, optimat, weighting, fpsandwich, rpsandwich, 
                  macrofile = macrofile, IGLSfile = IGLSfile, resifile = resifile, resi.store = resi.store, resioptions = resioptions, 
-                 debugmode = debugmode, startval = startval)
+                 debugmode = debugmode, startval = startval, namemap = long2shortname)
     iterations <- estoptions$mcmcMeth$iterations
     if (is.null(iterations)) 
       iterations <- 5000
@@ -2496,13 +2501,14 @@ version:date:md5:filename:x64:trial
   
   # MCMC algorithm (using the starting values obtain from IGLS algorithm)
   if (EstM == 1) {
-    MacroScript2(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre, 
+    long2shortname <- MacroScript2(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre, 
                  Meth, merr, carcentre, maxiter, convtol, seed, iterations, burnin, scale, thinning, priorParam, refresh, 
                  fixM, residM, Lev1VarM, OtherVarM, adaption, priorcode, rate, tol, lclo, mcmcOptions, fact, xc, mm, car, 
                  BUGO, mem.init, optimat, modelfile = modelfile, initfile = initfile, datafile = datafile, macrofile = macrofile, 
                  IGLSfile = IGLSfile, MCMCfile = MCMCfile, chainfile = chainfile, MIfile = MIfile, resifile = resifile, 
                  resi.store = resi.store, resioptions = resioptions, resichains = resichains, FACTchainfile = FACTchainfile, 
-                 resi.store.levs = resi.store.levs, debugmode = debugmode, startval = startval, dami = dami)
+                 resi.store.levs = resi.store.levs, debugmode = debugmode, startval = startval, dami = dami,
+                 namemap = long2shortname)
     
     cat("MLwiN is running, please wait......\n")
     time1 <- proc.time()
@@ -2540,6 +2546,9 @@ version:date:md5:filename:x64:trial
       
       
       chains <- read.dta(chainfile)
+      for (name in names(long2shortname)) {
+        colnames(chains) <- gsub(long2shortname[[name]], name, colnames(chains))
+      }
       
       chains <- mcmc(data = chains[, -1], thin = thinning)
       chain.names <- colnames(chains)
@@ -2703,6 +2712,9 @@ version:date:md5:filename:x64:trial
     resiraw <- list()
     for (i in 1:length(rp)) {
       tmp <- as.list(read.dta(resifile[i]))
+      for (name in names(long2shortname)) {
+        names(tmp) <- gsub(long2shortname[[name]], name, names(tmp))
+      }
       for (j in names(tmp)) {
         resiraw[[j]] <- tmp[[j]]
       }
@@ -2711,6 +2723,9 @@ version:date:md5:filename:x64:trial
   
   if (EstM == 1 && is.null(BUGO) && !is.null(resi.store.levs)) {
     residata <- read.dta(resichains)
+    for (name in names(long2shortname)) {
+      colnames(residata) <- gsub(long2shortname[[name]], name, colnames(residata))
+    }
     resiChains <- list()
     for (name in colnames(residata)) {
       lev <- as.integer(gsub("resi_lev", "", name))
