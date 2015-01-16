@@ -1,5 +1,6 @@
 importFrom("rbugs", runBugs, rbugs2coda, genBugsScript, getBugsOutput, rbugs)
-importFrom("coda", mcmc, mcmc.list, as.mcmc.list, read.coda, effectiveSize, raftery.diag, thin, is.mcmc)
+importFrom("coda", mcmc, mcmc.list, as.mcmc.list, read.coda, effectiveSize, raftery.diag, thin, is.mcmc, varnames, is.mcmc.list,
+nvar, nchain, niter, traceplot, as.mcmc)
 importFrom("lattice", histogram, densityplot, xyplot, qqmath, Rows, trellis.par.get, trellis.par.set, panel.xyplot, panel.grid, panel.abline, panel.segments)
 importFrom("foreign", read.dta, write.dta)
 importFrom("digest", digest)
