@@ -1,8 +1,8 @@
 #' Draws a sixway plot of MCMC diagnostics.
-#' 
+#'
 #' This function produces a variety of diagnostic plots and statistics for MCMC
 #' chains.
-#' 
+#'
 #' @param chain A numeric vector, or \code{\link{mcmc}} object (in which case
 #' uses its \code{thin} argument, otherwise assumes thinning = 1), storing the
 #' MCMC chain for a chosen parameter.
@@ -14,10 +14,10 @@
 #' auto-correlation function. \code{pacf.maxlag = 10} by default. See \code{\link[stats]{pacf}}.
 #' @param ...  Other graphical parameters (see \code{\link[graphics]{par}} for
 #' details).
-#' 
+#'
 #' @details A variety of plots and statistics are displayed in an R graphic
 #' window, including the following:
-#' \itemize {
+#' \itemize{
 #' \item a trace plot of the plotted trajectory of
 #' an MCMC chain for a model parameter;
 #' \item a kernel density plot; kernel density estimates are computed
@@ -44,33 +44,33 @@
 #' statistics including the posterior mean, sd, mode, quantiles and the
 #' effective sample size (ESS) of the chain.
 #' }
-#' 
+#'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
-#' 
+#'
 #' @seealso
 #' \code{\link{BD}},\code{\link{MCSE}},\code{\link{density}},\code{\link{acf}},\code{\link{pacf}},\code{\link[coda]{raftery.diag}},\code{\link[coda]{effectiveSize}}
 #' @examples
-#' 
-#' 
+#'
+#'
 #' \dontrun{
 #' library(R2MLwiN)
 #' #NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
 #' #...so please change relevant line if different
-#' #if using R2MLwiN via WINE, the path may look like 
-#' #options(MLwiN_path='/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/') 
-#' 
+#' #if using R2MLwiN via WINE, the path may look like
+#' #options(MLwiN_path='/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/')
+#'
 #' ## Example: tutorial
 #' data(tutorial)
 #' formula=normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)
 #' levID=c('school','student')
 #' estoptions= list(EstM=1,resi.store.levs=2)
 #' mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions)
-#' 
-#' chain=mymodel@chains[, 'FP_standlrt']
+#'
+#' chain=mymodel['chains'][, 'FP_standlrt']
 #' sixway(chain, 'beta_1')
 #' }
-#' 
+#'
 #' @export
 sixway <- function(chain, name = NULL, acf.maxlag = 100, pacf.maxlag = 10, ...) {
   args <- list(...)
@@ -148,7 +148,7 @@ sixway <- function(chain, name = NULL, acf.maxlag = 100, pacf.maxlag = 10, ...) 
   if (RL1$resmatrix[1] == "Error") {
     text(5, 4, paste("RL diagnostic only available after ", RL1$resmatrix[2], " updates.", sep = ""), cex = 0.8)
   } else {
-    text(5, 4, paste("Raftery-Lewis (quantile) : Nhat =(", RL1$resmatrix[1, "N"], ",", RL2$resmatrix[1, "N"], 
+    text(5, 4, paste("Raftery-Lewis (quantile) : Nhat =(", RL1$resmatrix[1, "N"], ",", RL2$resmatrix[1, "N"],
                      ")", sep = ""), cex = 0.8)
   }
   text(5, 3, "when q=(0.025,0.975), r=0.005 and s=0.95", cex = 0.8)
@@ -158,16 +158,16 @@ sixway <- function(chain, name = NULL, acf.maxlag = 100, pacf.maxlag = 10, ...) 
   plot(1, xlim = c(1, 22), ylim = c(1, 4), type = "n", axes = FALSE, xlab = "", ylab = "", frame.plot = TRUE)
   text(10, 3.8, "Summary Statistics", cex = 1.2)
   quants <- round(quantile(flatchain, c(0.025, 0.05, 0.5, 0.95, 0.975)), 3)
-  text(10, 2.9, paste("param name :", name, "posterior mean =", round(mean(flatchain), 3), "SD = ", round(sd(flatchain), 
+  text(10, 2.9, paste("param name :", name, "posterior mean =", round(mean(flatchain), 3), "SD = ", round(sd(flatchain),
                                                                                                           3), "mode =", round(dens$x[which.max(dens$y)], 3)), cex = 0.8)
-  text(10, 2, paste("quantiles : 2.5% =", quants[1], "5% =", quants[2], "50% =", quants[3], "95% =", quants[4], 
+  text(10, 2, paste("quantiles : 2.5% =", quants[1], "5% =", quants[2], "50% =", quants[3], "95% =", quants[4],
                     "97.5% =", quants[5]), cex = 0.8)
   if (isMCMC) {
-    text(10, 1.2, paste(niter(chain) * thin(chain), "actual iterations storing every ", paste(thin(chain), "th", 
+    text(10, 1.2, paste(niter(chain) * thin(chain), "actual iterations storing every ", paste(thin(chain), "th",
                                                                                               sep = ""), " iteration. Effective Sample Size (ESS) =", round(effectiveSize(chain))), cex = 0.8)
   } else {
-    text(10, 1.2, paste(length(chain), "actual iterations. Diagnostics assume storing every 1th iteration. Effective Sample Size (ESS) =", 
+    text(10, 1.2, paste(length(chain), "actual iterations. Diagnostics assume storing every 1th iteration. Effective Sample Size (ESS) =",
                         round(effectiveSize(chain))), cex = 0.8)
   }
   close.screen(all.screens = TRUE)
-} 
+}
