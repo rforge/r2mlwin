@@ -21,34 +21,6 @@
 #'  \item{here}
 #' }
 #'
-#' @section Overview:
-#' MLwiN uses both classical and Bayesian approaches to fitting multilevel
-#' models, and can model continuous, binomial, count, multivariate, ordered
-#' categorical and unordered categorical responses. The data structures it can
-#' model include hierarchical, cross-classified and/or multiple membership.
-#'
-#'
-#' To use the package, the following objects should be specified:
-#' \enumerate{
-#' \item a data.frame object containing the data to be modelled;
-#' \item a model formula;
-#' \item a character (vector) specifying the level ID(s);
-#' \item a list of options used to estimate the model;
-#' \item a vector specifying the distribution to be modelled;
-#' \item a vector specifying BUGS options. If non-null, WinBUGS/OpenBUGS are used, in conjunction
-#' with MLwiN, for modelling;
-#' \item a path to the folder where the MLwiN executable is saved;
-#' \item a path to the folder where the output files are to be saved. By default, the temporary directory
-#' (\code{\link{tempdir}}) is used.
-#' }
-#'
-#' Once these objects are specified, the \code{\link{runMLwiN}}
-#' function can be used to call MLwiN from R. After execution, the estimates
-#' and other statistics are returned to R and can be displayed as a table in
-#' the RGui, and the outputs of all parameter estimates (the chains, residuals
-#' and BUGs outputs) are also returned for further post-processing in R, as
-#' appropriate.
-#'
 #' @examples
 #' \dontrun{
 #' library(R2MLwiN)
