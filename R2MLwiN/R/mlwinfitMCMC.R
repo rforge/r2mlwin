@@ -66,6 +66,8 @@
 #' mymodel['BDIC']
 #' }
 #'
+
+#' @export 
 setClass(Class = "mlwinfitMCMC", representation = representation(version = "character", Nobs = "numeric", DataLength = "numeric", 
                                                                  Hierarchy = "ANY", burnin = "numeric", iterations = "numeric", D = "ANY", Formula = "ANY", levID = "character", 
                                                                  merr = "ANY", fact = "ANY", xc = "ANY", FP = "numeric", RP = "numeric", RP.cov = "matrix", FP.cov = "matrix", 
@@ -587,6 +589,7 @@ setReplaceMethod(f = "[[", signature = "mlwinfitMCMC", definition = function(x, 
   validObject(x)
   return(x)
 })
+#' @export 
 setMethod("summary", signature(object = "mlwinfitMCMC"), function(object, ...) {
   object
 })
@@ -816,23 +819,31 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   }
   cat(paste(rep("-", 50), collapse = "*"), "\n")
 }
-
+#' @export 
 setMethod("print", "mlwinfitMCMC", printMCMC)
+
+#' @export 
 setMethod("show", "mlwinfitMCMC", function(object) printMCMC(object))
+
+#' @export 
 setMethod("update", "mlwinfitMCMC", updateMLwiN)
 
+#' @export 
 setMethod("formula", "mlwinfitMCMC", function(x, env = parent.frame(), ...) {
   as.formula(x@Formula)
 })
 
+#' @export 
 setMethod("coef", "mlwinfitMCMC", function(object, ...) {
   c(object@FP, object@RP)
 })
 
+#' @export 
 setMethod("coefficients", "mlwinfitMCMC", function(object, ...) {
   coef(object)
 })
 
+#' @export 
 setMethod("vcov", "mlwinfitMCMC", function(object, ...) {
   m <- matrix(0, nrow(object@FP.cov) + nrow(object@RP.cov), ncol(object@FP.cov) + ncol(object@RP.cov))
   colnames(m) <- c(colnames(object@FP.cov), colnames(object@RP.cov))
@@ -842,18 +853,22 @@ setMethod("vcov", "mlwinfitMCMC", function(object, ...) {
   m
 })
 
+#' @export 
 setMethod("df.residual", "mlwinfitMCMC", function(object, ...) {
   nobs(object) - length(coef(object))
 })
 
+#' @export 
 setMethod("fitted", "mlwinfitMCMC", function(object, ...) {
   predict(object, type = "response")
 })
 
+#' @export 
 setMethod("fitted.values", "mlwinfitMCMC", function(object, ...) {
   fitted(object)
 })
 
+#' @export 
 setMethod("residuals", "mlwinfitMCMC", function(object, ...) {
   form <- Formula.translate(object@Formula, object@D, object@data)
   if (!is.list(form$resp)) {
@@ -864,10 +879,12 @@ setMethod("residuals", "mlwinfitMCMC", function(object, ...) {
   }
 })
 
+#' @export 
 setMethod("resid", "mlwinfitMCMC", function(object, ...) {
   residuals(object)
 })
 
+#' @export 
 setMethod("predict", "mlwinfitMCMC", function(object, newdata = NULL, params = NULL, type = "link", se.fit = FALSE, 
                                               terms = NULL, ...) {
   if (is.null(newdata)) {
@@ -945,6 +962,7 @@ setMethod("predict", "mlwinfitMCMC", function(object, newdata = NULL, params = N
   }
 })
 
+#' @export 
 setMethod("nobs", "mlwinfitMCMC", function(object, ...) {
   object@Nobs
 }) 

@@ -56,6 +56,7 @@
 #' mymodel['LIKE']
 #' }
 #'
+#' @export 
 setClass(Class = "mlwinfitIGLS", representation = representation(version = "character", Nobs = "numeric", DataLength = "numeric", 
                                                                  Hierarchy = "ANY", D = "ANY", Formula = "ANY", levID = "character", FP = "numeric", RP = "numeric", RP.cov = "matrix", 
                                                                  FP.cov = "matrix", LIKE = "ANY", elapsed.time = "numeric", call = "ANY", residual = "list", Converged = "logical", 
@@ -419,6 +420,7 @@ setReplaceMethod(f = "[[", signature = "mlwinfitIGLS", definition = function(x, 
   return(x)
 })
 
+#' @export 
 setMethod("summary", signature(object = "mlwinfitIGLS"), function(object, ...) {
   object
   
@@ -578,7 +580,11 @@ printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   cat(paste(rep("-", 50), collapse = "*"), "\n")
   
 }
+
+#' @export 
 setMethod("print", "mlwinfitIGLS", printIGLS)
+
+#' @export 
 setMethod("show", "mlwinfitIGLS", function(object) printIGLS(object))
 
 updateMLwiN <- function(object, Formula., levID., estoptions., ..., keep.order = TRUE, evaluate = TRUE) {
@@ -620,20 +626,26 @@ updateMLwiN <- function(object, Formula., levID., estoptions., ..., keep.order =
   if (evaluate) 
     eval(newcall, sys.parent()) else newcall
 }
+
+#' @export 
 setMethod("update", "mlwinfitIGLS", updateMLwiN)
 
+#' @export 
 setMethod("formula", "mlwinfitIGLS", function(x, env = parent.frame(), ...) {
   as.formula(x@Formula)
 })
 
+#' @export 
 setMethod("coef", "mlwinfitIGLS", function(object, ...) {
   c(object@FP, object@RP)
 })
 
+#' @export 
 setMethod("coefficients", "mlwinfitIGLS", function(object, ...) {
   coef(object)
 })
 
+#' @export 
 setMethod("vcov", "mlwinfitIGLS", function(object, ...) {
   m <- matrix(0, nrow(object@FP.cov) + nrow(object@RP.cov), ncol(object@FP.cov) + ncol(object@RP.cov))
   colnames(m) <- c(colnames(object@FP.cov), colnames(object@RP.cov))
@@ -643,18 +655,22 @@ setMethod("vcov", "mlwinfitIGLS", function(object, ...) {
   m
 })
 
+#' @export 
 setMethod("df.residual", "mlwinfitIGLS", function(object, ...) {
   nobs(object) - length(coef(object))
 })
 
+#' @export 
 setMethod("fitted", "mlwinfitIGLS", function(object, ...) {
   predict(object, type = "response")
 })
 
+#' @export 
 setMethod("fitted.values", "mlwinfitIGLS", function(object, ...) {
   fitted(object)
 })
 
+#' @export 
 setMethod("residuals", "mlwinfitIGLS", function(object, ...) {
   form <- Formula.translate(object@Formula, object@D, object@data)
   if (!is.list(form$resp)) {
@@ -665,10 +681,12 @@ setMethod("residuals", "mlwinfitIGLS", function(object, ...) {
   }
 })
 
+#' @export 
 setMethod("resid", "mlwinfitIGLS", function(object, ...) {
   residuals(object)
 })
 
+#' @export 
 setMethod("predict", "mlwinfitIGLS", function(object, newdata = NULL, params = NULL, type = "link", se.fit = FALSE, 
                                               terms = NULL, ...) {
   if (is.null(newdata)) {
@@ -746,6 +764,7 @@ setMethod("predict", "mlwinfitIGLS", function(object, newdata = NULL, params = N
   }
 })
 
+#' @export 
 setMethod("logLik", "mlwinfitIGLS", function(object, ...) {
   val <- -0.5 * deviance(object)
   attr(val, "df") <- length(coef(object))
@@ -754,10 +773,12 @@ setMethod("logLik", "mlwinfitIGLS", function(object, ...) {
   val
 })
 
+#' @export 
 setMethod("deviance", "mlwinfitIGLS", function(object, ...) {
   object@LIKE
 })
 
+#' @export 
 setMethod("nobs", "mlwinfitIGLS", function(object, ...) {
   object@Nobs
 }) 
