@@ -502,7 +502,7 @@
 #' (Revised Edition). Bristol: Centre for Multilevel Modelling, University of Bristol.
 #'  
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-#' W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
+#' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
 #' 
 #' @seealso
 #' \code{\link[stats]{formula}}, \code{\link{Formula.translate}}, \code{\link{Formula.translate.compat}}, \code{\link{MacroScript1}}, \code{\link{MacroScript2}}

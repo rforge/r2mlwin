@@ -12,7 +12,7 @@
 #' @param ul Upper limit of x-axis, where value specified is multiplied by the length of the chain. Defaults to \code{20}.
 #' 
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-#' W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
+#' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
 #'
 #' @seealso
 #' \code{\link{sixway}}
