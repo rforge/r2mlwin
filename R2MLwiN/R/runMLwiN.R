@@ -714,68 +714,79 @@ runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoption
   
   
   versioninfostr <- '
-version:date:md5:filename:x64:trial
-1.10:Jun 2001:44e840796f3c43113c45ac8fe7e0633a:mlwin.exe:FALSE:FALSE
-1.10:Jul 2001:21e3a2d85e6f9c4bb8d926658981a020:mlwin.exe:FALSE:FALSE
-2.00:May 2004:4ddb67c6426112bafc70bddca38cd63a:mlwin.exe:FALSE:FALSE
-2.00:Jun 2004:bf9aff9fa66d8eadc8b3a170e616ab58:mlwin.exe:FALSE:FALSE
-2.00:Jul 2004:f78c7d6d3a0dc82e7ea7e391a70ebb02:mlwin.exe:FALSE:FALSE
-2.00:Nov 2004:e9fbafdc5715921dcadec601e3cec593:mlwin.exe:FALSE:FALSE
-2.01:Dec 2004:359dbe8d728b2841b948504b5c272392:mlwin.exe:FALSE:FALSE
-2.01:Feb 2004:f4a164b199b37b33158b194402034756:mlwin.exe:FALSE:FALSE
-2.02:Jun 2005:cfb2ba2aea080ad69189709e87613ef7:mlwin.exe:FALSE:FALSE
-2.10:Feb 2009:d96fdc4d9876206837d5c720bf37c8e1:mlwin.exe:FALSE:FALSE
-2.11:Apr 2009:1da1348d7a65a3a7ae1f310d63520429:mlwin.exe:FALSE:FALSE
-2.12:Jul 2009:7f44b98b0ca60ea6b34ee56f962869c7:mlwin.exe:FALSE:FALSE
-2.13:Aug 2009:b435c8137676da09412ee6a57d7426cc:mlwin.exe:FALSE:FALSE
-2.14:Sep 2009:2e493aa7cdf221caed82c0cdc4facb17:mlwin.exe:FALSE:FALSE
-2.15:Oct 2009:3ca55fe4c04f546040fc4937f0ac1a9f:mlwin.exe:FALSE:FALSE
-2.16:Nov 2009:afd80cecbe7e1164957f4530b07ea5ec:mlwin.exe:FALSE:FALSE
-2.16:Nov 2009:a91958a92ee4e44bf80a58cb8c5a319a:mlwin.exe:FALSE:TRUE
-2.17:Jan 2010:28e92f9aba0431d2a53ab4ea0c1471e6:mlwin.exe:FALSE:FALSE
-2.18:Mar 2010:d0e7c52a33024ffe3bb176fac6fdd724:mlwin.exe:FALSE:FALSE
-2.19:May 2010:46e40433d3f22f947ffc539bfddff58a:mlwin.exe:FALSE:FALSE
-2.19:May 2010:2cd0159a1580452c43358511f763fb78:mlwin.exe:FALSE:TRUE
-2.20:Jun 2010:cf9ba18ef770d1d5e761b99bd74cfb48:mlwin.exe:FALSE:FALSE
-2.21:Oct 2010:71f36aecbbef624f70251d273547bae5:mlwin.exe:FALSE:FALSE
-2.22:Dec 2010:d372e2ea4d3dd8202bddc0fc3e3be445:mlwin.exe:FALSE:FALSE
-2.23:Apr 2011:0a150498818a6e519e1fb5f4c96863df:mlwin.exe:FALSE:FALSE
-2.23:Apr 2011:dd6304ed39b0fd769e1e40e4b85e5b8f:mlwin.exe:FALSE:TRUE
-2.24:Sep 2011:8b8a5d06d4440de87fa97359d06da8d6:mlwin.exe:FALSE:FALSE
-2.24:Sep 2011:005a73f0c8af424520147151d504fffb:mlwin.exe:FALSE:TRUE
-2.25:Feb 2012:a5a8e56a2da1faa75a0bf5a9c260f79b:mlwin.exe:FALSE:FALSE
-2.25:Feb 2012:ce92f10b5146c3d4fd10c1cad78d01d3:mlwin.exe:FALSE:TRUE
-2.26:Sep 2012:f915c285f8409fe66bf8ac0a90256fe7:mlwin.exe:FALSE:FALSE
-2.26:Sep 2012:8bdcb5ef1b4a1c10b7a5f2e1c359fae4:mlwin.exe:FALSE:TRUE
-2.26:Sep 2012:d4b3b6a97e0d413bf185debd18a7c388:mlnscript.exe:FALSE:FALSE
-2.26:Sep 2012:6d06f90db77a9f4d3bf973cfd4be6aad:mlnscript.exe:TRUE:FALSE
-2.27:Feb 2013:e25a7fb9431c024e2f09222434d9fc55:mlwin.exe:FALSE:FALSE
-2.27:Feb 2013:d0330c49c3234474b0e7d79fcd83117d:mlwin.exe:FALSE:TRUE
-2.27:Feb 2013:5bc7e8fade28bd8fb9f9ef110ec56afc:mlnscript.exe:FALSE:FALSE
-2.27:Feb 2013:63fa77b06439f295231dd4795e4ed99e:mlnscript.exe:TRUE:FALSE
-2.28:Jul 2013:6bdadad3615c49ca418cc63cb952d37f:mlwin.exe:FALSE:FALSE
-2.28:Jul 2013:6a1f0d366ffa622e4a052695a6013e2c:mlwin.exe:FALSE:TRUE
-2.28:Jul 2013:5fcbc7d0dd0a900c99ec411018ccdaa5:mlnscript.exe:FALSE:FALSE
-2.28:Jul 2013:d299e1156e5f7ef909a182abf637bb0d:mlnscript.exe:TRUE:FALSE
-2.29:Dec 2013:5f0a87e6cb7198d796f9664a05d5031a:mlwin.exe:FALSE:FALSE
-2.29:Dec 2013:5afdf13c0406202aaf308b569052dd20:mlwin.exe:FALSE:TRUE
-2.29:Dec 2013:47fbc35bf375d56d2291a3f85d2d838c:mlnscript.exe:FALSE:FALSE
-2.29:Dec 2013:4d39f330c201e7614df17150f8aab74f:mlnscript.exe:TRUE:FALSE
-2.30:Feb 2014:869c73b95daf1ec92c2b22277bd94724:mlwin.exe:FALSE:FALSE
-2.30:Feb 2014:022ba981c2bf8751dad35c041f5f7db3:mlwin.exe:FALSE:TRUE
-2.30:Feb 2014:b0f739262853e594242a6d4dad296eb6:mlnscript.exe:FALSE:FALSE
-2.30:Feb 2014:c964df5ff4011eae94419c2f815a9450:mlnscript.exe:TRUE:FALSE
-2.31:Sep 2014:befc087bb0e2b13ed01a57afa2d85bbe:mlwin.exe:FALSE:FALSE
-2.31:Sep 2014:6038ba228ddde891b4673cae4b7aaa0c:mlwin.exe:FALSE:TRUE
-2.31:Sep 2014:bfa10218aa4635ea2e5a4197faef98e7:mlnscript.exe:FALSE:FALSE
-2.31:Sep 2014:3a4c5904a21788262ef8244958eb5302:mlnscript.exe:TRUE:FALSE
+version:date:md5:filename:x64:trial:platform
+1.10:Jun 2001:44e840796f3c43113c45ac8fe7e0633a:mlwin.exe:FALSE:FALSE:win
+1.10:Jul 2001:21e3a2d85e6f9c4bb8d926658981a020:mlwin.exe:FALSE:FALSE:win
+2.00:May 2004:4ddb67c6426112bafc70bddca38cd63a:mlwin.exe:FALSE:FALSE:win
+2.00:Jun 2004:bf9aff9fa66d8eadc8b3a170e616ab58:mlwin.exe:FALSE:FALSE:win
+2.00:Jul 2004:f78c7d6d3a0dc82e7ea7e391a70ebb02:mlwin.exe:FALSE:FALSE:win
+2.00:Nov 2004:e9fbafdc5715921dcadec601e3cec593:mlwin.exe:FALSE:FALSE:win
+2.01:Dec 2004:359dbe8d728b2841b948504b5c272392:mlwin.exe:FALSE:FALSE:win
+2.01:Feb 2004:f4a164b199b37b33158b194402034756:mlwin.exe:FALSE:FALSE:win
+2.02:Jun 2005:cfb2ba2aea080ad69189709e87613ef7:mlwin.exe:FALSE:FALSE:win
+2.10:Feb 2009:d96fdc4d9876206837d5c720bf37c8e1:mlwin.exe:FALSE:FALSE:win
+2.11:Apr 2009:1da1348d7a65a3a7ae1f310d63520429:mlwin.exe:FALSE:FALSE:win
+2.12:Jul 2009:7f44b98b0ca60ea6b34ee56f962869c7:mlwin.exe:FALSE:FALSE:win
+2.13:Aug 2009:b435c8137676da09412ee6a57d7426cc:mlwin.exe:FALSE:FALSE:win
+2.14:Sep 2009:2e493aa7cdf221caed82c0cdc4facb17:mlwin.exe:FALSE:FALSE:win
+2.15:Oct 2009:3ca55fe4c04f546040fc4937f0ac1a9f:mlwin.exe:FALSE:FALSE:win
+2.16:Nov 2009:afd80cecbe7e1164957f4530b07ea5ec:mlwin.exe:FALSE:FALSE:win
+2.16:Nov 2009:a91958a92ee4e44bf80a58cb8c5a319a:mlwin.exe:FALSE:TRUE:win
+2.17:Jan 2010:28e92f9aba0431d2a53ab4ea0c1471e6:mlwin.exe:FALSE:FALSE:win
+2.18:Mar 2010:d0e7c52a33024ffe3bb176fac6fdd724:mlwin.exe:FALSE:FALSE:win
+2.19:May 2010:46e40433d3f22f947ffc539bfddff58a:mlwin.exe:FALSE:FALSE:win
+2.19:May 2010:2cd0159a1580452c43358511f763fb78:mlwin.exe:FALSE:TRUE:win
+2.20:Jun 2010:cf9ba18ef770d1d5e761b99bd74cfb48:mlwin.exe:FALSE:FALSE:win
+2.21:Oct 2010:71f36aecbbef624f70251d273547bae5:mlwin.exe:FALSE:FALSE:win
+2.22:Dec 2010:d372e2ea4d3dd8202bddc0fc3e3be445:mlwin.exe:FALSE:FALSE:win
+2.23:Apr 2011:0a150498818a6e519e1fb5f4c96863df:mlwin.exe:FALSE:FALSE:win
+2.23:Apr 2011:dd6304ed39b0fd769e1e40e4b85e5b8f:mlwin.exe:FALSE:TRUE:win
+2.24:Sep 2011:8b8a5d06d4440de87fa97359d06da8d6:mlwin.exe:FALSE:FALSE:win
+2.24:Sep 2011:005a73f0c8af424520147151d504fffb:mlwin.exe:FALSE:TRUE:win
+2.25:Feb 2012:a5a8e56a2da1faa75a0bf5a9c260f79b:mlwin.exe:FALSE:FALSE:win
+2.25:Feb 2012:ce92f10b5146c3d4fd10c1cad78d01d3:mlwin.exe:FALSE:TRUE:win
+2.26:Sep 2012:f915c285f8409fe66bf8ac0a90256fe7:mlwin.exe:FALSE:FALSE:win
+2.26:Sep 2012:8bdcb5ef1b4a1c10b7a5f2e1c359fae4:mlwin.exe:FALSE:TRUE:win
+2.26:Sep 2012:d4b3b6a97e0d413bf185debd18a7c388:mlnscript.exe:FALSE:FALSE:win
+2.26:Sep 2012:6d06f90db77a9f4d3bf973cfd4be6aad:mlnscript.exe:TRUE:FALSE:win
+2.27:Feb 2013:e25a7fb9431c024e2f09222434d9fc55:mlwin.exe:FALSE:FALSE:win
+2.27:Feb 2013:d0330c49c3234474b0e7d79fcd83117d:mlwin.exe:FALSE:TRUE:win
+2.27:Feb 2013:5bc7e8fade28bd8fb9f9ef110ec56afc:mlnscript.exe:FALSE:FALSE:win
+2.27:Feb 2013:63fa77b06439f295231dd4795e4ed99e:mlnscript.exe:TRUE:FALSE:win
+2.28:Jul 2013:6bdadad3615c49ca418cc63cb952d37f:mlwin.exe:FALSE:FALSE:win
+2.28:Jul 2013:6a1f0d366ffa622e4a052695a6013e2c:mlwin.exe:FALSE:TRUE:win
+2.28:Jul 2013:5fcbc7d0dd0a900c99ec411018ccdaa5:mlnscript.exe:FALSE:FALSE:win
+2.28:Jul 2013:d299e1156e5f7ef909a182abf637bb0d:mlnscript.exe:TRUE:FALSE:win
+2.29:Dec 2013:5f0a87e6cb7198d796f9664a05d5031a:mlwin.exe:FALSE:FALSE:win
+2.29:Dec 2013:5afdf13c0406202aaf308b569052dd20:mlwin.exe:FALSE:TRUE:win
+2.29:Dec 2013:47fbc35bf375d56d2291a3f85d2d838c:mlnscript.exe:FALSE:FALSE:win
+2.29:Dec 2013:4d39f330c201e7614df17150f8aab74f:mlnscript.exe:TRUE:FALSE:win
+2.30:Feb 2014:869c73b95daf1ec92c2b22277bd94724:mlwin.exe:FALSE:FALSE:win
+2.30:Feb 2014:022ba981c2bf8751dad35c041f5f7db3:mlwin.exe:FALSE:TRUE:win
+2.30:Feb 2014:b0f739262853e594242a6d4dad296eb6:mlnscript.exe:FALSE:FALSE:win
+2.30:Feb 2014:c964df5ff4011eae94419c2f815a9450:mlnscript.exe:TRUE:FALSE:win
+2.31:Sep 2014:befc087bb0e2b13ed01a57afa2d85bbe:mlwin.exe:FALSE:FALSE:win
+2.31:Sep 2014:6038ba228ddde891b4673cae4b7aaa0c:mlwin.exe:FALSE:TRUE:win
+2.31:Sep 2014:bfa10218aa4635ea2e5a4197faef98e7:mlnscript.exe:FALSE:FALSE:win
+2.31:Sep 2014:3a4c5904a21788262ef8244958eb5302:mlnscript.exe:TRUE:FALSE:win
+2.32:Jan 2015:eb320148ff952f5016c2aa4de7d8f363:mlwin.exe:FALSE:FALSE:win
+2.32:Jan 2015:c3dbed5d07e14bd73fa0491a22749101:mlwin.exe:FALSE:TRUE:win
+2.32:Jan 2015:7b86ba340c85d18d7e8ebd26fc30f09a:mlnscript.exe:FALSE:FALSE:win
+2.32:Jan 2015:68541f384170dfe5f8a24adf187b9902:mlnscript.exe:TRUE:FALSE:win
+2.32:Jan 2015:df5fabbed6204dd0277cad89b86c508a:mlnscript:TRUE:FALSE:lin
+2.32:Jan 2015:fa29135101278f91c52bdb3f29773f8e:mlnscript:TRUE:FALSE:lin
+2.32:Jan 2015:00e65cca7554bc5e82d21e0be564fe08:mlnscript:TRUE:FALSE:lin
+2.32:Jan 2015:83d5b13cd8160a43e34603f35ef56ea3:mlnscript:FALSE:FALSE:lin
+2.32:Jan 2015:e639bed035c855710d12004149f63465:mlnscript:FALSE:FALSE:lin
+2.32:Jan 2015:47e627c655c52f7dc6ff1e76a670afe3:mlnscript:FALSE:FALSE:lin
+2.32:Jan 2015:ab00a1cb783cf00ed6d95bbd5cebfb1a:mlnscript:TRUE:FALSE:mac
 '
   versioninfo <- read.delim(textConnection(versioninfostr), header = TRUE, sep = ":", strip.white = TRUE)
   if (isTRUE(checkversion)) {
     # Allow disabling the version check if it is slowing things down (e.g. in a simulation study)
     currentver <- versioninfo[versioninfo$md5 == digest(cmd, algo = "md5", file = TRUE), ]
     if (nrow(currentver) == 0) {
-      versiontext <- "MLwiN (version: unknown or >2.31)"
+      versiontext <- "MLwiN (version: unknown or >2.32)"
     } else {
       if (currentver$version < 2.28) {
         # Block versions >year older than current release
