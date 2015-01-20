@@ -26,15 +26,15 @@
 #' @slot call The matched call.
 #' @slot LIKE The deviance statistic (-2*log(like)).
 #' @slot fact.loadings If \code{fact} is not empty, then the factor loadings are returned.
-#' @slot fact.loadings.sd TO ADD
+#' @slot fact.loadings.sd If \code{fact} is not empty, then the factor loading standard deviationss are returned.
 #' @slot fact.cov If \code{fact} is not empty, then factor covariances are returned.
-#' @slot fact.cov.sd TO ADD
+#' @slot fact.cov.sd If \code{fact} is not empty, then factor covariance standard deviations are returned.
 #' @slot fact.chains If \code{fact} is not empty, then the factor chains are returned.
 #' @slot MIdata If \code{dami} is not empty, then the complete response variable \code{y} are returned.
 #' @slot residual If \code{resi.store} is \code{TRUE}, then the residual estimates at all levels are returned.
 #' @slot resi.chains If \code{resi.store.levs} is not empty, then the residual chains at these levels are returned.
-#' @slot version TO ADD
-#' @slot data TO ADD
+#' @slot version The MLwiN version used to fit the model
+#' @slot data The data.frame that was used to fit the model.
 #'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2014) Centre for Multilevel Modelling, University of Bristol.

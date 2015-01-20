@@ -18,13 +18,13 @@
 #' @slot elapsed.time Calculates the CPU time used for fitting the model.
 #' @slot call The matched call.
 #' @slot LIKE The deviance statistic (-2*log(like)).
-#' @slot Converged TO ADD
-#' @slot Iterations TO ADD
-#' @slot Meth TO ADD
+#' @slot Converged Boolean indicating whether the model has converged
+#' @slot Iterations Number of iterations that the model has run for
+#' @slot Meth If \code{Meth = 0} estimation method is set to RIGLS. If \code{Meth = 1} estimation method is set to IGLS.
 #' @slot residual If \code{resi.store} is \code{TRUE}, then the residual estimates at all levels are returned.
-#' @slot data TO ADD
-#' @slot nonlinear TO ADD
-#' @slot version TO ADD
+#' @slot data The data.frame that was used to fit the model.
+#' @slot nonlinear A character vector specifying linearisation method used. The first element specifies marginal quasi-likelihood linearization (\code{N = 0}) or penalised quasi-likelihood linearization (\code{N = 1}); The second element specifies first (\code{M = 1}) or second (\code{M = 2}) order approximation.
+#' @slot version The MLwiN version used to fit the model
 #'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
