@@ -1,12 +1,12 @@
-#' Draws caterpillar plots of the residuals from a \code{\link{mlwinfitIGLS-class}} or 
-#' \code{\link{mlwinfitIGLS-class}} object, at a chosen level of the multilevel model.
+#' Draws caterpillar plots of the residuals from a mlwinfitIGLS-class or 
+#' mlwinfitMCMC-class object, at a chosen level of the multilevel model.
 #' 
 #' Uses \code{\link[lattice]{qqmath}} in the \pkg{lattice} package to draw Quantile-Quantile plots
 #' of the residuals at a chosen level of a multilevel model against a
 #' theoretical distribution.
 #'  
 #' @param resi A \code{\link{mlwinfitIGLS-class}} or 
-#' \code{\link{mlwinfitIGLS-class}} object (model must be fitted specifying
+#' \code{\link{mlwinfitMCMC-class}} object (model must be fitted specifying
 #' \code{resi.store = TRUE} and including \code{'variances'} in the list of
 #' \code{resioptions} (both in \code{estoptions}) to not return an error).
 #' @param lev An integer scalar specifying the level of a multilevel model
