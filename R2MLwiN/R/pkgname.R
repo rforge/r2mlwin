@@ -15,6 +15,9 @@
 #' @importFrom Matrix nnzero sparseMatrix
 #' 
 #' @section Important differences between version 0.8-0 and earlier versions:
+#' A new model-fitting syntax, more in keeping with that conventionally used in
+#' R, was introduced in \pkg{R2MLwiN} version 0.8-0, with back-compatibility
+#' with earlier syntax preserved.
 #' \itemize{
 #'  \item{Put}
 #'  \item{stuff}
