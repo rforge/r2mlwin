@@ -67,532 +67,406 @@
 #' }
 #'
 
-#' @export 
+#' @name mlwinfitMCMC-class
+#' @rdname mlwinfitMCMC-class
+#' @exportClass mlwinfitMCMC
 setClass(Class = "mlwinfitMCMC", representation = representation(version = "character", Nobs = "numeric", DataLength = "numeric", 
                                                                  Hierarchy = "ANY", burnin = "numeric", iterations = "numeric", D = "ANY", Formula = "ANY", levID = "character", 
                                                                  merr = "ANY", fact = "ANY", xc = "ANY", FP = "numeric", RP = "numeric", RP.cov = "matrix", FP.cov = "matrix", 
                                                                  chains = "ANY", elapsed.time = "numeric", call = "ANY", BDIC = "numeric", LIKE = "ANY", fact.loadings = "numeric", 
                                                                  fact.loadings.sd = "numeric", fact.cov = "numeric", fact.cov.sd = "numeric", fact.chains = "ANY", MIdata = "data.frame", 
                                                                  residual = "list", resi.chains = "ANY", data = "data.frame"))
-#' This method gets a slot of an instance of the S4 class.
-#' @name [
+
+#' Extract or Replace parts of "mlwinfitMCMC" objects
+#'
 #' @rdname extract-methods
-#' @aliases [[,mlwinfitMCMC-method
-#' @docType methods
-setMethod(f = "[", signature = "mlwinfitMCMC", definition = function(x, i, j, drop) {
+setMethod("[", "mlwinfitMCMC", function(x, i, j, drop) {
   if (i == "version") {
     return(x@version)
-  } else {
   }
   if (i == "Nobs") {
     return(x@Nobs)
-  } else {
   }
   if (i == "DataLength") {
     return(x@DataLength)
-  } else {
   }
   if (i == "Hierarchy") {
     return(x@Hierarchy)
-  } else {
   }
   if (i == "burnin") {
     return(x@burnin)
-  } else {
   }
   if (i == "iterations") {
     return(x@iterations)
-  } else {
   }
   if (i == "D") {
     return(x@D)
-  } else {
   }
   if (i == "Formula") {
     return(x@Formula)
-  } else {
   }
   if (i == "levID") {
     return(x@levID)
-  } else {
   }
   if (i == "merr") {
     return(x@merr)
-  } else {
   }
   if (i == "fact") {
     return(x@fact)
-  } else {
   }
   if (i == "xc") {
     return(x@xc)
-  } else {
   }
   if (i == "FP") {
     return(x@FP)
-  } else {
   }
   if (i == "RP") {
     return(x@RP)
-  } else {
   }
   if (i == "FP.cov") {
     return(x@FP.cov)
-  } else {
   }
   if (i == "RP.cov") {
     return(x@RP.cov)
-  } else {
   }
   if (i == "chains") {
     return(x@chains)
-  } else {
   }
   if (i == "elapsed.time") {
     return(x@elapsed.time)
-  } else {
   }
   if (i == "BDIC") {
     return(x@BDIC)
-  } else {
   }
   if (i == "call") {
     return(x@call)
-  } else {
   }
   if (i == "LIKE") {
     return(x@LIKE)
-  } else {
   }
   if (i == "fact.loadings") {
     return(x@fact.loadings)
-  } else {
   }
   if (i == "fact.loadings.sd") {
     return(x@fact.loadings.sd)
-  } else {
   }
   if (i == "fact.cov") {
     return(x@fact.cov)
-  } else {
   }
   if (i == "fact.cov.sd") {
     return(x@fact.cov.sd)
-  } else {
   }
   if (i == "fact.chains") {
     return(x@fact.chains)
-  } else {
   }
   if (i == "MIdata") {
     return(x@MIdata)
-  } else {
   }
   if (i == "residual") {
     return(x@residual)
-  } else {
   }
   if (i == "resi.chains") {
     return(x@resi.chains)
-  } else {
   }
   if (i == "data") {
     return(x@data)
-  } else {
   }
 })
 
-#' Replace names of mlwinfitMCMC
-#' @name [
 #' @rdname extract-methods
-#' @aliases [<-,mlwinfitMCMC-method
-#' @docType methods
-setReplaceMethod(f = "[", signature = "mlwinfitMCMC", definition = function(x, i, j, value) {
+setReplaceMethod("[", signature(x = "mlwinfitMCMC"), function(x, i, j, value) {
   if (i == "version") {
     x@version <- value
-  } else {
   }
   if (i == "Nobs") {
     x@Nobs <- value
-  } else {
   }
   if (i == "DataLength") {
     x@DataLength <- value
-  } else {
   }
   if (i == "Hierarchy") {
     x@Hierarchy <- value
-  } else {
   }
   if (i == "burnin") {
     x@burnin <- value
-  } else {
   }
   if (i == "iterations") {
     x@iterations <- value
-  } else {
   }
   if (i == "D") {
     x@D <- value
-  } else {
   }
   if (i == "Formula") {
     x@Formula <- value
-  } else {
   }
   if (i == "levID") {
     x@levID <- value
-  } else {
   }
   if (i == "merr") {
     x@merr <- value
-  } else {
   }
   if (i == "fact") {
     x@fact <- value
-  } else {
   }
   if (i == "xc") {
     x@xc <- value
-  } else {
   }
   if (i == "FP") {
     x@FP <- value
-  } else {
   }
   if (i == "RP") {
     x@RP <- value
-  } else {
   }
   if (i == "FP.cov") {
     x@FP.cov <- value
-  } else {
   }
   if (i == "RP.cov") {
     x@RP.cov <- value
-  } else {
   }
   if (i == "chains") {
     x@chains <- value
-  } else {
   }
   if (i == "elapsed.time") {
     x@elapsed.time <- value
-  } else {
   }
   if (i == "BDIC") {
     x@BDIC <- value
-  } else {
   }
   if (i == "call") {
     x@call <- value
-  } else {
   }
   if (i == "LIKE") {
     x@LIKE <- value
-  } else {
   }
   if (i == "fact.loadings") {
     x@fact.loadings <- value
-  } else {
   }
   if (i == "fact.loadings.sd") {
     x@fact.loadings.sd <- value
-  } else {
   }
   if (i == "fact.cov") {
     x@fact.cov <- value
-  } else {
   }
   if (i == "fact.cov.sd") {
     x@fact.cov.sd <- value
-  } else {
   }
   if (i == "fact.chains") {
     x@fact.chains <- value
-  } else {
   }
   if (i == "MIdata") {
     x@MIdata <- value
-  } else {
   }
   if (i == "residual") {
     x@residual <- value
-  } else {
   }
   if (i == "resi.chains") {
     x@resi.chains <- value
-  } else {
   }
   if (i == "data") {
     x@data <- value
-  } else {
   }
   validObject(x)
   return(x)
 })
 
-#' Extract parts of mlwinfitMCMC
-#' @name [[
 #' @rdname extract-methods
-#' @aliases [,mlwinfitMCMC-method
-#' @docType methods
-setMethod(f = "[[", signature = "mlwinfitMCMC", definition = function(x, i, j, drop) {
+setMethod("[[", "mlwinfitMCMC", function(x, i, j, drop) {
   if (i == "version") {
     return(x@version)
-  } else {
   }
   if (i == "Nobs") {
     return(x@Nobs)
-  } else {
   }
   if (i == "DataLength") {
     return(x@DataLength)
-  } else {
   }
   if (i == "Hierarchy") {
     return(x@Hierarchy)
-  } else {
   }
   if (i == "burnin") {
     return(x@burnin)
-  } else {
   }
   if (i == "iterations") {
     return(x@iterations)
-  } else {
   }
   if (i == "D") {
     return(x@D)
-  } else {
   }
   if (i == "Formula") {
     return(x@Formula)
-  } else {
   }
   if (i == "levID") {
     return(x@levID)
-  } else {
   }
   if (i == "merr") {
     return(x@merr)
-  } else {
   }
   if (i == "fact") {
     return(x@fact)
-  } else {
   }
   if (i == "xc") {
     return(x@xc)
-  } else {
   }
   if (i == "FP") {
     return(x@FP)
-  } else {
   }
   if (i == "RP") {
     return(x@RP)
-  } else {
   }
   if (i == "FP.cov") {
     return(x@FP.cov)
-  } else {
   }
   if (i == "RP.cov") {
     return(x@RP.cov)
-  } else {
   }
   if (i == "chains") {
     return(x@chains)
-  } else {
   }
   if (i == "elapsed.time") {
     return(x@elapsed.time)
-  } else {
   }
   if (i == "BDIC") {
     return(x@BDIC)
-  } else {
   }
   if (i == "call") {
     return(x@call)
-  } else {
   }
   if (i == "LIKE") {
     return(x@LIKE)
-  } else {
   }
   if (i == "fact.loadings") {
     return(x@fact.loadings)
-  } else {
   }
   if (i == "fact.loadings.sd") {
     return(x@fact.loadings.sd)
-  } else {
   }
   if (i == "fact.cov") {
     return(x@fact.cov)
-  } else {
   }
   if (i == "fact.cov.sd") {
     return(x@fact.cov.sd)
-  } else {
   }
   if (i == "fact.chains") {
     return(x@fact.chains)
-  } else {
   }
   if (i == "MIdata") {
     return(x@MIdata)
-  } else {
   }
   if (i == "residual") {
     return(x@residual)
-  } else {
   }
   if (i == "resi.chains") {
     return(x@resi.chains)
-  } else {
   }
   if (i == "data") {
     return(x@data)
-  } else {
   }
 })
 
-#' Replace names of mlwinfitMCMC
-#' @name [[
 #' @rdname extract-methods
-#' @aliases [<-,mlwinfitMCMC-method
-#' @docType methods
-setReplaceMethod(f = "[[", signature = "mlwinfitMCMC", definition = function(x, i, j, value) {
+setReplaceMethod("[[", signature(x = "mlwinfitMCMC"), function(x, i, j, value) {
   if (i == "version") {
     x@version <- value
-  } else {
   }
   if (i == "Nobs") {
     x@Nobs <- value
-  } else {
   }
   if (i == "DataLength") {
     x@DataLength <- value
-  } else {
   }
   if (i == "Hierarchy") {
     x@Hierarchy <- value
-  } else {
   }
   if (i == "burnin") {
     x@burnin <- value
-  } else {
   }
   if (i == "iterations") {
     x@iterations <- value
-  } else {
   }
   if (i == "D") {
     x@D <- value
-  } else {
   }
   if (i == "Formula") {
     x@Formula <- value
-  } else {
   }
   if (i == "levID") {
     x@levID <- value
-  } else {
   }
   if (i == "merr") {
     x@merr <- value
-  } else {
   }
   if (i == "fact") {
     x@fact <- value
-  } else {
   }
   if (i == "xc") {
     x@xc <- value
-  } else {
   }
   if (i == "FP") {
     x@FP <- value
-  } else {
   }
   if (i == "RP") {
     x@RP <- value
-  } else {
   }
   if (i == "FP.cov") {
     x@FP.cov <- value
-  } else {
   }
   if (i == "RP.cov") {
     x@RP.cov <- value
-  } else {
   }
   if (i == "chains") {
     x@chains <- value
-  } else {
   }
   if (i == "elapsed.time") {
     x@elapsed.time <- value
-  } else {
   }
   if (i == "BDIC") {
     x@BDIC <- value
-  } else {
   }
   if (i == "call") {
     x@call <- value
-  } else {
   }
   if (i == "LIKE") {
     x@LIKE <- value
-  } else {
   }
   if (i == "fact.loadings") {
     x@fact.loadings <- value
-  } else {
   }
   if (i == "fact.loadings.sd") {
     x@fact.loadings.sd <- value
-  } else {
   }
   if (i == "fact.cov") {
     x@fact.cov <- value
-  } else {
   }
   if (i == "fact.cov.sd") {
     x@fact.cov.sd <- value
-  } else {
   }
   if (i == "fact.chains") {
     x@fact.chains <- value
-  } else {
   }
   if (i == "MIdata") {
     x@MIdata <- value
-  } else {
   }
   if (i == "residual") {
     x@residual <- value
-  } else {
   }
   if (i == "resi.chains") {
     x@resi.chains <- value
-  } else {
   }
   if (i == "data") {
     x@data <- value
-  } else {
   }
   validObject(x)
   return(x)
 })
+
+#' Summarize "mlwinfitMCMC" objects
+#'
+#' @rdname summary-methods
 #' @export 
 setMethod("summary", signature(object = "mlwinfitMCMC"), function(object, ...) {
   object
 })
+
 printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars = getOption("show.signif.stars"), 
                       z.ratio = TRUE, ...) {
   
@@ -819,32 +693,48 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   }
   cat(paste(rep("-", 50), collapse = "*"), "\n")
 }
+
+#' @rdname summary-methods
 #' @export 
 setMethod("print", "mlwinfitMCMC", printMCMC)
 
+#' @rdname summary-methods
 #' @export 
-setMethod("show", "mlwinfitMCMC", function(object) printMCMC(object))
+setMethod("show", signature(object = "mlwinfitMCMC"), function(object) printIGLS(object))
 
+#' Update "mlwinfitMCMC" objects
+#'
+#' @rdname update-methods
 #' @export 
-setMethod("update", "mlwinfitMCMC", updateMLwiN)
+setMethod("update", signature(object = "mlwinfitMCMC"), updateMLwiN)
 
+#' "mlwinfitMCMC" model formula
+#'
+#' @rdname formula
 #' @export 
 setMethod("formula", "mlwinfitMCMC", function(x, env = parent.frame(), ...) {
   as.formula(x@Formula)
 })
 
+#' Extract the coefficient vector from "mlwinfitMCMC" objects
+#'
+#' @rdname coef-methods
 #' @export 
-setMethod("coef", "mlwinfitMCMC", function(object, ...) {
+setMethod("coef", signature(object = "mlwinfitMCMC"), function(object, ...) {
   c(object@FP, object@RP)
 })
 
+#' @rdname coef-methods
 #' @export 
-setMethod("coefficients", "mlwinfitMCMC", function(object, ...) {
+setMethod("coefficients", signature(object = "mlwinfitMCMC"), function(object, ...) {
   coef(object)
 })
 
+#' Extract the approximate variance-covariance matrix from "mlwinfitMCMC" objects
+#'
+#' @rdname vcov-methods
 #' @export 
-setMethod("vcov", "mlwinfitMCMC", function(object, ...) {
+setMethod("vcov", signature(object = "mlwinfitMCMC"), function(object, ...) {
   m <- matrix(0, nrow(object@FP.cov) + nrow(object@RP.cov), ncol(object@FP.cov) + ncol(object@RP.cov))
   colnames(m) <- c(colnames(object@FP.cov), colnames(object@RP.cov))
   rownames(m) <- c(rownames(object@FP.cov), rownames(object@RP.cov))
@@ -853,23 +743,33 @@ setMethod("vcov", "mlwinfitMCMC", function(object, ...) {
   m
 })
 
+#' Returns the residual degrees-of-freedom extracted from "mlwinfitMCMC" objects.
+#' 
+#' @rdname df.residual-methods
 #' @export 
-setMethod("df.residual", "mlwinfitMCMC", function(object, ...) {
+setMethod("df.residual", signature(object = "mlwinfitMCMC"), function(object, ...) {
   nobs(object) - length(coef(object))
 })
 
+#' Returns the predicted data from "mlwinfitMCMC" objects.
+#' 
+#' @rdname predict-methods
 #' @export 
-setMethod("fitted", "mlwinfitMCMC", function(object, ...) {
+setMethod("fitted", signature(object = "mlwinfitMCMC"), function(object, ...) {
   predict(object, type = "response")
 })
 
+#' @rdname predict-methods
 #' @export 
-setMethod("fitted.values", "mlwinfitMCMC", function(object, ...) {
+setMethod("fitted.values", signature(object = "mlwinfitMCMC"), function(object, ...) {
   fitted(object)
 })
 
+#' Returns the residual data from "mlwinfitMCMC" objects.
+#' 
+#' @rdname residual-methods
 #' @export 
-setMethod("residuals", "mlwinfitMCMC", function(object, ...) {
+setMethod("residuals", signature(object = "mlwinfitMCMC"), function(object, ...) {
   form <- Formula.translate(object@Formula, object@D, object@data)
   if (!is.list(form$resp)) {
     object@data[[form$resp]] - fitted(object)
@@ -879,13 +779,15 @@ setMethod("residuals", "mlwinfitMCMC", function(object, ...) {
   }
 })
 
+#' @rdname residual-methods
 #' @export 
-setMethod("resid", "mlwinfitMCMC", function(object, ...) {
+setMethod("resid", signature(object = "mlwinfitMCMC"), function(object, ...) {
   residuals(object)
 })
 
+#' @rdname predict-methods
 #' @export 
-setMethod("predict", "mlwinfitMCMC", function(object, newdata = NULL, params = NULL, type = "link", se.fit = FALSE, 
+setMethod("predict", signature(object = "mlwinfitMCMC"), function(object, newdata = NULL, params = NULL, type = "link", se.fit = FALSE, 
                                               terms = NULL, ...) {
   if (is.null(newdata)) {
     indata <- object@data
@@ -962,7 +864,10 @@ setMethod("predict", "mlwinfitMCMC", function(object, newdata = NULL, params = N
   }
 })
 
+#' Returns the number of used observations from "mlwinfitMCMC" objects.
+#' 
+#' @rdname nobs-methods
 #' @export 
-setMethod("nobs", "mlwinfitMCMC", function(object, ...) {
+setMethod("nobs", signature(object = "mlwinfitMCMC"), function(object, ...) {
   object@Nobs
 }) 

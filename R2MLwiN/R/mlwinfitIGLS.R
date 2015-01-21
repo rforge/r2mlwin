@@ -56,374 +56,282 @@
 #' mymodel['LIKE']
 #' }
 #'
-#' @export 
+#' @name mlwinfitIGLS-class
+#' @rdname mlwinfitIGLS-class
+#' @exportClass mlwinfitIGLS
 setClass(Class = "mlwinfitIGLS", representation = representation(version = "character", Nobs = "numeric", DataLength = "numeric", 
                                                                  Hierarchy = "ANY", D = "ANY", Formula = "ANY", levID = "character", FP = "numeric", RP = "numeric", RP.cov = "matrix", 
                                                                  FP.cov = "matrix", LIKE = "ANY", elapsed.time = "numeric", call = "ANY", residual = "list", Converged = "logical", 
                                                                  Iterations = "numeric", Meth = "numeric", nonlinear = "numeric", data = "data.frame"))
 
-
-#' Extract parts of mlwinfitIGLS
-#' @name [
+#' Extract or Replace parts of "mlwinfitIGLS" objects
+#'
 #' @rdname extract-methods
-#' @aliases [[,mlwinfitIGLS-method
-#' @docType methods
-setMethod(f = "[", signature = "mlwinfitIGLS", definition = function(x, i, j, drop) {
+setMethod("[", "mlwinfitIGLS", function(x, i, j, drop) {
   if (i == "version") {
     return(x@version)
-  } else {
   }
   if (i == "Nobs") {
     return(x@Nobs)
-  } else {
   }
   if (i == "DataLength") {
     return(x@DataLength)
-  } else {
   }
   if (i == "Hierarchy") {
     return(x@Hierarchy)
-  } else {
   }
   if (i == "D") {
     return(x@D)
-  } else {
   }
   if (i == "Formula") {
     return(x@Formula)
-  } else {
   }
   if (i == "levID") {
     return(x@levID)
-  } else {
   }
   if (i == "FP") {
     return(x@FP)
-  } else {
   }
   if (i == "RP") {
     return(x@RP)
-  } else {
   }
   if (i == "FP.cov") {
     return(x@FP.cov)
-  } else {
   }
   if (i == "RP.cov") {
     return(x@RP.cov)
-  } else {
   }
   if (i == "elapsed.time") {
     return(x@elapsed.time)
-  } else {
   }
   if (i == "call") {
     return(x@call)
-  } else {
   }
   if (i == "LIKE") {
     return(x@LIKE)
-  } else {
   }
   if (i == "Converged") {
     return(x@Converged)
-  } else {
   }
   if (i == "Iterations") {
     return(x@Iterations)
-  } else {
   }
   if (i == "Meth") {
     return(x@Meth)
-  } else {
   }
   if (i == "nonlinear") {
     return(x@nonlinear)
-  } else {
-  }
-  # if(i=='chains.bugs'){return(x@chains.bugs)}else {}
-  if (i == "residual") {
-    return(x@residual)
-  } else {
-  }
-  if (i == "data") {
-    return(x@data)
-  } else {
-  }
-})
-
-#' Extract parts of mlwinfitIGLS
-#' @name [[
-#' @rdname extract-methods
-#' @aliases [,mlwinfitIGLS-method
-#' @docType methods
-setMethod(f = "[[", signature = "mlwinfitIGLS", definition = function(x, i, j, drop) {
-  if (i == "version") {
-    return(x@version)
-  } else {
-  }
-  if (i == "Nobs") {
-    return(x@Nobs)
-  } else {
-  }
-  if (i == "DataLength") {
-    return(x@DataLength)
-  } else {
-  }
-  if (i == "Hierarchy") {
-    return(x@Hierarchy)
-  } else {
-  }
-  if (i == "D") {
-    return(x@D)
-  } else {
-  }
-  if (i == "Formula") {
-    return(x@Formula)
-  } else {
-  }
-  if (i == "levID") {
-    return(x@levID)
-  } else {
-  }
-  if (i == "FP") {
-    return(x@FP)
-  } else {
-  }
-  if (i == "RP") {
-    return(x@RP)
-  } else {
-  }
-  if (i == "FP.cov") {
-    return(x@FP.cov)
-  } else {
-  }
-  if (i == "RP.cov") {
-    return(x@RP.cov)
-  } else {
-  }
-  if (i == "elapsed.time") {
-    return(x@elapsed.time)
-  } else {
-  }
-  if (i == "call") {
-    return(x@call)
-  } else {
-  }
-  if (i == "LIKE") {
-    return(x@LIKE)
-  } else {
-  }
-  if (i == "Converged") {
-    return(x@Converged)
-  } else {
-  }
-  if (i == "Iterations") {
-    return(x@Iterations)
-  } else {
-  }
-  if (i == "Meth") {
-    return(x@Meth)
-  } else {
-  }
-  if (i == "nonlinear") {
-    return(x@nonlinear)
-  } else {
   }
   if (i == "residual") {
     return(x@residual)
-  } else {
   }
   if (i == "data") {
     return(x@data)
-  } else {
   }
 })
 
-#' Replace names of mlwinfitIGLS
-#' @name [
 #' @rdname extract-methods
-#' @aliases [<-,mlwinfitIGLS-method
-#' @docType methods
-setReplaceMethod(f = "[", signature = "mlwinfitIGLS", definition = function(x, i, j, value) {
+setReplaceMethod("[", signature(x = "mlwinfitIGLS"), function(x, i, j, value) {
   if (i == "version") {
     x@version <- value
-  } else {
   }
   if (i == "Nobs") {
     x@Nobs <- value
-  } else {
   }
   if (i == "DataLength") {
     x@DataLength <- value
-  } else {
   }
   if (i == "Hierarchy") {
     x@Hierarchy <- value
-  } else {
   }
   if (i == "D") {
     x@D <- value
-  } else {
   }
   if (i == "Formula") {
     x@Formula <- value
-  } else {
   }
   if (i == "levID") {
     x@levID <- value
-  } else {
   }
   if (i == "FP") {
     x@FP <- value
-  } else {
   }
   if (i == "RP") {
     x@RP <- value
-  } else {
   }
   if (i == "FP.cov") {
     x@FP.cov <- value
-  } else {
   }
   if (i == "RP.cov") {
     x@RP.cov <- value
-  } else {
   }
   if (i == "elapsed.time") {
     x@elapsed.time <- value
-  } else {
   }
   if (i == "call") {
     x@call <- value
-  } else {
   }
   if (i == "LIKE") {
     x@LIKE <- value
-  } else {
   }
   if (i == "Converged") {
     x@Converged <- value
-  } else {
   }
   if (i == "Iterations") {
     x@Iterations <- value
-  } else {
   }
   if (i == "Meth") {
     x@Meth <- value
-  } else {
   }
   if (i == "nonlinear") {
     x@nonlinear <- value
-  } else {
   }
   if (i == "residual") {
     x@residual <- value
-  } else {
   }
   if (i == "data") {
     x@data <- value
-  } else {
   }
   validObject(x)
   return(x)
 })
 
-#' Replace names of mlwinfitIGLS
-#' @name [[
 #' @rdname extract-methods
-#' @aliases [<-,mlwinfitIGLS-method
-#' @docType methods
-setReplaceMethod(f = "[[", signature = "mlwinfitIGLS", definition = function(x, i, j, value) {
+setMethod("[[", "mlwinfitIGLS", function(x, i, j, drop) {
+  if (i == "version") {
+    return(x@version)
+  }
+  if (i == "Nobs") {
+    return(x@Nobs)
+  }
+  if (i == "DataLength") {
+    return(x@DataLength)
+  }
+  if (i == "Hierarchy") {
+    return(x@Hierarchy)
+  }
+  if (i == "D") {
+    return(x@D)
+  }
+  if (i == "Formula") {
+    return(x@Formula)
+  }
+  if (i == "levID") {
+    return(x@levID)
+  }
+  if (i == "FP") {
+    return(x@FP)
+  }
+  if (i == "RP") {
+    return(x@RP)
+  }
+  if (i == "FP.cov") {
+    return(x@FP.cov)
+  }
+  if (i == "RP.cov") {
+    return(x@RP.cov)
+  }
+  if (i == "elapsed.time") {
+    return(x@elapsed.time)
+  }
+  if (i == "call") {
+    return(x@call)
+  }
+  if (i == "LIKE") {
+    return(x@LIKE)
+  }
+  if (i == "Converged") {
+    return(x@Converged)
+  }
+  if (i == "Iterations") {
+    return(x@Iterations)
+  }
+  if (i == "Meth") {
+    return(x@Meth)
+  }
+  if (i == "nonlinear") {
+    return(x@nonlinear)
+  }
+  if (i == "residual") {
+    return(x@residual)
+  }
+  if (i == "data") {
+    return(x@data)
+  }
+})
+
+#' @rdname extract-methods
+setReplaceMethod("[[", signature(x = "mlwinfitIGLS"), function(x, i, j, value) {
   if (i == "version") {
     x@version <- value
-  } else {
   }
   if (i == "Nobs") {
     x@Nobs <- value
-  } else {
   }
   if (i == "DataLength") {
     x@DataLength <- value
-  } else {
   }
   if (i == "Hierarchy") {
     x@Hierarchy <- value
-  } else {
   }
   if (i == "D") {
     x@D <- value
-  } else {
   }
   if (i == "Formula") {
     x@Formula <- value
-  } else {
   }
   if (i == "levID") {
     x@levID <- value
-  } else {
   }
   if (i == "FP") {
     x@FP <- value
-  } else {
   }
   if (i == "RP") {
     x@RP <- value
-  } else {
   }
   if (i == "FP.cov") {
     x@FP.cov <- value
-  } else {
   }
   if (i == "RP.cov") {
     x@RP.cov <- value
-  } else {
   }
   if (i == "elapsed.time") {
     x@elapsed.time <- value
-  } else {
   }
   if (i == "call") {
     x@call <- value
-  } else {
   }
   if (i == "LIKE") {
     x@LIKE <- value
-  } else {
   }
   if (i == "Converged") {
     x@Converged <- value
-  } else {
   }
   if (i == "Iterations") {
     x@Iterations <- value
-  } else {
   }
   if (i == "Meth") {
     x@Meth <- value
-  } else {
   }
   if (i == "nonlinear") {
     x@nonlinear <- value
-  } else {
   }
   if (i == "residual") {
     x@residual <- value
-  } else {
   }
   if (i == "data") {
     x@data <- value
-  } else {
   }
   validObject(x)
   return(x)
 })
 
+#' Summarize "mlwinfitIGLS" objects
+#'
+#' @rdname summary-methods
 #' @export 
 setMethod("summary", signature(object = "mlwinfitIGLS"), function(object, ...) {
-  object
-  
+  object  
 })
 
 printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars = getOption("show.signif.stars"), 
@@ -578,14 +486,15 @@ printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
     }
   }
   cat(paste(rep("-", 50), collapse = "*"), "\n")
-  
 }
 
+#' @rdname summary-methods
 #' @export 
 setMethod("print", "mlwinfitIGLS", printIGLS)
 
+#' @rdname summary-methods
 #' @export 
-setMethod("show", "mlwinfitIGLS", function(object) printIGLS(object))
+setMethod("show", signature(object = "mlwinfitIGLS"), function(object) printIGLS(object))
 
 updateMLwiN <- function(object, Formula., levID., estoptions., ..., keep.order = TRUE, evaluate = TRUE) {
   my.update.formula <- function(old, new, keep.order = TRUE, ...) {
@@ -627,26 +536,39 @@ updateMLwiN <- function(object, Formula., levID., estoptions., ..., keep.order =
     eval(newcall, sys.parent()) else newcall
 }
 
+#' Update "mlwinfitIGLS" objects
+#'
+#' @rdname update-methods
 #' @export 
-setMethod("update", "mlwinfitIGLS", updateMLwiN)
+setMethod("update", signature(object = "mlwinfitIGLS"), updateMLwiN)
 
+#' "mlwinfitIGLS" model formula
+#'
+#' @rdname formula
 #' @export 
 setMethod("formula", "mlwinfitIGLS", function(x, env = parent.frame(), ...) {
   as.formula(x@Formula)
 })
 
+#' Extract the coefficient vector from "mlwinfitIGLS" objects
+#'
+#' @rdname coef-methods
 #' @export 
-setMethod("coef", "mlwinfitIGLS", function(object, ...) {
+setMethod("coef", signature(object = "mlwinfitIGLS"), function(object, ...) {
   c(object@FP, object@RP)
 })
 
+#' @rdname coef-methods
 #' @export 
-setMethod("coefficients", "mlwinfitIGLS", function(object, ...) {
+setMethod("coefficients", signature(object = "mlwinfitIGLS"), function(object, ...) {
   coef(object)
 })
 
+#' Extract the approximate variance-covariance matrix from "mlwinfitIGLS" objects
+#'
+#' @rdname vcov-methods
 #' @export 
-setMethod("vcov", "mlwinfitIGLS", function(object, ...) {
+setMethod("vcov", signature(object = "mlwinfitIGLS"), function(object, ...) {
   m <- matrix(0, nrow(object@FP.cov) + nrow(object@RP.cov), ncol(object@FP.cov) + ncol(object@RP.cov))
   colnames(m) <- c(colnames(object@FP.cov), colnames(object@RP.cov))
   rownames(m) <- c(rownames(object@FP.cov), rownames(object@RP.cov))
@@ -655,23 +577,33 @@ setMethod("vcov", "mlwinfitIGLS", function(object, ...) {
   m
 })
 
+#' Returns the residual degrees-of-freedom extracted from "mlwinfitIGLS" objects.
+#' 
+#' @rdname df.residual-methods
 #' @export 
-setMethod("df.residual", "mlwinfitIGLS", function(object, ...) {
+setMethod("df.residual", signature(object = "mlwinfitIGLS"), function(object, ...) {
   nobs(object) - length(coef(object))
 })
 
+#' Returns the predicted data from "mlwinfitIGLS" objects.
+#' 
+#' @rdname predict-methods
 #' @export 
-setMethod("fitted", "mlwinfitIGLS", function(object, ...) {
+setMethod("fitted", signature(object = "mlwinfitIGLS"), function(object, ...) {
   predict(object, type = "response")
 })
 
+#' @rdname predict-methods
 #' @export 
-setMethod("fitted.values", "mlwinfitIGLS", function(object, ...) {
+setMethod("fitted.values", signature(object = "mlwinfitIGLS"), function(object, ...) {
   fitted(object)
 })
 
+#' Returns the residual data from "mlwinfitIGLS" objects.
+#' 
+#' @rdname residual-methods
 #' @export 
-setMethod("residuals", "mlwinfitIGLS", function(object, ...) {
+setMethod("residuals", signature(object = "mlwinfitIGLS"), function(object, ...) {
   form <- Formula.translate(object@Formula, object@D, object@data)
   if (!is.list(form$resp)) {
     object@data[[form$resp]] - fitted(object)
@@ -681,13 +613,15 @@ setMethod("residuals", "mlwinfitIGLS", function(object, ...) {
   }
 })
 
+#' @rdname residual-methods
 #' @export 
-setMethod("resid", "mlwinfitIGLS", function(object, ...) {
+setMethod("resid", signature(object = "mlwinfitIGLS"), function(object, ...) {
   residuals(object)
 })
 
+#' @rdname predict-methods
 #' @export 
-setMethod("predict", "mlwinfitIGLS", function(object, newdata = NULL, params = NULL, type = "link", se.fit = FALSE, 
+setMethod("predict", signature(object = "mlwinfitIGLS"), function(object, newdata = NULL, params = NULL, type = "link", se.fit = FALSE, 
                                               terms = NULL, ...) {
   if (is.null(newdata)) {
     indata <- object@data
@@ -764,8 +698,11 @@ setMethod("predict", "mlwinfitIGLS", function(object, newdata = NULL, params = N
   }
 })
 
+#' Returns the log-likelihood from "mlwinfitIGLS" objects.
+#' 
+#' @rdname logLik-methods
 #' @export 
-setMethod("logLik", "mlwinfitIGLS", function(object, ...) {
+setMethod("logLik", signature(object = "mlwinfitIGLS"), function(object, ...) {
   val <- -0.5 * deviance(object)
   attr(val, "df") <- length(coef(object))
   attr(val, "nobs") <- nobs(object)
@@ -773,12 +710,18 @@ setMethod("logLik", "mlwinfitIGLS", function(object, ...) {
   val
 })
 
+#' Returns the deviance from "mlwinfitIGLS" objects.
+#' 
+#' @rdname deviance-methods
 #' @export 
-setMethod("deviance", "mlwinfitIGLS", function(object, ...) {
+setMethod("deviance", signature(object = "mlwinfitIGLS"), function(object, ...) {
   object@LIKE
 })
 
-#' @export 
-setMethod("nobs", "mlwinfitIGLS", function(object, ...) {
+#' Returns the number of used observations from "mlwinfitIGLS" objects.
+#' 
+#' @rdname nobs-methods
+#' @export
+setMethod("nobs", signature(object = "mlwinfitIGLS"), function(object, ...) {
   object@Nobs
 }) 
