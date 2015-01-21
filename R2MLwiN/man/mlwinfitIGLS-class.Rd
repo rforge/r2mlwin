@@ -3,7 +3,7 @@
 \docType{class}
 \name{mlwinfitIGLS-class}
 \alias{mlwinfitIGLS-class}
-\title{An S4 class that stores the outputs of the fitted model.}
+\title{An S4 class that stores the outputs of the fitted IGLS model.}
 \description{
 An MLwiN model run via the IGLS estimation method is represented by an "mlwinfitIGLS" object
 }

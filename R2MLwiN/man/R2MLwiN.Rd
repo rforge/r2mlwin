@@ -12,13 +12,30 @@ MLwiN (and also WinBUGS / OpenBUGS) from within the R environment.
 }
 \section{Important differences between version 0.8-0 and earlier versions}{
 
-A new model-fitting syntax, more in keeping with that conventionally used in
-R, was introduced in R2MLwiN version 0.8-0, with back-compatibility
-with earlier syntax preserved.
+A number of wide-ranging changes, including a new model-fitting syntax more
+in keeping with that conventionally used in R, were introduced in
+\pkg{R2MLwiN} version 0.8-0.
+
+The demos, which replicate both the User's Guide to MLwiN (Rasbash et al, 2012) and
+MCMC Estimation in MLwiN (Browne, 2012) manuals, provide practical demonstrations of many
+of these changes. See \code{demo(package = "R2MLwiN")} for a list of demo titles; to run one
+type e.g. \code{demo(UserGuide03)} or view a demo's script via
+\code{file.show(system.file("demo", "UserGuide03", package = "R2MLwiN"))}.
+
 \itemize{
- \item{Put}
- \item{stuff}
- \item{here}
+
+ \item{The Formula is now specified via a \code{\link[stats]{formula}} object. So, for example,
+ previously a 2-level model random intercept model would be specified by e.g.
+ \code{normexam ~ (0|cons + standlrt) + (2|cons) + (1|cons), levID = c('school', 'student')}
+ (with \code{normexam} the response variable, \code{cons} a constant of ones forming the intercept,
+ which is allowed to vary at level 1 (\code{student}) and level 2 (\code{school}), and
+ \code{standlrt} included as a predictor in the fixed part of the model). Whilst with back-compatibility
+ is preserved (i.e. this specification will currently still work) the same model can now be more
+ parsimoniously specified via \code{normexam ~ 1 + standlrt + (school|1) + (student|1)}.
+ As well examples in the demos, see also \code{\link{runMLwiN}} and \code{\link{Formula.translate}} for further info.}
+
+ \item{\code{\link{df2matrix}} and \code{\link{matrix2df}} functions have been added to convert multiple membership
+ information between \code{\link[base]{data.frame}} and \code{\link[base]{matrix}} formats.}
 }
 }
 

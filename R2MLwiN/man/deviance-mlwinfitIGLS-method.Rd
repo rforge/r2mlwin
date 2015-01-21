@@ -7,6 +7,11 @@
 \usage{
 \S4method{deviance}{mlwinfitIGLS}(object, ...)
 }
+\arguments{
+\item{object}{An \code{\link{mlwinfitIGLS-class}} object}
+
+\item{...}{Other arguments}
+}
 \description{
 Returns the deviance from "mlwinfitIGLS" objects.
 }

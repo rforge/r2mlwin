@@ -3,7 +3,7 @@
 \docType{class}
 \name{mlwinfitMCMC-class}
 \alias{mlwinfitMCMC-class}
-\title{This S4 class object is used to save the outputs from the fitted multilevel model using MCMC.}
+\title{An S4 class that stores the outputs of the fitted MCMC model.}
 \description{
 An MLwiN model run via the MCMC estimation method is represented by an "mlwinfitMCMC" object
 }
@@ -30,7 +30,7 @@ An MLwiN model run via the MCMC estimation method is represented by an "mlwinfit
 
 \item{\code{fact}}{A list of objects specified for factor analysis, including \code{nfact}, \code{lev.fact}, \code{nfactor}, \code{factor}, \code{loading} and \code{constr}.}
 
-\item{\code{xc}}{MIGHT NEED REVISING: A list of objects specified for cross-classified and/or multiple membership models, including \code{class}, \code{N1}, \code{weight}, \code{id} and \code{car}.}
+\item{\code{xc}}{A list of objects specified for cross-classified and/or multiple membership models, including \code{class}, \code{N1}, \code{weight}, \code{id} and \code{car}.}
 
 \item{\code{FP}}{Displays the fixed part estimates.}
 
