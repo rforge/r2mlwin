@@ -700,7 +700,7 @@ setMethod("print", "mlwinfitMCMC", printMCMC)
 
 #' @rdname summary-methods
 #' @export 
-setMethod("show", signature(object = "mlwinfitMCMC"), function(object) printIGLS(object))
+setMethod("show", signature(object = "mlwinfitMCMC"), function(object) printMCMC(object))
 
 #' Update "mlwinfitMCMC" objects
 #'
