@@ -6,7 +6,7 @@
 #' package.
 #' 
 #' @param D A vector specifying the type of distribution used in the model.
-#' @param levID A character (vector) specifies the level ID(s).
+#' @param levID A character (vector) specifying the level ID(s).
 #' @param datafile A file name where the BUGS data file will be saved in
 #' .txt format.
 #' @param initfile A file name where the BUGS initial values will be saved
@@ -54,7 +54,7 @@
 #' \item \code{loading}: a matrix specifying the
 #' starting values for the factor loadings and the starting value of the factor
 #' variance. Each row corresponds to a factor.
-#' \item{constr}: a matrix
+#' \item \code{constr}: a matrix
 #' specifying indicators of whether the factor loadings and the factor variance
 #' are constrained (\code{1}) or not (\code{0}).
 #' }
