@@ -16,23 +16,23 @@
 #' @details
 #' The \code{prior} list can contain the following:
 #' \itemize{
-#' \item{fixe}: For the fixed
+#' \item \code{fixe}: For the fixed
 #' parameters, if proper normal priors are used for some parameters, a list of
 #' vectors of length two is provided, each of which specifies the mean and the
 #' standard deviation. If not given, default ('flat' or 'diffuse') priors are
 #' used for the parameters.
-#' \item{fixe.common}: For multivariate normal,
+#' \item \code{fixe.common}: For multivariate normal,
 #' multinomial and mixed response models, if common coefficients are added, use
 #' \code{fixe.common} rather than \code{fixe}.
-#' \item{fixe.sep}: If the common
+#' \item \code{fixe.sep}: If the common
 #' coefficients are added, use \code{fixe.sep} for the separate coefficients.
-#' \item{rp1}: A list object specifying the Wishart or gamma prior for the
+#' \item \code{rp1}: A list object specifying the Wishart or gamma prior for the
 #' covariance matrix or scalar variance at level 1. Consists of: (1)
 #' \code{estimate} -- an estimate for the true value of the inverse of the
 #' covariance matrix; (2) \code{size} -- the number of rows in the covariance
 #' matrix. Note that this is a weakly-informative prior and the default prior
 #' is used if missing.
-#' \item{rp2}: A list object specifying the Wishart or
+#' \item \code{rp2}: A list object specifying the Wishart or
 #' gamma prior for the covariance matrix or scalar variance at level 2.
 #' Consists of: (1) \code{estimate} -- an estimate for the true value of the
 #' inverse of the covariance matrix; (2) \code{size} -- the number of rows in
@@ -47,9 +47,6 @@
 #' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
 #' 
 #' @seealso \code{\link{runMLwiN}}
-#' 
-#' @references MCMC estimation in MLwiN Version 2.25. Browne, W.J. (2012)
-#' Centre for Multilevel Modelling, University of Bristol.
 #' 
 prior2macro <- function(prior, formula, levID, D, indata) {
   ## translation from prior information to MLwiN macro
