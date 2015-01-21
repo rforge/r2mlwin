@@ -1,4 +1,4 @@
-#' An S4 class that stores the outputs of the fitted model.
+#' An S4 class that stores the outputs of the fitted IGLS model.
 #'
 #' An MLwiN model run via the IGLS estimation method is represented by an "mlwinfitIGLS" object
 #'
@@ -66,7 +66,7 @@ setClass(Class = "mlwinfitIGLS", representation = representation(version = "char
 
 #' Extract or Replace parts of "mlwinfitIGLS" objects
 #'
-#' @rdname extract-methods
+#' @rdname extract-methods-igls
 setMethod("[", "mlwinfitIGLS", function(x, i, j, drop) {
   if (i == "version") {
     return(x@version)
@@ -130,7 +130,7 @@ setMethod("[", "mlwinfitIGLS", function(x, i, j, drop) {
   }
 })
 
-#' @rdname extract-methods
+#' @rdname extract-methods-igls
 setReplaceMethod("[", signature(x = "mlwinfitIGLS"), function(x, i, j, value) {
   if (i == "version") {
     x@version <- value
@@ -196,7 +196,7 @@ setReplaceMethod("[", signature(x = "mlwinfitIGLS"), function(x, i, j, value) {
   return(x)
 })
 
-#' @rdname extract-methods
+#' @rdname extract-methods-igls
 setMethod("[[", "mlwinfitIGLS", function(x, i, j, drop) {
   if (i == "version") {
     return(x@version)
@@ -260,7 +260,7 @@ setMethod("[[", "mlwinfitIGLS", function(x, i, j, drop) {
   }
 })
 
-#' @rdname extract-methods
+#' @rdname extract-methods-igls
 setReplaceMethod("[[", signature(x = "mlwinfitIGLS"), function(x, i, j, value) {
   if (i == "version") {
     x@version <- value
@@ -328,7 +328,7 @@ setReplaceMethod("[[", signature(x = "mlwinfitIGLS"), function(x, i, j, value) {
 
 #' Summarize "mlwinfitIGLS" objects
 #'
-#' @rdname summary-methods
+#' @rdname summary-methods-igls
 #' @export 
 setMethod("summary", signature(object = "mlwinfitIGLS"), function(object, ...) {
   object  
@@ -488,11 +488,11 @@ printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   cat(paste(rep("-", 50), collapse = "*"), "\n")
 }
 
-#' @rdname summary-methods
+#' @rdname summary-methods-igls
 #' @export 
 setMethod("print", "mlwinfitIGLS", printIGLS)
 
-#' @rdname summary-methods
+#' @rdname summary-methods-igls
 #' @export 
 setMethod("show", signature(object = "mlwinfitIGLS"), function(object) printIGLS(object))
 
@@ -538,35 +538,36 @@ updateMLwiN <- function(object, Formula., levID., estoptions., ..., keep.order =
 
 #' Update "mlwinfitIGLS" objects
 #'
-#' @rdname update-methods
 #' @export 
 setMethod("update", signature(object = "mlwinfitIGLS"), updateMLwiN)
 
 #' "mlwinfitIGLS" model formula
-#'
-#' @rdname formula
+#' @param x See \code{\link[stats]{formula}}
+#' @param env See \code{\link[stats]{formula}}
+#' @param ... Other arguments; see \code{\link[stats]{formula}}
 #' @export 
 setMethod("formula", "mlwinfitIGLS", function(x, env = parent.frame(), ...) {
   as.formula(x@Formula)
 })
 
 #' Extract the coefficient vector from "mlwinfitIGLS" objects
-#'
-#' @rdname coef-methods
+#' @param object An \code{\link{mlwinfitIGLS-class}} object
+#' @param ... Other arguments
+#' @seealso \code{\link[stats]{coef}}
 #' @export 
 setMethod("coef", signature(object = "mlwinfitIGLS"), function(object, ...) {
   c(object@FP, object@RP)
 })
 
-#' @rdname coef-methods
+#' @rdname coef-mlwinfitIGLS-method
 #' @export 
 setMethod("coefficients", signature(object = "mlwinfitIGLS"), function(object, ...) {
   coef(object)
 })
 
 #' Extract the approximate variance-covariance matrix from "mlwinfitIGLS" objects
-#'
-#' @rdname vcov-methods
+#' @param object An \code{\link{mlwinfitIGLS-class}} object
+#' @param ... Other arguments
 #' @export 
 setMethod("vcov", signature(object = "mlwinfitIGLS"), function(object, ...) {
   m <- matrix(0, nrow(object@FP.cov) + nrow(object@RP.cov), ncol(object@FP.cov) + ncol(object@RP.cov))
@@ -578,22 +579,24 @@ setMethod("vcov", signature(object = "mlwinfitIGLS"), function(object, ...) {
 })
 
 #' Returns the residual degrees-of-freedom extracted from "mlwinfitIGLS" objects.
-#' 
-#' @rdname df.residual-methods
+#' @param object An \code{\link{mlwinfitIGLS-class}} object.
+#' @param ... Other arguments
+#' @seealso \code{\link[stats]{nobs}}, \code{\link[stats]{coef}}
 #' @export 
 setMethod("df.residual", signature(object = "mlwinfitIGLS"), function(object, ...) {
   nobs(object) - length(coef(object))
 })
 
 #' Returns the predicted data from "mlwinfitIGLS" objects.
-#' 
-#' @rdname predict-methods
+#' @param object An \code{\link{mlwinfitIGLS-class}} object.
+#' @param ... Other arguments.
+#' @seealso \code{\link[stats]{predict}}
 #' @export 
 setMethod("fitted", signature(object = "mlwinfitIGLS"), function(object, ...) {
   predict(object, type = "response")
 })
 
-#' @rdname predict-methods
+#' @rdname fitted-mlwinfitIGLS-method
 #' @export 
 setMethod("fitted.values", signature(object = "mlwinfitIGLS"), function(object, ...) {
   fitted(object)
@@ -601,7 +604,8 @@ setMethod("fitted.values", signature(object = "mlwinfitIGLS"), function(object, 
 
 #' Returns the residual data from "mlwinfitIGLS" objects.
 #' 
-#' @rdname residual-methods
+#' @param object An \code{\link{mlwinfitIGLS-class}} object
+#' @param ... Other arguments.
 #' @export 
 setMethod("residuals", signature(object = "mlwinfitIGLS"), function(object, ...) {
   form <- Formula.translate(object@Formula, object@D, object@data)
@@ -613,13 +617,13 @@ setMethod("residuals", signature(object = "mlwinfitIGLS"), function(object, ...)
   }
 })
 
-#' @rdname residual-methods
+#' @rdname residuals-mlwinfitIGLS-method
 #' @export 
 setMethod("resid", signature(object = "mlwinfitIGLS"), function(object, ...) {
   residuals(object)
 })
 
-#' @rdname predict-methods
+#' @rdname fitted-mlwinfitIGLS-method
 #' @export 
 setMethod("predict", signature(object = "mlwinfitIGLS"), function(object, newdata = NULL, params = NULL, type = "link", se.fit = FALSE, 
                                               terms = NULL, ...) {
@@ -699,8 +703,8 @@ setMethod("predict", signature(object = "mlwinfitIGLS"), function(object, newdat
 })
 
 #' Returns the log-likelihood from "mlwinfitIGLS" objects.
-#' 
-#' @rdname logLik-methods
+#' @param object An \code{\link{mlwinfitIGLS-class}} object.
+#' @param ... Other arguments.
 #' @export 
 setMethod("logLik", signature(object = "mlwinfitIGLS"), function(object, ...) {
   val <- -0.5 * deviance(object)
@@ -711,16 +715,16 @@ setMethod("logLik", signature(object = "mlwinfitIGLS"), function(object, ...) {
 })
 
 #' Returns the deviance from "mlwinfitIGLS" objects.
-#' 
-#' @rdname deviance-methods
+#' @param object An \code{\link{mlwinfitIGLS-class}} object
+#' @param ... Other arguments
 #' @export 
 setMethod("deviance", signature(object = "mlwinfitIGLS"), function(object, ...) {
   object@LIKE
 })
 
 #' Returns the number of used observations from "mlwinfitIGLS" objects.
-#' 
-#' @rdname nobs-methods
+#' @param object An \code{\link{mlwinfitIGLS-class}} object.
+#' @param ... Other arguments. 
 #' @export
 setMethod("nobs", signature(object = "mlwinfitIGLS"), function(object, ...) {
   object@Nobs
