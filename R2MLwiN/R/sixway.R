@@ -76,16 +76,16 @@ sixway <- function(chain, name = NULL, acf.maxlag = 100, pacf.maxlag = 10, ...) 
   args <- list(...)
   
   isMCMC <- TRUE
-  if (!is.mcmc(chain) && !is.mcmc.list(chain)) {
+  if (!coda::is.mcmc(chain) && !coda::is.mcmc.list(chain)) {
     isMCMC <- FALSE
-    chain <- mcmc(chain)
+    chain <- coda::mcmc(chain)
   }
   
-  if (nvar(chain) > 1) {
+  if (coda::nvar(chain) > 1) {
     stop("Cannot plot more than one parameter at a time")
   }
   
-  if (is.mcmc.list(chain) && nchain(chain) > 1) {
+  if (coda::is.mcmc.list(chain) && coda::nchain(chain) > 1) {
     warning("Sixway does not fully support multiple chains - diagnostics will be on concatenated chains")
   }
   
@@ -102,8 +102,8 @@ sixway <- function(chain, name = NULL, acf.maxlag = 100, pacf.maxlag = 10, ...) 
   }
   
   if (is.null(name)) {
-    if (!is.null(varnames(chain))) {
-      name <- varnames(chain)[1]
+    if (!is.null(coda::varnames(chain))) {
+      name <- coda::varnames(chain)[1]
     } else {
       name <- "x"
     }
@@ -119,7 +119,7 @@ sixway <- function(chain, name = NULL, acf.maxlag = 100, pacf.maxlag = 10, ...) 
   split.screen(figs = c(1, 1), screen = 4)
   
   screen(5)
-  traceplot(chain, xlab = "Iterations", ylab = "parameter", type = "l", tcl = -0.1, cex.axis = 0.8, main = "")
+  coda::traceplot(chain, xlab = "Iterations", ylab = "parameter", type = "l", tcl = -0.1, cex.axis = 0.8, main = "")
   
   flatchain <- as.matrix(chain)
   
@@ -163,11 +163,11 @@ sixway <- function(chain, name = NULL, acf.maxlag = 100, pacf.maxlag = 10, ...) 
   text(10, 2, paste("quantiles : 2.5% =", quants[1], "5% =", quants[2], "50% =", quants[3], "95% =", quants[4],
                     "97.5% =", quants[5]), cex = 0.8)
   if (isMCMC) {
-    text(10, 1.2, paste(niter(chain) * thin(chain), "actual iterations storing every ", paste(thin(chain), "th",
-                                                                                              sep = ""), " iteration. Effective Sample Size (ESS) =", round(effectiveSize(chain))), cex = 0.8)
+    text(10, 1.2, paste(coda::niter(chain) * coda::thin(chain), "actual iterations storing every ", paste(coda::thin(chain), "th",
+                                                                                              sep = ""), " iteration. Effective Sample Size (ESS) =", round(coda::effectiveSize(chain))), cex = 0.8)
   } else {
     text(10, 1.2, paste(length(chain), "actual iterations. Diagnostics assume storing every 1th iteration. Effective Sample Size (ESS) =",
-                        round(effectiveSize(chain))), cex = 0.8)
+                        round(coda::effectiveSize(chain))), cex = 0.8)
   }
   close.screen(all.screens = TRUE)
 }

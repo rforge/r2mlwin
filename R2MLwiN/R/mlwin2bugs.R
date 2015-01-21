@@ -109,7 +109,7 @@ mlwin2bugs <- function(D,levID, datafile, initfile, modelfile, bugEst, fact, add
     
     
     script.file <- paste(workingDir, "script.txt", sep = "/")
-    genBugsScript(paramSet, n.chains, n.iter, n.burnin, n.thin,
+    rbugs::genBugsScript(paramSet, n.chains, n.iter, n.burnin, n.thin,
                   dic, model.file, data.file, inits.files, bugsWorkingDir,
                   script.file, debug, OpenBugs, Windows, seed)
     
@@ -126,9 +126,9 @@ mlwin2bugs <- function(D,levID, datafile, initfile, modelfile, bugEst, fact, add
       cat("Files are generated in", workingDir, "\n")
       return(TRUE)
     }
-    runBugs(bugs, script.file, n.chains, workingDir, OpenBugs,
+    rbugs::runBugs(bugs, script.file, n.chains, workingDir, OpenBugs,
             Windows, verbose)
-    all <- getBugsOutput(n.chains, workingDir, OpenBugs)  ##Modified by Marcos
+    all <- rbugs::getBugsOutput(n.chains, workingDir, OpenBugs)  ##Modified by Marcos
     all$n.iter = n.iter                                   ##Modified by Marcos
     all$n.burnin = n.burnin                               ##Modified by Marcos
     all$n.thin = n.thin                                   ##Modified by Marcos
@@ -191,6 +191,6 @@ mlwin2bugs <- function(D,levID, datafile, initfile, modelfile, bugEst, fact, add
   chains.bugs=rbugs2(data.file = datafile, inits.files=rep(initfile,n.chains),
                      paramSet=parameters, model=modelfile, bugEst=bugEst, n.chains = n.chains, n.iter = n.iter, n.burnin=n.burnin, n.thin=n.thin, debug=debug, bugs=bugs,
                      bugsWorkingDir=bugsWorkingDir, OpenBugs=OpenBugs, cleanBugsWorkingDir=cleanBugsWorkingDir, seed = seed)
-  chains.bugs.mcmc=rbugs2coda(chains.bugs,burnin=1,n.thin)
+  chains.bugs.mcmc=rbugs::rbugs2coda(chains.bugs,burnin=1,n.thin)
   chains.bugs.mcmc
 }

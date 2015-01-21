@@ -2562,7 +2562,7 @@ version:date:md5:filename:x64:trial:platform
         colnames(chains) <- gsub(long2shortname[[name]], name, colnames(chains))
       }
       
-      chains <- mcmc(data = chains[, -1], thin = thinning)
+      chains <- coda::mcmc(data = chains[, -1], thin = thinning)
       chain.names <- colnames(chains)
       chain.names[grep("RP", chain.names)] <- RP.names
       colnames(chains) <- chain.names
@@ -2644,8 +2644,8 @@ version:date:md5:filename:x64:trial:platform
         colnames(factscores_v) <- namefacts_v
         colnames(factloads) <- load.names
         colnames(factcovs) <- fact.cov.names
-        factChains <- list(scores = factscores, scores_v = factscores_v, loadings = mcmc(data = factloads, 
-                                                                                         thin = thinning), cov = mcmc(data = factcovs, thin = thinning))
+        factChains <- list(scores = factscores, scores_v = factscores_v, loadings = coda::mcmc(data = factloads, 
+                                                                                         thin = thinning), cov = coda::mcmc(data = factcovs, thin = thinning))
       }
       
       if (sum(grepl("bcons", colnames(chains))) > 0) {
@@ -2748,7 +2748,7 @@ version:date:md5:filename:x64:trial:platform
         pnames <- c(pnames, paste("u", ucount, seq(1:nunit), sep = "_"))
         ucount <- ucount + 1
       }
-      resiChains[[name]] <- mcmc(data = matrix(na.omit(residata[, name]), nrow = iterations/thinning, byrow = TRUE, 
+      resiChains[[name]] <- coda::mcmc(data = matrix(na.omit(residata[, name]), nrow = iterations/thinning, byrow = TRUE, 
                                                dimnames = list(1:(iterations/thinning), pnames)), thin = thinning)
     }
   }
