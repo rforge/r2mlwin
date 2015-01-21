@@ -4,7 +4,7 @@
 #' error (MCSE) for the posterior estimate of the mean, for use in \code{\link{sixway}}.
 #' As MCMC is a simulation-based approach this induces (Monte Carlo) uncertainty
 #' due to the random numbers it uses. This uncertainty reduces with more
-#' iterations, and is measured by the MCSE.
+#' iterations, and is measured by the MCSE. See Browne (2012) for further details.
 #' 
 #' @param chain Vector or \code{\link[coda]{mcmc}} object.
 #' @param rho ACF for first lag.
@@ -13,6 +13,10 @@
 #' 
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
+#'
+#' @references
+#' Browne, W.J. (2012) MCMC Estimation in MLwiN, v2.26.
+#' Centre for Multilevel Modelling, University of Bristol.
 #'
 #' @seealso
 #' \code{\link{sixway}}
