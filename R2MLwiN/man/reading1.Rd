@@ -1,7 +1,7 @@
 \docType{data}
 \name{reading1}
 \alias{reading1}
-\title{.}
+\title{Students' reading attainment in inner London infant schools.}
 
 \format{A data frame with 407 observations on the following 13 variables:
   \describe{
