@@ -1,3 +1,45 @@
+Wed Jan 31 2015
+1. Bug fixing
+   * Allow matrix2df to work with unnamed columns
+   * Correctly handle "1" within the clre parameter
+   * Correct calculations related to standardised residuals
+   * Correct function default values
+   * Check residuals were stored when calling PredCurves/PredLines
+   * Correct applying fixed part starting values
+   * Save starting values in the order expected by MLwiN
+   * Correct handling of common coefficients for categorical variables
+   * Correct handling categorical predictors that contain missing values
+   * No longer automatically print out chain summaries when using BUGS options
+   * Prevent categ and centring options being used when using new formula syntax 
+   * Check variable names are not duplicated if case is ignored
+   * Allow handling of much longer variable names that was previously possible
+
+2. Changes
+   * Add "standardise" option to matrix2df to ensure weights sum to zero
+   * Issue warning if a factor variable is used as a continuous response
+   * Allow multiple membership/CAR information to be specified using matrices
+   * Report the quarsi-likelihood method used for non-normal models in summary
+   * Report the MLwiN version used in summary
+   * Removed some unused code
+   * Allow mlwinfitIGLS and mlwinfitMCMC objects to be passed directly to caterpillarR
+   * Add check to predCurves to ensure object passed is an mlwinfitIGLS or mlwinfitMCMC object
+   * Return residuals as a list of vectors
+   * Detect 32/64 bit version of MLwiN in ws2foreign
+   * Change trajectories function to work on mcmc, mcmc.list and mlwinfitMCMC objects
+   * Coverted documenation to be generated via roxygen2
+   * Update demos to reflect recent changes
+   * Prompt the user to exit after a model run is finished under debug mode
+   * Updated default MLwiN version to 2.32
+   * Updated package version to 0.8-0
+
+Thu Oct 24 2014
+1. Bug fixing
+   * Use package name when loading data to avoid clashing with other packages
+   * Load missing packages installing them in the demos
+
+2. Changes
+   * Added df2matrix and matrix2df functions to convert multiple membership information between data frame and matrix formats
+
 Mon Oct 20 2014
 1. Bug fixing
    * Updated package information to specify the correct dependencies and external functions.
@@ -13,7 +55,6 @@ Mon Oct 20 2014
    * Implemented new syntax for specifying cross-classified/multiple membership/CAR models
    * Updated included demos to use the newer formula syntax
    * Added CITATION file into package
-   * Added df2matrix and matrix2df functions to convert multiple membership information between data frame and matrix formats
 
 Tue Jul 15 2014
 1. Changes
