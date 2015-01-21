@@ -17,12 +17,14 @@
 #' @param x64 A logical value indicating whether the 64 bit version of MLwiN is
 #' used. If \code{FALSE} (by default), the 32 bit version is called.
 #'
-#' @return The converted data file (with a specific extension) will be saved to the file
-#' specified by \code{foreignfile}. CHANGE THIS TO AN ENTRY IN DETAILS.
+#' @details
+#' The converted data file (with a specific extension) will be saved to the file
+#' specified by \code{foreignfile}.
+#' 
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
 #'
-#' @seealso \cite{\link[foreign]{read.dta}}
+#' @seealso \code{\link[foreign]{read.dta}}
 #'
 #' @examples
 #' 
