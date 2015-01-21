@@ -25,8 +25,8 @@
 #' \code{'Mixed'} precedes the response types which also need to be listed in 
 #' \code{D}, e.g. \code{c('Mixed', 'Normal', 'Binomial')}; these need to be
 #' be listed in the same order to which they are referred to in the
-#' \code{Formula} object (see \code{\link{runMLwiN}}, \code{\link{formula.translate}},
-#' \code{\link{formula.translate.compat}}. \code{'Mixed'} combinations can only consist of
+#' \code{Formula} object (see \code{\link{runMLwiN}}, \code{\link{Formula.translate}},
+#' \code{\link{Formula.translate.compat}}. \code{'Mixed'} combinations can only consist of
 #' \code{'Normal'} and \code{'Binomial'} for MCMC estimation.
 #' @param nonlinear A character vector specifying linearisation method for IGLS
 #' starting values for discrete

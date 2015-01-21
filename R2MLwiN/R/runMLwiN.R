@@ -16,8 +16,8 @@
 #' \code{'Mixed'} precedes the response types which also need to be listed in 
 #' \code{D}, e.g. \code{c('Mixed', 'Normal', 'Binomial')}; these need to be
 #' be listed in the same order to which they are referred to in the
-#' \code{Formula} object (see \code{\link{runMLwiN}}, \code{\link{formula.translate}},
-#' \code{\link{formula.translate.compat}}. For (R)IGLS estimation (i.e. \code{EstM = 0}
+#' \code{Formula} object (see \code{\link{runMLwiN}}, \code{\link{Formula.translate}},
+#' \code{\link{Formula.translate.compat}}. For (R)IGLS estimation (i.e. \code{EstM = 0}
 #' in \code{estoptions}) \code{'Mixed'} combinations can consist of
 #' \code{'Normal'} and \code{'Binomial'} or \code{'Normal'} and \code{'Poisson'};
 #' for MCMC estimation (i.e. \code{EstM = 0}, on the other hand, only a combination
@@ -492,8 +492,8 @@
 #' If \code{BUGO} is non-NULL then the output is an \code{\link{mcmc.list}}
 #' object.
 #' 
-#' If the IGLS algorithm is used (i.e., \code{EstM = 0}), then returns \code{\link{mlwinfitIGLS}};
-#' if MCMC estimation used (i.e., \code{EstM = 1}), then returns \code{\link{mlwinfitIGLS}}.
+#' If the IGLS algorithm is used (i.e., \code{EstM = 0}), then returns \code{\link{mlwinfitIGLS-class}};
+#' if MCMC estimation used (i.e., \code{EstM = 1}), then returns \code{\link{mlwinfitMCMC-class}}.
 #' 
 #' @references
 #' Goldstein, H. (2011) Multilevel Statistical Models. 4th Edition. London: John Wiley and Sons.

@@ -25,8 +25,8 @@
 #' \code{'Mixed'} precedes the response types which also need to be listed in 
 #' \code{D}, e.g. \code{c('Mixed', 'Normal', 'Binomial')}; these need to be
 #' be listed in the same order to which they are referred to in the
-#' \code{Formula} object (see \code{\link{runMLwiN}}, \code{\link{formula.translate}},
-#' \code{\link{formula.translate.compat}}. \code{'Mixed'} combinations can consist of
+#' \code{Formula} object (see \code{\link{runMLwiN}}, \code{\link{Formula.translate}},
+#' \code{\link{Formula.translate.compat}}. \code{'Mixed'} combinations can consist of
 #' \code{'Normal'} and \code{'Binomial'} or \code{'Normal'} and \code{'Poisson'}.
 #' @param nonlinear A character vector specifying linearisation method for discrete
 #' response models (see Chapter 9 of Rasbash et al 2012, and Goldstein 2011).
