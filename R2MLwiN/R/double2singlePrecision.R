@@ -1,10 +1,10 @@
 #' Converts numerical values from double precision to single precision.
 #' 
 #' This function converts numeric column(s) of a data frame object, matrix or
-#' vector from double precision to single precision, e.g. to avoid warning
+#' vector from double precision to single precision, e.g. to avoid a warning
 #' from MLwiN which currently only stores data in single precision.
 #' 
-#' @param x A data frame object, matrix or vector to be converted. Column(s)
+#' @param x A \code{\link[base]{data.frame}} object, matrix or vector to be converted. Column(s)
 #' of these objects will be ignored during conversion if they are not
 #' numeric.
 #' 
