@@ -1,6 +1,6 @@
 #' An S4 class that stores the outputs of the fitted model.
 #'
-#' ADD DESCRIPTION
+#' An MLwiN model run via the IGLS estimation method is represented by an "mlwinfitIGLS" object
 #'
 #' @section An instance of the Class:
 #'  An instance is created by calling function \code{\link{runMLwiN}}.

@@ -1,6 +1,6 @@
 #' This S4 class object is used to save the outputs from the fitted multilevel model using MCMC.
 #'
-#' ADD DESCRIPTION
+#' An MLwiN model run via the MCMC estimation method is represented by an "mlwinfitMCMC" object
 #'
 #' @section An instance of the Class:
 #'  An instance is created by calling function \code{\link{runMLwiN}}.
