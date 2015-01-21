@@ -7,7 +7,7 @@
 #' uses its \code{thin} argument, otherwise assumes thinning = 1), storing the
 #' MCMC chain for a chosen parameter.
 #' @param name The parameter name. If \code{name = NULL}, the column name of \code{chain} will
-#' be used, unless that is also NULL in which case 'x' is used.
+#' be used, unless that is also \code{NULL} in which case 'x' is used.
 #' @param acf.maxlag Maximum lag at which to calculate the auto-correlation
 #' function. \code{acf.maxlag = 100} by default. See \code{\link[stats]{acf}}.
 #' @param pacf.maxlag Maximum lag at which to calculate the partial
