@@ -68,7 +68,7 @@
 #' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
 #'
 #' @seealso \code{\link{runMLwiN}},\code{\link[rbugs]{rbugs}}
-#'
+#' @export
 mlwin2bugs <- function(D,levID, datafile, initfile, modelfile, bugEst, fact, addmore, n.chains, n.iter, n.burnin, n.thin, debug=FALSE, bugs,
                        bugsWorkingDir=tempdir(), OpenBugs = FALSE, cleanBugsWorkingDir = FALSE, seed = NULL){
   
