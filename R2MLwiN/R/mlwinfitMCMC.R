@@ -15,7 +15,7 @@
 #' @slot levID A character string (vector) of the specified level ID(s).
 #' @slot merr A vector which sets-up measurement errors on predictor variables.
 #' @slot fact A list of objects specified for factor analysis, including \code{nfact}, \code{lev.fact}, \code{nfactor}, \code{factor}, \code{loading} and \code{constr}.
-#' @slot xc MIGHT NEED REVISING: A list of objects specified for cross-classified and/or multiple membership models, including \code{class}, \code{N1}, \code{weight}, \code{id} and \code{car}. 
+#' @slot xc A list of objects specified for cross-classified and/or multiple membership models, including \code{class}, \code{N1}, \code{weight}, \code{id} and \code{car}. 
 #' @slot FP Displays the fixed part estimates.
 #' @slot RP Displays the random part estimates.
 #' @slot FP.cov Displays a covariance matrix of the fixed part estimates.
