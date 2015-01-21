@@ -1,4 +1,4 @@
-#' This S4 class object is used to save the outputs from the fitted multilevel model using MCMC.
+#' An S4 class that stores the outputs of the fitted MCMC model.
 #'
 #' An MLwiN model run via the MCMC estimation method is represented by an "mlwinfitMCMC" object
 #'
@@ -79,7 +79,7 @@ setClass(Class = "mlwinfitMCMC", representation = representation(version = "char
 
 #' Extract or Replace parts of "mlwinfitMCMC" objects
 #'
-#' @rdname extract-methods
+#' @rdname extract-methods-mcmc
 setMethod("[", "mlwinfitMCMC", function(x, i, j, drop) {
   if (i == "version") {
     return(x@version)
@@ -173,7 +173,7 @@ setMethod("[", "mlwinfitMCMC", function(x, i, j, drop) {
   }
 })
 
-#' @rdname extract-methods
+#' @rdname extract-methods-mcmc
 setReplaceMethod("[", signature(x = "mlwinfitMCMC"), function(x, i, j, value) {
   if (i == "version") {
     x@version <- value
@@ -269,7 +269,7 @@ setReplaceMethod("[", signature(x = "mlwinfitMCMC"), function(x, i, j, value) {
   return(x)
 })
 
-#' @rdname extract-methods
+#' @rdname extract-methods-mcmc
 setMethod("[[", "mlwinfitMCMC", function(x, i, j, drop) {
   if (i == "version") {
     return(x@version)
@@ -363,7 +363,7 @@ setMethod("[[", "mlwinfitMCMC", function(x, i, j, drop) {
   }
 })
 
-#' @rdname extract-methods
+#' @rdname extract-methods-mcmc
 setReplaceMethod("[[", signature(x = "mlwinfitMCMC"), function(x, i, j, value) {
   if (i == "version") {
     x@version <- value
@@ -461,7 +461,7 @@ setReplaceMethod("[[", signature(x = "mlwinfitMCMC"), function(x, i, j, value) {
 
 #' Summarize "mlwinfitMCMC" objects
 #'
-#' @rdname summary-methods
+#' @rdname summary-methods-mcmc
 #' @export 
 setMethod("summary", signature(object = "mlwinfitMCMC"), function(object, ...) {
   object
@@ -694,45 +694,46 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   cat(paste(rep("-", 50), collapse = "*"), "\n")
 }
 
-#' @rdname summary-methods
+#' @rdname summary-methods-mcmc
 #' @export 
 setMethod("print", "mlwinfitMCMC", printMCMC)
 
-#' @rdname summary-methods
+#' @rdname summary-methods-mcmc
 #' @export 
 setMethod("show", signature(object = "mlwinfitMCMC"), function(object) printMCMC(object))
 
 #' Update "mlwinfitMCMC" objects
 #'
-#' @rdname update-methods
 #' @export 
 setMethod("update", signature(object = "mlwinfitMCMC"), updateMLwiN)
 
 #' "mlwinfitMCMC" model formula
-#'
-#' @rdname formula
+#' @param x See \code{\link[stats]{formula}}
+#' @param env See \code{\link[stats]{formula}}
+#' @param ... Other arguments; see \code{\link[stats]{formula}}
 #' @export 
 setMethod("formula", "mlwinfitMCMC", function(x, env = parent.frame(), ...) {
   as.formula(x@Formula)
 })
 
 #' Extract the coefficient vector from "mlwinfitMCMC" objects
-#'
-#' @rdname coef-methods
+#' @param object An \code{\link{mlwinfitMCMC-class}} object
+#' @param ... Other arguments
+#' @seealso \code{\link[stats]{coef}}
 #' @export 
 setMethod("coef", signature(object = "mlwinfitMCMC"), function(object, ...) {
   c(object@FP, object@RP)
 })
 
-#' @rdname coef-methods
+#' @rdname coef-mlwinfitMCMC-method
 #' @export 
 setMethod("coefficients", signature(object = "mlwinfitMCMC"), function(object, ...) {
   coef(object)
 })
 
 #' Extract the approximate variance-covariance matrix from "mlwinfitMCMC" objects
-#'
-#' @rdname vcov-methods
+#' @param object An \code{\link{mlwinfitMCMC-class}} object
+#' @param ... Other arguments
 #' @export 
 setMethod("vcov", signature(object = "mlwinfitMCMC"), function(object, ...) {
   m <- matrix(0, nrow(object@FP.cov) + nrow(object@RP.cov), ncol(object@FP.cov) + ncol(object@RP.cov))
@@ -744,30 +745,32 @@ setMethod("vcov", signature(object = "mlwinfitMCMC"), function(object, ...) {
 })
 
 #' Returns the residual degrees-of-freedom extracted from "mlwinfitMCMC" objects.
-#' 
-#' @rdname df.residual-methods
+#' @param object An \code{\link{mlwinfitMCMC-class}} object.
+#' @param ... Other arguments
+#' @seealso \code{\link[stats]{nobs}}, \code{\link[stats]{coef}}
 #' @export 
 setMethod("df.residual", signature(object = "mlwinfitMCMC"), function(object, ...) {
   nobs(object) - length(coef(object))
 })
 
 #' Returns the predicted data from "mlwinfitMCMC" objects.
-#' 
-#' @rdname predict-methods
+#' @param object An \code{\link{mlwinfitMCMC-class}} object.
+#' @param ... Other arguments
+#' @seealso \code{\link[stats]{predict}}
 #' @export 
 setMethod("fitted", signature(object = "mlwinfitMCMC"), function(object, ...) {
   predict(object, type = "response")
 })
 
-#' @rdname predict-methods
+#' @rdname fitted-mlwinfitMCMC-method
 #' @export 
 setMethod("fitted.values", signature(object = "mlwinfitMCMC"), function(object, ...) {
   fitted(object)
 })
 
 #' Returns the residual data from "mlwinfitMCMC" objects.
-#' 
-#' @rdname residual-methods
+#' @param object An \code{\link{mlwinfitMCMC-class}} object
+#' @param ... Other arguments.
 #' @export 
 setMethod("residuals", signature(object = "mlwinfitMCMC"), function(object, ...) {
   form <- Formula.translate(object@Formula, object@D, object@data)
@@ -779,13 +782,13 @@ setMethod("residuals", signature(object = "mlwinfitMCMC"), function(object, ...)
   }
 })
 
-#' @rdname residual-methods
+#' @rdname residuals-mlwinfitMCMC-method
 #' @export 
 setMethod("resid", signature(object = "mlwinfitMCMC"), function(object, ...) {
   residuals(object)
 })
 
-#' @rdname predict-methods
+#' @rdname fitted-mlwinfitMCMC-method
 #' @export 
 setMethod("predict", signature(object = "mlwinfitMCMC"), function(object, newdata = NULL, params = NULL, type = "link", se.fit = FALSE, 
                                               terms = NULL, ...) {
@@ -865,8 +868,8 @@ setMethod("predict", signature(object = "mlwinfitMCMC"), function(object, newdat
 })
 
 #' Returns the number of used observations from "mlwinfitMCMC" objects.
-#' 
-#' @rdname nobs-methods
+#' @param object An \code{\link{mlwinfitMCMC-class}} object.
+#' @param ... Other arguments.
 #' @export 
 setMethod("nobs", signature(object = "mlwinfitMCMC"), function(object, ...) {
   object@Nobs
