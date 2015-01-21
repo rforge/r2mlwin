@@ -1,7 +1,8 @@
 #' Converts a categorical variable into several separate binary variables
 #' 
 #' This function converts a vector (factor) of categorical character strings
-#' (integers) into several separate vectors of binary indicators.
+#' (integers) into several separate vectors of binary indicators to enable
+#' back-compatibility with versions of \pkg{R2MLwiN} prior to 0.8-0.
 #' 
 #' @param categrv A vector (factor) of categorical character strings
 #' (integers).
