@@ -5,7 +5,7 @@
 \alias{mlwinfitMCMC-class}
 \title{This S4 class object is used to save the outputs from the fitted multilevel model using MCMC.}
 \description{
-ADD DESCRIPTION
+An MLwiN model run via the MCMC estimation method is represented by an "mlwinfitMCMC" object
 }
 \section{Slots}{
 
