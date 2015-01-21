@@ -9,9 +9,9 @@ caterpillar(y, x, qtlow, qtup, xlab = "", ylab = "", xlim = NULL,
 }
 \arguments{
 \item{y}{A numerical vector specifying the \code{y} coordinates
-(e.g. the means or medians); see \code{\link[plot.default]{plot.default}}.}
+(e.g. the means or medians); see \code{\link[graphics]{plot.default}}.}
 
-\item{x}{A numerical vector specifying the \code{x} coordinates; see \code{\link[plot.default]{plot.default}}.}
+\item{x}{A numerical vector specifying the \code{x} coordinates; see \code{\link[graphics]{plot.default}}.}
 
 \item{qtlow}{A numerical vector (e.g. of lower-quantiles) to be used to plot lower error
 bars.}
@@ -19,21 +19,21 @@ bars.}
 \item{qtup}{A numerical vector (e.g. of upper-quantiles) to be used to upper plot error
 bars.}
 
-\item{xlab}{A label for the \code{x} axis. This is empty by default; see \code{\link[plot.default]{plot.default}}.}
+\item{xlab}{A label for the \code{x} axis. This is empty by default; see \code{\link[graphics]{plot.default}}.}
 
-\item{ylab}{A label for the \code{y} axis. This is empty by default; see \code{\link[plot.default]{plot.default}}.}
+\item{ylab}{A label for the \code{y} axis. This is empty by default; see \code{\link[graphics]{plot.default}}.}
 
 \item{xlim}{The \code{x} limits \code{(x1, x2)} of the plot. Note that
 \code{x1 > x2} is allowed and leads to a `reversed axis'. The default value,
 \code{NULL}, indicates that the range of the finite values to be plotted
-should be used; see \code{\link[plot.default]{plot.default}}.}
+should be used; see \code{\link[graphics]{plot.default}}.}
 
-\item{ylim}{The y limits of the plot; see \code{\link[plot.default]{plot.default}}.}
+\item{ylim}{The y limits of the plot; see \code{\link[graphics]{plot.default}}.}
 
-\item{main}{A main title for the plot; see \code{\link[plot.default]{plot.default}}.}
+\item{main}{A main title for the plot; see \code{\link[graphics]{plot.default}}.}
 }
 \description{
-A convenient wrapper for the \code{\link[plot]{plot}} function with the addition
+A convenient wrapper for the \code{\link[graphics]{plot}} function with the addition
 of error bars, e.g. to create caterpillar plots.
 }
 \examples{
@@ -68,7 +68,7 @@ caterpillar(y = u0rankmn[rankno], x = 1:65, qtlow = u0ranklo[rankno],
 }
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-W.J. (2014) Centre for Multilevel Modelling, University of Bristol, U.K.
+W.J. (2015) Centre for Multilevel Modelling, University of Bristol, U.K.
 }
 \seealso{
 \code{\link{caterpillarR}}

@@ -13,7 +13,7 @@ MLwiN (and also WinBUGS / OpenBUGS) from within the R environment.
 \section{Important differences between version 0.8-0 and earlier versions}{
 
 A new model-fitting syntax, more in keeping with that conventionally used in
-R, was introduced in \pkg{R2MLwiN} version 0.8-0, with back-compatibility
+R, was introduced in R2MLwiN version 0.8-0, with back-compatibility
 with earlier syntax preserved.
 \itemize{
  \item{Put}
@@ -24,9 +24,31 @@ with earlier syntax preserved.
 
 \section{References}{
 
-A User's Guide to MLwiN Version 2.10. Rasbash, J., Steele, F.,
-Browne, W.J. and Goldstein, H. (2009) Centre for Multilevel Modelling,
+
+\subsection{MLwiN software and manuals}{
+Browne, W.J. (2012) MCMC Estimation in MLwiN, v2.26.
+Centre for Multilevel Modelling, University of Bristol.
+
+Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009)
+MLwiN Version 2.1. Centre for Multilevel Modelling, University of Bristol.
+
+Rasbash, J., Charlton, C. and Pillinger, R. (2012) Manual Supplement to
+MLwiN v2.26. Centre for Multilevel Modelling, University of Bristol.
+
+Rasbash, J., Steele, F., Browne, W.J. and Goldstein, H. (2012)
+A User's Guide to MLwiN Version 2.26. Centre for Multilevel Modelling,
 University of Bristol.
+}
+
+\subsection{OpenBUGS}{
+Thomas, A., O'Hara, B., Ligges, U. and Sturtz, S. (2006) Making BUGS Open.
+R News, 6, 12:17.
+}
+
+\subsection{WinBUGS}{
+Spiegelhalter, D.J., Thomas, A. and Best, N.G. (1999) WinBUGS Version 1.2
+User Manual. MRC Biostatistics Unit.
+}
 }
 
 \section{Maintainer}{
@@ -98,14 +120,6 @@ demo(Chapter03)
 }
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
-
-MCMC estimation in MLwiN Version 2.25. Browne, W.J. (2012) Centre for
-Multilevel Modelling, University of Bristol.
-}
-\seealso{
-\code{\link{Formula.translate}}, \code{\link{ws2foreign}}, \code{\link[foreign]{read.dta}},
-\code{\link{runMLwiN}}, \code{\link{MacroScript1}},\ code{\link{MacroScript2}},
-\code{\link{caterpillar}}, \code{\link{predLines}}, \code{\link{predCurves}}, \code{\link{sixway}}
+W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
 }
 

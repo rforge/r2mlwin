@@ -21,11 +21,11 @@ namely a \code{\link[base]{data.frame}} with (a) columns containing membership I
 \code{0 1 1 0 1 1}, then first row of generated ID vectors would be, say, \code{2, 3, 5, 6})
 and (b) columns containing weights (in this example, if \code{standardise = TRUE}, then first
 row of generated weight vectors would be, say, \code{0.25, 0.25, 0.25, 0.25}, otherwise first
-row of generated weight vectors would be, say, \code{1, 1, 1, 1}.
+row of generated weight vectors would be, say, \code{1, 1, 1, 1}).
 }
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-W.J. (2014) Centre for Multilevel Modelling, University of Bristol, U.K.
+W.J. (2015) Centre for Multilevel Modelling, University of Bristol, U.K.
 }
 \seealso{
 \code{\link{df2matrix}}

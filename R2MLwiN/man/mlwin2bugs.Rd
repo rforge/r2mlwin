@@ -13,7 +13,7 @@ mlwin2bugs(D, levID, datafile, initfile, modelfile, bugEst, fact, addmore,
 \arguments{
 \item{D}{A vector specifying the type of distribution used in the model.}
 
-\item{levID}{A character (vector) specifies the level ID(s).}
+\item{levID}{A character (vector) specifying the level ID(s).}
 
 \item{datafile}{A file name where the BUGS data file will be saved in
 .txt format.}
@@ -85,7 +85,7 @@ then repeat this sequence for each pair.
 \item \code{loading}: a matrix specifying the
 starting values for the factor loadings and the starting value of the factor
 variance. Each row corresponds to a factor.
-\item{constr}: a matrix
+\item \code{constr}: a matrix
 specifying indicators of whether the factor loadings and the factor variance
 are constrained (\code{1}) or not (\code{0}).
 }
@@ -96,7 +96,7 @@ Jun Yan and Marcos Prates).
 }
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
+W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
 }
 \seealso{
 \code{\link{runMLwiN}},\code{\link[rbugs]{rbugs}}

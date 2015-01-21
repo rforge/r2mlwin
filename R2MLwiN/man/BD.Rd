@@ -21,11 +21,16 @@ BD(est, var, rho, k = 2, alpha = 0.05)
 An internal function, for use in \code{\link{sixway}}, which calculates the
 Brooks-Draper diagnostic, based on an unpublished paper by David Draper. It
 estimates the length of a Markov chain required to produce a mean estimate
-to k significant figures with a given accuracy (alpha).
+to k significant figures with a given accuracy (alpha). See Browne (2012)
+for further details.
 }
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
+W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
+}
+\references{
+Browne, W.J. (2012) MCMC Estimation in MLwiN, v2.26.
+Centre for Multilevel Modelling, University of Bristol.
 }
 \seealso{
 \code{\link{sixway}}

@@ -2,14 +2,14 @@
 % Please edit documentation in R/caterpillarR.R
 \name{caterpillarR}
 \alias{caterpillarR}
-\title{Draws caterpillar plots of the residuals from a \code{\link{mlwinfitIGLS-class}} or
-\code{\link{mlwinfitIGLS-class}} object, at a chosen level of the multilevel model.}
+\title{Draws caterpillar plots of the residuals from a mlwinfitIGLS-class or
+mlwinfitMCMC-class object, at a chosen level of the multilevel model.}
 \usage{
 caterpillarR(resi, lev = 2)
 }
 \arguments{
 \item{resi}{A \code{\link{mlwinfitIGLS-class}} or
-\code{\link{mlwinfitIGLS-class}} object (model must be fitted specifying
+\code{\link{mlwinfitMCMC-class}} object (model must be fitted specifying
 \code{resi.store = TRUE} and including \code{'variances'} in the list of
 \code{resioptions} (both in \code{estoptions}) to not return an error).}
 
@@ -43,9 +43,9 @@ caterpillarR(mymodel['residual'], lev = 2)
 }
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
+W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
 }
 \seealso{
-\code{\link{caterpillarR}}, \code{\link[lattice]{qqmath}}
+\code{\link{caterpillar}}, \code{\link[lattice]{qqmath}}
 }
 

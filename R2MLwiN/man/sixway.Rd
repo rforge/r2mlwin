@@ -12,7 +12,7 @@ uses its \code{thin} argument, otherwise assumes thinning = 1), storing the
 MCMC chain for a chosen parameter.}
 
 \item{name}{The parameter name. If \code{name = NULL}, the column name of \code{chain} will
-be used, unless that is also NULL in which case 'x' is used.}
+be used, unless that is also \code{NULL} in which case 'x' is used.}
 
 \item{acf.maxlag}{Maximum lag at which to calculate the auto-correlation
 function. \code{acf.maxlag = 100} by default. See \code{\link[stats]{acf}}.}
@@ -79,7 +79,7 @@ sixway(chain, 'beta_1')
 }
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
+W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
 }
 \seealso{
 \code{\link{BD}},\code{\link{MCSE}},\code{\link{density}},\code{\link{acf}},\code{\link{pacf}},\code{\link[coda]{raftery.diag}},\code{\link[coda]{effectiveSize}}

@@ -48,13 +48,13 @@ can include \code{'Normal'} (the default), \code{'Binomial'}, \code{'Poisson'},
 \code{'Mixed'} precedes the response types which also need to be listed in
 \code{D}, e.g. \code{c('Mixed', 'Normal', 'Binomial')}; these need to be
 be listed in the same order to which they are referred to in the
-\code{Formula} object (see \code{\link{runMLwiN}}, \code{\link{formula.translate}},
-\code{\link{formula.translate.compat}}. \code{'Mixed'} combinations can only consist of
+\code{Formula} object (see \code{\link{runMLwiN}}, \code{\link{Formula.translate}},
+\code{\link{Formula.translate.compat}}. \code{'Mixed'} combinations can only consist of
 \code{'Normal'} and \code{'Binomial'} for MCMC estimation.}
 
 \item{nonlinear}{A character vector specifying linearisation method for IGLS
 starting values for discrete
-response models (see Chapter 9 of Rasbash et al 2014, and Goldstein 2011).
+response models (see Chapter 9 of Rasbash et al 2012, and Goldstein 2011).
 \code{N = 0} specifies marginal quasi-likelihood
 linearization (MQL), whilst \code{N = 1} specifies penalised quasi-
 likelihood linearization (PQL); \code{M = 1} specifies first order
@@ -386,13 +386,14 @@ of parameters and all models.
 }
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
+W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
 }
 \references{
 Goldstein, H. (2011) Multilevel Statistical Models. 4th Edition. London: John Wiley and Sons.
 
-Rasbash, J., Steele, F., Browne, W. J., Goldstein, H. (2014). A User's Guide to MLwiN, v2.26
-(Revised Edition). Bristol: Centre for Multilevel Modelling, University of Bristol.
+Rasbash, J., Steele, F., Browne, W.J. and Goldstein, H. (2012)
+A User's Guide to MLwiN Version 2.26. Centre for Multilevel Modelling,
+University of Bristol.
 }
 \seealso{
 \code{\link{MacroScript1}}

@@ -20,10 +20,6 @@ changed via \code{options(MLwiN_path = 'path/to/MLwiN vX.XX/')}).}
 \item{x64}{A logical value indicating whether the 64 bit version of MLwiN is
 used. If \code{FALSE} (by default), the 32 bit version is called.}
 }
-\value{
-The converted data file (with a specific extension) will be saved to the file
-specified by \code{foreignfile}. CHANGE THIS TO AN ENTRY IN DETAILS.
-}
 \description{
 This function converts data from one format to another within MLwiN, via
 MLwiN macro language. The \code{foreign} package allows R to read data files
@@ -32,6 +28,9 @@ for most of these formats.
 \details{
 MLwiN supports conversion between MLwiN (*.wsz, *.ws), Minitab (*.mtw), SAS
 (*.xpt), SPSS (*.sav), and Stata (*.dta) files.
+
+The converted data file (with a specific extension) will be saved to the file
+specified by \code{foreignfile}.
 }
 \examples{
 \dontrun{
@@ -47,9 +46,9 @@ str(indata)
 }
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-W.J. (2014) Centre for Multilevel Modelling, University of Bristol.
+W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
 }
 \seealso{
-\cite{\link[foreign]{read.dta}}
+\code{\link[foreign]{read.dta}}
 }
 
