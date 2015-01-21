@@ -16,11 +16,11 @@
 #' \code{'Mixed'} precedes the response types which also need to be listed in 
 #' \code{D}, e.g. \code{c('Mixed', 'Normal', 'Binomial')}; these need to be
 #' be listed in the same order to which they are referred to in the
-#' \code{Formula} object (see \code{\link{runMLwiN}}, \code{\link{Formula.translate}},
-#' \code{\link{Formula.translate.compat}}. For (R)IGLS estimation (i.e. \code{EstM = 0}
+#' \code{Formula} object (see \code{\link{Formula.translate}},
+#' \code{\link{Formula.translate.compat}}). For (R)IGLS estimation (i.e. \code{EstM = 0}
 #' in \code{estoptions}) \code{'Mixed'} combinations can consist of
 #' \code{'Normal'} and \code{'Binomial'} or \code{'Normal'} and \code{'Poisson'};
-#' for MCMC estimation (i.e. \code{EstM = 0}, on the other hand, only a combination
+#' for MCMC estimation (i.e. \code{EstM = 0}), on the other hand, only a combination
 #' of \code{'Normal'} and \code{'Binomial'} is available.
 #' 
 #' @param data A data.frame object containing the data to be modelled.
@@ -38,7 +38,7 @@
 #' output to \code{stdout} sent to R console).
 #' @param stderr See \code{\link[base]{system2}}; \code{''} by default (i.e.
 #' output to \code{stderr} sent to R console).
-#' @param workdir A path to the folder where the output files are to be saved.
+#' @param workdir A path to the folder where the outputted files are to be saved.
 #' If the folder specified does not exist, a new folder of that name is
 #' created; \code{workdir = tempdir()} by default.
 #' @param checkversion If \code{TRUE} (default), returns version number unless
@@ -65,7 +65,7 @@
 #' it is a discrete response model (in which case you should not specify it).
 #' 
 #' The table below summarises the options for the \code{Formula} argument in
-#' \pkg{R2MLwiN}. They assume an intercept is added (via \code{~ 1}, for alternative
+#' \pkg{R2MLwiN}. They assume an intercept is added (via \code{~ 1}; for alternative
 #' specifications see \code{\link[stats]{formula}}). \code{<link>} denotes the link function,
 #' \code{<y1>}, \code{<y2>}, etc. represent response variables, \code{<denom>} denotes
 #' the denominator, \code{<offs>} the offset (optional), \code{<L2>}, \code{<L1>}, etc. the
@@ -189,7 +189,7 @@
 #' functionality.
 #' 
 #' \item \code{nonlinear}: a character vector specifying linearisation method for discrete
-#' response models estimated via IGLS (see Chapter 9 of Rasbash et al 2014,
+#' response models estimated via IGLS (see Chapter 9 of Rasbash et al 2012,
 #' and Goldstein 2011). \code{N = 0} specifies marginal quasi-likelihood
 #' linearization (MQL), whilst \code{N = 1} specifies penalised quasi-
 #' likelihood linearization (PQL); \code{M = 1} specifies first order
@@ -458,7 +458,7 @@
 #' of these priors.
 #' \item \code{startval}: Deprecated: starting values are now specified directly
 #' within \code{estoptions}.
-#' \item{lclo}: Toggles on/off the possible forms of complex level
+#' \item \code{lclo}: Toggles on/off the possible forms of complex level
 #' 1 variation when using MCMC. By default (\code{lclo = 0}) the level
 #' 1 variation is expressed as a function of the predictors. Else
 #' (\code{lclo = 1}) the log of the level 1 precision (1/variance) is expressed as
@@ -492,14 +492,15 @@
 #' If \code{BUGO} is non-NULL then the output is an \code{\link{mcmc.list}}
 #' object.
 #' 
-#' If the IGLS algorithm is used (i.e., \code{EstM = 0}), then returns \code{\link{mlwinfitIGLS-class}};
-#' if MCMC estimation used (i.e., \code{EstM = 1}), then returns \code{\link{mlwinfitMCMC-class}}.
+#' If the IGLS algorithm is used (i.e., \code{EstM = 0}), then returns \code{\link{mlwinfitIGLS-class}} object;
+#' if MCMC estimation used (i.e., \code{EstM = 1}), then returns \code{\link{mlwinfitMCMC-class}} object.
 #' 
 #' @references
 #' Goldstein, H. (2011) Multilevel Statistical Models. 4th Edition. London: John Wiley and Sons.
 #' 
-#' Rasbash, J., Steele, F., Browne, W. J., Goldstein, H. (2014). A User's Guide to MLwiN, v2.26
-#' (Revised Edition). Bristol: Centre for Multilevel Modelling, University of Bristol.
+#' Rasbash, J., Steele, F., Browne, W.J. and Goldstein, H. (2012)
+#' A User's Guide to MLwiN Version 2.26. Centre for Multilevel Modelling,
+#' University of Bristol.
 #'  
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
