@@ -5,7 +5,7 @@
 #' \code{0 1 1 0 1 1}, then first row of generated ID vectors would be, say, \code{2, 3, 5, 6})
 #' and (b) columns containing weights (in this example, if \code{standardise = TRUE}, then first
 #' row of generated weight vectors would be, say, \code{0.25, 0.25, 0.25, 0.25}, otherwise first
-#' row of generated weight vectors would be, say, \code{1, 1, 1, 1}.
+#' row of generated weight vectors would be, say, \code{1, 1, 1, 1}).
 #' 
 #' @param mat A matrix.
 #' @param standardise If \code{TRUE}, ensures the row sums to one; defaults to \code{FALSE}.
