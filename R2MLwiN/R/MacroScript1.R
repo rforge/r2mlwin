@@ -29,7 +29,7 @@
 #' \code{\link{formula.translate.compat}}. \code{'Mixed'} combinations can consist of
 #' \code{'Normal'} and \code{'Binomial'} or \code{'Normal'} and \code{'Poisson'}.
 #' @param nonlinear A character vector specifying linearisation method for discrete
-#' response models (see Chapter 9 of Rasbash et al 2014, and Goldstein 2011).
+#' response models (see Chapter 9 of Rasbash et al 2012, and Goldstein 2011).
 #' \code{N = 0} specifies marginal quasi-likelihood
 #' linearization (MQL), whilst \code{N = 1} specifies penalised quasi-
 #' likelihood linearization (PQL); \code{M = 1} specifies first order
@@ -156,8 +156,9 @@
 #' @references
 #' Goldstein, H. (2011) Multilevel Statistical Models. 4th Edition. London: John Wiley and Sons.
 #' 
-#' Rasbash, J., Steele, F., Browne, W. J., Goldstein, H. (2014). A User's Guide to MLwiN, v2.26
-#' (Revised Edition). Bristol: Centre for Multilevel Modelling, University of Bristol.
+#' Rasbash, J., Steele, F., Browne, W.J. and Goldstein, H. (2012)
+#' A User's Guide to MLwiN Version 2.26. Centre for Multilevel Modelling,
+#' University of Bristol.
 #' 
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
