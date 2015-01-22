@@ -54,9 +54,27 @@
 #' is instead referenced via \code{data}.
 #'
 #' @details
-#' With regard to \pkg{runMLwiN}'s \code{Formula} object, see \code{\link[stats]{formula}}
-#' for notes on general usage, plus further details below.
-#'
+#' With regard to \code{runMLwiN}'s \code{Formula} object, see \code{\link[stats]{formula}}
+#' for notes on general usage, noting the following differences:
+#' 
+#' \itemize{
+#' \item{The intercept is not included by default (this is keeping with the manner
+#' in which models are specified in MLwiN). To include an intercept, then, one
+#' can specify e.g. \code{normexam ~ 1 + standlrt + (student | 1)} or, assuming \code{cons}
+#' is a constant of ones, \code{normexam ~ cons + standlrt + (student | cons)}. (Note also,
+#' as further detailed below, for normal response models the level 1 ID (\code{student} in this example)
+#' needs to be explicitly included in the random part of the model formula; this is not the 
+#' case for discrete response models.}
+#' \item{When specifying the random part of the model, the variable name for the
+#' level ID is placed to the left of the vertical bar (e.g. \code{(school | 1)}, \code{(student | 1)}, etc.),
+#' rather than to the right.}
+#' \item{The link function and denominator are included in the \code{Formula} object, e.g.
+#' fitting a logistic model in which the variable \code{denom} is specified as the denominator:
+#' \code{logit(resp, denom) ~ 1 + age + (region | 1)}.}
+#' }
+#' 
+#' Further details are as follows.
+#' 
 #' The random part of the model is specified in sets of parentheses arranged in
 #' descending order with respect to their hierarchy. E.g. in the case of a 3-level
 #' model, the variable containing the level 3 ID is specified first, then
