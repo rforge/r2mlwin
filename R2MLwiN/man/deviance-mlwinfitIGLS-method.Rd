@@ -15,4 +15,7 @@
 \description{
 Returns the deviance from "mlwinfitIGLS" objects.
 }
+\seealso{
+\code{\link[stats]{deviance}}
+}
 

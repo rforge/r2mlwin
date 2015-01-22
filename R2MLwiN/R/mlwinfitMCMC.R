@@ -734,6 +734,7 @@ setMethod("coefficients", signature(object = "mlwinfitMCMC"), function(object, .
 #' Extract the approximate variance-covariance matrix from "mlwinfitMCMC" objects
 #' @param object An \code{\link{mlwinfitMCMC-class}} object
 #' @param ... Other arguments
+#' @seealso \code{\link[stats]{vcov}}
 #' @export 
 setMethod("vcov", signature(object = "mlwinfitMCMC"), function(object, ...) {
   m <- matrix(0, nrow(object@FP.cov) + nrow(object@RP.cov), ncol(object@FP.cov) + ncol(object@RP.cov))
@@ -771,6 +772,7 @@ setMethod("fitted.values", signature(object = "mlwinfitMCMC"), function(object, 
 #' Returns the residual data from "mlwinfitMCMC" objects.
 #' @param object An \code{\link{mlwinfitMCMC-class}} object
 #' @param ... Other arguments.
+#' @seealso \code{\link[stats]{residuals}}
 #' @export 
 setMethod("residuals", signature(object = "mlwinfitMCMC"), function(object, ...) {
   form <- Formula.translate(object@Formula, object@D, object@data)
@@ -870,6 +872,7 @@ setMethod("predict", signature(object = "mlwinfitMCMC"), function(object, newdat
 #' Returns the number of used observations from "mlwinfitMCMC" objects.
 #' @param object An \code{\link{mlwinfitMCMC-class}} object.
 #' @param ... Other arguments.
+#' @seealso \code{\link[stats]{nobs}}
 #' @export 
 setMethod("nobs", signature(object = "mlwinfitMCMC"), function(object, ...) {
   object@Nobs

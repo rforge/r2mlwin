@@ -18,4 +18,7 @@
 \description{
 Returns the residual data from "mlwinfitIGLS" objects.
 }
+\seealso{
+\code{\link[stats]{residuals}}
+}
 

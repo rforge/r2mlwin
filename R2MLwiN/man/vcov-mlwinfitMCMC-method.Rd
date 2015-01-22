@@ -15,4 +15,7 @@
 \description{
 Extract the approximate variance-covariance matrix from "mlwinfitMCMC" objects
 }
+\seealso{
+\code{\link[stats]{vcov}}
+}
 

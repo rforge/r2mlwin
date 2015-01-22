@@ -18,4 +18,7 @@
 \description{
 Returns the residual data from "mlwinfitMCMC" objects.
 }
+\seealso{
+\code{\link[stats]{residuals}}
+}
 

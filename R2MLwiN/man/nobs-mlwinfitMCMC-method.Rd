@@ -15,4 +15,7 @@
 \description{
 Returns the number of used observations from "mlwinfitMCMC" objects.
 }
+\seealso{
+\code{\link[stats]{nobs}}
+}
 

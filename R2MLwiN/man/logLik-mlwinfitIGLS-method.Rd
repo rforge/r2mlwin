@@ -15,4 +15,7 @@
 \description{
 Returns the log-likelihood from "mlwinfitIGLS" objects.
 }
+\seealso{
+\code{\link[stats]{logLik}}
+}
 

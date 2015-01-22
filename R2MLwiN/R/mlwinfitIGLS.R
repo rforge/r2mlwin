@@ -568,6 +568,7 @@ setMethod("coefficients", signature(object = "mlwinfitIGLS"), function(object, .
 #' Extract the approximate variance-covariance matrix from "mlwinfitIGLS" objects
 #' @param object An \code{\link{mlwinfitIGLS-class}} object
 #' @param ... Other arguments
+#' @seealso \code{\link[stats]{vcov}}
 #' @export 
 setMethod("vcov", signature(object = "mlwinfitIGLS"), function(object, ...) {
   m <- matrix(0, nrow(object@FP.cov) + nrow(object@RP.cov), ncol(object@FP.cov) + ncol(object@RP.cov))
@@ -606,6 +607,7 @@ setMethod("fitted.values", signature(object = "mlwinfitIGLS"), function(object, 
 #' 
 #' @param object An \code{\link{mlwinfitIGLS-class}} object
 #' @param ... Other arguments.
+#' @seealso \code{\link[stats]{residuals}}
 #' @export 
 setMethod("residuals", signature(object = "mlwinfitIGLS"), function(object, ...) {
   form <- Formula.translate(object@Formula, object@D, object@data)
@@ -705,6 +707,7 @@ setMethod("predict", signature(object = "mlwinfitIGLS"), function(object, newdat
 #' Returns the log-likelihood from "mlwinfitIGLS" objects.
 #' @param object An \code{\link{mlwinfitIGLS-class}} object.
 #' @param ... Other arguments.
+#' @seealso \code{\link[stats]{logLik}}
 #' @export 
 setMethod("logLik", signature(object = "mlwinfitIGLS"), function(object, ...) {
   val <- -0.5 * deviance(object)
@@ -717,6 +720,7 @@ setMethod("logLik", signature(object = "mlwinfitIGLS"), function(object, ...) {
 #' Returns the deviance from "mlwinfitIGLS" objects.
 #' @param object An \code{\link{mlwinfitIGLS-class}} object
 #' @param ... Other arguments
+#' @seealso \code{\link[stats]{deviance}}
 #' @export 
 setMethod("deviance", signature(object = "mlwinfitIGLS"), function(object, ...) {
   object@LIKE
@@ -725,6 +729,7 @@ setMethod("deviance", signature(object = "mlwinfitIGLS"), function(object, ...) 
 #' Returns the number of used observations from "mlwinfitIGLS" objects.
 #' @param object An \code{\link{mlwinfitIGLS-class}} object.
 #' @param ... Other arguments. 
+#' @seealso \code{\link[stats]{nobs}}
 #' @export
 setMethod("nobs", signature(object = "mlwinfitIGLS"), function(object, ...) {
   object@Nobs
