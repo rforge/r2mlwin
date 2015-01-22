@@ -1,7 +1,7 @@
 #' Writes MLwiN macros to fit models using Markov chain Monte Carlo (MCMC)
 #' methods
 #' 
-#' MacroScript2 is an internal function which creates an MLwiN macro file to
+#' write.MCMC is an internal function which creates an MLwiN macro file to
 #' fit models using MCMC.
 #' 
 #' @param indata A data.frame object containing the data to be modelled.
@@ -311,9 +311,9 @@
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
 #' 
-#' @seealso \code{\link{MacroScript1}}
+#' @seealso \code{\link{write.IGLS}}
 #' 
-MacroScript2 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp, D = "Normal", nonlinear = c(0, 1), categ = NULL,
+write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp, D = "Normal", nonlinear = c(0, 1), categ = NULL,
                          notation = NULL, nonfp = NULL, clre = NULL, Meth = 1, merr = NULL, carcentre = FALSE, maxiter = 20, 
                          convtol = 2, seed = 1, iterations = 5000, burnin = 500, scale = 5.8, thinning = 1, priorParam = "default", refresh = 50, 
                          fixM = 1, residM = 1, Lev1VarM = 1, OtherVarM = 1, adaption = 1, priorcode = 1, rate = 50, tol = 10, lclo = 0, 

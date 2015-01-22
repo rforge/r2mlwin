@@ -65,7 +65,7 @@
 #' and \code{()} respectively. Other syntax remains the same.
 #' 
 #' @return Outputs an R list object, which is then used as the input for
-#' \code{\link{MacroScript1}} and/or \code{\link{MacroScript2}}.
+#' \code{\link{write.IGLS}} and/or \code{\link{write.MCMC}}.
 #'
 #' @note Note that some characters listed above have special meanings in the
 #' formula, so avoid using them when you name the random variable. Alphanumeric
@@ -80,7 +80,7 @@
 #' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
 #' 
 #' @seealso
-#' \code{\link{runMLwiN}}, \code{\link{MacroScript1}}, \code{\link{MacroScript2}}, \code{\link{Formula.translate}}
+#' \code{\link{runMLwiN}}, \code{\link{write.IGLS}}, \code{\link{write.MCMC}}, \code{\link{Formula.translate}}
 #' 
 
 Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {

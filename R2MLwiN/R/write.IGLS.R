@@ -1,7 +1,7 @@
 #' Writes MLwiN macros to fit models using the iterative generalized least
 #' squares (IGLS) algorithm.
 #' 
-#' MacroScript1 is an internal function which creates an MLwiN macro file to
+#' write.IGLS is an internal function which creates an MLwiN macro file to
 #' fit a multilevel model using IGLS. 
 #' 
 #' @param indata A data.frame object containing the data to be modelled.
@@ -84,7 +84,7 @@
 #' deemed to have converged when the relative change in the estimate for all
 #' parameters from one iteration to the next is less than 10(-m). Defaults to
 #' value of \code{2} for m if not otherwise specified.
-#' @param mem.init If calling MacroScript1 directly, if wish to use defaults, value needs to be
+#' @param mem.init If calling write.IGLS directly, if wish to use defaults, value needs to be
 #' specified as \code{'default'}, else specify a vector of length 5 corresponding
 #' to the following order: number of levels; worksheet size in thousands of cells;
 #' the number of columns; the number of explanatory variables; the number of group
@@ -163,9 +163,9 @@
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
 #' 
-#' @seealso \code{\link{MacroScript2}}
+#' @seealso \code{\link{write.MCMC}}
 #' 
-MacroScript1 <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp, D = "Normal", nonlinear = c(0, 1), categ = NULL,
+write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp, D = "Normal", nonlinear = c(0, 1), categ = NULL,
                          notation = NULL, nonfp = NA, clre = NULL, Meth = 1, extra = FALSE, reset, rcon = NULL, fcon = NULL, 
                          maxiter = 20, convtol = 2, mem.init = "default", optimat = FALSE, weighting = NULL, fpsandwich = FALSE, rpsandwich = FALSE, 
                          macrofile, IGLSfile, resifile, resi.store = FALSE, resioptions, debugmode = FALSE, startval = NULL,

@@ -18,12 +18,12 @@
 #' Optional (can \code{\link[base]{attach}} as an alternative) but recommended.
 #' 
 #' @return Outputs an R list object, which is then used as the input for
-#' \code{\link{MacroScript1}} or \code{\link{MacroScript2}}.
+#' \code{\link{write.IGLS}} or \code{\link{write.MCMC}}.
 #'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
 #' @seealso
-#' \code{\link{runMLwiN}}, \code{\link{MacroScript1}}, \code{\link{MacroScript2}}; for
+#' \code{\link{runMLwiN}}, \code{\link{write.IGLS}}, \code{\link{write.MCMC}}; for
 #' function allowing back-compatibility with Formula syntax used in older
 #' versions of \pkg{R2MLwiN} (<0.8.0) see \code{\link{Formula.translate.compat}}.
 #'

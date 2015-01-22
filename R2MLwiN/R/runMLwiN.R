@@ -240,7 +240,7 @@
 #' \item \code{weighting}: a deprecated option for specifying weights in IGLS estimation:
 #' see \code{fpsandwich} and \code{rpsandwich} for new method of doing so.
 #' \code{weighting} is a list of objects including \code{levels}, \code{weights},
-#' \code{mode}, \code{FSDE} and \code{RSDE}; see \code{\link{MacroScript1}} for details.
+#' \code{mode}, \code{FSDE} and \code{RSDE}; see \code{\link{write.IGLS}} for details.
 #' 
 #' \item \code{centring}: deprecated method (only applicable when using old syntax
 #' pre-\pkg{R2MLwiN} v.0.8-0) specifying function by
@@ -259,7 +259,7 @@
 #' \item \code{xclass}: a deprecated option for specifying cross-classified and/or
 #' multiple membership models; see \code{xc} and \code{mm} for new method of
 #' doing so. \code{xclass} is a list of objects including \code{class},
-#' \code{N1}, \code{weight}, \code{id} and \code{car}; see \code{\link{MacroScript2}} for details.
+#' \code{N1}, \code{weight}, \code{id} and \code{car}; see \code{\link{write.MCMC}} for details.
 #'
 #' \item \code{mcmcOptions}: a list of objects specifying MCMC options, including the
 #' following:
@@ -396,7 +396,7 @@
 #' if that is not the case.
 #' 
 #' \item \code{mcmcMeth}: list of objects specifying MCMC methodology and prior
-#' options, including the following (see \code{\link{MacroScript2}} for further details):
+#' options, including the following (see \code{\link{write.MCMC}} for further details):
 #' \itemize{
 #' \item \code{iterations}: Number of main iterations post-burnin (i.e. monitoring chain length), defaults to 5000.
 #' \item \code{burnin}: Length of burnin, defaults to 500.
@@ -506,7 +506,7 @@
 #' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
 #' 
 #' @seealso
-#' \code{\link[stats]{formula}}, \code{\link{Formula.translate}}, \code{\link{Formula.translate.compat}}, \code{\link{MacroScript1}}, \code{\link{MacroScript2}}
+#' \code{\link[stats]{formula}}, \code{\link{Formula.translate}}, \code{\link{Formula.translate.compat}}, \code{\link{write.IGLS}}, \code{\link{write.MCMC}}
 #' 
 #' @examples
 #'  
@@ -2448,7 +2448,7 @@ version:date:md5:filename:x64:trial:platform
     }
   }
   if (EstM == 0) {
-    long2shortname <- MacroScript1(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre, 
+    long2shortname <- write.IGLS(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre, 
                  Meth, extra, reset, rcon, fcon, maxiter, convtol, mem.init, optimat, weighting, fpsandwich, rpsandwich, 
                  macrofile = macrofile, IGLSfile = IGLSfile, resifile = resifile, resi.store = resi.store, resioptions = resioptions, 
                  debugmode = debugmode, startval = startval, namemap = long2shortname)
@@ -2513,7 +2513,7 @@ version:date:md5:filename:x64:trial:platform
   
   # MCMC algorithm (using the starting values obtain from IGLS algorithm)
   if (EstM == 1) {
-    long2shortname <- MacroScript2(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre, 
+    long2shortname <- write.MCMC(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre, 
                  Meth, merr, carcentre, maxiter, convtol, seed, iterations, burnin, scale, thinning, priorParam, refresh, 
                  fixM, residM, Lev1VarM, OtherVarM, adaption, priorcode, rate, tol, lclo, mcmcOptions, fact, xc, mm, car, 
                  BUGO, mem.init, optimat, modelfile = modelfile, initfile = initfile, datafile = datafile, macrofile = macrofile, 

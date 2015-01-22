@@ -22,7 +22,7 @@ modelled, which can include \code{'Normal'} (the default), \code{'Binomial'},
 }
 \value{
 Outputs an R list object, which is then used as the input for
-\code{\link{MacroScript1}} and/or \code{\link{MacroScript2}}.
+\code{\link{write.IGLS}} and/or \code{\link{write.MCMC}}.
 }
 \description{
 Supports Formula syntax as used in earlier (<0.8-0) versions of \pkg{R2MLwiN}. A model
@@ -95,6 +95,6 @@ Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
 }
 \seealso{
-\code{\link{runMLwiN}}, \code{\link{MacroScript1}}, \code{\link{MacroScript2}}, \code{\link{Formula.translate}}
+\code{\link{runMLwiN}}, \code{\link{write.IGLS}}, \code{\link{write.MCMC}}, \code{\link{Formula.translate}}
 }
 
