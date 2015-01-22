@@ -13,8 +13,8 @@
 #' @param levID A character (vector) specifying the level ID(s).
 #' @param D A character string/vector specifying the distribution to be
 #' modelled, which can include \code{'Normal'} (the default), \code{'Binomial'},
-#' \code{'Poisson'}, \code{'Unordered Multinomial'}, \code{'Ordered Multinomial'},
-#' \code{'Multivariate Normal'}, or \code{'Mixed'}.
+#' \code{'Poisson'}, \code{'Negbinom'}, \code{'Unordered Multinomial'}, 
+#' \code{'Ordered Multinomial'}, \code{'Multivariate Normal'}, or \code{'Mixed'}.
 #' @param indata A data.frame object containing the data to be modelled.
 #'
 #' @details If \code{Formula} is a character string, then the following

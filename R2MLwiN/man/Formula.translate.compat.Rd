@@ -15,8 +15,8 @@ multilevel model. See \code{Value} for details.}
 
 \item{D}{A character string/vector specifying the distribution to be
 modelled, which can include \code{'Normal'} (the default), \code{'Binomial'},
-\code{'Poisson'}, \code{'Unordered Multinomial'}, \code{'Ordered Multinomial'},
-\code{'Multivariate Normal'}, or \code{'Mixed'}.}
+\code{'Poisson'}, \code{'Negbinom'}, \code{'Unordered Multinomial'},
+\code{'Ordered Multinomial'}, \code{'Multivariate Normal'}, or \code{'Mixed'}.}
 
 \item{indata}{A data.frame object containing the data to be modelled.}
 }
