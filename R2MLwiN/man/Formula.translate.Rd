@@ -13,7 +13,7 @@ further details.}
 
 \item{D}{A character string/vector specifying the type of distribution to be modelled, which
 can include \code{'Normal'} (the default), \code{'Binomial'}, \code{'Poisson'},
-\code{'Unordered Multinomial'}, \code{'Ordered Multinomial'},
+\code{'Negbinom'}, \code{'Unordered Multinomial'}, \code{'Ordered Multinomial'},
 \code{'Multivariate Normal'}, or \code{'Mixed'}. In the case of the latter,
 \code{'Mixed'} precedes the response types which also need to be listed in
 \code{D}, e.g. \code{c('Mixed', 'Normal', 'Binomial')}; these need to be
