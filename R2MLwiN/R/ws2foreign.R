@@ -15,7 +15,8 @@
 #' and path set by \code{options('MLwiN_path')}, the default for which can be
 #' changed via \code{options(MLwiN_path = 'path/to/MLwiN vX.XX/')}).
 #' @param x64 A logical value indicating whether the 64 bit version of MLwiN is
-#' used. If \code{FALSE} (by default), the 32 bit version is called.
+#' used, the default for this is determined by the version of R used. If 
+#' \code{FALSE}, the 32 bit version is called.
 #'
 #' @details
 #' The converted data file (with a specific extension) will be saved to the file
