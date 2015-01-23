@@ -6,12 +6,12 @@
   \describe{
     \item{\code{woman}}{Identifying code for each woman (level 1 unit).}
     \item{\code{district}}{Identifying code for each district (level 2 unit).}
-    \item{\code{use}}{Contraceptive use status at time of survey; levels are \code{Not using} and \code{Using}.}
-    \item{\code{lc}}{Number of living children at time of survey; ordered levels are \code{None}, \code{One child}, \code{Two children}, \code{Three plus}.}
+    \item{\code{use}}{Contraceptive use status at time of survey; a factor with levels \code{Not_using} and \code{Using}.}
+    \item{\code{lc}}{Number of living children at time of survey; an ordered factor with levels \code{None}, \code{One_child}, \code{Two_children}, \code{Three_plus}.}
     \item{\code{age}}{Age of woman at time of survey (in years), centred on sample mean of 30 years.}
-    \item{\code{urban}}{Type of region of residence; levels are \code{Rural} and \code{Urban}.}
-    \item{\code{educ}}{Woman's level of education; ordered levels are \code{None}, \code{Lower primary}, \code{Upper primary}, \code{Secondary and above}.}
-    \item{\code{hindu}}{Woman's religion; levels are \code{Muslim} and \code{Hindu}.}
+    \item{\code{urban}}{Type of region of residence; a factor with levels \code{Rural} and \code{Urban}.}
+    \item{\code{educ}}{Woman's level of education; an ordered factor with levels \code{None}, \code{Lower_primary}, \code{Upper_primary}, \code{Secondary_and_above}.}
+    \item{\code{hindu}}{Woman's religion; a factor with levels \code{Muslim} and \code{Hindu}.}
     \item{\code{d_illit}}{Proportion of women in district who are literate.}
     \item{\code{d_pray}}{Proportion of Muslim women in district who pray every day (a measure of religiosity).}    
     \item{\code{cons}}{A column of ones. If included as an explanatory variable in a regression model (e.g. in MLwiN), its coefficient is the intercept.}
@@ -23,13 +23,13 @@ Browne, W. J. (2012) \emph{MCMC Estimation in MLwiN Version 2.26.} University of
 
 Huq, N. M., Cleland, J. (1990) \emph{Bangladesh fertility survey, 1989.} Dhaka: National Institute of Population Research and Training (NIPORT).
 
-Rasbash, J., Browne, W. J., Healy, M., Cameron, B., Charlton, C. M. J. (2013) MLwiN v2.27. University of Bristol: Centre for Multilevel Modelling.
+Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) MLwiN Version 2.1. Centre for Multilevel Modelling, University of Bristol.
 }
 
 \description{
   A subset of data from the 1989 Bangladesh Fertility Survey, consisting of 1934 women across 60 districts.}
 \details{
-  The \code{bang1} dataset is one of the sample datasets provided with the multilevel-modelling software package MLwiN (Rasbash et al., 2013), and is a subset of data from the 1989 Bangladesh Fertility Survey (Huq and Cleland, 1990) used by Browne (2012) as an example when fitting logistic models for binary and binomial responses. The full sample was analysed in Amin et al. (1997).}
+  The \code{bang1} dataset is one of the sample datasets provided with the multilevel-modelling software package MLwiN (Rasbash et al., 2009), and is a subset of data from the 1989 Bangladesh Fertility Survey (Huq and Cleland, 1990) used by Browne (2012) as an example when fitting logistic models for binary and binomial responses. The full sample was analysed in Amin et al. (1997).}
 
 \seealso{
 See \code{mlmRev} package for an alternative format of the same dataset, with fewer variables.
