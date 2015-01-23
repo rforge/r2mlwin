@@ -60,20 +60,20 @@ trajectories(mymodel)
 
 # 23.4 A Poisson example . . . . . . . . . . . . . . . . . . . . . . . . 364
 
-## Read mmmec1 data
-data(mmmec1, package = "R2MLwiN")
+## Read mmmec data
+data(mmmec, package = "R2MLwiN")
 
-contrasts(mmmec1$nation, 9) <- diag(9)
+contrasts(mmmec$nation, 9) <- diag(9)
 
 (mymodel <- runMLwiN(log(obs) ~ 0 + nation + nation:uvbi + offset(log(exp)) + (region | 1), D = "Poisson", estoptions = list(EstM = 1,
-  mcmcMeth = list(iterations = 50000)), data = mmmec1))
+  mcmcMeth = list(iterations = 50000)), data = mmmec))
 
 sixway(mymodel@chains[, "FP_nationBelgium", drop = FALSE], acf.maxlag = 5000, "beta_1")
 
 ## Orthogonal update
 
 (mymodel <- runMLwiN(log(obs) ~ 0 + nation + nation:uvbi + offset(log(exp)) + (region | 1), D = "Poisson", estoptions = list(EstM = 1,
-  mcmcMeth = list(iterations = 50000), mcmcOptions = list(orth = 1)), data = mmmec1))
+  mcmcMeth = list(iterations = 50000), mcmcOptions = list(orth = 1)), data = mmmec))
 
 sixway(mymodel@chains[, "FP_nationBelgium", drop = FALSE], acf.maxlag = 100, "beta_1")
 

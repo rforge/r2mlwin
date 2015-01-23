@@ -58,9 +58,8 @@ xb <- predict(mymodel5)
 
 plot(mymodel5@data$uvbi, xb, xlab = "UV B radiation", ylab = "prediction", type = "n")
 lines(mymodel5@data$uvbi[mymodel5@data$nationBelgium == 1], xb[mymodel5@data$nationBelgium == 1], col = 1)
-lines(mymodel5@data$uvbi[mymodel5@data[["nationnationW Germany"]] == 1], xb[mymodel5@data[["nationnationW Germany"]] == 
-  1], col = 2)
-lines(mymodel5@data$uvbi[mymodel5@data$nationDebmark == 1], xb[mymodel5@data$nationDebmark == 1], col = 3)
+lines(mymodel5@data$uvbi[mymodel5@data$nationW_Germany == 1], xb[mymodel5@data$nationW_Germany == 1], col = 2)
+lines(mymodel5@data$uvbi[mymodel5@data$nationDenmark == 1], xb[mymodel5@data$nationDenmark == 1], col = 3)
 lines(mymodel5@data$uvbi[mymodel5@data$nationFrance == 1], xb[mymodel5@data$nationFrance == 1], col = 4)
 lines(mymodel5@data$uvbi[mymodel5@data$nationUK == 1], xb[mymodel5@data$nationUK == 1], col = 5)
 lines(mymodel5@data$uvbi[mymodel5@data$nationItaly == 1], xb[mymodel5@data$nationItaly == 1], col = 6)

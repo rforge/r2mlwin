@@ -81,20 +81,20 @@ trajectories(mymodel)
 
 # 25.5 The Melanoma example . . . . . . . . . . . . . . . . . . . . . . .414
 
-## Read mmmec1 data
-data(mmmec1, package = "R2MLwiN")
+## Read mmmec data
+data(mmmec, package = "R2MLwiN")
 
-contrasts(mmmec1$nation, 9) <- diag(9)
+contrasts(mmmec$nation, 9) <- diag(9)
 
 ## Define the model Hierarchical centring at level 2
 (mymodel <- runMLwiN(log(obs) ~ 0 + nation + nation:uvbi + offset(log(exp)) + (region | 1), D = "Poisson", estoptions = list(EstM = 1, 
-  mcmcMeth = list(iterations = 50000), mcmcOptions = list(hcen = 2)), data = mmmec1))
+  mcmcMeth = list(iterations = 50000), mcmcOptions = list(hcen = 2)), data = mmmec))
 
 sixway(mymodel@chains[, "FP_nationBelgium", drop = FALSE], acf.maxlag = 100, "beta_1")
 
 ## Hierarchical centring at level 2 + Orthogonal updates
 (mymodel <- runMLwiN(log(obs) ~ 0 + nation + nation:uvbi + offset(log(exp)) + (region | 1), D = "Poisson", estoptions = list(EstM = 1, 
-  mcmcMeth = list(iterations = 50000), mcmcOptions = list(orth = 1, hcen = 2)), data = mmmec1))
+  mcmcMeth = list(iterations = 50000), mcmcOptions = list(orth = 1, hcen = 2)), data = mmmec))
 
 sixway(mymodel@chains[, "FP_nationBelgium", drop = FALSE], acf.maxlag = 100, "beta_1")
 
