@@ -4,36 +4,21 @@
 \name{fitted,mlwinfitMCMC-method}
 \alias{fitted,mlwinfitMCMC-method}
 \alias{fitted.values,mlwinfitMCMC-method}
-\alias{predict,mlwinfitMCMC-method}
-\title{Returns the predicted data from "mlwinfitMCMC" objects.}
+\title{Returns the fitted values from "mlwinfitMCMC" objects.}
 \usage{
 \S4method{fitted}{mlwinfitMCMC}(object, ...)
 
 \S4method{fitted.values}{mlwinfitMCMC}(object, ...)
-
-\S4method{predict}{mlwinfitMCMC}(object, newdata = NULL, params = NULL,
-  type = "link", se.fit = FALSE, terms = NULL, ...)
 }
 \arguments{
 \item{object}{An \code{\link{mlwinfitMCMC-class}} object.}
 
 \item{...}{Other arguments}
-
-\item{newdata}{data frame for which to evaluate predictions}
-
-\item{params}{a character vector specifying the parameters to use in evaluating predictions. If \code{NULL}, \code{names(object[["FP"]])} is used by default.}
-
-\item{type}{when this has the value \code{"link"} (default) the linear predictor is returned.
-When \code{type="terms"} each component of the linear predictor is returned seperately. When \code{type="response"} predictions on the scale of the response are returned.}
-
-\item{se.fit}{logical. When this is \code{TRUE} (not default) standard error estimates are returned for each prediction.}
-
-\item{terms}{if \code{type="terms"}, which terms (default is all terms), a character vector.}
 }
 \description{
-Returns the predicted data from "mlwinfitMCMC" objects.
+Returns the fitted values from "mlwinfitMCMC" objects.
 }
 \seealso{
-\code{\link[stats]{predict}}
+\code{\link[stats]{fitted}}
 }
 

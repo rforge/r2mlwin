@@ -602,10 +602,10 @@ setMethod("df.residual", signature(object = "mlwinfitIGLS"), function(object, ..
   nobs(object) - length(coef(object))
 })
 
-#' Returns the predicted data from "mlwinfitIGLS" objects.
+#' Returns the fitted values from "mlwinfitIGLS" objects.
 #' @param object An \code{\link{mlwinfitIGLS-class}} object.
 #' @param ... Other arguments.
-#' @seealso \code{\link[stats]{predict}}
+#' @seealso \code{\link[stats]{fitted}}
 #' @export
 setMethod("fitted", signature(object = "mlwinfitIGLS"), function(object, ...) {
   predict(object, type = "response")
@@ -639,7 +639,8 @@ setMethod("resid", signature(object = "mlwinfitIGLS"), function(object, ...) {
   residuals(object)
 })
 
-#' @rdname fitted-mlwinfitIGLS-method
+#' Returns the predicted data from "mlwinfitIGLS" objects.
+#' @param object An \code{\link{mlwinfitIGLS-class}} object.
 #' @param newdata data frame for which to evaluate predictions
 #' @param params a character vector specifying the parameters to use in evaluating predictions.
 #' If \code{NULL}, \code{names(object[["FP"]])} is used by default.
@@ -647,6 +648,8 @@ setMethod("resid", signature(object = "mlwinfitIGLS"), function(object, ...) {
 #' When \code{type="terms"} each component of the linear predictor is returned seperately. When \code{type="response"} predictions on the scale of the response are returned.
 #' @param se.fit logical. When this is \code{TRUE} (not default) standard error estimates are returned for each prediction.
 #' @param terms if \code{type="terms"}, which terms (default is all terms), a character vector.
+#' @param ... Other arguments.
+#' @seealso \code{\link[stats]{predict}}
 #' @export
 setMethod("predict", signature(object = "mlwinfitIGLS"), function(object, newdata = NULL, params = NULL, type = "link", se.fit = FALSE,
                                               terms = NULL, ...) {
