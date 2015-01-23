@@ -20,7 +20,7 @@
     \item{\code{neigh6}}{Sixth neighbours.}
     \item{\code{neigh7}}{Seventh neighbours.}
     \item{\code{neigh8}}{Eighth neighbours.}
-    \item{\code{neigh9}}{Nineth neighbours.}
+    \item{\code{neigh9}}{Ninth neighbours.}
     \item{\code{neigh10}}{Tenth neightbours.}
     \item{\code{neigh11}}{Eleventh neightbours.}
     \item{\code{weight1}}{First neighbours' weights.}
@@ -31,7 +31,7 @@
     \item{\code{weight6}}{Sixth neighbours' weights.}
     \item{\code{weight7}}{Seventh neighbours' weights.}
     \item{\code{weight8}}{Eighth neighbours' weights.}
-    \item{\code{weight9}}{Nineth neighbours' weights.}
+    \item{\code{weight9}}{Ninth neighbours' weights.}
     \item{\code{weight10}}{Tenth neightbours' weights.}
     \item{\code{weight11}}{Eleventh neightbours' weights.}
     \item{\code{wcar1}}{First neighbours' CAR weights.}
@@ -42,7 +42,7 @@
     \item{\code{wcar6}}{Sixth neighbours' CAR weights.}
     \item{\code{wcar7}}{Seventh neighbours' CAR weights.}
     \item{\code{wcar8}}{Eighth neighbours' CAR weights.}
-    \item{\code{wcar9}}{Nineth neighbours' CAR weights.}
+    \item{\code{wcar9}}{Ninth neighbours' CAR weights.}
     \item{\code{wcar10}}{Tenth neightbours' CAR weights.}
     \item{\code{wcar11}}{Eleventh neightbours' CAR weights.}
 }}
@@ -51,13 +51,13 @@ Browne, W. J. (2012) \emph{MCMC Estimation in MLwiN Version 2.26.} University of
 
 Clayton, D., Kaldor, J. (1987) Empirical Bayes estimates of age-standardized relative risks for use in disease mapping. \emph{Biometrics} 43: 671-681.
 
-Rasbash, J., Browne, W. J., Healy, M., Cameron, B., Charlton, C. M. J. (2013) MLwiN v2.27. University of Bristol: Centre for Multilevel Modelling.
+Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) MLwiN Version 2.1. Centre for Multilevel Modelling, University of Bristol.
 }
 
 \description{
   Observed counts of male lip cancer for the 56 regions of Scotland over the period 1975-1980.}
 \details{
-  The \code{lips1} dataset is one of the sample datasets provided with the multilevel-modelling software package MLwiN (Rasbash et al., 2013), and was analysed in Clayton & Kaldor (1987); see also Browne (2012) for more details.}
+  The \code{lips1} dataset is one of the sample datasets provided with the multilevel-modelling software package MLwiN (Rasbash et al., 2009), and was analysed in Clayton & Kaldor (1987); see also Browne (2012) for more details.}
 
 \examples{
 \dontrun{
