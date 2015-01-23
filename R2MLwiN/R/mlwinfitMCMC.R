@@ -703,7 +703,15 @@ setMethod("print", "mlwinfitMCMC", printMCMC)
 setMethod("show", signature(object = "mlwinfitMCMC"), function(object) printMCMC(object))
 
 #' Update "mlwinfitMCMC" objects
-#'
+#' @param object a valid \code{mlwinfitMCMC} class object with an R function call component named \code{call}, the expression used to create itself.
+#' @param Formula. changes to the formula. This is a two sided formula where "." is substituted for existing components in the \code{Formula} component of \code{object$call}.
+#' @param levID. changes to the specifications of level ID(s).
+#' @param estoptions. changes to the specifications of a list of options used for estimating the model.
+#' @param ...  additional arguments to the call, or arguments with changed values.
+#' @param keep.order a logical value indicating whether the terms should keep their positions.
+#' @param evaluate  if \code{TRUE} (the default) the new call is evaluated;
+#' otherwise the call is returned as an unevaluated expression.
+#' @return either a new updated \code{mlwinfitMCMC} class object, or else an unevaluated expression for creating such an object.
 #' @export 
 setMethod("update", signature(object = "mlwinfitMCMC"), updateMLwiN)
 
