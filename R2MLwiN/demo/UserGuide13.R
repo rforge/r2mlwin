@@ -36,11 +36,11 @@ reading1[reading1 == -10] <- NA
 
 summary(reading1)
 
-reading <- reshape(reading1, idvar = "student", timevar = "ID", varying = c("READ1", "AGE1", "READ2", "AGE2", "READ3", 
-  "AGE3", "READ4", "AGE4", "READ5", "AGE5", "READ6", "AGE6"), sep = "", direction = "long")
+reading <- reshape(reading1, idvar = "student", timevar = "id", varying = c("read1", "age1", "read2", "age2", "read3", 
+  "age3", "read4", "age4", "read5", "age5", "read6", "age6"), sep = "", direction = "long")
 
-reading <- reading[c("student", "ID", "AGE", "READ")]
-reading <- reading[order(reading$student, reading$ID), ]
+reading <- reading[c("student", "id", "age", "read")]
+reading <- reading[order(reading$student, reading$id), ]
 
 colnames(reading) <- c("student", "occasion", "age", "reading")
 rownames(reading) <- NULL
