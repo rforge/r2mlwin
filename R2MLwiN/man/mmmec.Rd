@@ -17,7 +17,7 @@ Browne, W. J. (2012) \emph{MCMC Estimation in MLwiN Version 2.26.} University of
 
 Langford, I. H., Bentham, G., McDonald, A-L. (1998) Multi-level modelling of geographically aggregated health data: a case study on malignant melanoma mortality and UV exposure in the European Community. \emph{Statistics in Medicine} 17: 41-57.
 
-Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) MLwiN Version 2.1. Centre for Multilevel Modelling, University of Bristol.
+Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) \emph{MLwiN Version 2.1.} Centre for Multilevel Modelling, University of Bristol.
 }
 
 \description{
