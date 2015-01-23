@@ -7,14 +7,14 @@
     \item{\code{height}}{Heights of 100 adult males measured in centimetres.}
 }}
 \source{
-Rasbash, J., Browne, W. J., Healy, M., Cameron, B., Charlton, C. M. J. (2013) MLwiN v2.27. University of Bristol: Centre for Multilevel Modelling.
-Rasbash, J., Steele, F., Browne, W.J., Goldstein, H. (2012) \emph{A User's Guide to MLwiN v2.26}. University of Bristol: Centre for Multilevel Modelling.
+Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) MLwiN Version 2.1. Centre for Multilevel Modelling, University of Bristol.
+Rasbash, J., Steele, F., Browne, W.J. and Goldstein, H. (2012) A User's Guide to MLwiN Version 2.26. Centre for Multilevel Modelling, University of Bristol.
 }
 
 \description{
   Height data for 100 adult males.}
 \details{
-  The \code{height} dataset is one of the sample datasets provided with the multilevel-modelling software package MLwiN (Rasbash et al., 2013); see Rasbash et al. (2012) for further details.}
+  The \code{height} dataset is one of the sample datasets provided with the multilevel-modelling software package MLwiN (Rasbash et al., 2009); see Rasbash et al. (2012) for further details.}
 
 
 \examples{
