@@ -21,17 +21,11 @@ This function draws trajectories of MCMC chains.
 \examples{
 \dontrun{
 library(R2MLwiN)
-#NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
-#...so please change relevant line if different
-#if using R2MLwiN via WINE, the path may look like
-#options(MLwiN_path = '/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/')
 
 ## Example: tutorial
-data(tutorial)
-formula = normexam ~ (0|cons + standlrt) + (2|cons + standlrt) + (1|cons)
-levID = c('school', 'student')
-estoptions = list(EstM = 1)
-mymodel = runMLwiN(formula, levID, indata = tutorial, estoptions = estoptions)
+data(tutorial, package = "R2MLwiN")
+
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (student | 1 + standlrt), estoptions = list(EstM = 1), data = tutorial))
 
 trajectories(mymodel, Range = c(4501, 5000))
 }

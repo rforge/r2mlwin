@@ -61,20 +61,14 @@ effective sample size (ESS) of the chain.
 \examples{
 \dontrun{
 library(R2MLwiN)
-#NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
-#...so please change relevant line if different
-#if using R2MLwiN via WINE, the path may look like
-#options(MLwiN_path='/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/')
 
 ## Example: tutorial
-data(tutorial)
-formula=normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)
-levID=c('school','student')
-estoptions= list(EstM=1,resi.store.levs=2)
-mymodel=runMLwiN(formula, levID, indata=tutorial, estoptions=estoptions)
+data(tutorial, package = "R2MLwiN")
 
-chain=mymodel['chains'][, 'FP_standlrt']
-sixway(chain, 'beta_1')
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1), estoptions = list(EstM = 1, resi.store.levs = 2), data = tutorial))
+
+sixway(mymodel@chains[, "FP_standlrt", drop = FALSE], "beta_1")
+
 }
 }
 \author{

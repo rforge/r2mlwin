@@ -31,20 +31,15 @@
 #' library(R2MLwiN)
 #'
 #' ## Read alevchem data
-#' data(alevchem)
+#' data(alevchem, package = "R2MLwiN")
 #'
-#' alevchem['gcseav'] = double2singlePrecision(alevchem['gcse-tot'] / alevchem['gcse-no'] - 6)
-#' alevchem['gcse^2'] = double2singlePrecision(alevchem['gcseav']^2)
-#' alevchem['gcse^3'] = double2singlePrecision(alevchem['gcseav']^3)
+#' alevchem$gcseav <- double2singlePrecision(alevchem$gcse_tot/alevchem$gcse_no - 6)
 #'
 #' ## Example: A-level Chemistry
-#' formula = a-point ~ (0|cons + gcseav + gcse^2 + gcse^3 + gender) + (1|cons)
-#' levID = 'pupil'
-#' estoptions = list(EstM = 1)
-#' ## Fit the model
-#' mymodel = runMLwiN(formula, levID, indata = alevchem, estoptions = estoptions)
+#' (mymodel <- runMLwiN(a_point ~ 1 + gcseav + I(gcseav^2) + I(gcseav^3) + gender + (pupil | 1), estoptions = list(EstM = 1,
+#'  resi.store = TRUE), data = alevchem))
 #'
-#' predCurves(mymodel, indata, xname = 'gcseav', group = 'gender')
+#' predCurves(mymodel, xname = "gcseav", group = "genderfemale")
 #' }
 #'
 #' @export

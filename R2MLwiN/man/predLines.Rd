@@ -47,20 +47,13 @@ selected groups at a higher (>=2) level.
 \examples{
 \dontrun{
 library(R2MLwiN)
-#NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
-#...so please change relevant line if different
-#if using R2MLwiN via WINE, the path may look like
-#options(MLwiN_path = '/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/')
 
 ## Example: tutorial
-data(tutorial)
-formula = normexam ~ (0|cons + standlrt) + (2|cons + standlrt) + (1|cons)
-levID = c('school', 'student')
-estoptions = list(EstM = 1,resi.store.levs = 2)
-mymodel = runMLwiN(formula, levID, indata = tutorial, estoptions = estoptions)
+data(tutorial, package = "R2MLwiN")
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1), estoptions = list(EstM = 1,
+ resi.store.levs = 2), data = tutorial))
 
-predLines(mymodel, indata = tutorial, xname = 'standlrt', lev = 2,
-selected = c(30, 44, 53, 59), probs = c(.025, .975))
+predLines(mymodel, xname = "standlrt", lev = 2, selected = c(30, 44, 53, 59), probs = c(0.025, 0.975))
 }
 }
 \author{
