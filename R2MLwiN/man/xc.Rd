@@ -17,7 +17,7 @@
     \item{\code{pupil}}{Pupil identifying code.}
 }}
 \source{
-Paterson, L. (1991) Socio economic status and educational attainment: a multidimensional and multilevel study. Evaluation and Research in Education, 5, 97-121.
+Paterson, L. (1991) Socio economic status and educational attainment: a multidimensional and multilevel study. \emph{Evaluation and Research in Education}, 5, 97-121.
 Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) \emph{MLwiN Version 2.1.} Centre for Multilevel Modelling, University of Bristol.
 Rasbash, J., Steele, F., Browne, W.J., Goldstein, H. (2012) \emph{A User's Guide to MLwiN v2.26}. University of Bristol: Centre for Multilevel Modelling.
 }
