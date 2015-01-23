@@ -566,9 +566,6 @@
 #' ## To find the location of a demo for MCMCGuide03
 #' file.show(system.file('demo', 'MCMCGuide03.R', package='R2MLwiN'))
 #' 
-#' ## MLwiN folder
-#' mlwin = 'C:/Program Files (x86)/MLwiN v2.29/'
-#' 
 #' ## To run the demo for MCMCGuide03
 #' demo(MCMCGuide03)
 #' }
