@@ -46,9 +46,9 @@ cat(paste("Pr(y = 3) =", round(exp(mymodel@FP["FP_Intercept_3"])/(1 + exp(mymode
 
 cat(paste("Pr(y = 3) =", round(exp(mymodel@FP["FP_Intercept_3"])/(1 + exp(mymodel@FP["FP_Intercept_1"]) + exp(mymodel@FP["FP_Intercept_2"]) + 
   exp(mymodel@FP["FP_Intercept_3"])), 4), "\n"))
-cat(paste("Pr(y = 3) =", round(exp(mymodel@FP["FP_Intercept_3"] + mymodel@FP["FP_lcTwo children_3"])/(1 + exp(mymodel@FP["FP_Intercept_1"] + 
-  mymodel@FP["FP_lcTwo children_1"]) + exp(mymodel@FP["FP_Intercept_2"] + mymodel@FP["FP_lcTwo children_2"]) + exp(mymodel@FP["FP_Intercept_3"] + 
-  mymodel@FP["FP_lcTwo children_3"])), 4), "\n"))
+cat(paste("Pr(y = 3) =", round(exp(mymodel@FP["FP_Intercept_3"] + mymodel@FP["FP_lcTwo_children_3"])/(1 + exp(mymodel@FP["FP_Intercept_1"] + 
+  mymodel@FP["FP_lcTwo_children_1"]) + exp(mymodel@FP["FP_Intercept_2"] + mymodel@FP["FP_lcTwo_children_2"]) + exp(mymodel@FP["FP_Intercept_3"] + 
+  mymodel@FP["FP_lcTwo_children_3"])), 4), "\n"))
 
 # 12.3 Interval estimates for conditional probabilities . . . . . . . . .175
 
@@ -58,9 +58,9 @@ pred1 <- exp(chains[, "FP_Intercept_3"])/(1 + exp(chains[, "FP_Intercept_1"]) + 
 summary(pred1)
 sixway(pred1, "prob1")
 
-pred2 <- exp(chains[, "FP_Intercept_3"] + chains[, "FP_lcTwo children_3"])/(1 + exp(chains[, "FP_Intercept_1"] + chains[, 
-  "FP_lcTwo children_1"]) + exp(chains[, "FP_Intercept_2"] + chains[, "FP_lcTwo children_2"]) + exp(chains[, "FP_Intercept_3"] + 
-  chains[, "FP_lcTwo children_3"]))
+pred2 <- exp(chains[, "FP_Intercept_3"] + chains[, "FP_lcTwo_children_3"])/(1 + exp(chains[, "FP_Intercept_1"] + chains[, 
+  "FP_lcTwo_children_1"]) + exp(chains[, "FP_Intercept_2"] + chains[, "FP_lcTwo_children_2"]) + exp(chains[, "FP_Intercept_3"] + 
+  chains[, "FP_lcTwo_children_3"]))
 summary(pred2)
 sixway(pred2, "prob1")
 

@@ -38,19 +38,18 @@ addmargins(with(bang, table(use4)))
 
 addmargins(with(bang, table(lc, use4)))
 
-levels(bang$use4) <- c("ster", "mod", "trad", "none")
 bang$use4 <- relevel(bang$use4, 4)
 
 (mymodel1 <- (runMLwiN(log(use4, cons) ~ 1 + lc, D = "Unordered Multinomial", data = bang)))
 
-cat(paste("Pr(y = 1) =", round(exp(mymodel1@FP["FP_Intercept_ster"])/(1 + exp(mymodel1@FP["FP_Intercept_ster"]) + 
-  exp(mymodel1@FP["FP_Intercept_mod"]) + exp(mymodel1@FP["FP_Intercept_trad"])), 4), "\n"))
-cat(paste("Pr(y = 2) =", round(exp(mymodel1@FP["FP_Intercept_mod"])/(1 + exp(mymodel1@FP["FP_Intercept_ster"]) + exp(mymodel1@FP["FP_Intercept_mod"]) + 
-  exp(mymodel1@FP["FP_Intercept_trad"])), 4), "\n"))
-cat(paste("Pr(y = 3) =", round(exp(mymodel1@FP["FP_Intercept_trad"])/(1 + exp(mymodel1@FP["FP_Intercept_ster"]) + 
-  exp(mymodel1@FP["FP_Intercept_mod"]) + exp(mymodel1@FP["FP_Intercept_trad"])), 4), "\n"))
-cat(paste("Pr(y = 4) =", round(1/(1 + exp(mymodel1@FP["FP_Intercept_ster"]) + exp(mymodel1@FP["FP_Intercept_mod"]) + 
-  exp(mymodel1@FP["FP_Intercept_trad"])), 4), "\n"))
+cat(paste("Pr(y = 1) =", round(exp(mymodel1@FP["FP_Intercept_Sterilization"])/(1 + exp(mymodel1@FP["FP_Intercept_Sterilization"]) + 
+  exp(mymodel1@FP["FP_Intercept_Modern_reversible_method"]) + exp(mymodel1@FP["FP_Intercept_Traditional_method"])), 4), "\n"))
+cat(paste("Pr(y = 2) =", round(exp(mymodel1@FP["FP_Intercept_Modern_reversible_method"])/(1 + exp(mymodel1@FP["FP_Intercept_Sterilization"]) + exp(mymodel1@FP["FP_Intercept_mod"]) + 
+  exp(mymodel1@FP["FP_Intercept_Traditional_method"])), 4), "\n"))
+cat(paste("Pr(y = 3) =", round(exp(mymodel1@FP["FP_Intercept_Traditional_method"])/(1 + exp(mymodel1@FP["FP_Intercept_Sterilization"]) + 
+  exp(mymodel1@FP["FP_Intercept_Modern_reversible_method"]) + exp(mymodel1@FP["FP_Intercept_Traditional_method"])), 4), "\n"))
+cat(paste("Pr(y = 4) =", round(1/(1 + exp(mymodel1@FP["FP_Intercept_Sterilization"]) + exp(mymodel1@FP["FP_Intercept_Modern_reversible_method"]) + 
+  exp(mymodel1@FP["FP_Intercept_Traditional_method"])), 4), "\n"))
 
 # 10.4 A two-level random intercept multinomial logistic regression model 154
 
@@ -63,16 +62,16 @@ cat(paste("Pr(y = 4) =", round(1/(1 + exp(mymodel1@FP["FP_Intercept_ster"]) + ex
   data = bang)))
 
 
-mymodel3@RP["RP2_cov_Intercept_ster_Intercept_mod"]/sqrt(mymodel3@RP["RP2_var_Intercept_ster"] * mymodel3@RP["RP2_var_Intercept_mod"])
-mymodel3@RP["RP2_cov_Intercept_ster_Intercept_trad"]/sqrt(mymodel3@RP["RP2_var_Intercept_ster"] * mymodel3@RP["RP2_var_Intercept_trad"])
-mymodel3@RP["RP2_cov_Intercept_mod_Intercept_trad"]/sqrt(mymodel3@RP["RP2_var_Intercept_mod"] * mymodel3@RP["RP2_var_Intercept_trad"])
+mymodel3@RP["RP2_cov_Intercept_ster_Intercept_Modern_reversible_method"]/sqrt(mymodel3@RP["RP2_var_Intercept_Sterilization"] * mymodel3@RP["RP2_var_Intercept_Modern_reversible_method"])
+mymodel3@RP["RP2_cov_Intercept_ster_Intercept_Traditional_method"]/sqrt(mymodel3@RP["RP2_var_Intercept_Sterilization"] * mymodel3@RP["RP2_var_Intercept_Traditional_method"])
+mymodel3@RP["RP2_cov_Intercept_mod_Intercept_Traditional_method"]/sqrt(mymodel3@RP["RP2_var_Intercept_Modern_reversible_method"] * mymodel3@RP["RP2_var_Intercept_Traditional_method"])
 
 hipos <- rep(0, 2)
 hipos[1] <- which(levels(as.factor(bang$district)) == 56)
 hipos[2] <- which(levels(as.factor(bang$district)) == 11)
 
-u0 <- mymodel3@residual$lev_2_resi_est_Intercept.ster
-u0se <- sqrt(mymodel3@residual$lev_2_resi_var_Intercept.ster)
+u0 <- mymodel3@residual$lev_2_resi_est_Intercept.Sterilization
+u0se <- sqrt(mymodel3@residual$lev_2_resi_var_Intercept.Sterilization)
 u0rank <- rank(u0)
 u0rankhi <- u0 + u0se
 u0ranklo <- u0 - u0se
@@ -84,8 +83,8 @@ for (i in 1:60) lines(rep(i, 2), c(u0ranklo[u0rankno[i]], u0rankhi[u0rankno[i]])
 for (i in 1:2) points(x = which(u0rankno == hipos[i]), y = u0[u0rankno[which(u0rankno == hipos[i])]], pch = 22, bg = i + 
   1)
 
-u1 <- mymodel3@residual$lev_2_resi_est_Intercept.mod
-u1se <- sqrt(mymodel3@residual$lev_2_resi_var_Intercept.mod)
+u1 <- mymodel3@residual$lev_2_resi_est_Intercept.Modern_reversible_method
+u1se <- sqrt(mymodel3@residual$lev_2_resi_var_Intercept.Modern_reversible_method)
 u1rank <- rank(u1)
 u1rankhi <- u1 + u1se
 u1ranklo <- u1 - u1se
@@ -97,8 +96,8 @@ for (i in 1:60) lines(rep(i, 2), c(u1ranklo[u1rankno[i]], u1rankhi[u1rankno[i]])
 for (i in 1:2) points(x = which(u1rankno == hipos[i]), y = u1[u1rankno[which(u1rankno == hipos[i])]], pch = 22, bg = i + 
   1)
 
-u2 <- mymodel3@residual$lev_2_resi_est_Intercept.trad
-u2se <- sqrt(mymodel3@residual$lev_2_resi_var_Intercept.trad)
+u2 <- mymodel3@residual$lev_2_resi_est_Intercept.Traditional_method
+u2se <- sqrt(mymodel3@residual$lev_2_resi_var_Intercept.Traditional_method)
 u2rank <- rank(u2)
 u2rankhi <- u2 + u2se
 u2ranklo <- u2 - u2se
