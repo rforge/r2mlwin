@@ -7,25 +7,27 @@
     \item{\code{lea}}{Local Education Authority ID.}
     \item{\code{estab}}{Establishment (institution) ID.}
     \item{\code{pupil}}{Pupil ID.}
-    \item{\code{a_point}}{A-level point score (with levels: \code{F}, \code{E}, \code{D}, \code{C}, \code{B}, \code{A}).}
+    \item{\code{a_point}}{A-level point score (an ordered factor with levels: \code{F}, \code{E}, \code{D}, \code{C}, \code{B}, \code{A}).}
     \item{\code{gcse_tot}}{Total GCSE point score.}
     \item{\code{gcse_no}}{Number of GCSEs taken.}
     \item{\code{cons}}{Constant of ones}
-    \item{\code{gender}}{Pupil's gender (with levels: \code{male}, \code{female}).}
+    \item{\code{gender}}{Pupil's gender (a factor with levels: \code{male}, \code{female}).}
 }}
 
 \source{
 Browne, W. J. (2012) \emph{MCMC Estimation in MLwiN Version 2.26.} University of Bristol: Centre for Multilevel Modelling.
 
-Rasbash, J., Browne, W. J., Healy, M., Cameron, B., Charlton, C. M. J. (2013) MLwiN v2.27. University of Bristol: Centre for Multilevel Modelling.
+Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) MLwiN Version 2.1. Centre for Multilevel Modelling, University of Bristol.
+
+Rasbash, J., Steele, F., Browne, W.J. and Goldstein, H. (2012) A User's Guide to MLwiN Version 2.26. Centre for Multilevel Modelling, University of Bristol.
 
 Yang, M., Woodhouse, G. (2001) Progress from GCSE to A and AS level: institutional and gender differences, and trends over time. \emph{British Educational Research Journal} 27: 245-267.
 }
 
 \description{
-  Chemistry A-level results from one exam board; subset from Yang & Woodhouse, 2001.}
+  Chemistry A-level results from one exam board; subset from Yang & Woodhouse, 2001. See also Rasbash et al. (2012) and Browne (2012).}
 \details{
-  The \code{alevchem} dataset is one of the sample datasets provided with the multilevel-modelling software package MLwiN (Rasbash et al., 2013).}
+  The \code{alevchem} dataset is one of the sample datasets provided with the multilevel-modelling software package MLwiN (Rasbash et al., 2009).}
 
 
 \examples{
