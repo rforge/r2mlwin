@@ -32,7 +32,7 @@
 #' \dontrun{
 #' library(R2MLwiN)
 #' ## Modify the following path as appropriate.
-#' wsfile='C:/Program Files (x86)/MLwiN v2.30/samples/tutorial.ws'
+#' wsfile='C:/Program Files (x86)/MLwiN v2.32/samples/tutorial.ws'
 #' ## the tutorial.dta will be save under the temporary folder
 #' inputfile=paste(tempdir(),'/tutorial.dta',sep='')
 #' ws2foreign(wsfile, foreignfile=inputfile)
