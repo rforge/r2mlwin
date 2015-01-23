@@ -65,7 +65,10 @@ setClass(Class = "mlwinfitIGLS", representation = representation(version = "char
                                                                  Iterations = "numeric", Meth = "numeric", nonlinear = "numeric", data = "data.frame"))
 
 #' Extract or Replace parts of "mlwinfitIGLS" objects
-#'
+#' @param x data frame
+#' @param i,j elements to extract or replace. For \code{[} and \code{[[}, these are \code{character}.
+#' @param drop not used.
+#' @param value a suitable replacement value.
 #' @rdname extract-methods-igls
 setMethod("[", "mlwinfitIGLS", function(x, i, j, drop) {
   if (i == "version") {
@@ -327,7 +330,10 @@ setReplaceMethod("[[", signature(x = "mlwinfitIGLS"), function(x, i, j, value) {
 })
 
 #' Summarize "mlwinfitIGLS" objects
-#'
+#' @param object,x an \code{\link{mlwinfitIGLS-class}} object
+#' @param ... other parameters
+#' @param digits the number of significant digits to use when printing.
+#' @param signif.stars logical. If TRUE, 'significance stars' are printed for each coefficient.
 #' @rdname summary-methods-igls
 #' @export
 setMethod("summary", signature(object = "mlwinfitIGLS"), function(object, ...) {

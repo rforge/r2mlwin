@@ -78,7 +78,10 @@ setClass(Class = "mlwinfitMCMC", representation = representation(version = "char
                                                                  residual = "list", resi.chains = "ANY", data = "data.frame"))
 
 #' Extract or Replace parts of "mlwinfitMCMC" objects
-#'
+#' @param x data frame
+#' @param i,j elements to extract or replace. For \code{[} and \code{[[}, these are \code{character}.
+#' @param drop not used.
+#' @param value a suitable replacement value.
 #' @rdname extract-methods-mcmc
 setMethod("[", "mlwinfitMCMC", function(x, i, j, drop) {
   if (i == "version") {
@@ -460,7 +463,11 @@ setReplaceMethod("[[", signature(x = "mlwinfitMCMC"), function(x, i, j, value) {
 })
 
 #' Summarize "mlwinfitMCMC" objects
-#'
+#' @param object,x an \code{\link{mlwinfitMCMC-class}} object
+#' @param ... other parameters
+#' @param digits the number of significant digits to use when printing.
+#' @param signif.stars logical. If TRUE, 'significance stars' are printed for each coefficient.
+#' @param z.ratio logical. If TRUE, z-ratio values are displayed for each coefficient.
 #' @rdname summary-methods-mcmc
 #' @export 
 setMethod("summary", signature(object = "mlwinfitMCMC"), function(object, ...) {

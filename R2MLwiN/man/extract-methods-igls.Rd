@@ -16,6 +16,15 @@
 
 \S4method{[[}{mlwinfitIGLS}(x, i, j) <- value
 }
+\arguments{
+\item{x}{data frame}
+
+\item{i,j}{elements to extract or replace. For \code{[} and \code{[[}, these are \code{character}.}
+
+\item{drop}{not used.}
+
+\item{value}{a suitable replacement value.}
+}
 \description{
 Extract or Replace parts of "mlwinfitIGLS" objects
 }
