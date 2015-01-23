@@ -19,13 +19,8 @@ Rasbash, J., Steele, F., Browne, W.J. and Goldstein, H. (2012) \emph{A User's Gu
 
 \examples{
 \dontrun{
-#NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
-#...so please change relevant line if different
-#if using R2MLwiN via WINE, the path may look like 
-#options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/")
 
-data(height)
-
+data(height, package = "R2MLwiN")
 
 }
 }

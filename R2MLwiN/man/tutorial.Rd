@@ -37,43 +37,29 @@ See \code{mlmRev} package for an alternative format of the same dataset.
 
 \examples{
 \dontrun{
-#NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
-#...so please change relevant line if different
-#if using R2MLwiN via WINE, the path may look like 
-#options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/")
 
-data(tutorial)
+data(tutorial, package = "R2MLwiN")
 
 # Fit 2-level variance components model, using IGLS (default estimation method)
-F1 <- normexam ~ (0|cons) + (2|cons) + (1|cons)
-ID <- c("school", "student")
-(VarCompModel <- runMLwiN(Formula = F1, levID = ID, indata = tutorial))
+(VarCompModel <- runMLwiN(normexam ~ 1 + (school | 1) + (student | 1), data = tutorial))
+
 # print variance partition coefficient (VPC)
-print(VPC <- VarCompModel["RP"][["RP2_var_cons"]] / (VarCompModel["RP"][["RP1_var_cons"]] + 
-VarCompModel["RP"][["RP2_var_cons"]]))
+print(VPC <- coef(VarCompModel)[["RP2_var_Intercept"]] / (coef(VarCompModel)[["RP1_var_Intercept"]] + coef(VarCompModel)[["RP2_var_Intercept"]]))
 
 # Fit same model using MCMC
-(VarCompMCMC <- runMLwiN(Formula = F1, levID = ID, indata = tutorial, 
-estoptions = list(EstM = 1)))
+(VarCompMCMC <- runMLwiN(normexam ~ 1 + (school | 1) + (student | 1), estoptions = list(EstM = 1), data = tutorial))
+
 # return diagnostics for VPC
-VPC_MCMC <- VarCompMCMC["chains"][,"RP2_var_cons"] / (VarCompMCMC["chains"][,"RP1_var_cons"] + 
-VarCompMCMC["chains"][,"RP2_var_cons"])
+VPC_MCMC <- VarCompMCMC@chains[,"RP2_var_Intercept"] / (VarCompMCMC@chains[,"RP1_var_Intercept"] + VarCompMCMC@chains[,"RP2_var_Intercept"])
 sixway(VPC_MCMC, name = "VPC")
 
 # Adding predictor, allowing its coefficient to vary across groups (i.e. random slopes)
-F2 <- normexam ~ (0|cons + standlrt) + (2|cons + standlrt) + (1|cons)
-(standlrtRS_MCMC <- runMLwiN(
-Formula = F2, levID = ID, indata = tutorial,
-estoptions = list(EstM = 1)))
+(standlrtRS_MCMC <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1), estoptions = list(EstM = 1), data = tutorial))
 
 # Example modelling complex level 1 variance
-F3 <- normexam ~ (0|cons + standlrt) + (2|cons + standlrt) + (1|cons + standlrt)
-standlrtC1V_MCMC <- runMLwiN (
-Formula = F3, levID = ID, indata = tutorial,
-estoptions = (list(EstM = 1,
-#fit log of precision at level 1 as a function of predictors
-mcmcMeth = list(lclo = 1))), 
-)
+# fit log of precision at level 1 as a function of predictors
+(standlrtC1V_MCMC <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1 + standlrt), estoptions = list(EstM = 1, mcmcMeth = list(lclo = 1)), data = tutorial))
+
 }
 }
 \keyword{datasets}

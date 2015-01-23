@@ -61,16 +61,11 @@ Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) \emph{
 
 \examples{
 \dontrun{
-#NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
-#...so please change relevant line if different
-#if using R2MLwiN via WINE, the path may look like 
-#options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/")
 
-data(lips1)
+data(lips1, package = "R2MLwiN")
 
-F1 = log(obs,offs) ~ (0|cons+perc_aff) + (2|cons)
-ID = c('neigh1','area','area')
-(mymodel=runMLwiN(formula=F1, levID=ID, D='Poisson', indata=lips1, estoptions=list(EstM=1)))
+(mymodel <- runMLwiN(log(obs) ~ 1 + perc_aff + offset(offs) + (neigh1 | 0) + (area | 1), D = "Poisson", estoptions = list(EstM = 1), data = lips1))
+
 }
 }
 \keyword{datasets}

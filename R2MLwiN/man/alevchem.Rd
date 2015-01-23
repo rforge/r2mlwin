@@ -32,24 +32,19 @@ Yang, M., Woodhouse, G. (2001) Progress from GCSE to A and AS level: institution
 
 \examples{
 \dontrun{
-#NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
-#...so please change relevant line if different
-#if using R2MLwiN via WINE, the path may look like 
-#options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/")
 
-data(alavchem)
+data(alevchem, package = "R2MLwiN")
 
-alevchem["gcse2"]=double2singlePrecision(alevchem["gcseav"]^2)
+alevchem$gcseav <- double2singlePrecision(alevchem$gcse_tot/alevchem$gcse_no - 6)
 
-# Fit multilevel multinomial model
-F1=logit(a_point,cons,A) ~ (`0s`|cons) + (`0c`|gcseav+gcse2+gender) + (`2c` | cons+gcseav)
+# Note: Establishment codes on their own do not uniquely identify schools.
+# Schools are instead uniquely identified by LEA code, establishment ID
+# combination. Thus, here we generated a unique school ID.
 
-ID=c('estab','pupil')
+alevchem$school <- as.numeric(factor(paste0(alevchem$lea, alevchem$estab)))
 
-## Fit the model
-
-(mymodel <- runMLwiN(formula=F1, levID=ID, D='Ordered Multinomial', 
-                     indata=alevchem, estoptions=list(EstM=1)))
+(mymodel <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseav[1:5] + I(gcseav^2)[1:5] + gender[1:5] + (school | 1[1:5] +
+  gcseav[1:5]), D = "Ordered Multinomial", estoptions = list(EstM = 1), data = alevchem))
 
 }
 }

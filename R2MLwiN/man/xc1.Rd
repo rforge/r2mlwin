@@ -35,19 +35,11 @@ See \code{mlmRev} package for an alternative format of the same dataset.
 
 \examples{
 \dontrun{
-#NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
-#...so please change relevant line if different
-#if using R2MLwiN via WINE, the path may look like 
-#options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/")
 
-data(xc1)
-# Fit cross-classified model, partitioning variance in ATTAIN across
-# and within primary (pid) and secondary (sid) school
-F1 = attain ~ (0|cons) + (3|cons) + (2|cons) + (1|cons)
-ID = c("sid", "pid", "pupil")
-MyXC <- list("class" = c(3, 2),"N1" = c(1, 1))
-(XCModel <- runMLwiN(Formula = F1, levID = ID, indata = xc1, 
-estoptions = list(xclass = MyXC, EstM = 1)))
+data(xc1, package = "R2MLwiN")
+
+(mymodel <- runMLwiN(attain ~ 1 + (sid | 1) + (pid | 1) + (pupil | 1), estoptions = list(xc = TRUE, EstM = 1), data = xc1))
+
 }
 }
 \keyword{datasets}

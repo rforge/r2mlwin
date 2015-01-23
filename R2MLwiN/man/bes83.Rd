@@ -32,16 +32,11 @@ Rasbash, J., Steele, F., Browne, W.J. and Goldstein, H. (2012) \emph{A User's Gu
 
 \examples{
 \dontrun{
-#NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
-#...so please change relevant line if different
-#if using R2MLwiN via WINE, the path may look like
-#options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/")
 
-data(bes83)
+data(bes83, package = "R2MLwiN")
 
-F1=logit(votecons,cons)~(0|cons+defence+ unemp+ taxes+ privat)+(2|cons)
-ID=c('area','voter')
-(mymodel=runMLwiN(formula=F1, levID=ID, D="Binomial", indata=bes83, estoptions=list(EstM=1)))
+(mymodel <- runMLwiN(logit(votecons, cons) ~ 1 + defence + unemp + taxes + privat + (area | 1), D = "Binomial", estoptions = list(EstM = 1), 
+  data = bes83))
 
 }
 }

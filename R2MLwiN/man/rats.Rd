@@ -27,17 +27,12 @@ Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) \emph{
 
 \examples{
 \dontrun{
-#NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
-#...so please change relevant line if different
-#if using R2MLwiN via WINE, the path may look like 
-#options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/")
 
-data(rats)
+data(rats, package = "R2MLwiN")
 
-F1 = c(y8,y15,y22,y29,y36) ~ (0|cons) + (1|cons)
-ID = c('rat')
-(mymodel=runMLwiN(formula=F1, levID=ID, D='Multivariate Normal', 
-                  indata=rats, estoptions=list(EstM=1)))
+(mymodel <- runMLwiN(c(y8, y15, y22, y29, y36) ~ 1 + (rat | 1), D = "Multivariate Normal", estoptions = list(EstM = 1), 
+  data = rats))
+
 }
 }
 \keyword{datasets}

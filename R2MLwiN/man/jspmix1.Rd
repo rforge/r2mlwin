@@ -29,24 +29,15 @@ Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) \emph{
 
 \examples{
 \dontrun{
-#NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
-#...so please change relevant line if different
-#if using R2MLwiN via WINE, the path may look like 
-#options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/")
 
-data(jspmix1)
-# behaviour coded 0/1
-jspmix1$behaviour <- as.numeric(jspmix1$behaviour) - 1
+data(jspmix1, package = "R2MLwiN")
 
-# fit multilevel mixed response model, modelling effect of sex
-# and ravens on both responses, and fluent on english response only
-F1 = "c(english, probit(behaviour, cons)) ~ (0s|cons + sex + ravens) 
-+ (0c|fluent{1, 0}) + (2s|cons) + (1s|cons.english)"
-ID = c("school", "id")
-(MixedRespMCMC <- runMLwiN(Formula = F1, levID = ID, 
-D = c("Mixed", "Normal", "Binomial"), indata = jspmix1, 
-estoptions = list(EstM = 1, mcmcMeth = list(fixM = 1, residM = 1, Lev1VarM = 1)),
-))
+jspmix1$denomb <- jspmix1$cons
+
+(mymodel <- runMLwiN(c(english, probit(behaviour, denomb)) ~ 1 + sex + ravens + fluent[1] + (school | 1) + (id | 1[1]), 
+  D = c("Mixed", "Normal", "Binomial"), estoptions = list(EstM = 1, mcmcMeth = list(fixM = 1, residM = 1, Lev1VarM = 1)), 
+  data = jspmix1))
+
 }
 }
 \keyword{datasets}

@@ -38,19 +38,13 @@ See \code{mlmRev} package for an alternative format of the same dataset, with fe
 
 \examples{
 \dontrun{
-#NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
-#...so please change relevant line if different
-#if using R2MLwiN via WINE, the path may look like 
-#options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/")
 
-data(bang)
+data(bang, package = "R2MLwiN")
 
-F1=log(use4,cons,use4_4)~(0|cons+lc[lc0])+(2|cons)
-ID=c('district','woman')
-estoptions= list(EstM=1, nonlinear=c(1,2))
+bang$use4 <- relevel(bang$use4, 4)
 
-(mymodel=runMLwiN(formula=F1, levID=ID, D='Unordered Multinomial', 
-                  indata=bang, estoptions=estoptions))
+(mymodel <- runMLwiN(log(use4, cons) ~ 1 + lc + (district | 1), D = "Unordered Multinomial", estoptions = list(EstM = 1, 
+  nonlinear = c(1, 2)), data = bang))
 
 }
 }

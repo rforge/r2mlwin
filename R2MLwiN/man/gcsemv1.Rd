@@ -30,17 +30,11 @@ See \code{mlmRev} package for an alternative format of the same dataset, with fe
 
 \examples{
 \dontrun{
-#NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
-#...so please change relevant line if different
-#if using R2MLwiN via WINE, the path may look like
-#options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/")
 
-data(gcsemv1)
+data(gcsemv1, package = "R2MLwiN")
 
-F1 = c(written,csework) ~ (0|cons+female) + (2|cons) + (1|cons)
-ID = c('school','student')
-(mymodel=runMLwiN(formula=F1, levID=ID, D='Multivariate Normal',
-                  indata=gcsecomp1, estoptions=list(EstM=1)))
+(mymodel <- runMLwiN(c(written, csework) ~ 1 + female + (school | 1) + (student | 1), D = "Multivariate Normal", estoptions = list(EstM = 1), data = gcsemv1))
+
 }
 }
 \keyword{datasets}

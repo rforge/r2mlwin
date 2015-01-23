@@ -40,19 +40,13 @@ Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) \emph{
 
 \examples{
 \dontrun{
-#NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
-#...so please change relevant line if different
-#if using R2MLwiN via WINE, the path may look like 
-#options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/")
 
-data(wage1)
-# fit age_40 and numjobs as fixed effects, with random effects for companies, 
-# in multiple membership model
-F1 = logearn ~ (0|cons + age_40 + numjobs) + (1|cons) + (2|cons)
-ID = c("company", "id")
-OurMultiMemb <- list("class" = 2, "N1" = 4, "weight" = "weight1", "id" = NA)
-(MMembModel <- runMLwiN(Formula = F1, levID = ID, indata = wage1, 
-estoptions = list(EstM = 1, xclass = OurMultiMemb, notation = "class")))
+data(wage1, package = "R2MLwiN")
+
+(mymodel <- runMLwiN(logearn ~ 1 + age_40 + numjobs + (company | 1) + (id | 1), estoptions = list(EstM = 1, 
+  mm = list(list(mmvar = list("company", "company2", "company3", "company4"), weights = list("weight1", "weight2", 
+    "weight3", "weight4")), NA)), data = wage1))
+
 }
 }
 \keyword{datasets}

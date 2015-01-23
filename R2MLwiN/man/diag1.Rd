@@ -32,13 +32,11 @@ Statistical Society, Series A, 149:1-43. }
 
 \examples{
 \dontrun{
-#NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
-#...so please change relevant line if different
-#if using R2MLwiN via WINE, the path may look like
-#options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/")
 
-data(diag1)
+data(diag1, package = "R2MLwiN")
 
+(mymodel <- runMLwiN(n_ilea ~ 1 + n_vrq + (school | 1 + n_vrq) + (pupil | 1), estoptions = list(resi.store = TRUE, 
+  resioptions = c("standardised", "leverage", "influence", "deletion")), data = diag1))
 
 }
 }

@@ -33,15 +33,8 @@ Tizard, B., Blatchford, P., Burke, J. & Farquhar, C. (1988). Young children at s
 
 \examples{
 \dontrun{
-#NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
-#...so please change relevant line if different
-#if using R2MLwiN via WINE, the path may look like 
-#options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/")
 
-data(reading1)
-
-
-
+data(reading1, package = "R2MLwiN")
 
 }
 }

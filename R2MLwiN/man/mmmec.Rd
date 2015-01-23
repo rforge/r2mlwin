@@ -31,18 +31,11 @@ See \code{mlmRev} package for an alternative format of the same dataset, with fe
 
 \examples{
 \dontrun{
-#NOTE: Assumes MLwiN path is C:/Program Files (x86)/MLwiN v2.30/
-#...so please change relevant line if different
-#if using R2MLwiN via WINE, the path may look like 
-#options(MLwiN_path="/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN v2.30/")
 
-data(mmmec)
+data(mmmec, package = "R2MLwiN")
 
-mmmec[["logexp"]]=double2singlePrecision(log(mmmec[["exp"]]))
+(mymodel3 <- runMLwiN(log(obs) ~ 1 + uvbi + offset(log(exp)) + (nation | 1) + (region | 1), D = "Poisson", estoptions = list(EstM = 1), data = mmmec))
 
-F1 = log(obs,logexp) ~ (0|cons+uvbi) + (2|cons) + (3|cons)
-ID = c('nation','region','county')
-(mymodel3=runMLwiN(formula=F1, levID=ID, D="Poisson", indata=mmmec, estoptions=list(EstM=1)))
 }
 }
 \keyword{datasets}
