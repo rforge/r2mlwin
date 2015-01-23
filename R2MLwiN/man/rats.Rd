@@ -17,7 +17,7 @@ Browne, W. J. (2012) \emph{MCMC Estimation in MLwiN Version 2.26.} University of
 
 Gelfand, A. E., Hills, S.E., Racine-Poon, A., Smith, A.F.M. (1990) Illustration of Bayesian inference in normal data models using Gibbs sampling. \emph{Journal of the American Statistical Association} 85: 972-985.
 
-Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) MLwiN Version 2.1. Centre for Multilevel Modelling, University of Bristol.
+Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) \emph{MLwiN Version 2.1.} Centre for Multilevel Modelling, University of Bristol.
 }
 
 \description{

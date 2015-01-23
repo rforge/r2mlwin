@@ -19,7 +19,7 @@ Browne, W. J. (2012) \emph{MCMC Estimation in MLwiN Version 2.26.} University of
 
 Mortimore, P., Sammons, P., Stoll, L., Lewis, D., Ecob, R. (1988) \emph{School Matters}. Wells: Open Books.
 
-Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) MLwiN Version 2.1. Centre for Multilevel Modelling, University of Bristol.
+Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) \emph{MLwiN Version 2.1.} Centre for Multilevel Modelling, University of Bristol.
 }
 
 \description{

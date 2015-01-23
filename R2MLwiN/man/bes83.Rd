@@ -19,9 +19,9 @@ Browne, W. J. (2012) \emph{MCMC Estimation in MLwiN Version 2.26.} University of
 
 Heath, A., Yang, M., Goldstein, H. (1996). Multilevel analysis of the changing relationship between class and party in Britain 1964-1992. \emph{Quality and Quantity}, 30:389-404.
 
-Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) MLwiN Version 2.1. Centre for Multilevel Modelling, University of Bristol.
+Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) \emph{MLwiN Version 2.1.} Centre for Multilevel Modelling, University of Bristol.
 
-Rasbash, J., Steele, F., Browne, W.J. and Goldstein, H. (2012) A User's Guide to MLwiN Version 2.26. Centre for Multilevel Modelling, University of Bristol.
+Rasbash, J., Steele, F., Browne, W.J. and Goldstein, H. (2012) \emph{A User's Guide to MLwiN Version 2.26.} Centre for Multilevel Modelling, University of Bristol.
 }
 
 \description{

@@ -7,8 +7,8 @@
     \item{\code{height}}{Heights of 100 adult males measured in centimetres.}
 }}
 \source{
-Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) MLwiN Version 2.1. Centre for Multilevel Modelling, University of Bristol.
-Rasbash, J., Steele, F., Browne, W.J. and Goldstein, H. (2012) A User's Guide to MLwiN Version 2.26. Centre for Multilevel Modelling, University of Bristol.
+Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) \emph{MLwiN Version 2.1.} Centre for Multilevel Modelling, University of Bristol.
+Rasbash, J., Steele, F., Browne, W.J. and Goldstein, H. (2012) \emph{A User's Guide to MLwiN Version 2.26.} Centre for Multilevel Modelling, University of Bristol.
 }
 
 \description{

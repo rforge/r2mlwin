@@ -23,7 +23,7 @@ Browne, W. J. (2012) \emph{MCMC Estimation in MLwiN Version 2.26.} University of
 
 Huq, N. M., Cleland, J. (1990) \emph{Bangladesh fertility survey, 1989.} Dhaka: National Institute of Population Research and Training (NIPORT).
 
-Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) MLwiN Version 2.1. Centre for Multilevel Modelling, University of Bristol.
+Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) \emph{MLwiN Version 2.1.} Centre for Multilevel Modelling, University of Bristol.
 }
 
 \description{
