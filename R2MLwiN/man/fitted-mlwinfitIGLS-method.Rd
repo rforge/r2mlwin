@@ -18,6 +18,18 @@
 \item{object}{An \code{\link{mlwinfitIGLS-class}} object.}
 
 \item{...}{Other arguments.}
+
+\item{newdata}{data frame for which to evaluate predictions}
+
+\item{params}{a character vector specifying the parameters to use in evaluating predictions.
+If \code{NULL}, \code{names(object[["FP"]])} is used by default.}
+
+\item{type}{when this has the value \code{"link"} (default) the linear predictor is returned.
+When \code{type="terms"} each component of the linear predictor is returned seperately. When \code{type="response"} predictions on the scale of the response are returned.}
+
+\item{se.fit}{logical. When this is \code{TRUE} (not default) standard error estimates are returned for each prediction.}
+
+\item{terms}{if \code{type="terms"}, which terms (default is all terms), a character vector.}
 }
 \description{
 Returns the predicted data from "mlwinfitIGLS" objects.

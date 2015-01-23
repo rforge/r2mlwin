@@ -640,6 +640,13 @@ setMethod("resid", signature(object = "mlwinfitIGLS"), function(object, ...) {
 })
 
 #' @rdname fitted-mlwinfitIGLS-method
+#' @param newdata data frame for which to evaluate predictions
+#' @param params a character vector specifying the parameters to use in evaluating predictions.
+#' If \code{NULL}, \code{names(object[["FP"]])} is used by default.
+#' @param type when this has the value \code{"link"} (default) the linear predictor is returned.
+#' When \code{type="terms"} each component of the linear predictor is returned seperately. When \code{type="response"} predictions on the scale of the response are returned.
+#' @param se.fit logical. When this is \code{TRUE} (not default) standard error estimates are returned for each prediction.
+#' @param terms if \code{type="terms"}, which terms (default is all terms), a character vector.
 #' @export
 setMethod("predict", signature(object = "mlwinfitIGLS"), function(object, newdata = NULL, params = NULL, type = "link", se.fit = FALSE,
                                               terms = NULL, ...) {
