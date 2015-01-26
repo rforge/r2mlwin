@@ -39,7 +39,7 @@ options(MLwiN_path = mlwin)
 data(xc, package = "R2MLwiN")
 summary(xc)
 
-sid_dummy <- model.matrix(~factor(xc$SID) - 1)
+sid_dummy <- model.matrix(~factor(xc$sid) - 1)
 sid_dummy_names <- paste0("s", 1:19)
 colnames(sid_dummy) <- sid_dummy_names
 xc <- cbind(xc, sid_dummy)
@@ -58,15 +58,16 @@ random.ui[1, ] <- 1
 random.ui[2:19, ] <- diag(18) * -1
 random.ci <- rep(0, 18)
 
-(mymode1 <- runMLwiN(ATTAIN ~ 1 + (CONS | s1 + s2 + s3 + s4 + s5 + s6 + s7 + s8 + s9 + s10 + s11 + s12 + s13 + s14 + 
-  s15 + s16 + s17 + s18 + s19) + (PID | 1) + (PUPIL | 1), estoptions = list(clre = covmatrix, constraints = list(random.ui = random.ui, 
+(mymode1 <- runMLwiN(attain ~ 1 + (cons | s1 + s2 + s3 + s4 + s5 +
+s6 + s7 + s8 + s9 + s10 + s11 + s12 + s13 + s14 +
+  s15 + s16 + s17 + s18 + s19) + (pid | 1) + (pupil | 1), estoptions = list(clre = covmatrix, constraints = list(random.ui = random.ui,
   random.ci = random.ci)), data = xc))
 
 
 # 18.5 Other aspects of the SETX command . . . . . . . . . . . . . . . . 277
 
-sid_inter <- sid_dummy * xc$VRQ
-sid_inter_names <- paste0("s", 1:19, "Xvrq")
+sid_inter <- sid_dummy * xc$vrq
+sid_inter_names <- paste0("s",1:19, "Xvrq")
 colnames(sid_inter) <- sid_inter_names
 xc <- cbind(xc, sid_inter)
 
@@ -88,10 +89,11 @@ random.ui[20, 19:36] <- 1
 random.ui[21:38, 19:36] <- diag(18) * -1
 random.ci <- rep(0, 36)
 
-(mymodel2 <- runMLwiN(ATTAIN ~ 1 + (CONS | s1 + s2 + s3 + s4 + s5 + s6 + s7 + s8 + s9 + s10 + s11 + s12 + s13 + s14 + 
-  s15 + s16 + s17 + s18 + s19 + s1Xvrq + s2Xvrq + s3Xvrq + s4Xvrq + s5Xvrq + s6Xvrq + s7Xvrq + s8Xvrq + s9Xvrq + 
-  s10Xvrq + s11Xvrq + s12Xvrq + s13Xvrq + s14Xvrq + s15Xvrq + s16Xvrq + s17Xvrq + s18Xvrq + s19Xvrq) + (PID | CONS) + 
-  (PUPIL | CONS), estoptions = list(clre = covmatrix, constraints = list(random.ui = random.ui, random.ci = random.ci)), 
+(mymodel2 <- runMLwiN(attain ~ 1 + (cons | s1 + s2 + s3 + s4 + s5 +
+s6 + s7 + s8 + s9 + s10 + s11 + s12 + s13 + s14 +
+  s15 + s16 + s17 + s18 + s19 + s1Xvrq + s2Xvrq + s3Xvrq + s4Xvrq + s5Xvrq + s6Xvrq + s7Xvrq + s8Xvrq + s9Xvrq +
+  s10Xvrq + s11Xvrq + s12Xvrq + s13Xvrq + s14Xvrq + s15Xvrq + s16Xvrq + s17Xvrq + s18Xvrq + s19Xvrq) + (pid | cons) +
+  (pupil | cons), estoptions = list(clre = covmatrix, constraints = list(random.ui = random.ui, random.ci = random.ci)),
   data = xc))
 
 # Note: The final models in this section of the manual are for demonstration only.
@@ -101,7 +103,7 @@ random.ci <- rep(0, 36)
 # 18.6 Reducing storage overhead by grouping . . . . . . . . . . . . . . 279
 
 findClust <- function(data, var1, var2) {
-  grplist <- by(xc, xc$SID, function(x) x)
+  grplist <- by(xc, xc$sid, function(x) x)
   moreclust <- TRUE
   while (moreclust) {
     found <- FALSE
@@ -140,34 +142,34 @@ library(doBy)
 
 data(xc, package = "R2MLwiN")
 
-xc$region <- findClust(xc, "SID", "PID")
+xc$region <- findClust(xc, "sid", "pid")
 xc$region <- NULL
 
-numchildren <- summaryBy(CONS ~ SID + PID, FUN = length, data = xc)
-colnames(numchildren) <- c("SID", "PID", "numchildren")
+numchildren <- summaryBy(cons ~ sid + pid, FUN = length, data = xc)
+colnames(numchildren) <- c("sid", "pid", "numchildren")
 xc <- merge(xc, numchildren, sort = FALSE)
 
-xc <- xc[order(xc$SID, xc$PID), ]
+xc <- xc[order(xc$sid, xc$pid), ]
 
 xc <- xc[xc$numchildren > 2, ]
 
-xc$region <- findClust(xc, "SID", "PID")
+xc$region <- findClust(xc, "sid", "pid")
 
-xc <- xc[order(xc$region, xc$SID), ]
+xc <- xc[order(xc$region, xc$sid), ]
 
 xc$rsid <- rep(1, nrow(xc))
 
 rgrp <- xc$region[1]
-sgrp <- xc$SID[1]
+sgrp <- xc$sid[1]
 id <- 1
 for (i in 2:nrow(xc)) {
   if (xc$region[i] != rgrp) {
     rgrp <- xc$region[i]
-    sgrp <- xc$SID[i]
+    sgrp <- xc$sid[i]
     id <- 1
   }
-  if (xc$SID[i] != sgrp) {
-    sgrp <- xc$SID[i]
+  if (xc$sid[i] != sgrp) {
+    sgrp <- xc$sid[i]
     id <- id + 1
   }
   xc$rsid[i] <- id
@@ -192,9 +194,10 @@ random.ui[1, ] <- 1
 random.ui[2:8, ] <- diag(7) * -1
 random.ci <- rep(0, 7)
 
-xc <- xc[order(xc$region, xc$PID, xc$PUPIL), ]
+xc <- xc[order(xc$region, xc$pid, xc$pupil), ]
 
-(mymode1 <- runMLwiN(ATTAIN ~ 1 + (region | rs1 + rs2 + rs3 + rs4 + rs5 + rs6 + rs7 + rs8) + (PID | 1) + (PUPIL | 
+(mymode1 <- runMLwiN(attain ~ 1 + (region | rs1 + rs2 + rs3 + rs4 +
+rs5 + rs6 + rs7 + rs8) + (pid | 1) + (pupil |
   1), estoptions = list(clre = covmatrix, constraints = list(random.ui = random.ui, random.ci = random.ci)), data = xc))
 
 # 18.7 Modelling a multi-way cross-classification . . . . . . . . . . . .280
