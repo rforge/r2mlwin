@@ -44,7 +44,7 @@ bang$use4 <- relevel(bang$use4, 4)
 
 cat(paste("Pr(y = 1) =", round(exp(mymodel1@FP["FP_Intercept_Sterilization"])/(1 + exp(mymodel1@FP["FP_Intercept_Sterilization"]) + 
   exp(mymodel1@FP["FP_Intercept_Modern_reversible_method"]) + exp(mymodel1@FP["FP_Intercept_Traditional_method"])), 4), "\n"))
-cat(paste("Pr(y = 2) =", round(exp(mymodel1@FP["FP_Intercept_Modern_reversible_method"])/(1 + exp(mymodel1@FP["FP_Intercept_Sterilization"]) + exp(mymodel1@FP["FP_Intercept_mod"]) + 
+cat(paste("Pr(y = 2) =", round(exp(mymodel1@FP["FP_Intercept_Modern_reversible_method"])/(1 + exp(mymodel1@FP["FP_Intercept_Sterilization"]) + exp(mymodel1@FP["FP_Intercept_Modern_reversible_method"]) + 
   exp(mymodel1@FP["FP_Intercept_Traditional_method"])), 4), "\n"))
 cat(paste("Pr(y = 3) =", round(exp(mymodel1@FP["FP_Intercept_Traditional_method"])/(1 + exp(mymodel1@FP["FP_Intercept_Sterilization"]) + 
   exp(mymodel1@FP["FP_Intercept_Modern_reversible_method"]) + exp(mymodel1@FP["FP_Intercept_Traditional_method"])), 4), "\n"))
@@ -62,9 +62,9 @@ cat(paste("Pr(y = 4) =", round(1/(1 + exp(mymodel1@FP["FP_Intercept_Sterilizatio
   data = bang)))
 
 
-mymodel3@RP["RP2_cov_Intercept_ster_Intercept_Modern_reversible_method"]/sqrt(mymodel3@RP["RP2_var_Intercept_Sterilization"] * mymodel3@RP["RP2_var_Intercept_Modern_reversible_method"])
-mymodel3@RP["RP2_cov_Intercept_ster_Intercept_Traditional_method"]/sqrt(mymodel3@RP["RP2_var_Intercept_Sterilization"] * mymodel3@RP["RP2_var_Intercept_Traditional_method"])
-mymodel3@RP["RP2_cov_Intercept_mod_Intercept_Traditional_method"]/sqrt(mymodel3@RP["RP2_var_Intercept_Modern_reversible_method"] * mymodel3@RP["RP2_var_Intercept_Traditional_method"])
+mymodel3@RP["RP2_cov_Intercept_Sterilization_Intercept_Modern_reversible_method"]/sqrt(mymodel3@RP["RP2_var_Intercept_Sterilization"] * mymodel3@RP["RP2_var_Intercept_Modern_reversible_method"])
+mymodel3@RP["RP2_cov_Intercept_Sterilization_Intercept_Traditional_method"]/sqrt(mymodel3@RP["RP2_var_Intercept_Sterilization"] * mymodel3@RP["RP2_var_Intercept_Traditional_method"])
+mymodel3@RP["RP2_cov_Intercept_Modern_reversible_method_Intercept_Traditional_method"]/sqrt(mymodel3@RP["RP2_var_Intercept_Modern_reversible_method"] * mymodel3@RP["RP2_var_Intercept_Traditional_method"])
 
 hipos <- rep(0, 2)
 hipos[1] <- which(levels(as.factor(bang$district)) == 56)
