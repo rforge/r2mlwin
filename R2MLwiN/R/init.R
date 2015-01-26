@@ -6,6 +6,9 @@
     if (Sys.info()["sysname"] == "Darwin") {
       options(MLwiN_path = "/opt/mln/mlnscript")
     }
+    if (Sys.info()["sysname"] == "FreeBSD") {
+      options(MLwiN_path = "/usr/local/bin/mlnscript")
+    }
     if (Sys.info()["sysname"] == "Windows") {
       options(MLwiN_path = "C:/Program Files (x86)/MLwiN v2.32/")
     }
