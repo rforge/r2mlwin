@@ -105,9 +105,9 @@ l2varfn <- mymodel5@RP["RP2_var_Intercept"] + 2 * mymodel5@RP["RP2_cov_Intercept
 l1varfn <- mymodel5@RP["RP1_var_Intercept"] + 2 * mymodel5@RP["RP1_cov_Intercept_age"] * mymodel5@data$age + mymodel5@RP["RP1_var_age"] * 
   mymodel5@data$age^2
 
-totvarfn <- l2varfn + l2varfn
+totvarfn <- l2varfn + l1varfn
 
-plot(totvarfn, mymodel5@data$age)
+plot(mymodel5@data$age, totvarfn)
 
 xb <- predict(mymodel5)
 
