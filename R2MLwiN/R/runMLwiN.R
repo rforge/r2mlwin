@@ -529,10 +529,10 @@
 #' @examples
 #'  
 #' ## The R2MLwiN package includes scripts to replicate all the analyses in
-#' ## Browne, W.J. (2009) MCMC estimation in MLwiN Version 2.13.
-#' ## Version 2.25 is available online; download from the following link:
-#' ## http://www.bristol.ac.uk/cmm/software/mlwin/download/mcmc-print.pdf
-#' ## Centre for Multilevel Modelling, University of Bristol
+#' ## Rasbash et al (2012) A User's Guide to MLwiN Version 2.26 and
+#' ## Browne, W.J. (2012) MCMC estimation in MLwiN Version 2.26.
+#' ## The MLwiN manuals are available online, see:
+#' ## http://www.bristol.ac.uk/cmm/software/mlwin/download/manuals.html
 #' 
 #' #Contents
 #' #01 Introduction to MCMC Estimation and Bayesian Modelling
@@ -562,11 +562,20 @@
 #' #25 Hierarchical Centring
 #' 
 #' \dontrun{
+#' library(R2MLwiN)
+#' # NOTE: if MLwiN not saved in location R2MLwiN defaults to, specify path via:
+#' # options(MLwiN_path = 'path/to/MLwiN vX.XX/')
+#' # If using R2MLwiN via WINE, the path may look like this:
+#' # options(MLwiN_path = '/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN vX.XX/')
+#'
+#' ## For a list of demo titles
+#' demo(package = "R2MLwiN")
+#' 
 #' ## Take MCMCGuide03 as an example
-#' ## To find the location of a demo for MCMCGuide03
+#' ## To view file
 #' file.show(system.file('demo', 'MCMCGuide03.R', package='R2MLwiN'))
 #' 
-#' ## To run the demo for MCMCGuide03
+#' ## To run the demo
 #' demo(MCMCGuide03)
 #' }
 #' 

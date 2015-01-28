@@ -55,6 +55,10 @@
 #'
 #' \dontrun{
 #' library(R2MLwiN)
+#' # NOTE: if MLwiN not saved in location R2MLwiN defaults to, specify path via:
+#' # options(MLwiN_path = 'path/to/MLwiN vX.XX/')
+#' # If using R2MLwiN via WINE, the path may look like this:
+#' # options(MLwiN_path = '/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN vX.XX/')
 #'
 #' ## Example: tutorial
 #' data(tutorial, package = "R2MLwiN")
@@ -62,7 +66,7 @@
 #' (mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1),
 #'                      estoptions = list(EstM = 1, resi.store.levs = 2), data = tutorial))
 #'
-#' sixway(mymodel@@chains[, "FP_standlrt", drop = FALSE], "beta_1")
+#' sixway(mymodel@chains[, "FP_standlrt", drop = FALSE], "beta_1")
 #'
 #' }
 #'

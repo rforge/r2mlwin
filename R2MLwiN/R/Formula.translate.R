@@ -34,7 +34,7 @@
 #' # NOTE: if MLwiN not saved in location R2MLwiN defaults to, specify path via:
 #' # options(MLwiN_path = 'path/to/MLwiN vX.XX/')
 #' # If using R2MLwiN via WINE, the path may look like this:
-#' # options(MLwiN_path = '/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN vX.XX/') 
+#' # options(MLwiN_path = '/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN vX.XX/')
 #' 
 #' # Two-level random intercept model with student (level 1) nested within
 #' # school (level 2) and standlrt added to the fixed part.
@@ -62,7 +62,8 @@
 #'                       D = 'Binomial', data = bang))
 #'
 #' # Mixed response model
-#' # Normal (english) and Bernoulli (behaviour) disributed responses
+#' # Note using MCMC estimation (EstM = 1)
+#' # Normal (english) and Bernoulli (behaviour) distributed responses
 #' # probit link modelling behaviour with cons as denominator
 #' # E.g. see demo(MCMCGuide19)
 #' data(jspmix1, package = 'R2MLwiN')

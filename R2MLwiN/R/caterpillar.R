@@ -29,16 +29,16 @@
 #' \dontrun{
 #' library(R2MLwiN)
 #' # NOTE: if MLwiN not saved where R2MLwiN defaults to:
-#' # options(MLwiN_path='path/to/MLwiN vX.XX/')
+#' # options(MLwiN_path = 'path/to/MLwiN vX.XX/')
 #' # If using R2MLwiN via WINE, the path may look like:
-#' # options(MLwiN_path='/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN vX.XX/')
+#' # options(MLwiN_path = '/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN vX.XX/')
 #'
 #' # Example using tutorial dataset
 #' data(tutorial, package = 'R2MLwiN')
 #' (mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school|1) + (student|1),
-#'                      estoptions=list(EstM = 1, resi.store=TRUE,
-#'                      resi.store.levs=2, mcmcMeth=list(iterations = 5001)),
-#'                      data=tutorial))
+#'                      estoptions = list(EstM = 1, resi.store = TRUE,
+#'                      resi.store.levs = 2, mcmcMeth = list(iterations = 5001)),
+#'                      data = tutorial))
 #'
 #' resi.chain2 <- mymodel['resi.chains']$resi_lev2
 #'
