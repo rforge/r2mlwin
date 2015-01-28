@@ -18,7 +18,7 @@ Wed Jan 31 2015
    * Add "standardise" option to matrix2df to ensure weights sum to zero
    * Issue warning if a factor variable is used as a continuous response
    * Allow multiple membership/CAR information to be specified using matrices
-   * Report the quarsi-likelihood method used for non-normal models in summary
+   * Report the quasi-likelihood method used for non-normal models in summary
    * Report the MLwiN version used in summary
    * Removed some unused code
    * Allow mlwinfitIGLS and mlwinfitMCMC objects to be passed directly to caterpillarR
