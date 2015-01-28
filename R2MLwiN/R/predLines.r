@@ -37,10 +37,11 @@
 #'
 #' ## Example: tutorial
 #' data(tutorial, package = "R2MLwiN")
-#' (mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1), estoptions = list(EstM = 1, 
-#'  resi.store.levs = 2), data = tutorial))
+#' (mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1),
+#'                      estoptions = list(EstM = 1, resi.store.levs = 2), data = tutorial))
 #'
-#' predLines(mymodel, xname = "standlrt", lev = 2, selected = c(30, 44, 53, 59), probs = c(0.025, 0.975))
+#' predLines(mymodel, xname = "standlrt", lev = 2, selected = c(30, 44, 53, 59),
+#'           probs = c(0.025, 0.975))
 #' }
 #'
 #' @export

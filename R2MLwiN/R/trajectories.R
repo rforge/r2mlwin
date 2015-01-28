@@ -21,7 +21,8 @@
 #' ## Example: tutorial
 #' data(tutorial, package = "R2MLwiN")
 #'
-#' (mymodel <- runMLwiN(normexam ~ 1 + standlrt + (student | 1 + standlrt), estoptions = list(EstM = 1), data = tutorial))
+#' (mymodel <- runMLwiN(normexam ~ 1 + standlrt + (student | 1 + standlrt),
+#'                      estoptions = list(EstM = 1), data = tutorial))
 #'
 #' trajectories(mymodel, Range = c(4501, 5000))
 #' }
