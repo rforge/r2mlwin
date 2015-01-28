@@ -6,7 +6,7 @@
 \alias{R2MLwiN-package}
 \title{Running MLwiN from within R}
 \description{
-R2MLwiN is an R command interface to the MLwiN multilevel modelling
+\pkg{R2MLwiN} is an R command interface to the MLwiN multilevel modelling
 software package, allowing users to fit multilevel models using
 MLwiN (and also WinBUGS / OpenBUGS) from within the R environment.
 }
@@ -24,19 +24,47 @@ type e.g. \code{demo(UserGuide03)} or view a demo's script via
 
 \itemize{
 
- \item{The Formula is now specified via a \code{\link[stats]{formula}} object. So, for example,
+ \item{The Formula is now specified via a \code{\link[stats]{formula}} object (with some differences
+ in specification: see \code{\link{runMLwiN}}). So, for example,
  previously a 2-level model random intercept model would be specified by e.g.
- \code{normexam ~ (0|cons + standlrt) + (2|cons) + (1|cons), levID = c('school', 'student')}
- (with \code{normexam} the response variable, \code{cons} a constant of ones forming the intercept,
+ \code{normexam ~ (0|cons + standlrt) + (2|cons) + (1|cons), levID = c('school', 'student')},
+ with \code{normexam} the response variable, \code{cons} a constant of ones forming the intercept,
  which is allowed to vary at level 1 (\code{student}) and level 2 (\code{school}), and
- \code{standlrt} included as a predictor in the fixed part of the model). Whilst with back-compatibility
+ \code{standlrt} included as a predictor in the fixed part of the model. Whilst back-compatibility
  is preserved (i.e. this specification will currently still work) the same model can now be more
  parsimoniously specified via \code{normexam ~ 1 + standlrt + (school|1) + (student|1)}.
- As well examples in the demos, see also \code{\link{runMLwiN}} and \code{\link{Formula.translate}} for further info.}
+ As well examples in the demos, see \code{\link{runMLwiN}} and \code{\link{Formula.translate}} for further info.}
 
- \item{\code{\link{df2matrix}} and \code{\link{matrix2df}} functions have been added to convert multiple membership
+ \item{As a means of specifying cross-classified, multiple membership or CAR models, \code{xclass} is now deprecated.
+ Instead, cross-classified models are specified via \code{xc = TRUE}, multiple
+ membership models are specified via \code{mm}, and CAR models are specified via \code{car},
+ in the list of \code{estoptions}. \code{mm} and \code{car} can be a list of
+ variable names, a list of vectors, or a matrix. See \code{\link{runMLwiN}} for further details.}
+
+ \item{Multiple membership/CAR information can now be specified using matrices.
+ \code{\link{df2matrix}} and \code{\link{matrix2df}} functions have also been added to convert such
  information between \code{\link[base]{data.frame}} and \code{\link[base]{matrix}} formats.}
-}
+
+ \item{As a means of specifying common (i.e. the same for each category) or separate (i.e. one for each
+ category) coefficients in ordered multinomial
+ and multivariate response models, \code{c} (for common) and \code{s} (for separate) have been
+ replaced by the employment of square brackets after the relevant variable to indicate a common
+ coefficient is to be fitted (a separate coefficient will be fitted otherwise). Within these square
+ brackets needs to be placed a numeric identifier indicating the responses for which a common coefficient
+ is to be added (see \code{\link{runMLwiN}} for further details). E.g. what would have been previously
+ specified, within the \code{Formula} object, as \code{... (0s|cons + ravens) + (0c|fluent{1, 0}) ...} would now be specified by
+ \code{... 1 + ravens + fluent[1] ...}.}
+
+ \item{When added as a predictor, a variable encoded as a \code{\link[base]{factor}} is automatically
+ handled as categorical, replacing the previous use of square brackets after the variable name.}
+
+ \item{A number of generic s4 methods have been added to improve compatibility with statistical functions
+ which use them (e.g. see \code{\link[stat4]{stats4-package}}). So, for example, the addition of
+ a \code{\link{logLik-method}} means a likelihood ratio test can now be conducted
+ on two \code{\link{mlwinfitIGLS-class}} objects using the \code{\link[lmtest]{lrtest}} function,
+ e.g. \code{lrtest(mymodel1, mymodel2)}. See \code{help(package = "R2MLwiN)} for
+ the index listing these various methods.}
+ }
 }
 
 \section{References}{
@@ -78,8 +106,7 @@ library(R2MLwiN)
 
 data(tutorial, package = "R2MLwiN")
 
-(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1),
- estoptions = list(EstM = 1), data = tutorial))
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1), estoptions = list(EstM = 1), data = tutorial))
 
 ## The R2MLwiN package includes scripts to replicate all the analyses in
 ## Browne, W.J. (2009) MCMC estimation in MLwiN Version 2.13.
