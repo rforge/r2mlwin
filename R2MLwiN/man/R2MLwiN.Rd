@@ -106,7 +106,8 @@ library(R2MLwiN)
 
 data(tutorial, package = "R2MLwiN")
 
-(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1), estoptions = list(EstM = 1), data = tutorial))
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1),
+                     estoptions = list(EstM = 1), data = tutorial))
 
 ## The R2MLwiN package includes scripts to replicate all the analyses in
 ## Browne, W.J. (2009) MCMC estimation in MLwiN Version 2.13.
