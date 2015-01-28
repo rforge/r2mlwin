@@ -39,14 +39,20 @@ for each category of a categorical variable.
 \examples{
 \dontrun{
 library(R2MLwiN)
+# NOTE: if MLwiN not saved in location R2MLwiN defaults to, specify path via:
+# options(MLwiN_path = 'path/to/MLwiN vX.XX/')
+# If using R2MLwiN via WINE, the path may look like this:
+# options(MLwiN_path = '/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN vX.XX/')
 
 ## Read alevchem data
 data(alevchem, package = "R2MLwiN")
 
 alevchem$gcseav <- double2singlePrecision(alevchem$gcse_tot/alevchem$gcse_no - 6)
+# Avoids warning when fitting factor as continuous response:
+alevchem$a_point_num <- as.numeric(alevchem$a_point)
 
 ## Example: A-level Chemistry
-(mymodel <- runMLwiN(a_point ~ 1 + gcseav + I(gcseav^2) + I(gcseav^3)
+(mymodel <- runMLwiN(a_point_num ~ 1 + gcseav + I(gcseav^2) + I(gcseav^3)
                      + gender + (pupil | 1), estoptions = list(EstM = 1,  resi.store = TRUE),
                      data = alevchem))
 

@@ -76,7 +76,12 @@ An MLwiN model run via the MCMC estimation method is represented by an "mlwinfit
 }
 \examples{
 \dontrun{
+
 library(R2MLwiN)
+# NOTE: if MLwiN not saved in location R2MLwiN defaults to, specify path via:
+# options(MLwiN_path = 'path/to/MLwiN vX.XX/')
+# If using R2MLwiN via WINE, the path may look like this:
+# options(MLwiN_path = '/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN vX.XX/')
 
 ## Example: tutorial
 data(tutorial, package = "R2MLwiN")

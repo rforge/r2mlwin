@@ -66,7 +66,8 @@ data(bang, package = 'R2MLwiN')
                       D = 'Binomial', data = bang))
 
 # Mixed response model
-# Normal (english) and Bernoulli (behaviour) disributed responses
+# Note using MCMC estimation (EstM = 1)
+# Normal (english) and Bernoulli (behaviour) distributed responses
 # probit link modelling behaviour with cons as denominator
 # E.g. see demo(MCMCGuide19)
 data(jspmix1, package = 'R2MLwiN')

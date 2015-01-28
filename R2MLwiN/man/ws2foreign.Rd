@@ -36,12 +36,18 @@ specified by \code{foreignfile}.
 \examples{
 \dontrun{
 library(R2MLwiN)
-## Modify the following path as appropriate.
-wsfile='C:/Program Files (x86)/MLwiN v2.32/samples/tutorial.ws'
-## the tutorial.dta will be save under the temporary folder
-inputfile=paste(tempdir(),'/tutorial.dta',sep='')
-ws2foreign(wsfile, foreignfile=inputfile)
-indata=read.dta(inputfile)
+# NOTE: if MLwiN not saved in location R2MLwiN defaults to, specify path via:
+# options(MLwiN_path = 'path/to/MLwiN vX.XX/')
+# If using R2MLwiN via WINE, the path may look like this:
+# options(MLwiN_path = '/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN vX.XX/')
+
+## Modify the following path as appropriate:
+wsfile = 'C:/Program Files (x86)/MLwiN v2.32/samples/tutorial.ws'
+## the tutorial.dta file will be saved in the temporary folder
+inputfile = paste(tempdir(), '/tutorial.dta', sep = '')
+ws2foreign(wsfile, foreignfile = inputfile)
+library(foreign)
+indata = read.dta(inputfile)
 str(indata)
 }
 }

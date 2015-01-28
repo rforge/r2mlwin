@@ -59,10 +59,10 @@ type e.g. \code{demo(UserGuide03)} or view a demo's script via
  handled as categorical, replacing the previous use of square brackets after the variable name.}
 
  \item{A number of generic s4 methods have been added to improve compatibility with statistical functions
- which use them (e.g. see \code{\link[stat4]{stats4-package}}). So, for example, the addition of
- a \code{\link{logLik-method}} means a likelihood ratio test can now be conducted
+ which use them (e.g. see \code{\link[stats4]{stats4-package}}). So, for example, the addition of
+ a \code{\link{logLik}} means a likelihood ratio test can now be conducted
  on two \code{\link{mlwinfitIGLS-class}} objects using the \code{\link[lmtest]{lrtest}} function,
- e.g. \code{lrtest(mymodel1, mymodel2)}. See \code{help(package = "R2MLwiN)} for
+ e.g. \code{lrtest(mymodel1, mymodel2)}. See \code{help(package = "R2MLwiN")} for
  the index listing these various methods.}
  }
 }
@@ -103,6 +103,10 @@ Zhengzheng Zhang \email{zhengzheng236@gmail.com}
 \examples{
 \dontrun{
 library(R2MLwiN)
+# NOTE: if MLwiN not saved in location R2MLwiN defaults to, specify path via:
+# options(MLwiN_path = 'path/to/MLwiN vX.XX/')
+# If using R2MLwiN via WINE, the path may look like this:
+# options(MLwiN_path = '/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN vX.XX/')
 
 data(tutorial, package = "R2MLwiN")
 
@@ -110,43 +114,19 @@ data(tutorial, package = "R2MLwiN")
                      estoptions = list(EstM = 1), data = tutorial))
 
 ## The R2MLwiN package includes scripts to replicate all the analyses in
-## Browne, W.J. (2009) MCMC estimation in MLwiN Version 2.13.
-## Version 2.32 is available online; download from the following link:
-## http://www.bristol.ac.uk/cmm/media/software/mlwin/downloads/manuals/2-32/mcmc-print.pdf
-## Centre for Multilevel Modelling, University of Bristol
+## Rasbash et al (2012) A User's Guide to MLwiN Version 2.26 and
+## Browne, W.J. (2012) MCMC estimation in MLwiN Version 2.26.
+## The MLwiN manuals are available online, see:
+## http://www.bristol.ac.uk/cmm/software/mlwin/download/manuals.html
 
-#Contents
-#01 Introduction to MCMC Estimation and Bayesian Modelling
-#02 Single Level Normal Response Modelling
-#03 Variance Components Models
-#04 Other Features of Variance Components Models
-#05 Prior Distributions, Starting Values and Random Number Seeds
-#06 Random Slopes Regression Models
-#07 Using the WinBUGS Interface in MLwiN
-#08 Running a Simulation Study in MLwiN
-#09 Modelling Complex Variance at Level 1 / Heteroscedasticity
-#10 Modelling Binary Responses
-#11 Poisson Response Modelling
-#12 Unordered Categorical Responses
-#13 Ordered Categorical Responses
-#14 Adjusting for Measurement Errors in Predictor Variables
-#15 Cross Classified Models
-#16 Multiple Membership Models
-#17 Modelling Spatial Data
-#18 Multivariate Normal Response Models and Missing Data
-#19 Mixed Response Models and Correlated Residuals
-#20 Multilevel Factor Analysis Modelling
-#21 Using Structured MCMC
-#22 Using the Structured MVN framework for models
-#23 Using Orthogonal fixed effect vectors
-#24 Parameter expansion
-#25 Hierarchical Centring
+## For a list of demo titles
+demo(package = 'R2MLwiN')
 
 ## Take MCMCGuide03 as an example
-## To find the location of a demo for MCMCGuide03
-file.show(system.file('demo', 'MCMCGuide.R', package='R2MLwiN'))
+## To view file
+file.show(system.file('demo', 'MCMCGuide03.R', package='R2MLwiN'))
 
-## To run the demo for MCMCGuide03
+## To run the demo
 demo(MCMCGuide03)
 }
 }
