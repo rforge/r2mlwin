@@ -46,13 +46,15 @@
 #' rankno <- order(residualsRank)
 #'
 #' caterpillar(y = residuals[rankno], x = 1:65, qtlow = (residuals - residualsCI)[rankno],
-#'            qtup = (residuals + residualsCI)[rankno], xlab = 'Rank', ylab = 'Intercept', ylim = c(-1.5,1.5))
+#'            qtup = (residuals + residualsCI)[rankno], xlab = 'Rank', ylab = 'Intercept')
 #' }
 #'
 #' @export
 caterpillar <- function(y, x, qtlow, qtup, xlab = "", ylab = "", xlim = NULL, ylim = NULL, main = "") {
   # This function draws a caterpillar plot
-  
+  if (is.null(ylim)){
+    ylim = c(min(qtlow), max(qtup))
+  }
   plot(x, y, xlim = xlim, ylim = ylim, pch = 15, xlab = xlab, ylab = ylab, main = main)
   points(x, qtlow, pch = 24, bg = "grey")
   points(x, qtup, pch = 25, bg = "grey")
