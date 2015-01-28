@@ -128,7 +128,7 @@
 #' for the residuals; the \code{'norecode'} option prevents residuals with
 #' values exceedingly close or equal to zero from being recoded to missing; the
 #' reflate option returns unshrunken residuals. Note that the default option is
-#' \code{resioptions = c('variance', 'sampling')}; \code{'variance'} cannot be used together
+#' \code{resioptions = c('variance')}; \code{'variance'} cannot be used together
 #' with the other options to calculate standardised, leverage, influence and
 #' deletion residuals.
 #' @param debugmode A logical value determining whether MLwiN is run in the
@@ -1443,7 +1443,7 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt(paste("LINK", len.rpx, "G22"))
     if ("variance" %in% resioptions) {
       for (k in 1:len.rpx) {
-        wrt(paste0("NAME G22[", k, "] '", shortname("lev_", displevel, "_resi_variance_", rpx[k]), "'"))
+        wrt(paste0("NAME G22[", k, "] '", shortname("lev_", displevel, "_resi_var_", rpx[k]), "'"))
         wrt(paste0("DESC G22[", k, "] ", "'residual variance'"))
       }
     } else {

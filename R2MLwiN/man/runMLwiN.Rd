@@ -169,8 +169,7 @@ is default value, and the only other permissible value is \code{'standardised'}
 When \code{EstM = 0} (i.e. (R)IGLS estimation), \code{'variance'}
 cannot be specified together with \code{'standardised'}, \code{'leverage'} or
 \code{'deletion'} (function call stopped with appropriate error message).
-Default when \code{EstM = 0} is \code{resioptions = c('variance', 'sampling')}; default
-when \code{EstM = 1} is \code{resioptions = c('variance')}.
+Default is \code{resioptions = c('variance')}.
 
 \item \code{resi.store.levs}: an integer vector indicating the levels at which the
 residual chains are to be stored (\code{NULL} by default). Non-\code{NULL} values

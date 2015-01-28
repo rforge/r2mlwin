@@ -168,7 +168,7 @@ leverage, influence and deletion residuals respectively; the
 for the residuals; the \code{'norecode'} option prevents residuals with
 values exceedingly close or equal to zero from being recoded to missing; the
 reflate option returns unshrunken residuals. Note that the default option is
-\code{resioptions = c('variance', 'sampling')}; \code{'variance'} cannot be used together
+\code{resioptions = c('variance')}; \code{'variance'} cannot be used together
 with the other options to calculate standardised, leverage, influence and
 deletion residuals.}
 
