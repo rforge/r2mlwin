@@ -46,24 +46,18 @@ library(R2MLwiN)
 
 # Example using tutorial dataset
 data(tutorial, package = 'R2MLwiN')
-(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school|1) + (student|1),
-                     estoptions = list(EstM = 1, resi.store = TRUE,
-                     resi.store.levs = 2, mcmcMeth = list(iterations = 5001)),
+(mymodel <- runMLwiN(normexam ~ 1 + (school|1) + (student|1),
+                     estoptions = list(resi.store = TRUE),
                      data = tutorial))
 
-resi.chain2 <- mymodel['resi.chains']$resi_lev2
+# For each school, calculate the CIs...
+residuals <- mymodel@residual$lev_2_resi_est_Intercept
+residualsCI <- 1.96 * sqrt(mymodel@residual$lev_2_resi_var_Intercept)
+residualsRank <- rank(residuals)
+rankno <- order(residualsRank)
 
-# For each iteration, rank the schools
-u0rank <- apply(resi.chain2, 1, rank)
-# For each school, calculate the mean rank...
-u0rankmn <- apply(u0rank, 1, mean)
-u0ranklo <- apply(u0rank, 1, function(x) quantile(x, .025))
-u0rankmd <- apply(u0rank, 1, median)
-u0rankhi <- apply(u0rank, 1, function(x) quantile(x, .975))
-rankno <- order(u0rankmn)
-
-caterpillar(y = u0rankmn[rankno], x = 1:65, qtlow = u0ranklo[rankno],
-            qtup = u0rankhi[rankno], xlab = 'School', ylab = 'Rank')
+caterpillar(y = residuals[rankno], x = 1:65, qtlow = (residuals - residualsCI)[rankno],
+           qtup = (residuals + residualsCI)[rankno], xlab = 'Rank', ylab = 'Intercept')
 }
 }
 \author{
