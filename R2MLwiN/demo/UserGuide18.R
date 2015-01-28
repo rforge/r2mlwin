@@ -196,8 +196,7 @@ random.ci <- rep(0, 7)
 
 xc <- xc[order(xc$region, xc$pid, xc$pupil), ]
 
-(mymode1 <- runMLwiN(attain ~ 1 + (region | rs1 + rs2 + rs3 + rs4 +
-rs5 + rs6 + rs7 + rs8) + (pid | 1) + (pupil |
+(mymode1 <- runMLwiN(attain ~ 1 + (region | rs1 + rs2 + rs3 + rs4 + rs5 + rs6 + rs7 + rs8) + (pid | 1) + (pupil |
   1), estoptions = list(clre = covmatrix, constraints = list(random.ui = random.ui, random.ci = random.ci)), data = xc))
 
 # 18.7 Modelling a multi-way cross-classification . . . . . . . . . . . .280
