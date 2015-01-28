@@ -110,7 +110,7 @@
 #' \code{'Poisson'} \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + <x1> + (<L2>|1) + ...} \tab \code{log}\cr
 #' \code{'Negbinom'}* \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + (<L2>|1) + ...} \tab \code{log}\cr
 #' \code{'Binomial'} \tab \code{<link>(<y1>, <denom>) ~ 1 + <x1> + (<L2>|1) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
-#' \code{'Unordered Multinomial'} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + (<L2|1) + ...} \tab \code{logit} - to check\cr
+#' \code{'Unordered Multinomial'} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + (<L2>|1) + ...} \tab \code{logit}\cr
 #' \code{'Ordered Multinomial'} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
 #' \code{'Multivariate Normal'} \tab \code{c(<y1>, <y2>, ...) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + (<L1>|1) + ...} \tab (identity link assumed)\cr
 #' \code{c('Mixed', 'Normal', 'Binomial')} \tab \code{c(<y1>, ..., <link> (<y2>, <denom>), ...) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + (<L1>|1) + ...} \tab \code{logit}*,\code{probit},\code{cloglog}*\cr
@@ -943,8 +943,10 @@ version:date:md5:filename:x64:trial:platform
     if (D[1] == "Multinomial") {
       if (D[4] == 0) {
         # Unordered
-        if (D[2] == "log") 
+        if (D[2] == "log") {
+          warning("You specified as log link, but a logit link has been fitted")
           D[2] <- "logit"  # Backward compatibilty fix
+        } 
         if (D[2] != "logit") {
           stop("Invalid link function specified:", D[2])
         }
