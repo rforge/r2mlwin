@@ -136,9 +136,9 @@
 #' for the residuals; the \code{'norecode'} option prevents residuals with values exceedingly close or
 #' equal to zero from being recoded to missing.
 #' When \code{EstM = 1} (i.e. MCMC estimation) \code{'variance'}
-#' is default value, and the only other permissible values are \code{'standarised'}
-#' and \code{'norecode'} (else function call stopped with appropriate error
-#' message). When \code{EstM = 0} (i.e. (R)IGLS estimation), \code{'variance'}
+#' is default value, and the only other permissible value is \code{'standardised'}
+#' (else function call stopped with appropriate error message).
+#' When \code{EstM = 0} (i.e. (R)IGLS estimation), \code{'variance'}
 #' cannot be specified together with \code{'standardised'}, \code{'leverage'} or
 #' \code{'deletion'} (function call stopped with appropriate error message).
 #' Default when \code{EstM = 0} is \code{resioptions = c('variance', 'sampling')}; default
@@ -1132,8 +1132,8 @@ version:date:md5:filename:x64:trial:platform
     stop("variance will not be calculated together with standardised or deletion or leverage. Please remove variance in resioptions, and then standard error will be calculated instead.")
   }
   
-  if (EstM == 1 && ("sampling" %in% resioptions || "leverage" %in% resioptions || "infleuence" %in% resioptions || 
-                      "deletion" %in% resioptions)) {
+  if (EstM == 1 && ("sampling" %in% resioptions || "leverage" %in% resioptions || "influence" %in% resioptions || 
+                      "deletion" %in% resioptions || "norecode" %in% resioptions)) {
     stop("Invalid residual option specified for MCMC estimation")
   }
   

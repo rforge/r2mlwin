@@ -257,8 +257,7 @@ format.}
 \item{resioptions}{A string vector to specify the various residual options.
 The \code{'variance'} option calculates the posterior variances instead of
 the posterior standard errors; the \code{'standardised'} option calculates standardised
-residuals; the \code{'norecode'} option prevents residuals with
-values exceedingly close or equal to zero from being recoded to missing.}
+residuals.}
 
 \item{resichains}{A file name where the residual chains will be saved.}
 

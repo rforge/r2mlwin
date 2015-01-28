@@ -189,8 +189,7 @@
 #' @param resioptions A string vector to specify the various residual options.
 #' The \code{'variance'} option calculates the posterior variances instead of
 #' the posterior standard errors; the \code{'standardised'} option calculates standardised
-#' residuals; the \code{'norecode'} option prevents residuals with
-#' values exceedingly close or equal to zero from being recoded to missing.
+#' residuals.
 #' @param resichains A file name where the residual chains will be saved.
 #' @param FACTchainfile A file name where the factor chains will be saved.
 #' @param resi.store.levs An integer vector indicating the levels at which the
@@ -2295,9 +2294,6 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     
     calcresiduals <- function(level, displevel, rpx, resioptions, clre = clre) {
       wrt("")
-      if (!("norecode" %in% resioptions)) {
-        wrt("MISR 0")
-      }
       
       len.rpx <- length(rpx)
       
@@ -2405,9 +2401,6 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
       wrt("GENE 1 b30 1 G29[1]")
       wrt(paste0("NAME G29[1] 'lev_", displevel, "_residualid'"))
       outgroups <- c(outgroups, "G29")
-      if (!("norecode" %in% resioptions)) {
-        wrt("MISR 1")
-      }
       wrt("")
       wrt("LINK 0 G30")
       for (i in 1:length(outgroups)) {

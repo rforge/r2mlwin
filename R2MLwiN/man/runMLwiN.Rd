@@ -164,9 +164,9 @@ leverage, influence and deletion residuals respectively; the
 for the residuals; the \code{'norecode'} option prevents residuals with values exceedingly close or
 equal to zero from being recoded to missing.
 When \code{EstM = 1} (i.e. MCMC estimation) \code{'variance'}
-is default value, and the only other permissible values are \code{'standarised'}
-and \code{'norecode'} (else function call stopped with appropriate error
-message). When \code{EstM = 0} (i.e. (R)IGLS estimation), \code{'variance'}
+is default value, and the only other permissible value is \code{'standardised'}
+(else function call stopped with appropriate error message).
+When \code{EstM = 0} (i.e. (R)IGLS estimation), \code{'variance'}
 cannot be specified together with \code{'standardised'}, \code{'leverage'} or
 \code{'deletion'} (function call stopped with appropriate error message).
 Default when \code{EstM = 0} is \code{resioptions = c('variance', 'sampling')}; default
