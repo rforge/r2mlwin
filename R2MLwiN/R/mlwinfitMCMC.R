@@ -44,6 +44,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' 
 #' library(R2MLwiN)
 #' # NOTE: if MLwiN not saved in location R2MLwiN defaults to, specify path via:
 #' # options(MLwiN_path = 'path/to/MLwiN vX.XX/')
@@ -60,10 +61,9 @@
 #' summary(mymodel)
 #' 
 #' ##BDIC slot
-#' mymodel@BDIC
+#' mymodel@@BDIC
 #' }
 #'
-
 #' @name mlwinfitMCMC-class
 #' @rdname mlwinfitMCMC-class
 #' @exportClass mlwinfitMCMC
