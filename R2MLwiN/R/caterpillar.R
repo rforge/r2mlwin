@@ -40,8 +40,8 @@
 #'                      data = tutorial))
 #'
 #' # For each school, calculate the CIs...
-#' residuals <- mymodel@residual$lev_2_resi_est_Intercept
-#' residualsCI <- 1.96 * sqrt(mymodel@residual$lev_2_resi_var_Intercept)
+#' residuals <- mymodel@@residual$lev_2_resi_est_Intercept
+#' residualsCI <- 1.96 * sqrt(mymodel@@residual$lev_2_resi_var_Intercept)
 #' residualsRank <- rank(residuals)
 #' rankno <- order(residualsRank)
 #'
