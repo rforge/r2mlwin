@@ -43,9 +43,11 @@ Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) \emph{
 
 data(wage1, package = "R2MLwiN")
 
-(mymodel <- runMLwiN(logearn ~ 1 + age_40 + numjobs + (company | 1) + (id | 1), estoptions = list(EstM = 1, 
-  mm = list(list(mmvar = list("company", "company2", "company3", "company4"), weights = list("weight1", "weight2", 
-    "weight3", "weight4")), NA)), data = wage1))
+(mymodel <- runMLwiN(logearn ~ 1 + age_40 + numjobs + (company | 1) + (id | 1), 
+  estoptions = list(EstM = 1, 
+  mm = list(list(mmvar = list("company", "company2", "company3", "company4"),
+  weights = list("weight1", "weight2", "weight3", "weight4")), NA)),
+  data = wage1))
 
 }
 }

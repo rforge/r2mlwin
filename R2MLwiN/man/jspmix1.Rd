@@ -34,8 +34,10 @@ data(jspmix1, package = "R2MLwiN")
 
 jspmix1$denomb <- jspmix1$cons
 
-(mymodel <- runMLwiN(c(english, probit(behaviour, denomb)) ~ 1 + sex + ravens + fluent[1] + (school | 1) + (id | 1[1]), 
-  D = c("Mixed", "Normal", "Binomial"), estoptions = list(EstM = 1, mcmcMeth = list(fixM = 1, residM = 1, Lev1VarM = 1)), 
+(mymodel <- runMLwiN(c(english, probit(behaviour, denomb)) ~ 
+  1 + sex + ravens + fluent[1] + (school | 1) + (id | 1[1]), 
+  D = c("Mixed", "Normal", "Binomial"), 
+  estoptions = list(EstM = 1, mcmcMeth = list(fixM = 1, residM = 1, Lev1VarM = 1)), 
   data = jspmix1))
 
 }

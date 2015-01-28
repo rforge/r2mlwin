@@ -46,8 +46,9 @@ data(alevchem, package = "R2MLwiN")
 alevchem$gcseav <- double2singlePrecision(alevchem$gcse_tot/alevchem$gcse_no - 6)
 
 ## Example: A-level Chemistry
-(mymodel <- runMLwiN(a_point ~ 1 + gcseav + I(gcseav^2) + I(gcseav^3) + gender + (pupil | 1), estoptions = list(EstM = 1,
- resi.store = TRUE), data = alevchem))
+(mymodel <- runMLwiN(a_point ~ 
+  1 + gcseav + I(gcseav^2) + I(gcseav^3) + gender + (pupil | 1), 
+  estoptions = list(EstM = 1, resi.store = TRUE), data = alevchem))
 
 predCurves(mymodel, xname = "gcseav", group = "genderfemale")
 }

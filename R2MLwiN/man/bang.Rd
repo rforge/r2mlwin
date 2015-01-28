@@ -14,7 +14,7 @@
     \item{\code{educ}}{Woman's level of education (a factor with ordered levels \code{None}, \code{Lower_primary}, \code{Upper_primary}, \code{Secondary_and_above}.}
     \item{\code{hindu}}{Woman's religion; levels are \code{Muslim} and \code{Hindu}.}
     \item{\code{d_lit}}{Proportion of women in district who are literate.}
-    \item{\code{d_pray}}{Proportion of Muslim women in district who pray every day (a measure of religiosity).}    
+    \item{\code{d_pray}}{Proportion of Muslim women in district who pray every day (a measure of religiosity).}
     \item{\code{cons}}{Constant of ones.}
 }}
 \source{
@@ -43,8 +43,8 @@ data(bang, package = "R2MLwiN")
 
 bang$use4 <- relevel(bang$use4, 4)
 
-(mymodel <- runMLwiN(log(use4, cons) ~ 1 + lc + (district | 1), D = "Unordered Multinomial", estoptions = list(EstM = 1, 
-  nonlinear = c(1, 2)), data = bang))
+(mymodel <- runMLwiN(log(use4, cons) ~ 1 + lc + (district | 1), 
+  D = "Unordered Multinomial", estoptions = list(EstM = 1, nonlinear = c(1, 2)), data = bang))
 
 }
 }

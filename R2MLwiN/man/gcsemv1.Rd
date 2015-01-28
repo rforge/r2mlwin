@@ -33,7 +33,8 @@ See \code{mlmRev} package for an alternative format of the same dataset, with fe
 
 data(gcsemv1, package = "R2MLwiN")
 
-(mymodel <- runMLwiN(c(written, csework) ~ 1 + female + (school | 1) + (student | 1), D = "Multivariate Normal", estoptions = list(EstM = 1), data = gcsemv1))
+(mymodel <- runMLwiN(c(written, csework) ~ 1 + female + (school | 1) + (student | 1), 
+  D = "Multivariate Normal", estoptions = list(EstM = 1), data = gcsemv1))
 
 }
 }

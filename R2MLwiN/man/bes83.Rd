@@ -35,8 +35,8 @@ Rasbash, J., Steele, F., Browne, W.J. and Goldstein, H. (2012) \emph{A User's Gu
 
 data(bes83, package = "R2MLwiN")
 
-(mymodel <- runMLwiN(logit(votecons, cons) ~ 1 + defence + unemp + taxes + privat + (area | 1), D = "Binomial", estoptions = list(EstM = 1), 
-  data = bes83))
+(mymodel <- runMLwiN(logit(votecons, cons) ~ 1 + defence + unemp + taxes + privat + (area | 1),
+  D = "Binomial", estoptions = list(EstM = 1), data = bes83))
 
 }
 }

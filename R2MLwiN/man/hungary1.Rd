@@ -13,7 +13,7 @@
     \item{\code{phys_core}}{Core Physics test result.}
     \item{\code{phys_r2}}{Optional Physics test result.}
     \item{\code{cons}}{Constant(=1).}
-    \item{\code{student}}{Identifying code for each student (level 1 unit).}    
+    \item{\code{student}}{Identifying code for each student (level 1 unit).}
 }}
 \source{
 Browne, W. J. (2012) \emph{MCMC Estimation in MLwiN Version 2.26.} University of Bristol: Centre for Multilevel Modelling.
@@ -33,8 +33,9 @@ Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) \emph{
 
 data(hungary1, package = "R2MLwiN")
 
-(mymodel <- runMLwiN(c(es_core, biol_core, biol_r3, biol_r4, phys_core, phys_r2) ~ 1 + female + (school | 1) + (student | 
-  1), D = "Multivariate Normal", estoptions = list(EstM = 1), data = hungary1))
+(mymodel <- runMLwiN(c(es_core, biol_core, biol_r3, biol_r4, phys_core, phys_r2) ~ 
+  1 + female + (school | 1) + (student |1),
+  D = "Multivariate Normal", estoptions = list(EstM = 1), data = hungary1))
 
 }
 }

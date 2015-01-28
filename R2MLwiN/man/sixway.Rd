@@ -65,7 +65,8 @@ library(R2MLwiN)
 ## Example: tutorial
 data(tutorial, package = "R2MLwiN")
 
-(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1), estoptions = list(EstM = 1, resi.store.levs = 2), data = tutorial))
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1), 
+ estoptions = list(EstM = 1, resi.store.levs = 2), data = tutorial))
 
 sixway(mymodel@chains[, "FP_standlrt", drop = FALSE], "beta_1")
 

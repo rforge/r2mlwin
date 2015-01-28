@@ -27,7 +27,7 @@ Statistical Society, Series A, 149:1-43. }
 \description{
   Examination data for 907 students within 18 schools.}
 \details{
-  The \code{diag1} dataset is one of the sample datasets provided with the multilevel-modelling software package MLwiN (Rasbash et al., 2009), 
+  The \code{diag1} dataset is one of the sample datasets provided with the multilevel-modelling software package MLwiN (Rasbash et al., 2009),
   originally analysed in Aitkin & Longford (1986), and described further in Rasbash et al. (2012).}
 
 \examples{
@@ -35,8 +35,9 @@ Statistical Society, Series A, 149:1-43. }
 
 data(diag1, package = "R2MLwiN")
 
-(mymodel <- runMLwiN(n_ilea ~ 1 + n_vrq + (school | 1 + n_vrq) + (pupil | 1), estoptions = list(resi.store = TRUE, 
-  resioptions = c("standardised", "leverage", "influence", "deletion")), data = diag1))
+(mymodel <- runMLwiN(n_ilea ~ 1 + n_vrq + (school | 1 + n_vrq) + (pupil | 1),
+  estoptions = list(resi.store = TRUE, resioptions = c("standardised",
+  "leverage", "influence", "deletion")), data = diag1))
 
 }
 }
