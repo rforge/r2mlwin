@@ -35,7 +35,13 @@ data(tutorial, package = "R2MLwiN")
 
 # 3.2 Calculating residuals in MLwiN . . . . . . . . . . . . . . . . . . .40
 
-caterpillarR(mymodel1, lev = 2)
+residuals <- mymodel1@residual$lev_2_resi_est_Intercept
+residualsCI <- 1.96 * sqrt(mymode1l@residual$lev_2_resi_var_Intercept)
+residualsRank <- rank(residuals)
+rankno <- order(residualsRank)
+
+caterpillar(y = residuals[rankno], x = 1:65, qtlow = (residuals - residualsCI)[rankno],
+           qtup = (residuals + residualsCI)[rankno], xlab = 'Rank', ylab = 'Intercept')
 
 # 3.3 Normal plots . . . . . . . . . . . . . . . . . . . . . . . . . . . .43
 
