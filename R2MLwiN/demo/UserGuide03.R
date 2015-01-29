@@ -36,7 +36,7 @@ data(tutorial, package = "R2MLwiN")
 # 3.2 Calculating residuals in MLwiN . . . . . . . . . . . . . . . . . . .40
 
 residuals <- mymodel1@residual$lev_2_resi_est_Intercept
-residualsCI <- 1.96 * sqrt(mymode1l@residual$lev_2_resi_var_Intercept)
+residualsCI <- 1.96 * sqrt(mymodel1@residual$lev_2_resi_var_Intercept)
 residualsRank <- rank(residuals)
 rankno <- order(residualsRank)
 
