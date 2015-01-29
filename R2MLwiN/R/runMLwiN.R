@@ -2335,7 +2335,7 @@ version:date:md5:filename:x64:trial:platform
       if (!is.null(xc)) {
         groupsize <- by(outdata, outdata[, shortID[lev]], nrow)
       } else {
-        test <- require(reshape, quietly = TRUE)
+        test <- requireNamespace("reshape", quietly = TRUE)
         if (isTRUE(test)) {
           # If the level identifiers are factors with string labels then the following can produce the warning 'coercing
           # argument of type 'list' to logical' from within cbind2 in the reshape package.  This is due to the call:
