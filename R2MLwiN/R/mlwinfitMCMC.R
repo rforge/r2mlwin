@@ -834,7 +834,7 @@ setMethod("predict", signature(object = "mlwinfitMCMC"), function(object, newdat
       # seval <- as.vector(sqrt(diag(as.matrix(indata[x.names]) %*% as.matrix(object@FP.cov[fp.names, fp.names]) %*%
       # t(as.matrix(indata[x.names])))))
       seval <- as.vector(sqrt(rowSums(as.matrix(indata[x.names]) %*% as.matrix(object@FP.cov[fp.names, fp.names]) * 
-                                        indata[x.names]))[, 1])
+                                        indata[x.names])))
       return(list(fit = tval, se.fit = seval))
     } else {
       return(tval)
