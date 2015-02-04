@@ -623,7 +623,18 @@ setMethod("fitted.values", signature(object = "mlwinfitIGLS"), function(object, 
 setMethod("residuals", signature(object = "mlwinfitIGLS"), function(object, ...) {
   form <- Formula.translate(object@Formula, object@D, object@data)
   if (!is.list(form$resp)) {
-    object@data[[form$resp]] - fitted(object)
+    D <- object@D
+    indata <- object@data
+    tval <- fitted(object)
+    if (D[1] == "Binomial") {
+      tval <- tval * indata[, D[3]]
+    }
+    if (D[1] == "Poisson" || D[1] == "Negbinom") {
+      if (!is.na(D[3])) {
+        tval <- tval + indata[, D[3]]
+      }
+    }
+    object@data[[form$resp]] - tval
   } else {
     warning("residuals only implemented for univariate models")
     NULL
@@ -662,12 +673,12 @@ setMethod("predict", signature(object = "mlwinfitIGLS"), function(object, newdat
   }
   x.names <- sub("FP_", "", fp.names)
   if (type == "link") {
-    tval <- as.vector(as.matrix(indata[x.names]) %*% as.matrix(object@FP[fp.names]))
+    tval <- as.vector(as.matrix(indata[x.names]) %*% as.matrix(object@FP[fp.names])[, 1])
     if (se.fit) {
       # seval <- as.vector(sqrt(diag(as.matrix(indata[x.names]) %*% as.matrix(object@FP.cov[fp.names, fp.names]) %*%
       # t(as.matrix(indata[x.names])))))
       seval <- as.vector(sqrt(rowSums(as.matrix(indata[x.names]) %*% as.matrix(object@FP.cov[fp.names, fp.names]) *
-                                        indata[x.names])))
+                                        indata[x.names]))[, 1])
       return(list(fit = tval, se.fit = seval))
     } else {
       return(tval)
@@ -688,9 +699,10 @@ setMethod("predict", signature(object = "mlwinfitIGLS"), function(object, newdat
     }
   }
   if (type == "response") {
-    tval <- as.vector(as.matrix(indata[x.names]) %*% as.matrix(object@FP[fp.names]))
+    tval <- as.vector(as.matrix(indata[x.names]) %*% as.matrix(object@FP[fp.names])[, 1])
+    names(tval) <- 1:(length(tval))
     D <- object@D
-    if (D == "Normal" || D[1] == "Multivariate Normal") {
+    if (D[1] == "Normal" || D[1] == "Multivariate Normal") {
       return(tval)
     }
     if (D[1] == "Binomial") {
@@ -698,23 +710,31 @@ setMethod("predict", signature(object = "mlwinfitIGLS"), function(object, newdat
         antilogit <- function(x) {
           exp(x)/(1 + exp(x))
         }
-        return(antilogit(tval))
+        return(antilogit(tval) * indata[, D[3]])
       }
       if (D[2] == "probit") {
-        return(pnorm(tval))
+        return(pnorm(tval) * indata[, D[3]])
       }
       if (D[2] == "cloglog") {
         anticloglog <- function(x) {
           1 - exp(-exp(x))
         }
-        return(anticloglog(tval))
+        return(anticloglog(tval) * indata[, D[3]])
       }
     }
     if (D[1] == "Poisson") {
-      return(exp(tval))
+      if (is.na(D[3])) {
+        return(exp(tval))
+      } else {
+        return(exp(tval + indata[, D[3]]))
+      }
     }
     if (D[1] == "Negbinom") {
-      return(exp(tval))
+      if (is.na(D[3])) {
+        return(exp(tval))
+      } else {
+        return(exp(tval + indata[, D[3]]))
+      }
     }
     if (D[1] == "Mixed") {
     }
@@ -731,11 +751,17 @@ setMethod("predict", signature(object = "mlwinfitIGLS"), function(object, newdat
 #' @seealso \code{\link[stats]{logLik}}
 #' @export
 setMethod("logLik", signature(object = "mlwinfitIGLS"), function(object, ...) {
-  val <- -0.5 * deviance(object)
-  attr(val, "df") <- length(coef(object))
-  attr(val, "nobs") <- nobs(object)
-  class(val) <- "logLik"
-  val
+  D <- object@D
+  if (D[1] == "Normal" || D[1] == "Multivariate Normal") {
+    val <- -0.5 * deviance(object)
+    attr(val, "df") <- length(coef(object))
+    attr(val, "nobs") <- nobs(object)
+    class(val) <- "logLik"
+    return(val)
+  } else {
+    warning("logLik only available for Normal models")
+    return(NULL)
+  }
 })
 
 #' Returns the deviance from "mlwinfitIGLS" objects.
@@ -744,7 +770,13 @@ setMethod("logLik", signature(object = "mlwinfitIGLS"), function(object, ...) {
 #' @seealso \code{\link[stats]{deviance}}
 #' @export
 setMethod("deviance", signature(object = "mlwinfitIGLS"), function(object, ...) {
-  object@LIKE
+  D <- object@D
+  if (D[1] == "Normal" || D[1] == "Multivariate Normal") {
+    return(object@LIKE)
+  } else {
+    warning("deviance only available for Normal models")
+    return(NULL)
+  }
 })
 
 #' Returns the number of used observations from "mlwinfitIGLS" objects.
