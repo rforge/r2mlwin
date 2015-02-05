@@ -1,19 +1,19 @@
 #' An internal function, allowing back-compatibility, which translates a model
 #' formula from a formula object or character string into an R list object.
-#' 
+#'
 #' Supports Formula syntax as used in earlier (<0.8-0) versions of \pkg{R2MLwiN}. A model
 #' formula, as a formula object (or a character string) is translated into
 #' an R list object. Called by \code{\link{runMLwiN}} if \code{oldsyntax = TRUE}
 #' (when user specifies \code{levID} not \code{NULL} in \code{\link{runMLwiN}} function
 #' call). For corresponding function supporting new syntax, see
 #' \code{\link{Formula.translate}}.
-#' 
+#'
 #' @param Formula A formula object (or a character string) specifying a
 #' multilevel model. See \code{Value} for details.
 #' @param levID A character (vector) specifying the level ID(s).
 #' @param D A character string/vector specifying the distribution to be
 #' modelled, which can include \code{'Normal'} (the default), \code{'Binomial'},
-#' \code{'Poisson'}, \code{'Negbinom'}, \code{'Unordered Multinomial'}, 
+#' \code{'Poisson'}, \code{'Negbinom'}, \code{'Unordered Multinomial'},
 #' \code{'Ordered Multinomial'}, \code{'Multivariate Normal'}, or \code{'Mixed'}.
 #' @param indata A data.frame object containing the data to be modelled.
 #'
@@ -59,11 +59,11 @@
 #' component at a specific level; applies to multivariate normal, multinomial
 #' and mixed responses models only
 #' }
-#' 
+#'
 #' If \code{Formula} is a formula object, \code{0s/0c}, \code{2s/2c}, .... and
 #' \code{\{\}} have to be replaced by \code{`0s`/`0c`}, \code{`2s`/`2c`}, ....
 #' and \code{()} respectively. Other syntax remains the same.
-#' 
+#'
 #' @return Outputs an R list object, which is then used as the input for
 #' \code{\link{write.IGLS}} and/or \code{\link{write.MCMC}}.
 #'
@@ -75,13 +75,13 @@
 #' there is no categorical variable in the random effects. If there is one in
 #' the random part, the categorical variable has to be converted into a set of
 #' binary variables (e.g., using \code{\link{Untoggle}}).
-#' 
+#'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
-#' 
+#'
 #' @seealso
 #' \code{\link{runMLwiN}}, \code{\link{write.IGLS}}, \code{\link{write.MCMC}}, \code{\link{Formula.translate}}
-#' 
+#'
 
 Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
   nlev <- length(levID)
@@ -112,12 +112,12 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
     }
   }
   
-  if (D[1] == "Ordered Multinomial" || D[1] == "Unordered Multinomial" || D[1] == "Multivariate Normal" || D[1] == 
+  if (D[1] == "Ordered Multinomial" || D[1] == "Unordered Multinomial" || D[1] == "Multivariate Normal" || D[1] ==
         "Mixed") {
     nlev <- length(levID)
     cc <- c(0:nlev)
     cflag <- 0
-    if (sum(grepl("\\(+[[:digit:]]+[[:alpha:]]+\\|", left)) > 0) 
+    if (sum(grepl("\\(+[[:digit:]]+[[:alpha:]]+\\|", left)) > 0)
       cflag <- 1
     if (cflag == 0) {
       for (i in cc) {
@@ -176,7 +176,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
       names(D)[5] <- "ref.cat"
       resp <- resp[1]
     }
-    if (D[1] == "Mixed") 
+    if (D[1] == "Mixed")
       D <- as.list(D)
     if (D[[1]] == "Mixed") {
       resp <- sub("^c\\(", "", resp)
@@ -234,7 +234,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
     categ <- NULL
     leftsplit <- strsplit(left, "(\\+)|(\\|)")
     categstr <- unique(unlist(sapply(leftsplit, function(x) {
-      unlist(regmatches(x, gregexpr("([[:alnum:]]*(\\_|\\-|\\^|\\&)*[[:alnum:]])+(\\[+\\]|\\[+[[:print:]]+\\])", 
+      unlist(regmatches(x, gregexpr("([[:alnum:]]*(\\_|\\-|\\^|\\&)*[[:alnum:]])+(\\[+\\]|\\[+[[:print:]]+\\])",
                                     x)))
     })))
     
@@ -248,7 +248,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
         cvx <- unlist(strsplit(categstr[i], "\\["))
         categ[1, i] <- cvx[1]
         cvy <- sub("\\]", "", cvx[2])
-        if (cvy == "") 
+        if (cvy == "")
           cvy <- NA
         categ[2, i] <- cvy
         categ[3, i] <- length(levels(indata[[categ[1, i]]]))
@@ -285,15 +285,15 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
     effect.lev <- nlev:1
     for (i in 1:(nlev)) {
       t1 <- grep(paste(effect.lev[i], "s+\\|", sep = ""), left)
-      if (length(t1) != 0) 
+      if (length(t1) != 0)
         rands.no[i] <- t1
       t2 <- grep(paste(effect.lev[i], "c+\\|", sep = ""), left)
-      if (length(t2) != 0) 
+      if (length(t2) != 0)
         randc.no[i] <- t2
     }
     randS <- left[rands.no]
     randC <- left[randc.no]
-    rands <- randc <- list()
+    rands <- randc <- randcpos <- list()
     
     if (nlev > 0) {
       for (i in 1:(nlev)) {
@@ -304,6 +304,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
         if (length(randC[i]) != 0) {
           randc[[i]] <- unlist(strsplit(randC[[i]], "\\|"))
           randc[[i]] <- unlist(strsplit(randc[[i]][2], "\\+"))
+          randcpos[[i]] <- rep(NA, length(randc[[i]]))
           if (D[1] == "Ordered Multinomial" || D[1] == "Unordered Multinomial") {
             nresp <- length(unique(indata[[resp]]))
           } else {
@@ -317,6 +318,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
                 randcc <- unlist(strsplit(randc[[i]][j], "\\{"))
                 randc[[i]][j] <- randcc[1]
                 tempid <- sub("\\}", "", randcc[2])
+                randcpos[[i]][j] <- tempid
                 cidmat <- rbind(cidmat, c(randc[[i]][j], tempid))
               }
             }
@@ -345,7 +347,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
           names.resp <- names.resp[-as.numeric(D["ref.cat"])]
           refcatint <- as.numeric(D["ref.cat"])
           if (!is.na(refcatint)) {
-            if (refcatint == 1) 
+            if (refcatint == 1)
               usign <- ">" else usign <- "<"
           } else {
             usign <- ""
@@ -356,7 +358,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
         for (i in 1:length(temps)) {
           if (D[1] == "Ordered Multinomial") {
             if (sum(grepl("\\.", temps[i])) == 0) {
-              nonfps <- c(nonfps, sapply(names.resp, function(x) paste(temps[i], ".(", usign, "=", x, ")", 
+              nonfps <- c(nonfps, sapply(names.resp, function(x) paste(temps[i], ".(", usign, "=", x, ")",
                                                                        sep = "")))
             } else {
               ttemp <- unlist(strsplit(temps[i], "\\."))
@@ -364,7 +366,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
               if (ttemp %in% sapply(names.resp, function(x) paste(".(", usign, "=", x, ")", sep = ""))) {
                 nonfps <- c(nonfps, temps[i])
               } else {
-                nonfps <- c(nonfps, sapply(names.resp, function(x) paste(temps[i], ".(", usign, "=", x, ")", 
+                nonfps <- c(nonfps, sapply(names.resp, function(x) paste(temps[i], ".(", usign, "=", x, ")",
                                                                          sep = "")))
               }
             }
@@ -405,7 +407,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
             names.resp <- names.resp[-as.numeric(D["ref.cat"])]
             refcatint <- as.numeric(D["ref.cat"])
             if (!is.na(refcatint)) {
-              if (refcatint == 1) 
+              if (refcatint == 1)
                 usign <- ">" else usign <- "<"
             } else {
               usign <- ""
@@ -416,7 +418,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
           for (i in 1:length(temps)) {
             if (D[1] == "Ordered Multinomial") {
               if (sum(grepl("\\.", temps[i])) == 0) {
-                nonfps <- c(nonfps, sapply(names.resp, function(x) paste(temps[i], ".(", usign, "=", x, ")", 
+                nonfps <- c(nonfps, sapply(names.resp, function(x) paste(temps[i], ".(", usign, "=", x, ")",
                                                                          sep = "")))
               } else {
                 ttemp <- unlist(strsplit(temps[i], "\\."))
@@ -424,7 +426,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
                 if (ttemp %in% sapply(names.resp, function(x) paste(".(", usign, "=", x, ")", sep = ""))) {
                   nonfps <- c(nonfps, temps[i])
                 } else {
-                  nonfps <- c(nonfps, sapply(names.resp, function(x) paste(temps[i], ".(", usign, "=", x, 
+                  nonfps <- c(nonfps, sapply(names.resp, function(x) paste(temps[i], ".(", usign, "=", x,
                                                                            ")", sep = "")))
                 }
               }
@@ -465,14 +467,14 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
             cidmat[i, 2] <- paste(tempid, collapse = ",")
           }
         }
-        if (sum(is.na(cidmat[, 1])) > 0) 
+        if (sum(is.na(cidmat[, 1])) > 0)
           cidmat <- cidmat[-which(is.na(cidmat[, 1])), ]
         common.coeff <- unique(paste(cidmat[, 1], cidmat[, 2], sep = "@"))
         lencom <- length(common.coeff)
         tt.id <- unlist(strsplit(common.coeff, "\\@"))[(1:lencom) * 2]
         tt.names <- unlist(strsplit(common.coeff, "\\@"))[(1:lencom) * 2 - 1]
         common.coeff <- sub("\\@", "\\.", common.coeff)
-        if (D[1] == "Ordered Multinomial" || D[1] == "Unordered Multinomial") 
+        if (D[1] == "Ordered Multinomial" || D[1] == "Unordered Multinomial")
           lencol <- nresp - 1 else lencol <- nresp
         ccid.mat <- matrix(0, nrow = length(tt.names), ncol = lencol)
         rownames(ccid.mat) <- tt.names
@@ -482,7 +484,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
           if (D[1] == "Ordered Multinomial" || D[1] == "Unordered Multinomial") {
             refcatint <- as.numeric(D["ref.cat"])
             if (!is.na(refcatint)) {
-              nonrefcatpos[which(nonrefcatpos > refcatint)] <- nonrefcatpos[which(nonrefcatpos > refcatint)] - 
+              nonrefcatpos[which(nonrefcatpos > refcatint)] <- nonrefcatpos[which(nonrefcatpos > refcatint)] -
                 1
             }
           }
@@ -509,7 +511,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
       lenfixc <- length(fixc)
       
       if (lenfixc != 0 && length(randC) == 0) {
-        if (D[1] == "Ordered Multinomial" || D[1] == "Unordered Multinomial") 
+        if (D[1] == "Ordered Multinomial" || D[1] == "Unordered Multinomial")
           lencol <- nresp - 1 else lencol <- nresp
         ccid.mat <- matrix(0, nrow = lenfixc, ncol = lencol)
         rownames(ccid.mat) <- fixc
@@ -527,7 +529,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
           if (D[1] == "Ordered Multinomial" || D[1] == "Unordered Multinomial") {
             refcatint <- as.numeric(D["ref.cat"])
             if (!is.na(refcatint)) {
-              nonrefcatpos[which(nonrefcatpos > refcatint)] <- nonrefcatpos[which(nonrefcatpos > refcatint)] - 
+              nonrefcatpos[which(nonrefcatpos > refcatint)] <- nonrefcatpos[which(nonrefcatpos > refcatint)] -
                 1
             }
           }
@@ -559,20 +561,20 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
                 names.resp <- as.character(sort(unique(indata[[resp]])))
               }
               names.resp <- names.resp[-as.numeric(D["ref.cat"])]
-              if (D[1] == "Ordered Multinomial" || D[1] == "Unordered Multinomial") 
+              if (D[1] == "Ordered Multinomial" || D[1] == "Unordered Multinomial")
                 refcatint <- as.numeric(D["ref.cat"])
             } else {
               names.resp <- resp
             }
             if (D[1] == "Ordered Multinomial") {
               if (!is.na(refcatint)) {
-                if (refcatint == 1) 
+                if (refcatint == 1)
                   usign <- ">" else usign <- "<"
               } else {
                 usign <- ""
               }
               if (sum(grepl("\\.", rands[[i]][j])) == 0) {
-                rptemp <- c(rptemp, sapply(names.resp, function(x) paste(rands[[i]][j], ".(", usign, "=", 
+                rptemp <- c(rptemp, sapply(names.resp, function(x) paste(rands[[i]][j], ".(", usign, "=",
                                                                          x, ")", sep = "")))
               } else {
                 ttemp <- unlist(strsplit(rands[[i]][j], "\\."))
@@ -580,7 +582,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
                 if (ttemp %in% sapply(names.resp, function(x) paste(".(", usign, "=", x, ")", sep = ""))) {
                   rptemp <- c(rptemp, rands[[i]][j])
                 } else {
-                  rptemp <- c(rptemp, sapply(names.resp, function(x) paste(rands[[i]][j], ".(", usign, "=", 
+                  rptemp <- c(rptemp, sapply(names.resp, function(x) paste(rands[[i]][j], ".(", usign, "=",
                                                                            x, ")", sep = "")))
                 }
               }
@@ -609,9 +611,15 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
             rp.names <- c(rp.names, rp.name)
           }
           rptemp <- NULL
+          tmpcidmat <- unique(cidmat)
           for (j in 1:length(randc[[i]])) {
-            randcid <- cidmat[grep(randc[[i]][j], cidmat[, 1])[1], 2]
+            tmp_pos <- grep(randc[[i]][j], tmpcidmat[, 1])
+            if (length(tmp_pos>1)){
+              tmp_pos <- tmp_pos[randcpos[[i]][j]==tmpcidmat[tmp_pos, 2]][1]
+            }
+            randcid <- tmpcidmat[tmp_pos, 2]
             rptemp <- c(rptemp, paste(randc[[i]][j], gsub(",", "", randcid), sep = "."))
+            tmpcidmat <- tmpcidmat[-tmp_pos, , drop = FALSE]
           }
           if (is.null(rp[[rp.name]])) {
             rp[[rp.name]] <- rptemp
@@ -630,7 +638,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
         nresp <- length(resp)
       }
       if (lenfixc != 0) {
-        if (D[1] == "Ordered Multinomial" || D[1] == "Unordered Multinomial") 
+        if (D[1] == "Ordered Multinomial" || D[1] == "Unordered Multinomial")
           lencol <- nresp - 1 else lencol <- nresp
         ccid.mat <- matrix(0, nrow = lenfixc, ncol = lencol)
         rownames(ccid.mat) <- fixc
@@ -648,7 +656,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
           if (D[1] == "Ordered Multinomial" || D[1] == "Unordered Multinomial") {
             refcatint <- as.numeric(D["ref.cat"])
             if (!is.na(refcatint)) {
-              nonrefcatpos[which(nonrefcatpos > refcatint)] <- nonrefcatpos[which(nonrefcatpos > refcatint)] - 
+              nonrefcatpos[which(nonrefcatpos > refcatint)] <- nonrefcatpos[which(nonrefcatpos > refcatint)] -
                 1
             }
           }
@@ -660,36 +668,36 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
       rp <- nonfps <- nonfps <- nonfpc <- NULL
     }
     
-    if (D[1] == "Ordered Multinomial" || D[1] == "Unordered Multinomial") 
+    if (D[1] == "Ordered Multinomial" || D[1] == "Unordered Multinomial")
       D[1] <- "Multinomial"
     invars <- new.env()
-    if (length(rp) != 0) 
+    if (length(rp) != 0)
       rp <- rp[order(names(rp), decreasing = TRUE)]
     if (length(randC) == 0 && length(fixc) == 0) {
       invars$resp <- resp
       invars$expl <- fixs
-      if (length(rp) != 0) 
+      if (length(rp) != 0)
         invars$rp <- rp
-      if (length(nonfps) != 0) 
+      if (length(nonfps) != 0)
         invars$nonfp <- nonfps
-      if (!is.null(categ)) 
+      if (!is.null(categ))
         invars$categ <- categ
       invars$D <- D
     } else {
       invars$resp <- resp
-      if (length(fixs) != 0) 
+      if (length(fixs) != 0)
         invars$expl$sep.coeff <- fixs else invars$expl$sep.coeff <- NA
-      if (length(fixc) != 0) 
+      if (length(fixc) != 0)
         invars$expl$common.coeff <- fixc else invars$expl$common.coeff <- NA
-      if (length(rp) != 0) 
+      if (length(rp) != 0)
         invars$rp <- rp
-      if (length(ccid.mat) != 0) 
+      if (length(ccid.mat) != 0)
         invars$expl$common.coeff.id <- ccid.mat
-      if (length(nonfps) != 0) 
+      if (length(nonfps) != 0)
         invars$nonfp$nonfp.sep <- nonfps else invars$nonfp$nonfp.sep <- NA
-      if (length(nonfpc) != 0) 
+      if (length(nonfpc) != 0)
         invars$nonfp$nonfp.common <- nonfpc else invars$nonfp$nonfp.common <- NA
-      if (!is.null(categ)) 
+      if (!is.null(categ))
         invars$categ <- categ
       invars$D <- D
     }
@@ -714,7 +722,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
     categ <- NULL
     leftsplit <- strsplit(left, "(\\+)|(\\|)")
     categstr <- unique(unlist(sapply(leftsplit, function(x) {
-      unlist(regmatches(x, gregexpr("([[:alnum:]]*(\\_|\\-|\\^|\\&)*[[:alnum:]])+(\\[+\\]|\\[+[[:print:]]+\\])", 
+      unlist(regmatches(x, gregexpr("([[:alnum:]]*(\\_|\\-|\\^|\\&)*[[:alnum:]])+(\\[+\\]|\\[+[[:print:]]+\\])",
                                     x)))
     })))
     
@@ -728,7 +736,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
         cvx <- unlist(strsplit(categstr[i], "\\["))
         categ[1, i] <- cvx[1]
         cvy <- sub("\\]", "", cvx[2])
-        if (cvy == "") 
+        if (cvy == "")
           cvy <- NA
         categ[2, i] <- cvy
         categ[3, i] <- length(levels(indata[[categ[1, i]]]))
@@ -749,7 +757,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
     rands.no <- rep(NA, nlev)
     for (i in 1:nlev) {
       t1 <- grep(paste(effect.lev[i], "+\\|", sep = ""), left)
-      if (length(t1) != 0) 
+      if (length(t1) != 0)
         rands.no[i] <- t1
     }
     randS <- left[rands.no]
@@ -792,14 +800,14 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
     invars <- new.env()
     invars$resp <- resp
     invars$expl <- fixs
-    if (length(rp) != 0) 
+    if (length(rp) != 0)
       rp <- rp[order(names(rp), decreasing = TRUE)]
-    if (length(rp) != 0) 
+    if (length(rp) != 0)
       invars$rp <- rp
-    if (length(nonfps) != 0) 
+    if (length(nonfps) != 0)
       invars$nonfp <- nonfps
     invars$D <- D
-    if (!is.null(categ)) 
+    if (!is.null(categ))
       invars$categ <- categ
     invars <- as.list(invars)
   }
@@ -823,7 +831,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
     categ <- NULL
     leftsplit <- strsplit(left, "(\\+)|(\\|)")
     categstr <- unique(unlist(sapply(leftsplit, function(x) {
-      unlist(regmatches(x, gregexpr("([[:alnum:]]*(\\_|\\-|\\^|\\&)*[[:alnum:]])+(\\[+\\]|\\[+[[:print:]]+\\])", 
+      unlist(regmatches(x, gregexpr("([[:alnum:]]*(\\_|\\-|\\^|\\&)*[[:alnum:]])+(\\[+\\]|\\[+[[:print:]]+\\])",
                                     x)))
     })))
     left <- sapply(regmatches(left, gregexpr("\\[[^]]*\\]", left), invert = TRUE), function(x) paste(x, collapse = ""))
@@ -836,7 +844,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
         cvx <- unlist(strsplit(categstr[i], "\\["))
         categ[1, i] <- cvx[1]
         cvy <- sub("\\]", "", cvx[2])
-        if (cvy == "") 
+        if (cvy == "")
           cvy <- NA
         categ[2, i] <- cvy
         categ[3, i] <- length(levels(indata[[categ[1, i]]]))
@@ -861,7 +869,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
     rands.no <- rep(NA, nlev)
     for (i in 1:nlev) {
       t1 <- grep(paste(effect.lev[i], "+\\|", sep = ""), left)
-      if (length(t1) != 0) 
+      if (length(t1) != 0)
         rands.no[i] <- t1
     }
     randS <- left[rands.no]
@@ -904,14 +912,14 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
     invars <- new.env()
     invars$resp <- resp
     invars$expl <- fixs
-    if (length(rp) != 0) 
+    if (length(rp) != 0)
       rp <- rp[order(names(rp), decreasing = TRUE)]
-    if (length(rp) != 0) 
+    if (length(rp) != 0)
       invars$rp <- rp
-    if (length(nonfps) != 0) 
+    if (length(nonfps) != 0)
       invars$nonfp <- nonfps
     invars$D <- D
-    if (!is.null(categ)) 
+    if (!is.null(categ))
       invars$categ <- categ
     invars <- as.list(invars)
   }
@@ -923,7 +931,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
     categ <- NULL
     leftsplit <- strsplit(left, "(\\+)|(\\|)")
     categstr <- unique(unlist(sapply(leftsplit, function(x) {
-      unlist(regmatches(x, gregexpr("([[:alnum:]]*(\\_|\\-|\\^|\\&)*[[:alnum:]])+(\\[+\\]|\\[+[[:print:]]+\\])", 
+      unlist(regmatches(x, gregexpr("([[:alnum:]]*(\\_|\\-|\\^|\\&)*[[:alnum:]])+(\\[+\\]|\\[+[[:print:]]+\\])",
                                     x)))
     })))
     left <- sapply(regmatches(left, gregexpr("\\[[^]]*\\]", left), invert = TRUE), function(x) paste(x, collapse = ""))
@@ -935,7 +943,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
         cvx <- unlist(strsplit(categstr[i], "\\["))
         categ[1, i] <- cvx[1]
         cvy <- sub("\\]", "", cvx[2])
-        if (cvy == "") 
+        if (cvy == "")
           cvy <- NA
         categ[2, i] <- cvy
         categ[3, i] <- length(levels(indata[[categ[1, i]]]))
@@ -952,7 +960,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
     rands.no <- rep(NA, nlev)
     for (i in 1:nlev) {
       t1 <- grep(paste(effect.lev[i], "+\\|", sep = ""), left)
-      if (length(t1) != 0) 
+      if (length(t1) != 0)
         rands.no[i] <- t1
       
     }
@@ -997,16 +1005,16 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
     invars <- new.env()
     invars$resp <- resp
     invars$expl <- fixs
-    if (length(rp) != 0) 
+    if (length(rp) != 0)
       rp <- rp[order(names(rp), decreasing = TRUE)]
-    if (length(rp) != 0) 
+    if (length(rp) != 0)
       invars$rp <- rp
-    if (length(nonfps) != 0) 
+    if (length(nonfps) != 0)
       invars$nonfp <- nonfps
     invars$D <- D
-    if (!is.null(categ)) 
+    if (!is.null(categ))
       invars$categ <- categ
     invars <- as.list(invars)
   }
   return(invars)
-} 
+}
