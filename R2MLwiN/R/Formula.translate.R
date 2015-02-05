@@ -760,7 +760,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     }
     randS <- left[rands.no]
     randC <- left[randc.no]
-    rands <- randc <- list()
+    rands <- randc <- randcpos <- list()
     
     if (nlev > 0) {
       for (i in 1:(nlev)) {
@@ -771,6 +771,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
         if (length(randC[i]) != 0) {
           randc[[i]] <- unlist(strsplit(randC[[i]], "\\|"))
           randc[[i]] <- get.terms(randc[[i]][2])
+          randcpos[[i]] <- rep(NA, length(randc[[i]]))
           for (j in 1:length(randc[[i]])) {
             if (!is.na(randc[[i]][1])) {
               if (length(grep("\\{", randc[[i]][j])) == 0) {
@@ -779,6 +780,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
                 randcc <- unlist(strsplit(randc[[i]][j], "\\{"))
                 randc[[i]][j] <- randcc[1]
                 tempid <- sub("\\}", "", randcc[2])
+                randcpos[[i]][j] <- tempid
                 cidmat <- rbind(cidmat, c(randc[[i]][j], tempid))
               }
             }
@@ -1073,7 +1075,10 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
           rptemp <- NULL
           tmpcidmat <- unique(cidmat)
           for (j in 1:length(randc[[i]])) {
-            tmp_pos <- grep(randc[[i]][j], tmpcidmat[, 1])[1]
+            tmp_pos <- grep(randc[[i]][j], tmpcidmat[, 1])
+            if (length(tmp_pos>1)){
+              tmp_pos <- tmp_pos[randcpos[[i]][j]==tmpcidmat[tmp_pos, 2]][1]
+            }
             randcid <- tmpcidmat[tmp_pos, 2]
             rptemp <- c(rptemp, paste(randc[[i]][j], gsub(",", "", randcid), sep = "."))
             tmpcidmat <- tmpcidmat[-tmp_pos, , drop = FALSE]
