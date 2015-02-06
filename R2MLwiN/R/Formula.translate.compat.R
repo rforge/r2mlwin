@@ -611,15 +611,9 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
             rp.names <- c(rp.names, rp.name)
           }
           rptemp <- NULL
-          tmpcidmat <- unique(cidmat)
           for (j in 1:length(randc[[i]])) {
-            tmp_pos <- grep(randc[[i]][j], tmpcidmat[, 1])
-            if (length(tmp_pos>1)){
-              tmp_pos <- tmp_pos[randcpos[[i]][j]==tmpcidmat[tmp_pos, 2]][1]
-            }
-            randcid <- tmpcidmat[tmp_pos, 2]
+            randcid <- randcpos[[i]][j]
             rptemp <- c(rptemp, paste(randc[[i]][j], gsub(",", "", randcid), sep = "."))
-            tmpcidmat <- tmpcidmat[-tmp_pos, , drop = FALSE]
           }
           if (is.null(rp[[rp.name]])) {
             rp[[rp.name]] <- rptemp
