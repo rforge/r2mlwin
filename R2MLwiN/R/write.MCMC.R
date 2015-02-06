@@ -1,9 +1,9 @@
 #' Writes MLwiN macros to fit models using Markov chain Monte Carlo (MCMC)
 #' methods
-#' 
+#'
 #' write.MCMC is an internal function which creates an MLwiN macro file to
 #' fit models using MCMC.
-#' 
+#'
 #' @param indata A data.frame object containing the data to be modelled.
 #' @param dtafile The file name of the dataset to be imported into MLwiN, which
 #' is in Stata format (i.e. with extension .dta).
@@ -21,8 +21,8 @@
 #' @param D A character string/vector specifying the type of distribution to be modelled, which
 #' can include \code{'Normal'} (the default), \code{'Binomial'}, \code{'Poisson'},
 #' \code{'Unordered Multinomial'}, \code{'Ordered Multinomial'},
-#' \code{'Multivariate Normal'}, or \code{'Mixed'}. In the case of the latter, 
-#' \code{'Mixed'} precedes the response types which also need to be listed in 
+#' \code{'Multivariate Normal'}, or \code{'Mixed'}. In the case of the latter,
+#' \code{'Mixed'} precedes the response types which also need to be listed in
 #' \code{D}, e.g. \code{c('Mixed', 'Normal', 'Binomial')}; these need to be
 #' be listed in the same order to which they are referred to in the
 #' \code{Formula} object (see \code{\link{runMLwiN}}, \code{\link{Formula.translate}},
@@ -135,13 +135,13 @@
 #' \code{mmvar} and \code{weights}, with the former containing columns
 #' specifying the classification units, and the latter containing columns
 #' specifying the weights. Ignored if \code{EstM = 0}, i.e. only applicable to models estimated via
-#' MCMC. \code{mm = NULL} by default. Supersedes deprecated \code{xclass}. 
+#' MCMC. \code{mm = NULL} by default. Supersedes deprecated \code{xclass}.
 #' E.g. (from \code{demo(MCMCGuide16)}) for
 #' \code{logearn ~ 1 + age_40 + sex + parttime + (company|1) + (id|1)}, if
 #' \code{company} is a multiple membership classification with the variables
 #' indicating the classifications in \code{company}, \code{company2},
 #' \code{company3}, \code{company4} and their weights in \code{weight1}, \code{weight2},
-#' \code{weight3} and \code{weight4} then 
+#' \code{weight3} and \code{weight4} then
 #' \code{mm = list(list(mmvar = list('company', 'company2', 'company3', 'company4'),}
 #' \code{weights = list('weight1', 'weight2', 'weight3', 'weight4')), NA)}
 #' with the \code{NA}, listed last, corresponding to the level 1 identifier (\code{id}).
@@ -219,7 +219,7 @@
 #' estimate from the iterations produced. \code{dami = 2} is as for \code{dami = 1}
 #' but with the standard errors of the estimate additionally being stored.
 #' @param namemap A mapping of column names to DTA friendly shorter names
-#' 
+#'
 #' @details A list of other MCMC options as used in the argument
 #' \code{mcmcOptions}:
 #' \itemize{
@@ -244,7 +244,7 @@
 #' correlation parameter and independent variance parameters;\cr \code{4} \tab fits AR1 errors with independent variance
 #' parameters.\cr }
 #' }
-#' 
+#'
 #' A list of objects specified for cross-classified and/or multiple membership
 #' models, as used in the argument \code{xclass}:
 #' \itemize{
@@ -269,7 +269,7 @@
 #' \item \code{car}: \code{car = TRUE} indicates
 #' the spatial CAR model; \code{FALSE} otherwise. \code{car = FALSE} if ignored.
 #' }
-#' 
+#'
 #' A list of objects specified for factor analysis, as used in the argument
 #' \code{fact}:
 #' \itemize{
@@ -292,32 +292,32 @@
 #' specifying indicators of whether the factor loadings and the factor variance
 #' are constrained (\code{1}) or not (\code{0}).
 #' }
-#' 
+#'
 #' @return Outputs a modified version of namemap containing newly generated
 #' short names.
 #' @note Note that for \code{FixM}, \code{residM}, \code{Lev1VarM} and
-#' 
+#'
 #' \code{OtherVarM}, not all combinations of methods are available for all sets
 #' of parameters and all models.
-#' 
+#'
 #' @references
 #' Goldstein, H. (2011) Multilevel Statistical Models. 4th Edition. London: John Wiley and Sons.
-#' 
+#'
 #' Rasbash, J., Steele, F., Browne, W.J. and Goldstein, H. (2012)
 #' A User's Guide to MLwiN Version 2.26. Centre for Multilevel Modelling,
 #' University of Bristol.
-#' 
+#'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
-#' 
+#'
 #' @seealso \code{\link{write.IGLS}}
-#' 
+#'
 write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp, D = "Normal", nonlinear = c(0, 1), categ = NULL,
-                         notation = NULL, nonfp = NULL, clre = NULL, Meth = 1, merr = NULL, carcentre = FALSE, maxiter = 20, 
-                         convtol = 2, seed = 1, iterations = 5000, burnin = 500, scale = 5.8, thinning = 1, priorParam = "default", refresh = 50, 
-                         fixM = 1, residM = 1, Lev1VarM = 1, OtherVarM = 1, adaption = 1, priorcode = 1, rate = 50, tol = 10, lclo = 0, 
-                         mcmcOptions, fact = NULL, xc = NULL, mm = NULL, car = NULL, BUGO = NULL, mem.init = "default", optimat = FALSE, 
-                         modelfile, initfile, datafile, macrofile, IGLSfile, MCMCfile, chainfile, MIfile, resifile, resi.store = FALSE, 
+                         notation = NULL, nonfp = NULL, clre = NULL, Meth = 1, merr = NULL, carcentre = FALSE, maxiter = 20,
+                         convtol = 2, seed = 1, iterations = 5000, burnin = 500, scale = 5.8, thinning = 1, priorParam = "default", refresh = 50,
+                         fixM = 1, residM = 1, Lev1VarM = 1, OtherVarM = 1, adaption = 1, priorcode = 1, rate = 50, tol = 10, lclo = 0,
+                         mcmcOptions, fact = NULL, xc = NULL, mm = NULL, car = NULL, BUGO = NULL, mem.init = "default", optimat = FALSE,
+                         modelfile, initfile, datafile, macrofile, IGLSfile, MCMCfile, chainfile, MIfile, resifile, resi.store = FALSE,
                          resioptions, resichains, FACTchainfile, resi.store.levs = NULL, debugmode = FALSE, startval = NULL, dami = NULL,
                          namemap = sapply(colnames(indata), as.character)) {
   
@@ -413,9 +413,9 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     for (ii in 1:nrp) {
       rpx <- rp[[rp.names[ii]]]
       nrpx <- length(rpx)
-      if (nrpx == 1) 
+      if (nrpx == 1)
         num_vars <- num_vars + 1
-      if (nrpx >= 2) 
+      if (nrpx >= 2)
         num_vars <- num_vars + nrpx * (nrpx - 1)/2 + nrpx
     }
   }
@@ -467,7 +467,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("NOTE   Specify the level identifier(s)")
     for (ii in 1:nlev) {
       aa <- nlev:1
-      if (!is.na(levID[ii])) 
+      if (!is.na(levID[ii]))
         wrt(paste("IDEN ", aa[ii], "    '", levID[ii], "'", sep = ""))
       
     }
@@ -498,7 +498,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
             if (is.na(categ["ref", which(p == categ["var", ])])) {
               wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
             } else {
-              wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+              wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                          ])]), sep = ""))
             }
           } else {
@@ -518,7 +518,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
               if (is.na(categ["ref", which(p == categ["var", ])])) {
                 wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
               } else {
-                wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+                wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                            ])]), sep = ""))
               }
             } else {
@@ -546,7 +546,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("NOTE   Specify the level identifier(s)")
     for (ii in 1:nlev) {
       aa <- nlev:2
-      if (!is.na(levID[ii])) 
+      if (!is.na(levID[ii]))
         wrt(paste("IDEN ", aa[ii], "    '", levID[ii], "'", sep = ""))
     }
     wrt("IDEN 1 'resp_indicator'")
@@ -593,7 +593,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
                 if (is.na(categ["ref", which(p == categ["var", ])])) {
                   wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
                 } else {
-                  wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+                  wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                              ])]), sep = ""))
                 }
               } else {
@@ -613,7 +613,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
                   if (is.na(categ["ref", which(p == categ["var", ])])) {
                     wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
                   } else {
-                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                                ])]), sep = ""))
                   }
                 } else {
@@ -654,7 +654,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
               if (is.na(categ["ref", which(p == categ["var", ])])) {
                 wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
               } else {
-                wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+                wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                            ])]), sep = ""))
               }
             } else {
@@ -682,7 +682,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
                 if (is.na(categ["ref", which(p == categ["var", ])])) {
                   wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
                 } else {
-                  wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+                  wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                              ])]), sep = ""))
                 }
               } else {
@@ -713,7 +713,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
               if (is.na(categ["ref", which(p == categ["var", ])])) {
                 wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
               } else {
-                wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+                wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                            ])]), sep = ""))
               }
             } else {
@@ -733,7 +733,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
                 if (is.na(categ["ref", which(p == categ["var", ])])) {
                   wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
                 } else {
-                  wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+                  wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                              ])]), sep = ""))
                 }
               } else {
@@ -763,7 +763,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("NOTE   Specify the level identifier(s)")
     for (ii in 1:nlev) {
       aa <- nlev:2
-      if (!is.na(levID[ii])) 
+      if (!is.na(levID[ii]))
         wrt(paste("IDEN ", aa[ii], "    '", levID[ii], "'", sep = ""))
     }
     wrt("IDEN 1 'resp_indicator'")
@@ -782,7 +782,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
                 if (is.na(categ["ref", which(p == categ["var", ])])) {
                   wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
                 } else {
-                  wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+                  wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                              ])]), sep = ""))
                 }
               } else {
@@ -802,7 +802,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
                   if (is.na(categ["ref", which(p == categ["var", ])])) {
                     wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
                   } else {
-                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                                ])]), sep = ""))
                   }
                 } else {
@@ -843,7 +843,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
               if (is.na(categ["ref", which(p == categ["var", ])])) {
                 wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
               } else {
-                wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+                wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                            ])]), sep = ""))
               }
             } else {
@@ -871,7 +871,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
                 if (is.na(categ["ref", which(p == categ["var", ])])) {
                   wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
                 } else {
-                  wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+                  wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                              ])]), sep = ""))
                 }
               } else {
@@ -902,7 +902,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
               if (is.na(categ["ref", which(p == categ["var", ])])) {
                 wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
               } else {
-                wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+                wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                            ])]), sep = ""))
               }
             } else {
@@ -922,7 +922,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
                 if (is.na(categ["ref", which(p == categ["var", ])])) {
                   wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
                 } else {
-                  wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+                  wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                              ])]), sep = ""))
                 }
               } else {
@@ -956,13 +956,13 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("NOTE   Specify the level identifier(s)")
     for (ii in 1:c(nlev - 1)) {
       aa <- nlev:1
-      if (!is.na(levID[ii])) 
+      if (!is.na(levID[ii]))
         wrt(paste("IDEN ", aa[ii], "    '", levID[ii], "'", sep = ""))
     }
     wrt("IDEN 1 'resp_indicator'")
     wrt("")
     
-    if (as.numeric(D[4]) == 0) 
+    if (as.numeric(D[4]) == 0)
       wrt("RDISt 1 4") else wrt("RDISt 1 5")
     wrt(paste("DOFFs 1 '", D[3], "'", sep = ""))
     if (D[2] == "logit") {
@@ -992,7 +992,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
                 if (is.na(categ["ref", which(p == categ["var", ])])) {
                   wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
                 } else {
-                  wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+                  wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                              ])]), sep = ""))
                 }
               } else {
@@ -1012,7 +1012,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
                   if (is.na(categ["ref", which(p == categ["var", ])])) {
                     wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
                   } else {
-                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                                ])]), sep = ""))
                   }
                 } else {
@@ -1053,7 +1053,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
               if (is.na(categ["ref", which(p == categ["var", ])])) {
                 wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
               } else {
-                wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+                wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                            ])]), sep = ""))
               }
             } else {
@@ -1081,7 +1081,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
                 if (is.na(categ["ref", which(p == categ["var", ])])) {
                   wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
                 } else {
-                  wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+                  wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                              ])]), sep = ""))
                 }
               } else {
@@ -1111,7 +1111,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
               if (is.na(categ["ref", which(p == categ["var", ])])) {
                 wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
               } else {
-                wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+                wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                            ])]), sep = ""))
               }
             } else {
@@ -1131,7 +1131,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
                 if (is.na(categ["ref", which(p == categ["var", ])])) {
                   wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
                 } else {
-                  wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+                  wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                              ])]), sep = ""))
                 }
               } else {
@@ -1158,7 +1158,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("NOTE   Specify the level identifier(s)")
     for (ii in 1:nlev) {
       aa <- nlev:1
-      if (!is.na(levID[ii])) 
+      if (!is.na(levID[ii]))
         wrt(paste("IDEN ", aa[ii], "    '", levID[ii], "'", sep = ""))
     }
     wrt("")
@@ -1174,7 +1174,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
             if (is.na(categ["ref", which(p == categ["var", ])])) {
               wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
             } else {
-              wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+              wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                          ])]), sep = ""))
             }
           } else {
@@ -1194,7 +1194,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
               if (is.na(categ["ref", which(p == categ["var", ])])) {
                 wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
               } else {
-                wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+                wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                            ])]), sep = ""))
               }
             } else {
@@ -1219,7 +1219,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("NOTE   Specify the level identifier(s)")
     for (ii in 1:nlev) {
       aa <- nlev:1
-      if (!is.na(levID[ii])) 
+      if (!is.na(levID[ii]))
         wrt(paste("IDEN ", aa[ii], "    '", levID[ii], "'", sep = ""))
     }
     wrt("")
@@ -1240,7 +1240,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
             if (is.na(categ["ref", which(p == categ["var", ])])) {
               wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
             } else {
-              wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+              wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                          ])]), sep = ""))
             }
           } else {
@@ -1260,7 +1260,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
               if (is.na(categ["ref", which(p == categ["var", ])])) {
                 wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
               } else {
-                wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+                wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                            ])]), sep = ""))
               }
             } else {
@@ -1287,7 +1287,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("NOTE   Specify the level identifier(s)")
     for (ii in 1:nlev) {
       aa <- nlev:1
-      if (!is.na(levID[ii])) 
+      if (!is.na(levID[ii]))
         wrt(paste("IDEN ", aa[ii], "    '", levID[ii], "'", sep = ""))
     }
     wrt("")
@@ -1308,7 +1308,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
             if (is.na(categ["ref", which(p == categ["var", ])])) {
               wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
             } else {
-              wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+              wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                          ])]), sep = ""))
             }
           } else {
@@ -1328,7 +1328,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
               if (is.na(categ["ref", which(p == categ["var", ])])) {
                 wrt(paste("ADDT    '", p, "' ", -1e+07, sep = ""))
               } else {
-                wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var", 
+                wrt(paste("ADDT    '", p, "' ", which(levels(indata[, p]) == categ["ref", which(p == categ["var",
                                                                                                            ])]), sep = ""))
               }
             } else {
@@ -1393,14 +1393,14 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
   wrt("NOTE   Specify random part covariate(s)")
   if (nrp > 0) {
     for (ii in 1:nrp) {
-      for (p in rp[[ii]]) wrt(paste("SETV  ", as.numeric(sub("rp", "", rp.names[ii])), "   '", gsub("\\:", "\\.", 
+      for (p in rp[[ii]]) wrt(paste("SETV  ", as.numeric(sub("rp", "", rp.names[ii])), "   '", gsub("\\:", "\\.",
                                                                                                     p), "'", sep = ""))
     }
   }
   if (!is.null(clre)) {
     nclre <- ncol(clre)
     for (ii in 1:nclre) {
-      wrt(paste("CLRE  ", as.numeric(clre[1, ii]), " '", gsub("\\:", "\\.", clre[2, ii]), "' '", gsub("\\:", 
+      wrt(paste("CLRE  ", as.numeric(clre[1, ii]), " '", gsub("\\:", "\\.", clre[2, ii]), "' '", gsub("\\:",
                                                                                                       "\\.", clre[3, ii]), "'", sep = ""))
     }
   }
@@ -1420,7 +1420,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     for (i in 1:fact$nfact) {
       TT <- c(TT, fact$lev.fact[i] + 1, matrix(rbind(fact$loading[i, ], fact$constr[i, ]), nrow = 1))
     }
-    if (fact$nfactcor > 0) 
+    if (fact$nfactcor > 0)
       TT <- c(TT, fact$factcor)
     FACT <- as.vector(c(length(resp), fact$nfact, fact$nfactcor, TT))
     rm(TT)
@@ -1538,7 +1538,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt(paste("PAEX", mcmcOptions$paex[1], mcmcOptions$paex[2]))
   }
   
-  if (D[1] == "Multivariate Normal") 
+  if (D[1] == "Multivariate Normal")
     wrt(paste("MCCO ", mcmcOptions$mcco))
   
   if (!is.null(xc) && isTRUE(xc)) {
@@ -1552,7 +1552,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
         if (D[1] != "Multivariate Normal") {
           wrt(paste0("MULM ", mmlev, " ", length(mm[[i]]$mmvar), " '", mm[[i]]$weights[[1]], "'"))
         } else {
-          wrt(paste0("MULM ", mmlev, " ", length(mm[[i]]$mmvar), " '", mm[[i]]$weights[[1]], "' '", mm[[i]]$mmvars[[1]], 
+          wrt(paste0("MULM ", mmlev, " ", length(mm[[i]]$mmvar), " '", mm[[i]]$weights[[1]], "' '", mm[[i]]$mmvars[[1]],
                      "'"))
         }
       }
@@ -1563,7 +1563,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     for (i in 1:length(car)) {
       if (!any(is.na(car[[i]]))) {
         carlev <- (length(car) - i) + 1
-        wrt(paste0("MULM ", carlev, " ", length(car[[i]]$carvar), " '", car[[i]]$weights[[1]], "' '", car[[i]]$carvar[[1]], 
+        wrt(paste0("MULM ", carlev, " ", length(car[[i]]$carvar), " '", car[[i]]$weights[[1]], "' '", car[[i]]$carvar[[1]],
                    "'"))
         wrt(paste("CARP", carlev, "1"))
       }
@@ -1622,7 +1622,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
           len.rpx <- length(rpx)
           wrt(paste0("LINK ", len.rpx, " G27"))
           wrt("LINK 1 G28")
-          wrt(paste("NOTE Calculate MCMC starting values for level ", as.numeric(sub("rp", "", rp.names[j])), 
+          wrt(paste("NOTE Calculate MCMC starting values for level ", as.numeric(sub("rp", "", rp.names[j])),
                     " residuals", sep = ""))
           wrt(paste("RLEV   ", as.numeric(sub("rp", "", rp.names[j])), sep = ""))
           wrt("RFUN")
@@ -1641,18 +1641,18 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("MISR   1")
   }
   
-  if (D[1] == "Normal") 
+  if (D[1] == "Normal")
     DD <- 1
-  if (D[1] == "Binomial") 
+  if (D[1] == "Binomial")
     DD <- 2
-  if (D[1] == "Mixed") 
+  if (D[1] == "Mixed")
     DD <- 5
-  if (D[1] == "Poisson") 
+  if (D[1] == "Poisson")
     DD <- 3
-  if (D[1] == "Multivariate Normal") 
+  if (D[1] == "Multivariate Normal")
     DD <- 4
   if (D[1] == "Multinomial") {
-    if (as.numeric(D[4]) == 0) 
+    if (as.numeric(D[4]) == 0)
       DD <- 6 else DD <- 7
     wrt("CLRV 2")
   }
@@ -1673,15 +1673,15 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
   }
   
   if ((!is.null(BUGO)) && !(D[1] == "Mixed") && nrp > 0) {
-    if (D[1] == "Normal" || D[1] == "Multivariate Normal") 
+    if (D[1] == "Normal" || D[1] == "Multivariate Normal")
       DD2 <- 0
     if (is.null(xc)) {
-      wrt(paste("BUGO 6 ", DD, " ", DD2, " G30[1] ", priorcol, " '", modelfile, "' ", "'", initfile, "' ", "'", 
+      wrt(paste("BUGO 6 ", DD, " ", DD2, " G30[1] ", priorcol, " '", modelfile, "' ", "'", initfile, "' ", "'",
                 datafile, "'", sep = ""))
       wrt("ERAS   G30")
       wrt("LINK 0 G30")
     } else {
-      wrt(paste("BUGO 6 ", DD, " ", DD2, " ", "'", modelfile, "' ", "'", initfile, "' ", "'", datafile, "'", 
+      wrt(paste("BUGO 6 ", DD, " ", DD2, " ", "'", modelfile, "' ", "'", initfile, "' ", "'", datafile, "'",
                 sep = ""))
     }
   } else {
@@ -1693,7 +1693,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     if (is.null(xc)) {
       residcols <- "G30[1] G30[2]"
     }
-    wrt(paste("MCMC   0", burnin, adaption, scale, rate, tol, residcols, priorcol, fixM, residM, Lev1VarM, OtherVarM, 
+    wrt(paste("MCMC   0", burnin, adaption, scale, rate, tol, residcols, priorcol, fixM, residM, Lev1VarM, OtherVarM,
               priorcode, DD))
     
     if (is.null(xc)) {
@@ -1717,7 +1717,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
       }
       wrt("LINK 0 G23")
       if (dami[ndami] < iterations) {
-        wrt(paste("MCMC 1 ", (iterations/thinning) - dami[ndami], " ", thinning, " c1090 c1091 c1003 c1004 1 ", 
+        wrt(paste("MCMC 1 ", (iterations/thinning) - dami[ndami], " ", thinning, " c1090 c1091 c1003 c1004 1 ",
                   DD, sep = ""))
         wrt("PUPN c1003 c1004")
         wrt("AVER c1091 b99 b100")
@@ -1739,7 +1739,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
         }
         is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) abs(x - round(x)) < tol
         if (!is.wholenumber(iterations/refresh)) {
-          wrt(paste("MCMC 1 ", (iterations/thinning)%%refresh, " ", thinning, " c1090 c1091 c1003 c1004 1 ", 
+          wrt(paste("MCMC 1 ", (iterations/thinning)%%refresh, " ", thinning, " c1090 c1091 c1003 c1004 1 ",
                     DD, sep = ""))
           wrt("PUPN c1003 c1004")
           wrt("AVER c1091 b99 b100")
@@ -1801,9 +1801,9 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
       wrt("NAME   G25[4]  '_FACT_load_v'")
       wrt("NAME   G25[5]  '_FACT_var_b'")
       wrt("NAME   G25[6]  '_FACT_var_v'")
-      wrt(paste("PSTA '", FACTchainfile, "' ", "'_FACT_load_b_chain' ", "'_FACT_load_v_chain' ", "'_FACT_value_b' ", 
+      wrt(paste("PSTA '", FACTchainfile, "' ", "'_FACT_load_b_chain' ", "'_FACT_load_v_chain' ", "'_FACT_value_b' ",
                 "'_FACT_value_v' ", sep = ""))
-      wrt(paste("PSTA '", MCMCfile, "' ", "'_FP_b' ", "'_FP_v' ", "'_RP_b' ", "'_RP_v' ", "'_FACT_load_b' ", 
+      wrt(paste("PSTA '", MCMCfile, "' ", "'_FP_b' ", "'_FP_v' ", "'_RP_b' ", "'_RP_v' ", "'_FACT_load_b' ",
                 "'_FACT_load_v' ", "'_FACT_var_b' ", "'_FACT_var_v' ", "'_Stats'", sep = ""))
       wrt("ERAS G21")
       wrt("LINK 0 G21")
@@ -1868,7 +1868,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
           }
         }
         nonfp.s <- unique(nonfp.s)
-        if (is.na(sep.coeff[1])) 
+        if (is.na(sep.coeff[1]))
           sep.coeff <- character(0)
         for (p in sep.coeff) {
           if (is.na(nonfp.sep[1]) || sum(p == nonfp.s) == 0) {
@@ -2012,7 +2012,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
             nonfp.s <- gsub(paste(".", resp[i], sep = ""), "", nonfp.s)
           }
           nonfp.s <- unique(nonfp.s)
-          if (is.na(sep.coeff[1])) 
+          if (is.na(sep.coeff[1]))
             sep.coeff <- character(0)
           for (p in sep.coeff) {
             if (is.na(nonfp.sep[1]) || sum(p == nonfp.s) == 0) {
@@ -2057,7 +2057,6 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
           for (p in common.coeff) {
             newp <- paste(p, paste(which(as.logical(common.coeff.id[kk, ])), collapse = ""), sep = ".")
             kk <- kk + 1
-            print(newp)
             nonfp.c <- nonfp.common
             if (is.na(nonfp.common[1]) || sum(newp == nonfp.c) == 0) {
               if (is.null(categ) || sum(p == categ["var", ]) == 0) {
@@ -2205,7 +2204,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
         for (i in 1:j) {
           if (i == j) {
             if (resid.lev == as.numeric(clre[1, k]) && rpx[i] == clre[2, k] && rpx[i] == clre[3, k]) {
-              if (k < ncol(clre)) 
+              if (k < ncol(clre))
                 k <- k + 1
             } else {
               wrt("LINK 1 G25")
@@ -2215,9 +2214,9 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
               wrt("LINK 0 G25")
             }
           } else {
-            if ((resid.lev == as.numeric(clre[1, k]) && rpx[i] == clre[2, k] && rpx[j] == clre[3, k]) || (resid.lev == 
+            if ((resid.lev == as.numeric(clre[1, k]) && rpx[i] == clre[2, k] && rpx[j] == clre[3, k]) || (resid.lev ==
                                                                                                             as.numeric(clre[1, k]) && rpx[j] == clre[2, k] && rpx[i] == clre[3, k])) {
-              if (k < ncol(clre)) 
+              if (k < ncol(clre))
                 k <- k + 1
             } else {
               wrt("LINK 1 G25")
@@ -2305,7 +2304,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
             wrt(paste0("NAME G26[", k, "] '", shortname("lev_", displevel, "_resi_est_", rpx[k]), "'"))
             wrt(paste0("DESC G26[", k, "] ", "'residual estimates'"))
           } else {
-            if (ii < ncol(clre)) 
+            if (ii < ncol(clre))
               ii <- ii + 1
           }
         } else {
@@ -2323,7 +2322,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
               wrt(paste0("NAME G27[", k, "] '", shortname("lev_", displevel, "_resi_variance_", rpx[k]), "'"))
               wrt(paste0("DESC G27[", k, "] ", "'residual variance'"))
             } else {
-              if (ii < ncol(clre)) 
+              if (ii < ncol(clre))
                 ii <- ii + 1
             }
           } else {
@@ -2340,7 +2339,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
               wrt(paste0("NAME G27[", k, "] '", shortname("lev_", displevel, "_resi_se_", rpx[k]), "'"))
               wrt(paste0("DESC G27[", k, "] ", "'residual standard error'"))
             } else {
-              if (ii < ncol(clre)) 
+              if (ii < ncol(clre))
                 ii <- ii + 1
             }
           } else {
@@ -2367,7 +2366,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
               wrt(paste0("NAME G28[", k, "] '", shortname("lev_", displevel, "_std_resi_est_", rpx[k]), "'"))
               wrt(paste0("DESC G28[", k, "] ", "'std standardised residual'"))
             } else {
-              if (ii < ncol(clre)) 
+              if (ii < ncol(clre))
                 ii <- ii + 1
             }
           } else {
@@ -2443,4 +2442,4 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("EXIT")
   }
   return(namemap)
-} 
+}
