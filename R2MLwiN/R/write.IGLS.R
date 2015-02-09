@@ -1206,11 +1206,7 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
         for (p in nonfp.sep) wrt(paste("FPAR 0  '", p, "'", sep = ""))
       } else {
         for (i in 1:length(nonfp.sep)) {
-          if (i %in% interpos) {
-            wrt(paste("FPAR 0  '", gsub("\\:", "\\.", nonfp.sep[i]), "'", sep = ""))
-          } else {
             wrt(paste("FPAR 0  '", nonfp.sep[i], "'", sep = ""))
-          }
         }
       }
     }
@@ -1220,18 +1216,14 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
         for (p in nonfp.common) wrt(paste("FPAR 0  '", p, "'", sep = ""))
       } else {
         for (i in 1:length(nonfp.common)) {
-          if (i %in% interpos) {
-            wrt(paste("FPAR 0  '", gsub("\\:", "\\.", nonfp.common[i]), "'", sep = ""))
-          } else {
             wrt(paste("FPAR 0  '", nonfp.common[i], "'", sep = ""))
-          }
         }
       }
     }
   } else {
     if (!is.na(nonfp[1])) {
       wrt("NOTE Turn off the fixed part of the explotary varible(s)")
-      for (p in nonfp) wrt(paste("FPAR 0  '", gsub("\\:", "\\.", p), "'", sep = ""))
+      for (p in nonfp) wrt(paste("FPAR 0  '", p, "'", sep = ""))
     }
   }
   
@@ -1240,9 +1232,6 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
   if (nrp > 0) {
     for (ii in 1:nrp) {
       for (p in rp[[ii]]) {
-        if (oldsyntax) {
-          p <- gsub("\\:", "\\.", p)
-        }
         wrt(paste("SETV  ", as.numeric(sub("rp", "", rp.names[ii])), "   '", p, "'", sep = ""))
       }
     }
@@ -1250,8 +1239,7 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
   if (!is.null(clre)) {
     nclre <- ncol(clre)
     for (ii in 1:nclre) {
-      wrt(paste("CLRE  ", as.numeric(clre[1, ii]), " '", gsub("\\:", "\\.", clre[2, ii]), "' '", gsub("\\:", 
-                                                                                                      "\\.", clre[3, ii]), "'", sep = ""))
+      wrt(paste("CLRE  ", as.numeric(clre[1, ii]), " '",  clre[2, ii], "' '", clre[3, ii], "'", sep = ""))
     }
   }
   
