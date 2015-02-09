@@ -1239,8 +1239,12 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
   wrt("NOTE   Specify random part covariate(s)")
   if (nrp > 0) {
     for (ii in 1:nrp) {
-      for (p in rp[[ii]]) wrt(paste("SETV  ", as.numeric(sub("rp", "", rp.names[ii])), "   '", gsub("\\:", "\\.", 
-                                                                                                    p), "'", sep = ""))
+      for (p in rp[[ii]]) {
+        if (oldsyntax) {
+          p <- gsub("\\:", "\\.", p)
+        }
+        wrt(paste("SETV  ", as.numeric(sub("rp", "", rp.names[ii])), "   '", p, "'", sep = ""))
+      }
     }
   }
   if (!is.null(clre)) {
