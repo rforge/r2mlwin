@@ -31,9 +31,9 @@ data(tutorial, package = "R2MLwiN")
 
 plot(tutorial$standlrt, tutorial$normexam, asp = 1)
 
-(mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (student | 1), data = tutorial))
+(mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (1 | student), data = tutorial))
 
-(mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(resi.store = TRUE), 
+(mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(resi.store = TRUE), 
   data = tutorial))
 
 # 4.2 Graphing predicted school lines from a random intercept model . . . 51
@@ -59,14 +59,14 @@ xyplot(xbu ~ standlrt, type = "l", group = school, data = pred)
 
 # 4.3 The effect of clustering on the standard errors of coeficients . . .58
 
-(mymodel3 <- runMLwiN(normexam ~ 1 + standlrt + schgend + (school | 1) + (student | 1), data = tutorial))
+(mymodel3 <- runMLwiN(normexam ~ 1 + standlrt + schgend + (1 | school) + (1 | student), data = tutorial))
 
-(mymodel4 <- runMLwiN(normexam ~ 1 + standlrt + schgend + (student | 1), data = tutorial))
+(mymodel4 <- runMLwiN(normexam ~ 1 + standlrt + schgend + (1 | student), data = tutorial))
 
 # 4.4 Does the coeficient of standlrt vary across schools? Introducing a random slope . . . . . . . . . . . . . .
 # . . . . . . . . . . . . . .59
 
-(mymodel5 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1), estoptions = list(resi.store = TRUE), 
+(mymodel5 <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school) + (1 | student), estoptions = list(resi.store = TRUE), 
   data = tutorial))
 
 # 4.5 Graphing predicted school lines from a random slope model . . . . . 62

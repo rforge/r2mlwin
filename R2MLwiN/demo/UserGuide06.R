@@ -27,23 +27,23 @@ options(MLwiN_path = mlwin)
 
 data(tutorial, package = "R2MLwiN")
 
-(mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1), data = tutorial))
+(mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school) + (1 | student), data = tutorial))
 
 # 6.1 The impact of school gender on girls' achievement . . . . . . . . . 80
 
-(mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + sex + schgend + (school | 1 + standlrt) + (student | 1), data = tutorial))
+(mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + sex + schgend + (1 + standlrt | school) + (1 | student), data = tutorial))
 
-(mymodel3 <- runMLwiN(normexam ~ 1 + standlrt + sex + schgend + schgend:standlrt + (school | 1 + standlrt) + (student | 
-  1), estoptions = list(startval = list(FP.b = mymodel2@FP, FP.v = mymodel2@FP.cov, RP.b = mymodel2@RP, RP.v = mymodel2@RP.cov)), 
+(mymodel3 <- runMLwiN(normexam ~ 1 + standlrt + sex + schgend + schgend:standlrt + (1 + standlrt | school) + (1 | student),
+ estoptions = list(startval = list(FP.b = mymodel2@FP, FP.v = mymodel2@FP.cov, RP.b = mymodel2@RP, RP.v = mymodel2@RP.cov)), 
   data = tutorial))
 
 
 # 6.2 Contextual effects of school intake ability averages . . . . . . . .83
 
-(mymodel4 <- runMLwiN(normexam ~ 1 + standlrt + sex + schgend + schav + (school | 1 + standlrt) + (student | 1), data = tutorial))
+(mymodel4 <- runMLwiN(normexam ~ 1 + standlrt + sex + schgend + schav + (1 + standlrt | school) + (1 | student), data = tutorial))
 
-(mymodel5 <- runMLwiN(normexam ~ 1 + standlrt + sex + schgend + schav + standlrt:schav + (school | 1 + standlrt) + 
-  (student | 1), data = tutorial))
+(mymodel5 <- runMLwiN(normexam ~ 1 + standlrt + sex + schgend + schav + standlrt:schav + (1 + standlrt | school) + 
+  (1 | student), data = tutorial))
 
 pred <- predict(mymodel5, params = c("FP_schavhigh", "FP_standlrt:schavhigh"), se.fit = TRUE)
 

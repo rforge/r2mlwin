@@ -34,9 +34,9 @@ summary(wage1)
 hist(wage1$earnings)
 hist(wage1$logearn, breaks = 20)
 
-(mymodel <- runMLwiN(logearn ~ 1 + age_40 + numjobs + (id | 1), estoptions = list(EstM = 1), data = wage1))
+(mymodel <- runMLwiN(logearn ~ 1 + age_40 + numjobs + (1 | id), estoptions = list(EstM = 1), data = wage1))
 
-(mymodel <- runMLwiN(logearn ~ 1 + age_40 + numjobs + sex + parttime + (id | 1), estoptions = list(EstM = 1), data = wage1))
+(mymodel <- runMLwiN(logearn ~ 1 + age_40 + numjobs + sex + parttime + (1 | id), estoptions = list(EstM = 1), data = wage1))
 
 vars <- cbind(as.numeric(wage1$parttime) - 1, as.numeric(wage1$sex) - 1, wage1$numjobs)
 colnames(vars) <- c("parttime", "sex", "numjobs")
@@ -46,11 +46,11 @@ round(cor(vars), 4)
 
 tabulate(wage1$numjobs)
 
-(mymodel <- runMLwiN(logearn ~ 1 + age_40 + sex + parttime + (company | 1) + (id | 1), estoptions = list(EstM = 1), 
+(mymodel <- runMLwiN(logearn ~ 1 + age_40 + sex + parttime + (1 | company) + (1 | id), estoptions = list(EstM = 1), 
   data = wage1))
 
 ## Multiple membership
-(mymodel <- runMLwiN(logearn ~ 1 + age_40 + sex + parttime + (company | 1) + (id | 1), estoptions = list(EstM = 1, 
+(mymodel <- runMLwiN(logearn ~ 1 + age_40 + sex + parttime + (1 | company) + (1 | id), estoptions = list(EstM = 1, 
   mm = list(list(mmvar = list("company", "company2", "company3", "company4"), weights = list("weight1", "weight2", 
     "weight3", "weight4")), NA), resi.store = TRUE, resi.store.levs = 2), data = wage1))
 
@@ -78,7 +78,7 @@ wage1$companyno67 <- (wage1$company == 67) + (wage1$company2 == 67) + (wage1$com
   67)
 
 ## Multiple membership
-(mymodel <- runMLwiN(logearn ~ 1 + age_40 + sex + parttime + companyno54 + companyno67 + (company | 1) + (id | 1), 
+(mymodel <- runMLwiN(logearn ~ 1 + age_40 + sex + parttime + companyno54 + companyno67 + (1 | company) + (1 | id), 
   estoptions = list(EstM = 1, mm = list(list(mmvar = list("company", "company2", "company3", "company4"), weights = list("weight1", 
     "weight2", "weight3", "weight4")), NA)), data = wage1))
 
@@ -86,7 +86,7 @@ wage1$companyno67 <- (wage1$company == 67) + (wage1$company2 == 67) + (wage1$com
 
 
 ## New weights
-(mymodel <- runMLwiN(logearn ~ 1 + age_40 + sex + parttime + companyno54 + companyno67 + (company | 1) + (id | 1), 
+(mymodel <- runMLwiN(logearn ~ 1 + age_40 + sex + parttime + companyno54 + companyno67 + (1 | company) + (1 | id), 
   estoptions = list(EstM = 1, mm = list(list(mmvar = list("company", "company2", "company3", "company4"), weights = list("weight1", 
     "weight2", "weight3", "weight4")), NA)), data = wage1))
 

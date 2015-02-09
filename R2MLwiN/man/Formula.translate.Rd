@@ -46,23 +46,23 @@ library(R2MLwiN)
 # with the highest level (school) specified first.
 # E.g. see demo(UserGuide04)
 data(tutorial, package = 'R2MLwiN')
-(mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (school|1) + (student|1),
+(mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student),
                      data = tutorial))
 
 # Adding a random slope
-(mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + (school|1 + standlrt)
-                     + (student|1), data = tutorial))
+(mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school)
+                     + (1 | student), data = tutorial))
 
 # Exploring complex level 1 variation
 # E.g. see demo(UserGuide07)
-(mymodel3 <- runMLwiN(normexam ~ 1 + standlrt + (school|1 + standlrt)
-                      + (student|1 + standlrt), data = tutorial))
+(mymodel3 <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school)
+                      + (1 + standlrt | student), data = tutorial))
 
 # Logit link with cons specified as denominator
 # Note level 1 ID not explicitly specified
 # E.g. see demo(UserGuide09)
 data(bang, package = 'R2MLwiN')
-(mymodel4 <- runMLwiN(logit(use, cons) ~ 1 + lc + age + (district|1),
+(mymodel4 <- runMLwiN(logit(use, cons) ~ 1 + lc + age + (1 | district),
                       D = 'Binomial', data = bang))
 
 # Mixed response model
@@ -72,7 +72,7 @@ data(bang, package = 'R2MLwiN')
 # E.g. see demo(MCMCGuide19)
 data(jspmix1, package = 'R2MLwiN')
 (mymodel <- runMLwiN(c(english, probit(behaviour, cons)) ~
-                     1 + sex + ravens + fluent[1] + (school|1) + (id|1[1]),
+                     1 + sex + ravens + fluent[1] + (1 | school) + (1[1] | id),
                      D = c('Mixed', 'Normal', 'Binomial'),
                      estoptions = list(EstM = 1,
                      mcmcMeth = list(fixM = 1, residM = 1, Lev1VarM = 1)),

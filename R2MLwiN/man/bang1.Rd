@@ -40,7 +40,7 @@ See \code{mlmRev} package for an alternative format of the same dataset, with fe
 
 data(bang1, package = "R2MLwiN")
 
-(mymodel <- runMLwiN(logit(use, denomb) ~ 1 + age + lc + urban + (district | 1 + urban),
+(mymodel <- runMLwiN(logit(use, denomb) ~ 1 + age + lc + urban + (1 + urban | district),
   D = "Binomial", estoptions = list(EstM = 1), data = bang1))
 
 }

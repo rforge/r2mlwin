@@ -39,7 +39,7 @@ a_point_uniform <- (a_point_rank - 0.5)/length(a_point_rank)
 
 alevchem$alevelnormal <- qnorm(a_point_uniform)
 
-(mymodel1 <- runMLwiN(alevelnormal ~ 1 + (pupil | 1), data = alevchem))
+(mymodel1 <- runMLwiN(alevelnormal ~ 1 + (1 | pupil), data = alevchem))
 
 alevchem$gcseav <- alevchem$gcse_tot/alevchem$gcse_no
 
@@ -48,14 +48,14 @@ gcseav_uniform <- (gcseav_rank - 0.5)/length(gcseav_rank)
 
 alevchem$gcseavnormal <- qnorm(gcseav_uniform)
 
-(mymodel2 <- runMLwiN(alevelnormal ~ 1 + gender + gcseavnormal + I(gcseavnormal^2) + I(gcseavnormal^3) + (pupil | 
-  1), data = alevchem))
+(mymodel2 <- runMLwiN(alevelnormal ~ 1 + gender + gcseavnormal + I(gcseavnormal^2) + I(gcseavnormal^3) + (1 | pupil),
+ data = alevchem))
 
-(mymodel3 <- runMLwiN(alevelnormal ~ 1 + gender + gcseavnormal + I(gcseavnormal^2) + (pupil | 1), data = alevchem))
+(mymodel3 <- runMLwiN(alevelnormal ~ 1 + gender + gcseavnormal + I(gcseavnormal^2) + (1 | pupil), data = alevchem))
 
-(mymodel4 <- runMLwiN(alevelnormal ~ 1 + gender + (pupil | 1), data = alevchem))
+(mymodel4 <- runMLwiN(alevelnormal ~ 1 + gender + (1 | pupil), data = alevchem))
 
-(mymodel5 <- runMLwiN(gcseavnormal ~ 1 + gender + (pupil | 1), data = alevchem))
+(mymodel5 <- runMLwiN(gcseavnormal ~ 1 + gender + (1 | pupil), data = alevchem))
 
 # 11.3 A single-level model with an ordered categorical response variable 166
 
@@ -68,22 +68,22 @@ alevchem$gcseavnormal <- qnorm(gcseav_uniform)
 
 alevchem$school <- as.numeric(factor(paste0(alevchem$lea, alevchem$estab)))
 
-(mymodel7 <- runMLwiN(logit(a_point, cons, 6) ~ 1 + (school | 1[1:5]), D = "Ordered Multinomial", data = alevchem))
+(mymodel7 <- runMLwiN(logit(a_point, cons, 6) ~ 1 + (1[1:5] | school), D = "Ordered Multinomial", data = alevchem))
 
-(mymodel8 <- runMLwiN(logit(a_point, cons, 6) ~ 1 + (school | 1[1:5]), D = "Ordered Multinomial", estoptions = list(nonlinear = c(N = 1, 
+(mymodel8 <- runMLwiN(logit(a_point, cons, 6) ~ 1 + (1[1:5] | school), D = "Ordered Multinomial", estoptions = list(nonlinear = c(N = 1, 
   M = 2)), data = alevchem))
 
-(mymodel9 <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseavnormal[1:5] + (school | 1[1:5]), D = "Ordered Multinomial", 
+(mymodel9 <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseavnormal[1:5] + (1[1:5] | school), D = "Ordered Multinomial", 
   estoptions = list(nonlinear = c(N = 1, M = 2)), data = alevchem))
 
-(mymodel10 <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseavnormal + (school | 1[1:5]), D = "Ordered Multinomial", 
+(mymodel10 <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseavnormal + (1[1:5] | school), D = "Ordered Multinomial", 
   estoptions = list(nonlinear = c(N = 1, M = 2)), data = alevchem))
 
-(mymodel11 <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseavnormal[1:5] + gender[1:5] + I(gcseavnormal^2)[1:5] + (school | 
-  1[1:5]), D = "Ordered Multinomial", estoptions = list(nonlinear = c(N = 1, M = 2)), data = alevchem))
+(mymodel11 <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseavnormal[1:5] + gender[1:5] + I(gcseavnormal^2)[1:5] + (1[1:5] | school),
+ D = "Ordered Multinomial", estoptions = list(nonlinear = c(N = 1, M = 2)), data = alevchem))
 
-(mymodel12 <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseavnormal[1:5] + gender[1:5] + I(gcseavnormal^2)[1:5] + (school | 
-  1[1:5] + gcseavnormal[1:5]), D = "Ordered Multinomial", estoptions = list(nonlinear = c(N = 1, M = 2), startval = list(FP.b = mymodel11@FP, 
+(mymodel12 <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseavnormal[1:5] + gender[1:5] + I(gcseavnormal^2)[1:5] + (1[1:5] + gcseavnormal[1:5] | school),
+ D = "Ordered Multinomial", estoptions = list(nonlinear = c(N = 1, M = 2), startval = list(FP.b = mymodel11@FP, 
   FP.v = mymodel11@FP.cov, RP.b = mymodel11@RP, RP.v = mymodel11@RP.cov)), data = alevchem))
 
 invlogit <- function(x) exp(x)/(1 + exp(x))
@@ -108,8 +108,8 @@ invlogit(mymodel12@FP["FP_Intercept_C"] + mymodel12@FP["FP_gcseavnormal_12345"])
 
 invlogit(mymodel12@FP["FP_Intercept_B"] + mymodel12@FP["FP_gcseavnormal_12345"])
 
-(mymodel13 <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseavnormal[1:5] + gender[1:5] + I(gcseavnormal^2)[1:5] + (school | 
-  +gcseavnormal[1:5] + gender[1:5]), D = "Ordered Multinomial", estoptions = list(nonlinear = c(N = 1, M = 2), startval = list(FP.b = mymodel12@FP, 
+(mymodel13 <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseavnormal[1:5] + gender[1:5] + I(gcseavnormal^2)[1:5] + (gcseavnormal[1:5] + gender[1:5] | school),
+ D = "Ordered Multinomial", estoptions = list(nonlinear = c(N = 1, M = 2), startval = list(FP.b = mymodel12@FP, 
   FP.v = mymodel12@FP.cov, RP.b = mymodel12@RP, RP.v = mymodel12@RP.cov)), data = alevchem))
 
 

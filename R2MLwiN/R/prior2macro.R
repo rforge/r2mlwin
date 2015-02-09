@@ -1,9 +1,9 @@
 #' Translates informative prior information into a concise MLwiN macro.
-#' 
+#'
 #' An internal function which takes an R list object containing informative
 #' prior information for a multilevel model and translates it into a concise
 #' vector object to be used in an MLwiN macro.
-#'  
+#'
 #' @param prior An R list object containing prior information for a multilevel
 #' model. See `Details' below.
 #' @param formula A formula object; see
@@ -39,15 +39,15 @@
 #' the covariance matrix. Note that this is a weakly-informative prior and the
 #' default prior is used if missing.
 #' }
-#' 
+#'
 #' @return A long vector is returned in the format of MLwiN macro language. This
 #' includes all the specified prior parameters.
-#' 
+#'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
-#' 
+#'
 #' @seealso \code{\link{runMLwiN}}
-#' 
+#'
 prior2macro <- function(prior, formula, levID, D, indata) {
   ## translation from prior information to MLwiN macro
   
@@ -95,7 +95,7 @@ prior2macro <- function(prior, formula, levID, D, indata) {
       }
     }
     if (length(Iterms) > 0) {
-      Iterms <- sapply(regmatches(Iterms, gregexpr("\\[{1}([[:digit:]]|\\,|[[:space:]])*\\]{1}", Iterms), invert = TRUE), 
+      Iterms <- sapply(regmatches(Iterms, gregexpr("\\[{1}([[:digit:]]|\\,|[[:space:]])*\\]{1}", Iterms), invert = TRUE),
                        function(x) paste(x, collapse = ""))
       tform <- as.formula(paste0("~0+", paste(Iterms, collapse = "+")))
       dataplus <- model.frame(formula = tform, data = indata, na.action = NULL)
@@ -135,9 +135,9 @@ prior2macro <- function(prior, formula, levID, D, indata) {
           pos_polyfunc <- grepl("(poly|polym)\\([[:print:]]+\\)", xlabs)
           if (any(pos_polyfunc)) {
             xployterms <- xlabs[pos_polyfunc]
-            xployterms <- sapply(regmatches(xployterms, gregexpr("\\[{1}([[:digit:]]|\\,|[[:space:]])*\\]{1}", 
+            xployterms <- sapply(regmatches(xployterms, gregexpr("\\[{1}([[:digit:]]|\\,|[[:space:]])*\\]{1}",
                                                                  xployterms), invert = TRUE), function(x) paste(x, collapse = ""))
-            labs.common <- sapply(regmatches(xployterms, gregexpr("\\[{1}([[:digit:]]|\\,|[[:space:]])*\\]{1}", 
+            labs.common <- sapply(regmatches(xployterms, gregexpr("\\[{1}([[:digit:]]|\\,|[[:space:]])*\\]{1}",
                                                                   xployterms)), function(x) paste(x, collapse = ""))
             is_labs.common <- !(labs.common == "")
             otherterms <- xlabs[!pos_polyfunc]
@@ -264,7 +264,7 @@ prior2macro <- function(prior, formula, levID, D, indata) {
   }
   
   left2leftsc <- function(left, nlev, nresp, D) {
-    is_cvar <- grepl("(\\+|\\-|\\*|\\/|\\:|\\|){1}\\(*[[:alnum:]]{1}[[:graph:]]*\\[{1}(c\\(|\\)|\\,|\\:|[[:digit:]])*\\]{1}\\)*(\\+|\\-|\\*|\\/|\\:|$)", 
+    is_cvar <- grepl("(\\+|\\-|\\*|\\/|\\:|\\|){1}\\(*[[:alnum:]]{1}[[:graph:]]*\\[{1}(c\\(|\\)|\\,|\\:|[[:digit:]])*\\]{1}\\)*(\\+|\\-|\\*|\\/|\\:|$)",
                      left)
     if (!any(is_cvar)) {
       return(left)
@@ -281,7 +281,7 @@ prior2macro <- function(prior, formula, levID, D, indata) {
     for (ii in cc) {
       for (jj in 1:nleft) {
         lev_found <- grepl(paste0("^", ii, "\\|"), left[jj])
-        cvar_found <- grepl("(\\+|\\-|\\*|\\/|\\:|\\|){1}\\(*[[:alnum:]]{1}[[:graph:]]*\\[{1}(c\\(|\\)|\\,|\\:|[[:digit:]])*\\]{1}\\)*(\\+|\\-|\\*|\\/|\\:|$)", 
+        cvar_found <- grepl("(\\+|\\-|\\*|\\/|\\:|\\|){1}\\(*[[:alnum:]]{1}[[:graph:]]*\\[{1}(c\\(|\\)|\\,|\\:|[[:digit:]])*\\]{1}\\)*(\\+|\\-|\\*|\\/|\\:|$)",
                             left[jj])
         if (lev_found && cvar_found) {
           leftjj <- sub(paste0("^", ii, "\\|"), "", left[jj])
@@ -429,7 +429,7 @@ prior2macro <- function(prior, formula, levID, D, indata) {
   tempfstr <- gsub("[[:space:]]", "", tempfstr)
   
   if (!any(D %in% c("Normal", "Multivariate Normal"))) {
-    Formula <- update(Formula, ~. + (l1id | 0))
+    Formula <- update(Formula, ~. + (0 | l1id))
   }
   
   Terms <- terms.formula(Formula, keep.order = TRUE)
@@ -448,32 +448,62 @@ prior2macro <- function(prior, formula, levID, D, indata) {
   }
   
   if (is.null(levID)) {
-    charposlevID <- grepl("^[[:alpha:]]{1}[[:graph:]]*\\|", left)
+    charposlevID <- grepl("\\|{1,2}[[:alpha:]]{1}[[:graph:]]*$", left)
     vlpos <- grepl("\\|", left)
-    nonzeropos <- !grepl("^0{1}(s|c)*\\|", left)
+    nonzeropos <- !grepl("\\|{1,2}0{1}(s|c)*$", left)
     vlpos <- vlpos & nonzeropos
     if (any(charposlevID) && (sum(charposlevID) == sum(vlpos))) {
-      levID <- sub("\\|{1,2}[[:graph:]]+", "", left[which(vlpos)])
+      levID <- sub("[[:graph:]]+\\|{1,2}", "", left[which(vlpos)])
       nlev <- length(levID)
       cc <- c(0:nlev)
       for (ii in 1:nlev) {
-        left <- sub(paste0("^", levID[ii], "\\|"), paste0(c(nlev:1)[ii], "|"), left)
+        pos_first <- grep(paste0("\\|{1,2}", levID[ii], "$"), left)
+        if (length(pos_first) > 0) {
+          kk <- 0
+          for (jj in 1:length(pos_first)){
+            if (grepl("\\|{2}",left[pos_first[jj]])){
+              left[pos_first[jj]] <- sub(paste0("\\|{2}", levID[ii], "$"), "", left[pos_first[jj]])
+              left[pos_first[jj]] <- paste0(paste0(c(nlev:1)[ii], "||"), left[pos_first[jj]])
+            }else{
+              if (kk == 0){
+                left[pos_first[jj]] <- sub(paste0("\\|{1}", levID[ii], "$"), "", left[pos_first[jj]])
+                left[pos_first[jj]] <- paste0(paste0(c(nlev:1)[ii], "|"), left[pos_first[jj]])
+                kk <- kk + 1
+              }
+            }
+          }
+        }
       }
-      onevlzero <- left == "1|0"
-      onevdlzero <- left == "1||0"
+      onevlzero <- left == "0|1"
+      onevdlzero <- left == "0||1"
       delpos <- onevlzero | onevdlzero
       left <- left[!(delpos)]
     } else {
       stop("levID cannot be determined based on the formula")
     }
   } else {
-    charposlevID <- grepl("^[[:alpha:]]{1}[[:graph:]]*\\|", left)
+    charposlevID <- grepl("\\|{1,2}[[:alpha:]]{1}[[:graph:]]*$", left)
     if (any(charposlevID)) {
       for (ii in 1:nlev) {
-        left <- sub(paste0("^", levID[ii], "\\|"), paste0(c(nlev:1)[ii], "|"), left)
+        pos_first <- grep(paste0("\\|{1,2}", levID[ii], "$"), left)
+        if (length(pos_first) > 0) {
+          kk <- 0
+          for (jj in 1:length(pos_first)){
+            if (grepl("\\|{2}",left[pos_first[jj]])){
+              left[pos_first[jj]] <- sub(paste0("\\|{2}", levID[ii], "$"), "", left[pos_first[jj]])
+              left[pos_first[jj]] <- paste0(paste0(c(nlev:1)[ii], "||"), left[pos_first[jj]])
+            }else{
+              if (kk == 0){
+                left[pos_first[jj]] <- sub(paste0("\\|{1}", levID[ii], "$"), "", left[pos_first[jj]])
+                left[pos_first[jj]] <- paste0(paste0(c(nlev:1)[ii], "|"), left[pos_first[jj]])
+                kk <- kk + 1
+              }
+            }
+          }
+        }
       }
-      onevlzero <- left == "1|0"
-      onevdlzero <- left == "1||0"
+      onevlzero <- left == "0|1"
+      onevdlzero <- left == "0||1"
       delpos <- onevlzero | onevdlzero
       left <- left[!(delpos)]
     }
@@ -580,7 +610,7 @@ prior2macro <- function(prior, formula, levID, D, indata) {
     names(D)[5] <- "ref.cat"
     resp <- resp[1]
   }
-  if (D[1] == "Mixed") 
+  if (D[1] == "Mixed")
     D <- as.list(D)
   if (D[[1]] == "Mixed") {
     resp <- sub("^c\\(", "", resp)
@@ -649,7 +679,7 @@ prior2macro <- function(prior, formula, levID, D, indata) {
     left <- gsub("\\]", "\\}", left)
   }
   cflag <- 0
-  if (sum(grepl("\\(+[[:digit:]]+[[:alpha:]]+\\|", left)) > 0) 
+  if (sum(grepl("\\(+[[:digit:]]+[[:alpha:]]+\\|", left)) > 0)
     cflag <- 1
   if (cflag == 0) {
     for (i in cc) {
@@ -662,7 +692,7 @@ prior2macro <- function(prior, formula, levID, D, indata) {
   if (is_str_form) {
     leftsplit <- strsplit(left, "(\\+)|(\\|)")
     categstr <- unique(unlist(sapply(leftsplit, function(x) {
-      unlist(regmatches(x, gregexpr("([[:alnum:]]*(\\_|\\-|\\^|\\&)*[[:alnum:]])+(\\[+\\]|\\[+[[:print:]]+\\])", 
+      unlist(regmatches(x, gregexpr("([[:alnum:]]*(\\_|\\-|\\^|\\&)*[[:alnum:]])+(\\[+\\]|\\[+[[:print:]]+\\])",
                                     x)))
     })))
     
@@ -676,7 +706,7 @@ prior2macro <- function(prior, formula, levID, D, indata) {
         cvx <- unlist(strsplit(categstr[i], "\\["))
         categ[1, i] <- cvx[1]
         cvy <- sub("\\]", "", cvx[2])
-        if (cvy == "") 
+        if (cvy == "")
           cvy <- NA
         categ[2, i] <- cvy
         categ[3, i] <- length(levels(indata[[categ[1, i]]]))
@@ -864,7 +894,7 @@ prior2macro <- function(prior, formula, levID, D, indata) {
   if (D[1] == "Normal" || D[1] == "Multivariate Normal" || D[1] == "Mixed") {
     efflev <- nlev:1
   } else {
-    if (nlev > 1) 
+    if (nlev > 1)
       efflev <- nlev:2 else efflev <- NULL
   }
   
@@ -882,7 +912,7 @@ prior2macro <- function(prior, formula, levID, D, indata) {
       }
     }
   }
-  if (!(D[1] == "Normal" || D[1] == "Multivariate Normal" || D[1] == "Mixed")) 
+  if (!(D[1] == "Normal" || D[1] == "Multivariate Normal" || D[1] == "Mixed"))
     TT <- c(TT, 0)
   TT
-} 
+}

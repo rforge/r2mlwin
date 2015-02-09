@@ -53,7 +53,7 @@ alevchem$a_point_num <- as.numeric(alevchem$a_point)
 
 ## Example: A-level Chemistry
 (mymodel <- runMLwiN(a_point_num ~ 1 + gcseav + I(gcseav^2) + I(gcseav^3)
-                     + gender + (pupil | 1), estoptions = list(EstM = 1,  resi.store = TRUE),
+                     + gender + (1 | pupil), estoptions = list(EstM = 1,  resi.store = TRUE),
                      data = alevchem))
 
 predCurves(mymodel, xname = "gcseav", group = "genderfemale")

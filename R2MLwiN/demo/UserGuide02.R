@@ -49,7 +49,7 @@ tab
 
 t.test(normexam ~ sex, data = tutorial, var.equal = TRUE)
 
-(mymodel1 <- runMLwiN(normexam ~ 1 + sex + (student | 1), data = tutorial))
+(mymodel1 <- runMLwiN(normexam ~ 1 + sex + (1 | student), data = tutorial))
 
 # 2.4 Comparing more than two groups: Fixed effects models . . . . . . . .20
 
@@ -57,11 +57,11 @@ mean_normexam <- aggregate(normexam ~ school, mean, data = tutorial)$normexam
 
 hist(mean_normexam)
 
-mymodel2 <- runMLwiN(normexam ~ 1 + (student | 1), data = tutorial)
+mymodel2 <- runMLwiN(normexam ~ 1 + (1 | student), data = tutorial)
 
 tutorial$school <- relevel(tutorial$school, 65)
 
-(mymodel3 <- runMLwiN(normexam ~ 1 + school + (student | 1), data = tutorial))
+(mymodel3 <- runMLwiN(normexam ~ 1 + school + (1 | student), data = tutorial))
 
 aov(normexam ~ school, data = tutorial)
 
@@ -70,7 +70,7 @@ library(lmtest)
 
 lrtest(mymodel2, mymodel3)
 
-(mymodel4 <- runMLwiN(normexam ~ 1 + school + schgend + (student | 1), data = tutorial))
+(mymodel4 <- runMLwiN(normexam ~ 1 + school + schgend + (1 | student), data = tutorial))
 
 
 
@@ -78,9 +78,9 @@ lrtest(mymodel2, mymodel3)
 
 tutorial$school <- as.numeric(levels(tutorial$school))[tutorial$school]
 
-(mymodel5 <- runMLwiN(normexam ~ 1 + (school | 1) + (student | 1), data = tutorial))
+(mymodel5 <- runMLwiN(normexam ~ 1 + (1 | school) + (1 | student), data = tutorial))
 
-(mymodel6 <- runMLwiN(normexam ~ 1 + schgend + (school | 1) + (student | 1), data = tutorial))
+(mymodel6 <- runMLwiN(normexam ~ 1 + schgend + (1 | school) + (1 | student), data = tutorial))
 
 
 #     Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . 35

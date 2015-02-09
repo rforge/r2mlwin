@@ -35,21 +35,21 @@ data(gcsecomp1, package="R2MLwiN")
 # 18.2 Fitting single level multivariate models . . . . . . . . . . . . .265
 
 ## IGLS
-(mymodel <- runMLwiN(c(written, csework) ~ 1 + (student | 1), D = "Multivariate Normal", estoptions = list(sort.ignore = TRUE), 
+(mymodel <- runMLwiN(c(written, csework) ~ 1 + (1 | student), D = "Multivariate Normal", estoptions = list(sort.ignore = TRUE), 
   data = gcsecomp1))
 ## MCMC
-(mymodel <- runMLwiN(c(written, csework) ~ 1 + (student | 1), D = "Multivariate Normal", estoptions = list(EstM = 1, 
+(mymodel <- runMLwiN(c(written, csework) ~ 1 + (1 | student), D = "Multivariate Normal", estoptions = list(EstM = 1, 
   sort.ignore = TRUE), data = gcsecomp1))
 
 # 18.3 Adding predictor variables . . . . . . . . . . . . . . . . . . . .270
 
-(mymodel <- runMLwiN(c(written, csework) ~ 1 + female + (student | 1), D = "Multivariate Normal", estoptions = list(EstM = 1, 
+(mymodel <- runMLwiN(c(written, csework) ~ 1 + female + (1 | student), D = "Multivariate Normal", estoptions = list(EstM = 1, 
   sort.ignore = TRUE), data = gcsecomp1))
 
 # 18.4 A multilevel multivariate model . . . . . . . . . . . . . . . . . 271
 
 ## Store residual chain at level 3: school
-(mymodel <- runMLwiN(c(written, csework) ~ 1 + female + (school | 1) + (student | 1), D = "Multivariate Normal", estoptions = list(EstM = 1, 
+(mymodel <- runMLwiN(c(written, csework) ~ 1 + female + (1 | school) + (1 | student), D = "Multivariate Normal", estoptions = list(EstM = 1, 
   resi.store = TRUE, resi.store.levs = 3), data = gcsecomp1))
 
 resi <- mymodel@resi.chains$resi_lev3
@@ -101,10 +101,10 @@ for (i in 1:6) points(x = resi0mean[rankno0[which(rankno0 == hipos[i])]], y = re
 ## Read gcsemv1 data
 data(gcsemv1, package = "R2MLwiN")
 
-(mymodel <- runMLwiN(c(written, csework) ~ 1 + female + (student | 1), D = "Multivariate Normal", estoptions = list(EstM = 1, 
+(mymodel <- runMLwiN(c(written, csework) ~ 1 + female + (1 | student), D = "Multivariate Normal", estoptions = list(EstM = 1, 
   sort.ignore = TRUE), data = gcsemv1))
 
-(mymodel <- runMLwiN(c(written, csework) ~ 1 + female + (school | 1) + (student | 1), D = "Multivariate Normal", estoptions = list(EstM = 1, 
+(mymodel <- runMLwiN(c(written, csework) ~ 1 + female + (1 | school) + (1 | student), D = "Multivariate Normal", estoptions = list(EstM = 1, 
   mcmcMeth = list(dami = 2)), data = gcsemv1))
 
 # 18.6 Imputation methods for missing data . . . . . . . . . . . . . . . 280
@@ -115,11 +115,11 @@ data(gcsemv1, package = "R2MLwiN")
 data(hungary1, package = "R2MLwiN")
 summary(hungary1)
 
-(mymodel <- runMLwiN(c(es_core, biol_core, biol_r3, biol_r4, phys_core, phys_r2) ~ 1 + female + (school | 1) + (student | 
-  1), D = "Multivariate Normal", data = hungary1))
+(mymodel <- runMLwiN(c(es_core, biol_core, biol_r3, biol_r4, phys_core, phys_r2) ~ 1 + female + (1 | school) + (1 | student),
+ D = "Multivariate Normal", data = hungary1))
 
-(mymodel <- runMLwiN(c(es_core, biol_core, biol_r3, biol_r4, phys_core, phys_r2) ~ 1 + female + (school | 1) + (student | 
-  1), D = "Multivariate Normal", estoptions = list(EstM = 1, mcmcMeth = list(dami = c(0, 1000, 2000, 3000, 4000, 
+(mymodel <- runMLwiN(c(es_core, biol_core, biol_r3, biol_r4, phys_core, phys_r2) ~ 1 + female + (1 | school) + (1 | student),
+ D = "Multivariate Normal", estoptions = list(EstM = 1, mcmcMeth = list(dami = c(0, 1000, 2000, 3000, 4000, 
   5000))), data = hungary1))
 
 head(mymodel["MIdata"])

@@ -27,20 +27,20 @@ options(MLwiN_path = mlwin)
 data(tutorial, package = "R2MLwiN")
 
 ## Choose MCMC algoritm for estimation (IGLS will be used to obtain starting values for MCMC)
-(mymodel <- runMLwiN(normexam ~ 1 + standlrt + school + school:standlrt + (student | 1), estoptions = list(EstM = 1), 
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + school + school:standlrt + (1 | student), estoptions = list(EstM = 1), 
   data = tutorial))
 
 ## Define the model Choose IGLS algoritm for estimation Fit the model
-(mymodel0a <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1), data = tutorial))
+(mymodel0a <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school) + (1 | student), data = tutorial))
 
 ## Choose MCMC algoritm for estimation (IGLS will be used to obtain starting values for MCMC)
-(mymodel0 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1), estoptions = list(EstM = 1), 
+(mymodel0 <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school) + (1 | student), estoptions = list(EstM = 1), 
   data = tutorial))
 
 # 6.1 Prediction intervals for a random slopes regression model . . . . . 75
 
 ## Save level 2 residual chains
-(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1), estoptions = list(EstM = 1, 
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school) + (1 | student), estoptions = list(EstM = 1, 
   mcmcMeth = list(iterations = 5001), resi.store.levs = 2), data = tutorial))
 
 predLines(mymodel, xname = "standlrt", lev = 2, selected = NULL, probs = c(0.025, 0.975), legend.space = "right", 
@@ -57,19 +57,19 @@ RP.b <- c(0.1, 0, 0.1, 0.554)
 names(RP.b) <- c("RP2_var_Intercept", "RP2_cov_Intercept_standlrt", "RP2_var_standlrt", "RP1_var_Intercept")
 
 ## Fit the model
-(mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1), estoptions = list(EstM = 1, 
+(mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school) + (1 | student), estoptions = list(EstM = 1, 
   startval = list(RP.b = RP.b)), data = tutorial))
 
 # 6.4 Uniform prior . . . . . . . . . . . . . . . . . . . . . . . . . . . 79
 
 ## Diffuse priors (Uniform priors)
-(mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1), estoptions = list(EstM = 1, 
+(mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school) + (1 | student), estoptions = list(EstM = 1, 
   mcmcMeth = list(priorcode = 0)), data = tutorial))
 
 # 6.5 Informative prior . . . . . . . . . . . . . . . . . . . . . . . . . 80
 
 ## Informative normal prior for Sigma_u
-(mymodel3 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1), estoptions = list(EstM = 1, 
+(mymodel3 <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school) + (1 | student), estoptions = list(EstM = 1, 
   mcmcMeth = list(priorParam = list(rp2 = list(estimate = matrix(c(0.09, 0.018, 0.09, 0.015), 2, 2), size = 65)))), 
   data = tutorial))
 

@@ -36,13 +36,13 @@ covmatrix[3, 1] <- "sexgirl"
 
 contrasts(tutorial$sex, 2) <- diag(2)
 
-(mymodel1 <- runMLwiN(normexam ~ 0 + sex + (student | 0 + sex), estoptions = list(clre = covmatrix), data = tutorial))
+(mymodel1 <- runMLwiN(normexam ~ 0 + sex + (0 + sex | student), estoptions = list(clre = covmatrix), data = tutorial))
 
 contrasts(tutorial$sex, 1) <- c(0, 1)
 
 # 7.2 Variance functions at level 2 . . . . . . . . . . . . . . . . . . . 95
 
-(mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1), data = tutorial))
+(mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school) + (1 | student), data = tutorial))
 
 l2varfn <- mymodel2@RP["RP2_var_Intercept"] + (2 * mymodel2@RP["RP2_cov_Intercept_standlrt"] * mymodel2@data$standlrt) + 
   (mymodel2@RP["RP2_var_standlrt"] * mymodel2@data$standlrt^2)
@@ -54,7 +54,7 @@ plot(varfndata$standlrt, varfndata$l2varfn, type = "l")
 
 # 7.3 Further elaborating the model for the student-level variance . . . .99
 
-(mymodel3 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1 + standlrt), data = tutorial))
+(mymodel3 <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school) + (1 + standlrt | student), data = tutorial))
 
 l2varfn <- mymodel3@RP["RP2_var_Intercept"] + (2 * mymodel3@RP["RP2_cov_Intercept_standlrt"] * mymodel3@data$standlrt) + 
   (mymodel3@RP["RP2_var_standlrt"] * mymodel3@data$standlrt^2)
@@ -79,7 +79,7 @@ covmatrix[1, 3] <- 1
 covmatrix[2, 3] <- "standlrt"
 covmatrix[3, 3] <- "sexgirl"
 
-(mymodel4 <- runMLwiN(normexam ~ 1 + standlrt + sex + (school | 1 + standlrt) + (student | 1 + standlrt + sex), estoptions = list(clre = covmatrix), 
+(mymodel4 <- runMLwiN(normexam ~ 1 + standlrt + sex + (1 + standlrt | school) + (1 + standlrt + sex | student), estoptions = list(clre = covmatrix), 
   data = tutorial))
 
 covmatrix <- matrix(, nrow = 3, ncol = 2)
@@ -90,7 +90,7 @@ covmatrix[1, 2] <- 1
 covmatrix[2, 2] <- "sexgirl"
 covmatrix[3, 2] <- "Intercept"
 
-(mymodel5 <- runMLwiN(normexam ~ 1 + standlrt + sex + (school | 1 + standlrt) + (student | 1 + standlrt + sex), estoptions = list(clre = covmatrix), 
+(mymodel5 <- runMLwiN(normexam ~ 1 + standlrt + sex + (1 + standlrt | school) + (1 + standlrt + sex | student), estoptions = list(clre = covmatrix), 
   data = tutorial))
 
 l2varfn <- mymodel5@RP["RP2_var_Intercept"] + (2 * mymodel5@RP["RP2_cov_Intercept_standlrt"] * mymodel5@data$standlrt) + 

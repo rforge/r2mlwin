@@ -67,11 +67,11 @@ sixway(pred2, "prob1")
 # 12.4 Adding district level random effects . . . . . . . . . . . . . . .177
 
 ## Uses IGLS
-(mymodel <- runMLwiN(log(use4, cons) ~ 1 + lc + (district | 1), D = "Unordered Multinomial", estoptions = list(EstM = 0, 
+(mymodel <- runMLwiN(log(use4, cons) ~ 1 + lc + (1 | district), D = "Unordered Multinomial", estoptions = list(EstM = 0, 
   nonlinear = c(1, 2)), data = bang))
 
 ## Uses MCMC
-(mymodel <- runMLwiN(log(use4, cons) ~ 1 + lc + (district | 1), D = "Unordered Multinomial", estoptions = list(EstM = 1, 
+(mymodel <- runMLwiN(log(use4, cons) ~ 1 + lc + (1 | district), D = "Unordered Multinomial", estoptions = list(EstM = 1, 
   nonlinear = c(1, 2)), data = bang))
 sixway(mymodel@chains[, "RP2_var_Intercept_Sterilization", drop = FALSE], "sigma2v0")
 

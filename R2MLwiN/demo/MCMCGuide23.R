@@ -46,14 +46,14 @@ bang1$denomb <- bang1$cons
 
 ## Define the model
 
-(mymodel <- runMLwiN(logit(use, denomb) ~ 1 + age + lc + urban + (district | 1 + urban), D = "Binomial", estoptions = list(EstM = 1),
+(mymodel <- runMLwiN(logit(use, denomb) ~ 1 + age + lc + urban + (1 + urban | district), D = "Binomial", estoptions = list(EstM = 1),
   data = bang1))
 
 trajectories(mymodel)
 
 ## Orthogonal update
 
-(mymodel <- runMLwiN(logit(use, denomb) ~ 1 + age + lc + urban + (district | 1 + urban), D = "Binomial", estoptions = list(EstM = 1,
+(mymodel <- runMLwiN(logit(use, denomb) ~ 1 + age + lc + urban + (1 + urban | district), D = "Binomial", estoptions = list(EstM = 1,
   mcmcOptions = list(orth = 1)), data = bang1))
 
 trajectories(mymodel)
@@ -65,14 +65,14 @@ data(mmmec, package = "R2MLwiN")
 
 contrasts(mmmec$nation, 9) <- diag(9)
 
-(mymodel <- runMLwiN(log(obs) ~ 0 + nation + nation:uvbi + offset(log(exp)) + (region | 1), D = "Poisson", estoptions = list(EstM = 1,
+(mymodel <- runMLwiN(log(obs) ~ 0 + nation + nation:uvbi + offset(log(exp)) + (1 | region), D = "Poisson", estoptions = list(EstM = 1,
   mcmcMeth = list(iterations = 50000)), data = mmmec))
 
 sixway(mymodel@chains[, "FP_nationBelgium", drop = FALSE], acf.maxlag = 5000, "beta_1")
 
 ## Orthogonal update
 
-(mymodel <- runMLwiN(log(obs) ~ 0 + nation + nation:uvbi + offset(log(exp)) + (region | 1), D = "Poisson", estoptions = list(EstM = 1,
+(mymodel <- runMLwiN(log(obs) ~ 0 + nation + nation:uvbi + offset(log(exp)) + (1 | region), D = "Poisson", estoptions = list(EstM = 1,
   mcmcMeth = list(iterations = 50000), mcmcOptions = list(orth = 1)), data = mmmec))
 
 sixway(mymodel@chains[, "FP_nationBelgium", drop = FALSE], acf.maxlag = 100, "beta_1")
@@ -90,13 +90,13 @@ alevchem$school <- as.numeric(factor(paste0(alevchem$lea, alevchem$estab)))
 alevchem$gcseav <- double2singlePrecision(alevchem$gcse_tot/alevchem$gcse_no - 6)
 
 ## MCMC
-(mymodel <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseav[1:5] + I(gcseav^2)[1:5] + gender[1:5] + (school | 1[1:5]),
+(mymodel <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseav[1:5] + I(gcseav^2)[1:5] + gender[1:5] + (1[1:5] | school),
   D = "Ordered Multinomial", estoptions = list(EstM = 1), data = alevchem))
 
 trajectories(mymodel)
 
 ## Orthogonal update
-(mymodel <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseav[1:5] + I(gcseav^2)[1:5] + gender[1:5] + (school | 1[1:5]),
+(mymodel <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseav[1:5] + I(gcseav^2)[1:5] + gender[1:5] + (1[1:5] | school),
   D = "Ordered Multinomial", estoptions = list(EstM = 1, mcmcOptions = list(orth = 1)), data = alevchem))
 
 trajectories(mymodel)
@@ -110,7 +110,7 @@ bang1$denomb <- bang1$cons
 
 ## Orthogonal update (WinBUGS)
 
-mymodel <- runMLwiN(logit(use, denomb) ~ 1 + age + lc + urban + (district | 1 + urban), D = "Binomial", estoptions = list(EstM = 1,
+mymodel <- runMLwiN(logit(use, denomb) ~ 1 + age + lc + urban + (1 + urban | district), D = "Binomial", estoptions = list(EstM = 1,
   mcmcOptions = list(orth = 1), show.file = TRUE), BUGO = c(version = 4, n.chains = 1, debug = FALSE, seed = 1,
   bugs = openbugs, OpenBugs = TRUE), data = bang1)
 

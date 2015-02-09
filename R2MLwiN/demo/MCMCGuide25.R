@@ -46,7 +46,7 @@ while (!file.access(openbugs, mode = 0) == 0 || !file.access(openbugs, mode = 1)
 
 ## Hierarchical centring at level 2 (DO NOT USE VERSION 2.25; the bug has been fixed for VERSION 2.26)
 
-mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcOptions = list(hcen = 2), 
+mymodel <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcOptions = list(hcen = 2), 
   show.file = TRUE), BUGO = c(version = 4, n.chains = 1, debug = FALSE, seed = 1, bugs = openbugs, OpenBugs = TRUE), 
   data = tutorial)
 
@@ -67,14 +67,14 @@ bang1$denomb <- bang1$cons
 
 ## Hierarchical centring at level 2
 
-(mymodel <- runMLwiN(logit(use, denomb) ~ 1 + age + lc + urban + (district | 1 + urban), D = "Binomial", estoptions = list(EstM = 1, 
+(mymodel <- runMLwiN(logit(use, denomb) ~ 1 + age + lc + urban + (1 + urban | district), D = "Binomial", estoptions = list(EstM = 1, 
   mcmcOptions = list(hcen = 2)), data = bang1))
 
 trajectories(mymodel)
 
 ## Hierarchical centring at level 2 + Orthogonal updates
 
-(mymodel <- runMLwiN(logit(use, denomb) ~ 1 + age + lc + urban + (district | 1 + urban), D = "Binomial", estoptions = list(EstM = 1, 
+(mymodel <- runMLwiN(logit(use, denomb) ~ 1 + age + lc + urban + (1 + urban | district), D = "Binomial", estoptions = list(EstM = 1, 
   mcmcOptions = list(hcen = 2, orth = 1)), data = bang1))
 
 trajectories(mymodel)
@@ -87,13 +87,13 @@ data(mmmec, package = "R2MLwiN")
 contrasts(mmmec$nation, 9) <- diag(9)
 
 ## Define the model Hierarchical centring at level 2
-(mymodel <- runMLwiN(log(obs) ~ 0 + nation + nation:uvbi + offset(log(exp)) + (region | 1), D = "Poisson", estoptions = list(EstM = 1, 
+(mymodel <- runMLwiN(log(obs) ~ 0 + nation + nation:uvbi + offset(log(exp)) + (1 | region), D = "Poisson", estoptions = list(EstM = 1, 
   mcmcMeth = list(iterations = 50000), mcmcOptions = list(hcen = 2)), data = mmmec))
 
 sixway(mymodel@chains[, "FP_nationBelgium", drop = FALSE], acf.maxlag = 100, "beta_1")
 
 ## Hierarchical centring at level 2 + Orthogonal updates
-(mymodel <- runMLwiN(log(obs) ~ 0 + nation + nation:uvbi + offset(log(exp)) + (region | 1), D = "Poisson", estoptions = list(EstM = 1, 
+(mymodel <- runMLwiN(log(obs) ~ 0 + nation + nation:uvbi + offset(log(exp)) + (1 | region), D = "Poisson", estoptions = list(EstM = 1, 
   mcmcMeth = list(iterations = 50000), mcmcOptions = list(orth = 1, hcen = 2)), data = mmmec))
 
 sixway(mymodel@chains[, "FP_nationBelgium", drop = FALSE], acf.maxlag = 100, "beta_1")
@@ -105,13 +105,13 @@ data(tutorial, package = "R2MLwiN")
 
 ## Define the model Univariate MH Hierarchical centring at level 2
 
-(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcMeth = list(fixM = 2, 
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcMeth = list(fixM = 2, 
   residM = 2), mcmcOptions = list(hcen = 2)), data = tutorial))
 
 trajectories(mymodel, Range = c(4501, 5000))
 ## Gibbs Hierarchical centring at level 2
 
-(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcOptions = list(hcen = 2)), 
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcOptions = list(hcen = 2)), 
   data = tutorial))
 
 trajectories(mymodel, Range = c(4501, 5000))

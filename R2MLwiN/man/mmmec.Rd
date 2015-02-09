@@ -34,7 +34,7 @@ See \code{mlmRev} package for an alternative format of the same dataset, with fe
 
 data(mmmec, package = "R2MLwiN")
 
-(mymodel3 <- runMLwiN(log(obs) ~ 1 + uvbi + offset(log(exp)) + (nation | 1) + (region | 1), 
+(mymodel3 <- runMLwiN(log(obs) ~ 1 + uvbi + offset(log(exp)) + (1 | nation) + (1 | region), 
  D = "Poisson", estoptions = list(EstM = 1), data = mmmec))
 
 }

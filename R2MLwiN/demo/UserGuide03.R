@@ -29,7 +29,7 @@ options(MLwiN_path = mlwin)
 
 data(tutorial, package = "R2MLwiN")
 
-(mymodel1 <- runMLwiN(normexam ~ 1 + (school | 1) + (student | 1), data = tutorial, estoptions = list(resi.store = TRUE)))
+(mymodel1 <- runMLwiN(normexam ~ 1 + (1 | school) + (1 | student), data = tutorial, estoptions = list(resi.store = TRUE)))
 
 
 

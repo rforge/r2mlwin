@@ -60,17 +60,14 @@
 #' \itemize{
 #' \item{The intercept is not included by default (this is keeping with the manner
 #' in which models are specified in MLwiN). To include an intercept, then, one
-#' can specify e.g. \code{normexam ~ 1 + standlrt + (student | 1)} or, assuming \code{cons}
-#' is a constant of ones, \code{normexam ~ cons + standlrt + (student | cons)}. (Note also,
+#' can specify e.g. \code{normexam ~ 1 + standlrt + (1 | student)} or, assuming \code{cons}
+#' is a constant of ones, \code{normexam ~ cons + standlrt + (cons | student)}. (Note also,
 #' as further detailed below, for normal response models the level 1 ID (\code{student} in this example)
 #' needs to be explicitly included in the random part of the model formula; this is not the 
 #' case for discrete response models.}
-#' \item{When specifying the random part of the model, the variable name for the
-#' level ID is placed to the left of the vertical bar (e.g. \code{(school | 1)}, \code{(student | 1)}, etc.),
-#' rather than to the right.}
 #' \item{The link function and denominator are included in the \code{Formula} object, e.g.
 #' fitting a logistic model in which the variable \code{denom} is specified as the denominator:
-#' \code{logit(resp, denom) ~ 1 + age + (region | 1)}.}
+#' \code{logit(resp, denom) ~ 1 + age + (1 | region)}.}
 #' }
 #' 
 #' Further details are as follows.
@@ -372,7 +369,7 @@
 #' specifying the weights. Ignored if \code{EstM = 0}, i.e. only applicable to models estimated via
 #' MCMC. \code{mm = NULL} by default. Supersedes deprecated \code{xclass}. 
 #' E.g. (from \code{demo(MCMCGuide16)}) for
-#' \code{logearn ~ 1 + age_40 + sex + parttime + (company|1) + (id|1)}, if
+#' \code{logearn ~ 1 + age_40 + sex + parttime + (1 | company) + (1 | id)}, if
 #' \code{company} is a multiple membership classification with the variables
 #' indicating the classifications in \code{company}, \code{company2},
 #' \code{company3}, \code{company4} and their weights in \code{weight1}, \code{weight2},

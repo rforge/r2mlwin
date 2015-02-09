@@ -34,10 +34,10 @@ summary(gcsemv1)
 
 # 14.3 Setting up the basic model . . . . . . . . . . . . . . . . . . . .214
 
-(mymodel1 <- runMLwiN(c(written, csework) ~ 1 + (student | 1), D = "Multivariate Normal", estoptions = list(sort.ignore = TRUE), 
+(mymodel1 <- runMLwiN(c(written, csework) ~ 1 + (1 | student), D = "Multivariate Normal", estoptions = list(sort.ignore = TRUE), 
   data = gcsemv1))
 
-(mymodel2 <- runMLwiN(c(written, csework) ~ 1 + female + (school | 1) + (student | 1), D = "Multivariate Normal", 
+(mymodel2 <- runMLwiN(c(written, csework) ~ 1 + female + (1 | school) + (1 | student), D = "Multivariate Normal", 
   data = gcsemv1))
 
 mymodel2@RP["RP2_cov_Intercept_written_Intercept_csework"]/sqrt(mymodel2@RP["RP2_var_Intercept_written"] * mymodel2@RP["RP2_var_Intercept_csework"])
@@ -46,10 +46,10 @@ mymodel2@RP["RP1_cov_Intercept_written_Intercept_csework"]/sqrt(mymodel2@RP["RP1
 
 # 14.4 A more elaborate model . . . . . . . . . . . . . . . . . . . . . .219
 
-(mymodel3 <- runMLwiN(c(written, csework) ~ 1 + female + (school | 1 + female) + (student | 1), D = "Multivariate Normal", 
+(mymodel3 <- runMLwiN(c(written, csework) ~ 1 + female + (1 + female | school) + (1 | student), D = "Multivariate Normal", 
   data = gcsemv1))
 
-(mymodel4 <- runMLwiN(c(written, csework) ~ 1 + female + (school | 1 + female[1]) + (student | 1), D = "Multivariate Normal", 
+(mymodel4 <- runMLwiN(c(written, csework) ~ 1 + female + (1 + female[1] | school) + (1 | student), D = "Multivariate Normal", 
   estoptions = list(resi.store = TRUE), data = gcsemv1))
 
 mymodel4@RP["RP2_cov_Intercept_written_Intercept_csework"]/sqrt(mymodel4@RP["RP2_var_Intercept_written"] * mymodel4@RP["RP2_var_Intercept_csework"])

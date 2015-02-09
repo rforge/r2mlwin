@@ -27,12 +27,12 @@ options(MLwiN_path = mlwin)
 data(tutorial, package = "R2MLwiN")
 
 ## Choose IGLS algoritm for estimation
-(mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (student | 1), data = tutorial))
+(mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (1 | student), data = tutorial))
 
 # 2.1 Running the Gibbs Sampler . . . . . . . . . . . . . . . . . . . . . 26
 
 ## Choose MCMC algoritm for estimation
-(mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + (student | 1), estoptions = list(EstM = 1), data = tutorial))
+(mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + (1 | student), estoptions = list(EstM = 1), data = tutorial))
 
 estimates <- mymodel2@chains
 par(mfrow = c(2, 2))
@@ -50,17 +50,17 @@ plot(1:niter(estimates), estimates[, "RP1_var_Intercept"], xlab = "iteration", y
 # 2.3 Adding more predictors . . . . . . . . . . . . . . . . . . . . . . .29
 
 ## Choose IGLS algoritm for estimation
-(mymodel3 <- runMLwiN(normexam ~ 1 + standlrt + sex + schgend + (student | 1), data = tutorial))
+(mymodel3 <- runMLwiN(normexam ~ 1 + standlrt + sex + schgend + (1 | student), data = tutorial))
 
 ## Choose MCMC algoritm for estimation
-(mymodel4 <- runMLwiN(normexam ~ 1 + standlrt + sex + schgend + (student | 1), estoptions = list(EstM = 1), data = tutorial))
+(mymodel4 <- runMLwiN(normexam ~ 1 + standlrt + sex + schgend + (1 | student), estoptions = list(EstM = 1), data = tutorial))
 
 # 2.4 Fitting school effects as fixed parameters . . . . . . . . . . . . .32
 
 tutorial$school <- as.factor(tutorial$school)
 
 ## Choose MCMC algoritm for estimation (IGLS will be used to obtain starting values for MCMC)
-(mymodel5 <- runMLwiN(normexam ~ 1 + standlrt + sex + school + (student | 1), estoptions = list(EstM = 1), data = tutorial))
+(mymodel5 <- runMLwiN(normexam ~ 1 + standlrt + sex + school + (1 | student), estoptions = list(EstM = 1), data = tutorial))
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . . 33
 

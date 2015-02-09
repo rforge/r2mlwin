@@ -41,7 +41,7 @@ See \code{mlmRev} package for an alternative format of the same dataset.
 data(tutorial, package = "R2MLwiN")
 
 # Fit 2-level variance components model, using IGLS (default estimation method)
-(VarCompModel <- runMLwiN(normexam ~ 1 + (school | 1) + (student | 1), data = tutorial))
+(VarCompModel <- runMLwiN(normexam ~ 1 + (1 | school) + (1 | student), data = tutorial))
 
 # print variance partition coefficient (VPC)
 print(VPC <- coef(VarCompModel)[["RP2_var_Intercept"]] /
@@ -49,7 +49,7 @@ print(VPC <- coef(VarCompModel)[["RP2_var_Intercept"]] /
              coef(VarCompModel)[["RP2_var_Intercept"]]))
 
 # Fit same model using MCMC
-(VarCompMCMC <- runMLwiN(normexam ~ 1 + (school | 1) + (student | 1),
+(VarCompMCMC <- runMLwiN(normexam ~ 1 + (1 | school) + (1 | student),
  estoptions = list(EstM = 1), data = tutorial))
 
 # return diagnostics for VPC
@@ -59,13 +59,13 @@ VPC_MCMC <- VarCompMCMC@chains[,"RP2_var_Intercept"] /
 sixway(VPC_MCMC, name = "VPC")
 
 # Adding predictor, allowing its coefficient to vary across groups (i.e. random slopes)
-(standlrtRS_MCMC <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1),
+(standlrtRS_MCMC <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school) + (1 | student),
  estoptions = list(EstM = 1), data = tutorial))
 
 # Example modelling complex level 1 variance
 # fit log of precision at level 1 as a function of predictors
 (standlrtC1V_MCMC <- runMLwiN(normexam ~ 
-  1 + standlrt + (school | 1 + standlrt) + (student | 1 + standlrt),
+  1 + standlrt + (school | 1 + standlrt) + (1 + standlrt | student),
   estoptions = list(EstM = 1, mcmcMeth = list(lclo = 1)),
   data = tutorial))
 

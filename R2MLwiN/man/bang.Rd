@@ -43,7 +43,7 @@ data(bang, package = "R2MLwiN")
 
 bang$use4 <- relevel(bang$use4, 4)
 
-(mymodel <- runMLwiN(log(use4, cons) ~ 1 + lc + (district | 1), 
+(mymodel <- runMLwiN(log(use4, cons) ~ 1 + lc + (1 | district), 
   D = "Unordered Multinomial", estoptions = list(EstM = 1, nonlinear = c(1, 2)), data = bang))
 
 }

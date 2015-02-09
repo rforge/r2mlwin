@@ -58,9 +58,9 @@ random.ui[1, ] <- 1
 random.ui[2:19, ] <- diag(18) * -1
 random.ci <- rep(0, 18)
 
-(mymode1 <- runMLwiN(attain ~ 1 + (cons | s1 + s2 + s3 + s4 + s5 +
+(mymode1 <- runMLwiN(attain ~ 1 + (s1 + s2 + s3 + s4 + s5 +
 s6 + s7 + s8 + s9 + s10 + s11 + s12 + s13 + s14 +
-  s15 + s16 + s17 + s18 + s19) + (pid | 1) + (pupil | 1), estoptions = list(clre = covmatrix, constraints = list(random.ui = random.ui,
+  s15 + s16 + s17 + s18 + s19 | cons) + (1 | pid) + (1 | pupil), estoptions = list(clre = covmatrix, constraints = list(random.ui = random.ui,
   random.ci = random.ci)), data = xc))
 
 
@@ -89,11 +89,11 @@ random.ui[20, 19:36] <- 1
 random.ui[21:38, 19:36] <- diag(18) * -1
 random.ci <- rep(0, 36)
 
-(mymodel2 <- runMLwiN(attain ~ 1 + (cons | s1 + s2 + s3 + s4 + s5 +
+(mymodel2 <- runMLwiN(attain ~ 1 + (s1 + s2 + s3 + s4 + s5 +
 s6 + s7 + s8 + s9 + s10 + s11 + s12 + s13 + s14 +
   s15 + s16 + s17 + s18 + s19 + s1Xvrq + s2Xvrq + s3Xvrq + s4Xvrq + s5Xvrq + s6Xvrq + s7Xvrq + s8Xvrq + s9Xvrq +
-  s10Xvrq + s11Xvrq + s12Xvrq + s13Xvrq + s14Xvrq + s15Xvrq + s16Xvrq + s17Xvrq + s18Xvrq + s19Xvrq) + (pid | cons) +
-  (pupil | cons), estoptions = list(clre = covmatrix, constraints = list(random.ui = random.ui, random.ci = random.ci)),
+  s10Xvrq + s11Xvrq + s12Xvrq + s13Xvrq + s14Xvrq + s15Xvrq + s16Xvrq + s17Xvrq + s18Xvrq + s19Xvrq | cons) + (1 | pid) +
+  (1 | pupil), estoptions = list(clre = covmatrix, constraints = list(random.ui = random.ui, random.ci = random.ci)),
   data = xc))
 
 # Note: The final models in this section of the manual are for demonstration only.
@@ -196,8 +196,8 @@ random.ci <- rep(0, 7)
 
 xc <- xc[order(xc$region, xc$pid, xc$pupil), ]
 
-(mymode1 <- runMLwiN(attain ~ 1 + (region | rs1 + rs2 + rs3 + rs4 + rs5 + rs6 + rs7 + rs8) + (pid | 1) + (pupil |
-  1), estoptions = list(clre = covmatrix, constraints = list(random.ui = random.ui, random.ci = random.ci)), data = xc))
+(mymode1 <- runMLwiN(attain ~ 1 + (rs1 + rs2 + rs3 + rs4 + rs5 + rs6 + rs7 + rs8 | region) + (1 | pid) + (1 | pupil), 
+  estoptions = list(clre = covmatrix, constraints = list(random.ui = random.ui, random.ci = random.ci)), data = xc))
 
 # 18.7 Modelling a multi-way cross-classification . . . . . . . . . . . .280
 

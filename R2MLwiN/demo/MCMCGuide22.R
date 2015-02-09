@@ -34,12 +34,12 @@ data(tutorial, package = "R2MLwiN")
 
 ## Define the model
 
-(mymodel <- runMLwiN(normexam ~ 1 + (school | 1) + (student | 1), estoptions = list(EstM = 1), data = tutorial))
+(mymodel <- runMLwiN(normexam ~ 1 + (1 | school) + (1 | student), estoptions = list(EstM = 1), data = tutorial))
 
 
 ## Structured MVN
 
-(mymodel <- runMLwiN(normexam ~ 1 + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcOptions = list(smvn = 1)), 
+(mymodel <- runMLwiN(normexam ~ 1 + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcOptions = list(smvn = 1)), 
   data = tutorial))
 
 # 22.3 Model Comparison and structured MVN models . . . . . . . . . . . .349
@@ -48,16 +48,16 @@ data(tutorial, package = "R2MLwiN")
 
 ## Gibbs
 
-(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1), data = tutorial))
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1), data = tutorial))
 
 ## SMCMC
 
-(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcOptions = list(smcm = 1)), 
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcOptions = list(smcm = 1)), 
   data = tutorial))
 
 ## Structured MVN
 
-(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcOptions = list(smvn = 1)), 
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcOptions = list(smvn = 1)), 
   data = tutorial))
 
 # 22.4 Assessing the need for the level 2 variance . . . . . . . . . . . 350
@@ -71,15 +71,15 @@ tutorial$temp <- double2singlePrecision(rnorm(4059))
 
 ## IGLS
 
-(mymodel <- runMLwiN(temp ~ 1 + standlrt + (school | 1) + (student | 1), data = tutorial))
+(mymodel <- runMLwiN(temp ~ 1 + standlrt + (1 | school) + (1 | student), data = tutorial))
 
 ## Gibbs
 
-(mymodel <- runMLwiN(temp ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1), data = tutorial))
+(mymodel <- runMLwiN(temp ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1), data = tutorial))
 
 ## Structured MVN
 
-(mymodel <- runMLwiN(temp ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcOptions = list(smvn = 1)), 
+(mymodel <- runMLwiN(temp ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcOptions = list(smvn = 1)), 
   data = tutorial))
 
 summary(mymodel@chains[, "RP2_var_Intercept"])

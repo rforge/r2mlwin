@@ -34,7 +34,7 @@ library(R2MLwiN)
 
 # Example using tutorial dataset
 data(tutorial, package = 'R2MLwiN')
-mymodel <- runMLwiN(normexam ~ 1 + (school|1) + (student|1),
+mymodel <- runMLwiN(normexam ~ 1 + (1 | school) + (1 | student),
                     estoptions = list(resi.store = TRUE),
                     data = tutorial)
 # Caterpillar plot

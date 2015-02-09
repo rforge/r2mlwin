@@ -43,7 +43,7 @@
 #' ## Example: tutorial
 #' data(tutorial, package = "R2MLwiN")
 #'
-#' (mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1),
+#' (mymodel <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school) + (1 | student),
 #'                      data = tutorial)) 
 #'
 #' ##summary method

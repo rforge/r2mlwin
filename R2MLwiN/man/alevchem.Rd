@@ -44,7 +44,7 @@ alevchem$gcseav <- double2singlePrecision(alevchem$gcse_tot/alevchem$gcse_no - 6
 alevchem$school <- as.numeric(factor(paste0(alevchem$lea, alevchem$estab)))
 
 (mymodel <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseav[1:5] + I(gcseav^2)[1:5] +
-  gender[1:5] + (school | 1[1:5] + gcseav[1:5]), 
+  gender[1:5] + (1[1:5] + gcseav[1:5] | school), 
   D = "Ordered Multinomial", estoptions = list(EstM = 1), data = alevchem))
 
 }

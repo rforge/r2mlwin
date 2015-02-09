@@ -64,7 +64,7 @@ Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) \emph{
 
 data(lips1, package = "R2MLwiN")
 
-(mymodel <- runMLwiN(log(obs) ~ 1 + perc_aff + offset(offs) + (neigh1 | 0) + (area | 1),
+(mymodel <- runMLwiN(log(obs) ~ 1 + perc_aff + offset(offs) + (0 | neigh1) + (1 | area),
  D = "Poisson", estoptions = list(EstM = 1), data = lips1))
 
 }

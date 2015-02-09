@@ -36,13 +36,13 @@ summary(mmmec)
 
 # 12.3 A three-level analysis . . . . . . . . . . . . . . . . . . . . . .184
 
-(mymodel2 <- runMLwiN(log(obs) ~ 1 + offset(log(exp)) + (nation | 1) + (region | 1), D = "Poisson", estoptions = list(Meth = 0), 
+(mymodel2 <- runMLwiN(log(obs) ~ 1 + offset(log(exp)) + (1 | nation) + (1 | region), D = "Poisson", estoptions = list(Meth = 0), 
   data = mmmec))
 
-(mymodel3 <- runMLwiN(log(obs) ~ 1 + offset(log(exp)) + (nation | 1) + (region | 1), D = "Poisson", estoptions = list(Meth = 0, 
+(mymodel3 <- runMLwiN(log(obs) ~ 1 + offset(log(exp)) + (1 | nation) + (1 | region), D = "Poisson", estoptions = list(Meth = 0, 
   nonlinear = c(N = 1, M = 2)), data = mmmec))
 
-(mymodel4 <- runMLwiN(log(obs) ~ 1 + uvbi + offset(log(exp)) + (nation | 1) + (region | 1), D = "Poisson", estoptions = list(Meth = 0, 
+(mymodel4 <- runMLwiN(log(obs) ~ 1 + uvbi + offset(log(exp)) + (1 | nation) + (1 | region), D = "Poisson", estoptions = list(Meth = 0, 
   nonlinear = c(N = 1, M = 2)), data = mmmec))
 
 # 12.4 A two-level model using separate country terms . . . . . . . . . .186
@@ -51,7 +51,7 @@ addmargins(with(mmmec, table(nation)))
 
 contrasts(mmmec$nation, 9) <- diag(9)
 
-(mymodel5 <- runMLwiN(log(obs) ~ 0 + nation + nation:uvbi + offset(log(exp)) + (region | 1), D = "Poisson", estoptions = list(Meth = 0, 
+(mymodel5 <- runMLwiN(log(obs) ~ 0 + nation + nation:uvbi + offset(log(exp)) + (1 | region), D = "Poisson", estoptions = list(Meth = 0, 
   nonlinear = c(N = 1, M = 2)), data = mmmec))
 
 xb <- predict(mymodel5)

@@ -29,7 +29,7 @@ options(MLwiN_path = mlwin)
 
 data(tutorial, package = "R2MLwiN")
 
-(mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(resi.store = TRUE), 
+(mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(resi.store = TRUE), 
   data = tutorial))
 
 u0 <- mymodel1@residual$lev_2_resi_est_Intercept
@@ -147,7 +147,7 @@ points(mymodel1@data$standlrt[mymodel1@data$school == 53], mymodel1@data$normexa
 points(mymodel1@data$standlrt[mymodel1@data$school == 59], mymodel1@data$normexam[mymodel1@data$school == 59], col = "green")
 legend(-3, 3, c("School 53", "School 59"), lty = 1, col = c("red", "green"))
 
-(mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1), estoptions = list(resi.store = TRUE, 
+(mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school) + (1 | student), estoptions = list(resi.store = TRUE, 
   resioptions = c("estimates", "sampling")), data = tutorial))
 
 xb <- predict(mymodel2)

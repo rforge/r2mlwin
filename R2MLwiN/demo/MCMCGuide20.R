@@ -38,7 +38,7 @@ round(colMeans(hungary1[, c("es_core", "biol_core", "phys_core")]), 4)
 round(apply(hungary1[, c("es_core", "biol_core", "phys_core")], 2, sd), 4)
 round(cor(hungary1[, c("es_core", "biol_core", "phys_core")]), 4)
 
-(mymodel <- runMLwiN(c(es_core, biol_core, biol_r3, biol_r4, phys_core, phys_r2) ~ 1 + (student | 1), D = "Multivariate Normal", 
+(mymodel <- runMLwiN(c(es_core, biol_core, biol_r3, biol_r4, phys_core, phys_r2) ~ 1 + (1 | student), D = "Multivariate Normal", 
   data = hungary1))
 
 covM1 <- matrix(, 6, 6)
@@ -58,7 +58,7 @@ factcor <- NULL
 loading <- matrix(c(1, 0, 0, 0, 0, 0, 1), ncol = 7, nrow = nfact, byrow = TRUE)
 constr <- matrix(c(1, 0, 0, 0, 0, 0, 0), ncol = 7, nrow = nfact, byrow = TRUE)
 
-(mymodel <- runMLwiN(c(es_core, biol_core, biol_r3, biol_r4, phys_core, phys_r2) ~ 1 + (student | 1), D = "Multivariate Normal", 
+(mymodel <- runMLwiN(c(es_core, biol_core, biol_r3, biol_r4, phys_core, phys_r2) ~ 1 + (1 | student), D = "Multivariate Normal", 
   estoptions = list(EstM = 1, fact = list(nfact = nfact, lev.fact = lev.fact, nfactcor = nfactcor, factcor = factcor, 
     loading = loading, constr = constr)), data = hungary1))
 
@@ -76,7 +76,7 @@ factcor <- NULL
 loading <- matrix(c(1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1), ncol = 7, nrow = nfact, byrow = TRUE)
 constr <- matrix(c(1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0), ncol = 7, nrow = nfact, byrow = TRUE)
 
-(mymodel <- runMLwiN(c(es_core, biol_core, biol_r3, biol_r4, phys_core, phys_r2) ~ 1 + (student | 1), D = "Multivariate Normal", 
+(mymodel <- runMLwiN(c(es_core, biol_core, biol_r3, biol_r4, phys_core, phys_r2) ~ 1 + (1 | student), D = "Multivariate Normal", 
   estoptions = list(EstM = 1, fact = list(nfact = nfact, lev.fact = lev.fact, nfactcor = nfactcor, factcor = factcor, 
     loading = loading, constr = constr)), data = hungary1))
 
@@ -93,7 +93,7 @@ sixway(loads[, "load2_biol_r3", drop = FALSE], acf.maxlag = 1500, name = "load2.
 
 ## burn-in: 5000, iterations=10,000
 
-(mymodel <- runMLwiN(c(es_core, biol_core, biol_r3, biol_r4, phys_core, phys_r2) ~ 1 + (student | 1), D = "Multivariate Normal", 
+(mymodel <- runMLwiN(c(es_core, biol_core, biol_r3, biol_r4, phys_core, phys_r2) ~ 1 + (1 | student), D = "Multivariate Normal", 
   estoptions = list(EstM = 1, fact = list(nfact = nfact, lev.fact = lev.fact, nfactcor = nfactcor, factcor = factcor, 
     loading = loading, constr = constr), mcmcMeth = list(burnin = 5000, iterations = 10000)), data = hungary1))
 
@@ -111,14 +111,14 @@ factcor <- c(1, 2, 0, 0)
 loading <- matrix(c(1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1), ncol = 7, nrow = nfact, byrow = TRUE)
 constr <- matrix(c(1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0), ncol = 7, nrow = nfact, byrow = TRUE)
 
-(mymodel <- runMLwiN(c(es_core, biol_core, biol_r3, biol_r4, phys_core, phys_r2) ~ 1 + (student | 1), D = "Multivariate Normal", 
+(mymodel <- runMLwiN(c(es_core, biol_core, biol_r3, biol_r4, phys_core, phys_r2) ~ 1 + (1 | student), D = "Multivariate Normal", 
   estoptions = list(EstM = 1, fact = list(nfact = nfact, lev.fact = lev.fact, nfactcor = nfactcor, factcor = factcor, 
     loading = loading, constr = constr), mcmcMeth = list(burnin = 5000, iterations = 10000)), data = hungary1))
 
 # 20.8 Multilevel factor analysis . . . . . . . . . . . . . . . . . . . 320
 
 
-(mymodel <- runMLwiN(c(es_core, biol_core, biol_r3, biol_r4, phys_core, phys_r2) ~ 1 + (school | 1) + (student | 1), 
+(mymodel <- runMLwiN(c(es_core, biol_core, biol_r3, biol_r4, phys_core, phys_r2) ~ 1 + (1 | school) + (1 | student), 
   D = "Multivariate Normal", data = hungary1))
 
 covM1 <- matrix(, 6, 6)
@@ -145,7 +145,7 @@ factcor <- NULL
 loading <- matrix(c(1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1), ncol = 7, nrow = nfact, byrow = TRUE)
 constr <- matrix(c(1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0), ncol = 7, nrow = nfact, byrow = TRUE)
 
-(mymodel <- runMLwiN(c(es_core, biol_core, biol_r3, biol_r4, phys_core, phys_r2) ~ 1 + (school | 1) + (student | 1), 
+(mymodel <- runMLwiN(c(es_core, biol_core, biol_r3, biol_r4, phys_core, phys_r2) ~ 1 + (1 | school) + (1 | student), 
   D = "Multivariate Normal", estoptions = list(EstM = 1, fact = list(nfact = nfact, lev.fact = lev.fact, nfactcor = nfactcor, 
     factcor = factcor, loading = loading, constr = constr)), data = hungary1))
 

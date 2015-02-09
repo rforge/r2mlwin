@@ -61,7 +61,7 @@ formatC(round(tab2, 6))
 
 ## The highest level comes first, then the second highest and so on
 ## Fit the model
-(mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (student | 1 + standlrt), estoptions = list(EstM = 1), data = tutorial))
+(mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | student), estoptions = list(EstM = 1), data = tutorial))
 trajectories(mymodel1, Range = c(4501, 5000))
 
 l1varfn <- mymodel1@RP["RP1_var_Intercept"] + 2 * mymodel1@RP["RP1_cov_Intercept_standlrt"] * tutorial$standlrt + 
@@ -72,7 +72,7 @@ abline(v = 0, lty = "dotted")
 # 9.3 Complex variance functions in multilevel models . . . . . . . . . .119
 
 ## The highest level comes first, then the second highest and so on Choose option(s) for inference Fit the model
-(mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1), estoptions = list(EstM = 1), 
+(mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school) + (1 | student), estoptions = list(EstM = 1), 
   data = tutorial))
 
 l2varfn <- mymodel2@RP["RP2_var_Intercept"] + 2 * mymodel2@RP["RP2_cov_Intercept_standlrt"] * tutorial$standlrt + 
@@ -84,7 +84,7 @@ abline(h = l1varfn)
 abline(v = 0, lty = "dotted")
 
 ## Fit the model
-(mymodel3 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1 + standlrt), estoptions = list(EstM = 1), 
+(mymodel3 <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school) + (1 + standlrt | student), estoptions = list(EstM = 1), 
   data = tutorial))
 
 ## Remove term standlrt/standlrt from the level 1 covariance matrix
@@ -94,7 +94,7 @@ clre[2, 1] <- "standlrt"
 clre[3, 1] <- "standlrt"
 
 ## Fit the model
-(mymodel4 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1 + standlrt), estoptions = list(EstM = 1, 
+(mymodel4 <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school) + (1 + standlrt | student), estoptions = list(EstM = 1, 
   clre = clre), data = tutorial))
 
 # 9.4 Relationship with gender . . . . . . . . . . . . . . . . . . . . . 123
@@ -110,7 +110,7 @@ clre[1, 2] <- 1
 clre[2, 2] <- "girl"
 clre[3, 2] <- "girl"
 
-(mymodel5 <- runMLwiN(normexam ~ 1 + standlrt + girl + (school | 1 + standlrt) + (student | 1 + standlrt + girl), 
+(mymodel5 <- runMLwiN(normexam ~ 1 + standlrt + girl + (1 + standlrt | school) + (1 + standlrt + girl | student), 
   estoptions = list(EstM = 1, clre = clre), data = tutorial))
 
 l2varfn <- mymodel5@RP["RP2_var_Intercept"] + 2 * mymodel5@RP["RP2_cov_Intercept_standlrt"] * tutorial$standlrt + 
@@ -126,7 +126,7 @@ abline(v = 0, lty = "dotted")
 
 # 9.5 Alternative log precision formulation . . . . . . . . . . . . . . .126
 
-(mymodel6 <- runMLwiN(normexam ~ 1 + standlrt + girl + (school | 1 + standlrt) + (student | 1 + standlrt + girl), 
+(mymodel6 <- runMLwiN(normexam ~ 1 + standlrt + girl + (1 + standlrt | school) + (1 + standlrt + girl | student), 
   estoptions = list(EstM = 1, clre = clre, mcmcMeth = list(lclo = 1)), data = tutorial))
 
 l2varfn <- mymodel6@RP["RP2_var_Intercept"] + 2 * mymodel6@RP["RP2_cov_Intercept_standlrt"] * tutorial$standlrt + 

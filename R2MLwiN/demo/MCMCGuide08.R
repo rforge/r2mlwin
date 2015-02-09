@@ -49,9 +49,9 @@ for (i in 1:ns) {
   e <- rnorm(108, 0, sqrt(Actual[3]))
   resp <- Actual[1] * cons + u + e
   indata <- data.frame(cbind(pupil, school, cons, resp))
-  simModelIGLS <- runMLwiN(resp ~ 1 + (school | 1) + (pupil | 1), data = indata)
+  simModelIGLS <- runMLwiN(resp ~ 1 + (1 | school) + (1 | pupil), data = indata)
   IGLS_array[, , i] <- cbind(coef(simModelIGLS), diag(vcov(simModelIGLS)))
-  simModelMCMC <- runMLwiN(resp ~ 1 + (school | 1) + (pupil | 1), estoptions = list(EstM = 1), data = indata)
+  simModelMCMC <- runMLwiN(resp ~ 1 + (1 | school) + (1 | pupil), estoptions = list(EstM = 1), data = indata)
   MCMC_array[, , i] <- cbind(coef(simModelMCMC), diag(vcov(simModelMCMC)))
   MCMC_median[i, ] <- c(median(simModelMCMC@chains[, "RP2_var_Intercept"]), median(simModelMCMC@chains[, "RP1_var_Intercept"]))
   if (Actual[1] > quantile(simModelMCMC@chains[, "FP_Intercept"], 0.025) & Actual[1] < quantile(simModelMCMC@chains[, 

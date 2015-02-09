@@ -34,14 +34,14 @@ data(tutorial, package = "R2MLwiN")
 
 ## Define the model
 
-(mymodel <- runMLwiN(normexam ~ 1 + (school | 1) + (student | 1), estoptions = list(EstM = 1), data = tutorial))
+(mymodel <- runMLwiN(normexam ~ 1 + (1 | school) + (1 | student), estoptions = list(EstM = 1), data = tutorial))
 
 summary(mymodel@chains[, "FP_Intercept"])
 sixway(mymodel@chains[, "FP_Intercept", drop = FALSE], "beta_0")
 
 ## Structured MCMC
 
-(mymodel <- runMLwiN(normexam ~ 1 + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcOptions = list(smcm = 1)), 
+(mymodel <- runMLwiN(normexam ~ 1 + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcOptions = list(smcm = 1)), 
   data = tutorial))
 
 summary(mymodel@chains[, "FP_Intercept"])
@@ -49,14 +49,14 @@ sixway(mymodel@chains[, "FP_Intercept", drop = FALSE], "beta_0")
 
 # 21.3 A random intercepts model . . . . . . . . . . . . . . . . . . . . 334
 
-(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcOptions = list(smcm = 1)), 
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcOptions = list(smcm = 1)), 
   data = tutorial))
 
 trajectories(mymodel, Range = c(1, 500))
 
 # 21.4 Examining the residual chains . . . . . . . . . . . . . . . . . . 335
 
-(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, resi.store = TRUE, 
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, resi.store = TRUE, 
   resi.store.levs = 2, mcmcMeth = list(iterations = 5001), mcmcOptions = list(smcm = 1)), data = tutorial))
 
 ## Each row represents each iteration
@@ -66,7 +66,7 @@ sixway(mymodel@resi.chains$resi_lev2[, 1, drop = FALSE], name = "school1")
 
 # 21.6 Random Slopes model practice . . . . . . . . . . . . . . . . . . .338
 
-(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1), estoptions = list(EstM = 1, 
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school) + (1 | student), estoptions = list(EstM = 1, 
   mcmcOptions = list(smcm = 1)), data = tutorial))
 
 sixway(mymodel@chains[, "FP_Intercept", drop = FALSE], "beta_0")

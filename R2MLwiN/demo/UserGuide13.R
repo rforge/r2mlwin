@@ -62,15 +62,15 @@ tab$age[7, ] <- c(length(na.omit(reading$age)), mean(na.omit(reading$age)), sd(n
 rownames(tab)[7] <- "Total"
 tab
 
-(mymodel1 <- runMLwiN(reading ~ 1 + (student | 1) + (occasion | 1), data = reading))
+(mymodel1 <- runMLwiN(reading ~ 1 + (1 | student) + (1 | occasion), data = reading))
 
 
 # 13.3 A linear growth curve model . . . . . . . . . . . . . . . . . . . 201
 
-(mymodel2 <- runMLwiN(reading ~ 1 + age + (student | 1) + (occasion | 1), estoptions = list(startval = list(FP.b = mymodel1@FP, 
+(mymodel2 <- runMLwiN(reading ~ 1 + age + (1 | student) + (1 | occasion), estoptions = list(startval = list(FP.b = mymodel1@FP, 
   FP.v = mymodel1@FP.cov, RP.b = mymodel1@RP, RP.v = mymodel1@RP.cov)), data = reading))
 
-(mymodel3 <- runMLwiN(reading ~ 1 + age + (student | 1 + age) + (occasion | 1), estoptions = list(resi.store = TRUE, 
+(mymodel3 <- runMLwiN(reading ~ 1 + age + (1 + age | student) + (1 | occasion), estoptions = list(resi.store = TRUE, 
   startval = list(FP.b = mymodel2@FP, FP.v = mymodel2@FP.cov, RP.b = mymodel2@RP, RP.v = mymodel2@RP.cov)), data = reading))
 
 u0 <- mymodel3@residual$lev_2_resi_est_Intercept
@@ -91,11 +91,11 @@ plot(e0std, e0nscore, asp = 1)
 
 # 13.4 Complex level 1 variation . . . . . . . . . . . . . . . . . . . . 204
 
-(mymodel4 <- runMLwiN(reading ~ 1 + age + (student | 1 + age) + (occasion | 1 + age), data = reading))
+(mymodel4 <- runMLwiN(reading ~ 1 + age + (1 + age | student) + (1 + age | occasion), data = reading))
 
 # 13.5 Repeated measures modelling of non-linear polynomial growth . . . 205
 
-(mymodel5 <- runMLwiN(reading ~ 1 + age + I(age^2) + (student | 1 + age + I(age^2)) + (occasion | 1 + age), estoptions = list(resi.store = TRUE), 
+(mymodel5 <- runMLwiN(reading ~ 1 + age + I(age^2) + (1 + age + I(age^2) | student) + (1 + age | occasion), estoptions = list(resi.store = TRUE), 
   data = reading))
 
 l2varfn <- mymodel5@RP["RP2_var_Intercept"] + 2 * mymodel5@RP["RP2_cov_Intercept_age"] * mymodel5@data$age + mymodel5@RP["RP2_var_age"] * 

@@ -30,7 +30,7 @@ Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) \emph{
 
 data(rats, package = "R2MLwiN")
 
-(mymodel <- runMLwiN(c(y8, y15, y22, y29, y36) ~ 1 + (rat | 1), 
+(mymodel <- runMLwiN(c(y8, y15, y22, y29, y36) ~ 1 + (1 | rat), 
   D = "Multivariate Normal", estoptions = list(EstM = 1),
   data = rats))
 

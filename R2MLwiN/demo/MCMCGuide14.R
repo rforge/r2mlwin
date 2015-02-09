@@ -32,23 +32,23 @@ error <- double2singlePrecision(rnorm(length(tutorial$standlrt), 0, sqrt(0.2)))
 obslrt <- double2singlePrecision(tutorial$standlrt + error)
 tutorial <- cbind(tutorial, error, obslrt)
 
-(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (student | 1), data = tutorial))
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (1 | student), data = tutorial))
 
-(mymodel <- runMLwiN(normexam ~ 1 + error + (student | 1), data = tutorial))
+(mymodel <- runMLwiN(normexam ~ 1 + error + (1 | student), data = tutorial))
 
-(mymodel <- runMLwiN(normexam ~ 1 + obslrt + (student | 1), data = tutorial))
+(mymodel <- runMLwiN(normexam ~ 1 + obslrt + (1 | student), data = tutorial))
 
-(mymodel <- runMLwiN(normexam ~ 1 + obslrt + (student | 1), estoptions = list(EstM = 1, merr = c(N = 1, "obslrt", 
+(mymodel <- runMLwiN(normexam ~ 1 + obslrt + (1 | student), estoptions = list(EstM = 1, merr = c(N = 1, "obslrt",
   0.2)), data = tutorial))
 
 # 14.2 Measurement error modelling in multilevel models . . . . . . . . .205
 
-(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1), estoptions = list(EstM = 1), 
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school) + (1 | student), estoptions = list(EstM = 1),
   data = tutorial))
 
-(mymodel <- runMLwiN(normexam ~ 1 + obslrt + (school | 1 + obslrt) + (student | 1), estoptions = list(EstM = 1), data = tutorial))
+(mymodel <- runMLwiN(normexam ~ 1 + obslrt + (1 + obslrt | school) + (1 | student), estoptions = list(EstM = 1), data = tutorial))
 
-(mymodel <- runMLwiN(normexam ~ 1 + obslrt + (school | 1 + obslrt) + (student | 1), estoptions = list(EstM = 1, merr = c(N = 1, 
+(mymodel <- runMLwiN(normexam ~ 1 + obslrt + (1 + obslrt | school) + (1 | student), estoptions = list(EstM = 1, merr = c(N = 1,
   "obslrt", 0.2)), data = tutorial))
 
 # 14.3 Measurement errors in binomial models . . . . . . . . . . . . . . 208
@@ -67,7 +67,7 @@ bang1$obsage <- double2singlePrecision(bang1$age + rnorm(length(bang1$age), 0, 5
 (mymodel <- runMLwiN(logit(use, denomb) ~ 1 + obsage, D = "Binomial", estoptions = list(EstM = 1), data = bang1))
 
 ## Adjust for the measurement errors
-(mymodel <- runMLwiN(logit(use, denomb) ~ 1 + obsage, D = "Binomial", estoptions = list(EstM = 1, merr = c(N = 1, 
+(mymodel <- runMLwiN(logit(use, denomb) ~ 1 + obsage, D = "Binomial", estoptions = list(EstM = 1, merr = c(N = 1,
   "obsage", 25)), data = bang1))
 
 # 14.4 Measurement errors in more than one variable and

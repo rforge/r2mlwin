@@ -33,13 +33,13 @@ options(MLwiN_path = mlwin)
 data(tutorial, package = "R2MLwiN")
 
 ## IGLS
-(mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), data = tutorial))
+(mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), data = tutorial))
 
 ## Diffuse priors (Gamma priors)
-(mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1), data = tutorial))
+(mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1), data = tutorial))
 
 ## Diffuse priors (Uniform priors)
-(mymodel3 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcMeth = list(priorcode = 0)), 
+(mymodel3 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcMeth = list(priorcode = 0)), 
   data = tutorial))
 
 aa <- cbind(mymodel1@FP, mymodel2@FP, mymodel3@FP)
@@ -52,13 +52,13 @@ rm(list = c("mymodel1", "mymodel2", "mymodel3"))
 # 5.3 Using informative priors . . . . . . . . . . . . . . . . . . . . . .62
 
 ## Informative normal prior for beta_1 Fit the model
-(mymodel4 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcMeth = list(priorParam = list(fixe = list(standlrt = c(1, 
+(mymodel4 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcMeth = list(priorParam = list(fixe = list(standlrt = c(1, 
   0.01))))), data = tutorial))
 
 sixway(mymodel4@chains[, "FP_standlrt", drop = FALSE], "beta_1")
 
 ## Informative normal prior for beta_1
-(mymodel5 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcMeth = list(priorParam = list(fixe = list(standlrt = c(1, 
+(mymodel5 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcMeth = list(priorParam = list(fixe = list(standlrt = c(1, 
   0.1))))), data = tutorial))
 
 sixway(mymodel5@chains[, "FP_standlrt", drop = FALSE], "beta_1")
@@ -66,7 +66,7 @@ sixway(mymodel5@chains[, "FP_standlrt", drop = FALSE], "beta_1")
 # 5.4 Specifying an informative prior for a random parameter . . . . . . .65
 
 ## Specifies an informative prior for sigma2u
-(mymodel6 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcMeth = list(priorParam = list(rp2 = list(estimates = 0.2, 
+(mymodel6 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcMeth = list(priorParam = list(rp2 = list(estimates = 0.2, 
   size = 100)))), data = tutorial))
 
 sixway(mymodel6@chains[, "RP2_var_Intercept", drop = FALSE], "sigma^2_u0")
@@ -80,22 +80,22 @@ RP.b <- c(2, 4)
 names(RP.b) <- c("RP2_var_Intercept", "RP1_var_Intercept")
 startval <- list(FP.b = FP.b, RP.b = RP.b)
 
-(mymodel7 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcMeth = list(burnin = 0, 
+(mymodel7 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcMeth = list(burnin = 0, 
   iterations = 500), startval = startval), data = tutorial))
 
 rm(list = c("mymodel4", "mymodel5", "mymodel6", "mymodel7"))
 
 ## Use different seeds
-(mymodel8 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcMeth = list(seed = 1)), 
+(mymodel8 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcMeth = list(seed = 1)), 
   data = tutorial))
 
-(mymodel9 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcMeth = list(seed = 2)), 
+(mymodel9 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcMeth = list(seed = 2)), 
   data = tutorial))
 
-(mymodel10 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcMeth = list(seed = 3)), 
+(mymodel10 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcMeth = list(seed = 3)), 
   data = tutorial))
 
-(mymodel11 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcMeth = list(seed = 4)), 
+(mymodel11 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcMeth = list(seed = 4)), 
   data = tutorial))
 
 aa <- cbind(mymodel8@FP, mymodel9@FP, mymodel10@FP, mymodel11@FP)

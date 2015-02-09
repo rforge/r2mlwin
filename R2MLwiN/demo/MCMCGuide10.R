@@ -60,17 +60,17 @@ sixway(mymodel1@chains[, "FP_age", drop = FALSE], "beta_1")
 
 # 10.2 Random effects logistic regression model . . . . . . . . . . . . .136
 
-(mymodel4 <- runMLwiN(logit(use, denomb) ~ 1 + age + lc + (district | 1), D = "Binomial", estoptions = list(EstM = 1), 
+(mymodel4 <- runMLwiN(logit(use, denomb) ~ 1 + age + lc + (1 | district), D = "Binomial", estoptions = list(EstM = 1), 
   data = bang1))
 summary(mymodel4@chains[, "RP2_var_Intercept"])
 sixway(mymodel4@chains[, "RP2_var_Intercept", drop = FALSE], "sigma2u0")
 
 # 10.3 Random coefficients for area type . . . . . . . . . . . . . . . . 139
 
-(mymodel5 <- runMLwiN(logit(use, denomb) ~ 1 + age + lc + urban + (district | 1), D = "Binomial", estoptions = list(EstM = 1), 
+(mymodel5 <- runMLwiN(logit(use, denomb) ~ 1 + age + lc + urban + (1 | district), D = "Binomial", estoptions = list(EstM = 1), 
   data = bang1))
 
-(mymodel6 <- runMLwiN(logit(use, denomb) ~ 1 + age + lc + urban + (district | 1 + urban), D = "Binomial", estoptions = list(EstM = 1), 
+(mymodel6 <- runMLwiN(logit(use, denomb) ~ 1 + age + lc + urban + (1 + urban | district), D = "Binomial", estoptions = list(EstM = 1), 
   data = bang1))
 
 # 10.4 Probit regression . . . . . . . . . . . . . . . . . . . . . . . . 141
@@ -78,11 +78,11 @@ sixway(mymodel4@chains[, "RP2_var_Intercept", drop = FALSE], "sigma2u0")
 # 10.5 Running a probit regression in MLwiN . . . . . . . . . . . . . . .142
 
 ## Gibbs
-(mymodel7 <- runMLwiN(probit(use, denomb) ~ 1 + age + lc + urban + (district | 1 + urban), D = "Binomial", estoptions = list(EstM = 1, 
+(mymodel7 <- runMLwiN(probit(use, denomb) ~ 1 + age + lc + urban + (1 + urban | district), D = "Binomial", estoptions = list(EstM = 1, 
   mcmcMeth = list(fixM = 1, residM = 1)), data = bang1))
 
 ## Univariate MH by default
-(mymodel8 <- runMLwiN(probit(use, denomb) ~ 1 + age + lc + urban + (district | 1 + urban), D = "Binomial", estoptions = list(EstM = 1), 
+(mymodel8 <- runMLwiN(probit(use, denomb) ~ 1 + age + lc + urban + (1 + urban | district), D = "Binomial", estoptions = list(EstM = 1), 
   data = bang1))
 
 cat("The mean parameter estimates\n")
@@ -105,14 +105,14 @@ print(sdtable)
 
 # 10.6 Comparison with WinBUGS . . . . . . . . . . . . . . . . . . . . . 144
 
-mymodel9 <- runMLwiN(logit(use, denomb) ~ 1 + age + (district | 1), D = "Binomial", estoptions = list(EstM = 1), BUGO = c(version = 4, 
+mymodel9 <- runMLwiN(logit(use, denomb) ~ 1 + age + (1 | district), D = "Binomial", estoptions = list(EstM = 1), BUGO = c(version = 4, 
   n.chains = 1, debug = FALSE, seed = 1, bugs = openbugs, OpenBugs = TRUE), data = bang1)
 
 summary(mymodel9)
 summary(mymodel9[, "beta[1]"])
 sixway(mymodel9[, "beta[1]", drop = FALSE])
 
-(mymodel10 <- runMLwiN(logit(use, denomb) ~ 1 + age + (district | 1), D = "Binomial", estoptions = list(EstM = 1), 
+(mymodel10 <- runMLwiN(logit(use, denomb) ~ 1 + age + (1 | district), D = "Binomial", estoptions = list(EstM = 1), 
   data = bang1))
 
 summary(mymodel10@chains[, "FP_Intercept"])

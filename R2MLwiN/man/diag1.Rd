@@ -35,7 +35,7 @@ Statistical Society, Series A, 149:1-43. }
 
 data(diag1, package = "R2MLwiN")
 
-(mymodel <- runMLwiN(n_ilea ~ 1 + n_vrq + (school | 1 + n_vrq) + (pupil | 1),
+(mymodel <- runMLwiN(n_ilea ~ 1 + n_vrq + (1 + n_vrq | school) + (1 | pupil),
   estoptions = list(resi.store = TRUE, resioptions = c("standardised",
   "leverage", "influence", "deletion")), data = diag1))
 

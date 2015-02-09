@@ -37,7 +37,7 @@ See \code{mlmRev} package for an alternative format of the same dataset.
 
 data(xc, package = "R2MLwiN")
 
-(mymodel <- runMLwiN(attain ~ 1 + (sid | 1) + (pid | 1) + (pupil | 1),
+(mymodel <- runMLwiN(attain ~ 1 + (1 | sid) + (1 | pid) + (1 | pupil),
  estoptions = list(xc = TRUE, EstM = 1), data = xc))
 
 }

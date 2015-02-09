@@ -27,7 +27,7 @@ Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B. (2009) \emph{
 
 data(gcsecomp1, package="R2MLwiN")
 
-(mymodel <- runMLwiN(c(written, csework) ~ 1 + female + (school | 1) + (student | 1), 
+(mymodel <- runMLwiN(c(written, csework) ~ 1 + female + (1 | school) + (1 | student), 
   D = "Multivariate Normal", estoptions = list(EstM = 1), data = gcsecomp1))
 
 }

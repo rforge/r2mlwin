@@ -29,7 +29,7 @@ options(MLwiN_path = mlwin)
 data(tutorial, package = "R2MLwiN")
 
 ## The highest level comes first, then the second highest and so on
-(mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1), data = tutorial))
+(mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1), data = tutorial))
 
 estimates <- mymodel1@chains
 par(mfrow = c(3, 2))
@@ -51,7 +51,7 @@ sixway(mymodel1@chains[, "RP2_var_Intercept", drop = FALSE], "sigma2u0")
 
 # 3.3 Comparison between fixed and random school effects . . . . . . . . .41
 
-(mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + sex + (school | 1) + (student | 1), estoptions = list(EstM = 1), data = tutorial))
+(mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + sex + (1 | school) + (1 | student), estoptions = list(EstM = 1), data = tutorial))
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . . 43
 

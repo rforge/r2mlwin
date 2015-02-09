@@ -1,22 +1,22 @@
 #' An internal function to translate an R formula into an R list object.
-#' 
+#'
 #' A model formula, as a formula object written in R-type syntax, is translated
 #' into an R list object.
-#' 
+#'
 #' @param Formula A \code{\link[stats]{formula}} object specifying a multilevel model.
 #' See \code{\link[stats]{formula}} for notes on general usage, and \code{\link{runMLwiN}} for
 #' further details.
 #' @param D A character string/vector specifying the type of distribution to be modelled, which
-#' can include \code{'Normal'} (the default), \code{'Binomial'}, \code{'Poisson'}, 
+#' can include \code{'Normal'} (the default), \code{'Binomial'}, \code{'Poisson'},
 #' \code{'Negbinom'}, \code{'Unordered Multinomial'}, \code{'Ordered Multinomial'},
-#' \code{'Multivariate Normal'}, or \code{'Mixed'}. In the case of the latter, 
-#' \code{'Mixed'} precedes the response types which also need to be listed in 
+#' \code{'Multivariate Normal'}, or \code{'Mixed'}. In the case of the latter,
+#' \code{'Mixed'} precedes the response types which also need to be listed in
 #' \code{D}, e.g. \code{c('Mixed', 'Normal', 'Binomial')}; these need to be
 #' be listed in the same order to which they are referred to in the
 #' \code{Formula} object.
 #' @param indata A data.frame object containing the data to be modelled.
 #' Optional (can \code{\link[base]{attach}} as an alternative) but recommended.
-#' 
+#'
 #' @return Outputs an R list object, which is then used as the input for
 #' \code{\link{write.IGLS}} or \code{\link{write.MCMC}}.
 #'
@@ -35,30 +35,30 @@
 #' # options(MLwiN_path = 'path/to/MLwiN vX.XX/')
 #' # If using R2MLwiN via WINE, the path may look like this:
 #' # options(MLwiN_path = '/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN vX.XX/')
-#' 
+#'
 #' # Two-level random intercept model with student (level 1) nested within
 #' # school (level 2) and standlrt added to the fixed part.
 #' # Importantly, the ordering of school and student reflects their hierarchy,
 #' # with the highest level (school) specified first.
 #' # E.g. see demo(UserGuide04)
 #' data(tutorial, package = 'R2MLwiN')
-#' (mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (school|1) + (student|1),
+#' (mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student),
 #'                      data = tutorial))
 #'
 #' # Adding a random slope
-#' (mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + (school|1 + standlrt)
-#'                      + (student|1), data = tutorial))
+#' (mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school)
+#'                      + (1 | student), data = tutorial))
 #'
 #' # Exploring complex level 1 variation
 #' # E.g. see demo(UserGuide07)
-#' (mymodel3 <- runMLwiN(normexam ~ 1 + standlrt + (school|1 + standlrt)
-#'                       + (student|1 + standlrt), data = tutorial))
-#'  
+#' (mymodel3 <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school)
+#'                       + (1 + standlrt | student), data = tutorial))
+#'
 #' # Logit link with cons specified as denominator
 #' # Note level 1 ID not explicitly specified
 #' # E.g. see demo(UserGuide09)
 #' data(bang, package = 'R2MLwiN')
-#' (mymodel4 <- runMLwiN(logit(use, cons) ~ 1 + lc + age + (district|1),
+#' (mymodel4 <- runMLwiN(logit(use, cons) ~ 1 + lc + age + (1 | district),
 #'                       D = 'Binomial', data = bang))
 #'
 #' # Mixed response model
@@ -68,13 +68,13 @@
 #' # E.g. see demo(MCMCGuide19)
 #' data(jspmix1, package = 'R2MLwiN')
 #' (mymodel <- runMLwiN(c(english, probit(behaviour, cons)) ~
-#'                      1 + sex + ravens + fluent[1] + (school|1) + (id|1[1]),
+#'                      1 + sex + ravens + fluent[1] + (1 | school) + (1[1] | id),
 #'                      D = c('Mixed', 'Normal', 'Binomial'),
 #'                      estoptions = list(EstM = 1,
 #'                      mcmcMeth = list(fixM = 1, residM = 1, Lev1VarM = 1)),
 #'                      data = jspmix1))
 #' }
-#' 
+#'
 Formula.translate <- function(Formula, D = "Normal", indata) {
   
   get.terms <- function(fstr) {
@@ -500,7 +500,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
   tempfstr <- gsub("[[:space:]]", "", tempfstr)
   
   if (!any(D %in% c("Normal", "Multivariate Normal"))) {
-    Formula <- update(Formula, ~. + (l1id | 0))
+    Formula <- update(Formula, ~. + (0 | l1id))
   }
   
   Terms <- terms.formula(Formula, keep.order = TRUE)
@@ -515,23 +515,36 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
   }
   
   
-  charposlevID <- grepl("^[[:alpha:]]{1}[[:graph:]]*\\|", left)
+  charposlevID <- grepl("\\|{1,2}[[:alpha:]]{1}[[:graph:]]*$", left)
   vlpos <- grepl("\\|", left)
-  nonzeropos <- !grepl("^0{1}(s|c)*\\|", left)
+  nonzeropos <- !grepl("\\|{1,2}0{1}(s|c)*$", left)
   vlpos <- vlpos & nonzeropos
   if (any(charposlevID) && (sum(charposlevID) == sum(vlpos))) {
-    levID <- sub("\\|{1,2}[[:graph:]]+", "", left[which(vlpos)])
+    levID <- sub("[[:graph:]]+\\|{1,2}", "", left[which(vlpos)])
     nlev <- length(levID)
     cc <- c(0:nlev)
     for (ii in 1:nlev) {
-      pos_first <- grep(paste0("^", levID[ii], "\\|"), left)
+      pos_first <- grep(paste0("\\|{1,2}", levID[ii], "$"), left)
       if (length(pos_first) > 0) {
-        pos_first <- pos_first[1]
-        left[pos_first] <- sub(paste0("^", levID[ii], "\\|"), paste0(c(nlev:1)[ii], "|"), left[pos_first])
+        kk <- 0
+        for (jj in 1:length(pos_first)){
+          if (grepl("\\|{2}",left[pos_first[jj]])){
+            left[pos_first[jj]] <- sub(paste0("\\|{2}", levID[ii], "$"), "", left[pos_first[jj]])
+            left[pos_first[jj]] <- paste0(paste0(c(nlev:1)[ii], "||"), left[pos_first[jj]])          
+          }else{
+            if (kk == 0){
+              #match the first position for this levID
+              #levID can have the same name but represent different levels
+              left[pos_first[jj]] <- sub(paste0("\\|{1}", levID[ii], "$"), "", left[pos_first[jj]])
+              left[pos_first[jj]] <- paste0(paste0(c(nlev:1)[ii], "|"), left[pos_first[jj]])   
+              kk <- kk +1     
+            }
+          }
+        }
       }
     }
-    onevlzero <- left == "1|0"
-    onevdlzero <- left == "1||0"
+    onevlzero <- left == "0|1"
+    onevdlzero <- left == "0||1"
     delpos <- onevlzero | onevdlzero
     left <- left[!(delpos)]
   } else {

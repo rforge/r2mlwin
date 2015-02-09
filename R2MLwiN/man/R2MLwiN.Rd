@@ -32,7 +32,7 @@ type e.g. \code{demo(UserGuide03)} or view a demo's script via
  which is allowed to vary at level 1 (\code{student}) and level 2 (\code{school}), and
  \code{standlrt} included as a predictor in the fixed part of the model. Whilst back-compatibility
  is preserved (i.e. this specification will currently still work) the same model can now be more
- parsimoniously specified via \code{normexam ~ 1 + standlrt + (school|1) + (student|1)}.
+ parsimoniously specified via \code{normexam ~ 1 + standlrt + (1 | school) + (1 | student)}.
  As well examples in the demos, see \code{\link{runMLwiN}} and \code{\link{Formula.translate}} for further info.}
 
  \item{As a means of specifying cross-classified, multiple membership or CAR models, \code{xclass} is now deprecated.
@@ -110,7 +110,7 @@ library(R2MLwiN)
 
 data(tutorial, package = "R2MLwiN")
 
-(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (school | 1 + standlrt) + (student | 1),
+(mymodel <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school) + (1 | student),
                      estoptions = list(EstM = 1), data = tutorial))
 
 ## The R2MLwiN package includes scripts to replicate all the analyses in

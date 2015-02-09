@@ -27,10 +27,10 @@ options(MLwiN_path = mlwin)
 data(tutorial, package = "R2MLwiN")
 
 ## IGLS
-(mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), data = tutorial))
+(mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), data = tutorial))
 
 ## Gibbs
-(mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1), data = tutorial))
+(mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1), data = tutorial))
 
 # 4.1 Metropolis Hastings (MH) sampling for the variance components model 46
 
@@ -39,13 +39,13 @@ data(tutorial, package = "R2MLwiN")
 # 4.3 Running the variance components with Metropolis Hastings . . . . . .48
 
 ## MH Adaptive with defaults
-(mymodel3 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcMeth = list(fixM = 2, 
+(mymodel3 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcMeth = list(fixM = 2, 
   residM = 2, Lev1VarM = 2)), data = tutorial))
 
 sixway(mymodel3@chains[, "FP_standlrt", drop = FALSE], "beta_1")
 
 ## MH Scale Factor = 5.8
-(mymodel4 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcMeth = list(fixM = 2, 
+(mymodel4 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcMeth = list(fixM = 2, 
   residM = 2, Lev1VarM = 2, adaption = 0)), data = tutorial))
 
 aa <- cbind(mymodel1@FP, mymodel2@FP, mymodel4@FP, mymodel3@FP)
@@ -58,7 +58,7 @@ rm(list = c("mymodel1", "mymodel2", "mymodel3", "mymodel4"))
 
 # 4.5 Block updating MH sampling . . . . . . . . . . . . . . . . . . . . .49
 ## MH Adaptive with defaults
-(mymodel5 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, mcmcMeth = list(fixM = 3, 
+(mymodel5 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcMeth = list(fixM = 3, 
   residM = 2, Lev1VarM = 2, rate = 40)), data = tutorial))
 
 estimates <- mymodel5@chains
@@ -77,7 +77,7 @@ rm(mymodel5)
 
 # 4.6 Residuals in MCMC . . . . . . . . . . . . . . . . . . . . . . . . . 51
 
-(mymodel6 <- runMLwiN(normexam ~ 1 + standlrt + (school | 1) + (student | 1), estoptions = list(EstM = 1, resi.store = TRUE, 
+(mymodel6 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, resi.store = TRUE, 
   resi.store.levs = 2, mcmcMeth = list(iterations = 5001)), data = tutorial))
 
 resi.chain2 <- mymodel6@resi.chains$resi_lev2

@@ -37,31 +37,31 @@ sixway(mymodel1@chains[, "FP_uvbi", drop = FALSE], "beta_1")
 
 # 11.2 Adding in region level random effects . . . . . . . . . . . . . . 157
 
-(mymodel2 <- runMLwiN(log(obs) ~ 1 + uvbi + offset(log(exp)) + (region | 1), D = "Poisson", estoptions = list(EstM = 1, 
+(mymodel2 <- runMLwiN(log(obs) ~ 1 + uvbi + offset(log(exp)) + (1 | region), D = "Poisson", estoptions = list(EstM = 1, 
   mcmcMeth = list(iterations = 50000, seed = 13)), data = mmmec))
 summary(mymodel2@chains[, "FP_uvbi"])
 sixway(mymodel2@chains[, "FP_uvbi", drop = FALSE], "beta_1")
 
 # 11.3 Including nation effects in the model . . . . . . . . . . . . . . 159
 
-(mymodel3 <- runMLwiN(log(obs) ~ 1 + uvbi + offset(log(exp)) + (nation | 1) + (region | 1), D = "Poisson", estoptions = list(EstM = 1, 
+(mymodel3 <- runMLwiN(log(obs) ~ 1 + uvbi + offset(log(exp)) + (1 | nation) + (1 | region), D = "Poisson", estoptions = list(EstM = 1, 
   mcmcMeth = list(iterations = 50000, seed = 13)), data = mmmec))
 
 
 contrasts(mmmec$nation, 9) <- diag(9)
 
-(mymodel4 <- runMLwiN(log(obs) ~ 0 + uvbi + nation + offset(log(exp)) + (region | 1), D = "Poisson", estoptions = list(EstM = 1, 
+(mymodel4 <- runMLwiN(log(obs) ~ 0 + uvbi + nation + offset(log(exp)) + (1 | region), D = "Poisson", estoptions = list(EstM = 1, 
   mcmcMeth = list(iterations = 50000)), data = mmmec))
 
 # 11.4 Interaction with UV exposure . . . . . . . . . . . . . . . . . . .161
 
-(mymodel5 <- runMLwiN(log(obs) ~ 0 + nation + nation:uvbi + offset(log(exp)) + (region | 1), D = "Poisson", estoptions = list(EstM = 1, 
+(mymodel5 <- runMLwiN(log(obs) ~ 0 + nation + nation:uvbi + offset(log(exp)) + (1 | region), D = "Poisson", estoptions = list(EstM = 1, 
   mcmcMeth = list(iterations = 50000)), data = mmmec))
 sixway(mymodel5@chains[, "FP_nationBelgium", drop = FALSE], acf.maxlag = 5000, "beta_1")
 
 # 11.5 Problems with univariate updating Metropolis procedures . . . . . 163
 
-(mymodel6 <- runMLwiN(log(obs) ~ 0 + nation + nation:uvbi + offset(log(exp)) + (region | 1), D = "Poisson", estoptions = list(EstM = 1, 
+(mymodel6 <- runMLwiN(log(obs) ~ 0 + nation + nation:uvbi + offset(log(exp)) + (1 | region), D = "Poisson", estoptions = list(EstM = 1, 
   mcmcMeth = list(iterations = 500000, thinning = 10)), data = mmmec))
 sixway(mymodel6@chains[, "FP_nationBelgium", drop = FALSE], "beta_1")
 
