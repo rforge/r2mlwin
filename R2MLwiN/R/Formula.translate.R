@@ -945,7 +945,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
           }
         }
         if (sum(is.na(cidmat[, 1])) > 0) 
-          cidmat <- cidmat[!(is.na(cidmat[, 1])), ]
+          cidmat <- cidmat[!(is.na(cidmat[, 1])), , drop=FALSE]
         common.coeff <- unique(paste(cidmat[, 1], cidmat[, 2], sep = "@"))
         lencom <- length(common.coeff)
         tt.id <- unlist(strsplit(common.coeff, "\\@"))[(1:lencom) * 2]
