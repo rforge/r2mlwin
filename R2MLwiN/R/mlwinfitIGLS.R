@@ -685,10 +685,9 @@ setMethod("predict", signature(object = "mlwinfitIGLS"), function(object, newdat
     }
   }
   if (type == "terms") {
-    if (is.null(terms)) {
-      terms <- fp.names
-    } else {
-      x.names <- sub("FP_", "", terms)
+    if (!is.null(terms)) {
+      x.names <- terms
+      fp.names <- paste0("FP_", terms)
     }
     tval <- as.matrix(t(t(indata[x.names]) * object@FP[fp.names]))
     if (se.fit) {
