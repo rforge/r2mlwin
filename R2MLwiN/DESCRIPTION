@@ -1,7 +1,7 @@
 Package: R2MLwiN
 Version: 0.8-0
 Date: 2015-01-20
-Title: Running MLwiN from within R
+Title: Running MLwiN from Within R
 Authors@R: c(person("Zhengzheng", "Zhang", role = c("aut", "cre"),email =
     "zhengzheng236@gmail.com"), person("Chris", "Charlton",  role = "aut"),
     person("Richard", "Parker", role = "aut"), person("George", "Leckie", role
@@ -24,7 +24,7 @@ Suggests:
     lmtest
 Enhances:
     reshape
-Description: R2MLwiN is an R command interface to the MLwiN multilevel
+Description: This package is an R command interface to the MLwiN multilevel
     modelling software package, allowing users to fit multilevel models using
     MLwiN from within the R environment.
 License: GPL (>= 2)
