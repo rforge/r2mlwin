@@ -542,7 +542,7 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
     cat("Estimation algorithm:  MCMC      Elapsed time :", paste(round(object@elapsed.time, 2), "s", sep = ""), 
         "\n")
   }
-  cat("Number of obs: ", object@Nobs, "(from total", object@DataLength, ")        Number of iter.:", object@iterations, 
+  cat("Number of obs: ", object@Nobs, paste0("(from total ", object@DataLength, ")"), "         Number of iter.:", object@iterations, 
       "         Burn-in:", object@burnin, "\n")
   
   if (!(object@D[1] == "Mixed") && is.null(object@merr) && is.null(object@fact)) {

@@ -44,7 +44,7 @@
 #' data(tutorial, package = "R2MLwiN")
 #'
 #' (mymodel <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school) + (1 | student),
-#'                      data = tutorial)) 
+#'                      data = tutorial))
 #'
 #' ##summary method
 #' summary(mymodel)
@@ -410,7 +410,7 @@ printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
     cat(object@nonlinear[2])
   }
   cat("        Elapsed time :", paste(round(object@elapsed.time, 2), "s", sep = ""), "\n")
-  cat("Number of obs: ", object@Nobs, "(from total", object@DataLength, ")")
+  cat("Number of obs: ", object@Nobs, paste0("(from total ", object@DataLength, ")"))
   if (object@Converged) {
     cat("        The model converged after", object@Iterations, "iterations.\n")
   } else {
