@@ -1,3 +1,17 @@
+Fri Feb 27 2015
+1. Bug fixing
+   * Give error message is logLik or deviance are requested for non-normal models
+   * Correct prediction calculation to take denominator/offset into account
+   * Correct the preduction calculation when "terms" option is specified
+   * Fixed a bug when specifying common variables in mixed response models
+   * Allow interactions in the random part when using the newer syntax
+
+2. Changes
+   * Modified MCMCGuide08 demo to run simulations in parallel using the doParallel package
+   * Modified MCMCGuide11 demo to run last model for full number of iterations
+   * Removed df.residual method for MCMC models
+   * Switched the position of the level identifier and predictor variables in the model formula
+
 Wed Jan 31 2015
 1. Bug fixing
    * Allow matrix2df to work with unnamed columns

@@ -7,3 +7,6 @@ Debugging option to extract internal model matrices (IGLS) - XSS/VMAT/ZMAT/YRES/
 Allow user specified design matrix (IGLS) - SETD command
 Multinomial proportions - need manual calculation/reshaping
 Add an option to allow the model to be set up but not run, useful for example if we just want to run a BUGS model or see the MLwiN syntax
+Add more error checking
+Add support for multiple MCMC chains when calling MLwiN
+Automate multiple imputation (maybe using mi package)
