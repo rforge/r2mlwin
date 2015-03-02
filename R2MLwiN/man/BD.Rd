@@ -17,6 +17,9 @@ BD(est, var, rho, k = 2, alpha = 0.05)
 
 \item{alpha}{Numeric scalar indicating the desired accuracy (defaults to \code{0.05})}
 }
+\value{
+The Brooks-Draper diagnostic statistic is returned.
+}
 \description{
 An internal function, for use in \code{\link{sixway}}, which calculates the
 Brooks-Draper diagnostic, based on an unpublished paper by David Draper. It

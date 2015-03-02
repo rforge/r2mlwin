@@ -15,6 +15,9 @@ MCSE(chain, rho, ll = 0.5, ul = 20)
 
 \item{ul}{Upper limit of x-axis, where value specified is multiplied by the length of the chain. Defaults to \code{20}.}
 }
+\value{
+The Monte Carlo standard error (MCSE) for the posterior estimate of the mean is returned.
+}
 \description{
 An internal function which calculates the estimated Monte Carlo standard
 error (MCSE) for the posterior estimate of the mean, for use in \code{\link{sixway}}.

@@ -12,6 +12,8 @@
 #' @param k Integer scalar corresponding to the number of significant figures (defaults to \code{2})
 #' @param alpha Numeric scalar indicating the desired accuracy (defaults to \code{0.05})
 #' 
+#' @return The Brooks-Draper diagnostic statistic is returned.
+#' 
 #' @references
 #' Browne, W.J. (2012) MCMC Estimation in MLwiN, v2.26.
 #' Centre for Multilevel Modelling, University of Bristol.

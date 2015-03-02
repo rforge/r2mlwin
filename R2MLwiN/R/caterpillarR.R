@@ -7,7 +7,7 @@
 #'  
 #' @param resi A \code{\link{mlwinfitIGLS-class}} or 
 #' \code{\link{mlwinfitMCMC-class}} object (model must be fitted specifying
-#' \code{resi.store = TRUE} and including \code{'variances'} in the list of
+#' \code{resi.store = TRUE} and including \code{'variances'} or \code{'sampling'} in the list of
 #' \code{resioptions} (both in \code{estoptions}) to not return an error).
 #' @param lev An integer scalar specifying the level of a multilevel model
 #' for which to produce a plot for.

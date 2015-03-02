@@ -11,6 +11,8 @@
 #' @param ll Lower limit of x-axis, where value specified is multiplied by the length of the chain. Defaults to \code{0.5}.
 #' @param ul Upper limit of x-axis, where value specified is multiplied by the length of the chain. Defaults to \code{20}.
 #'
+#' @return The Monte Carlo standard error (MCSE) for the posterior estimate of the mean is returned.
+#'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
 #'

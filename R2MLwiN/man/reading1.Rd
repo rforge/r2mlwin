@@ -33,9 +33,50 @@ Tizard, B., Blatchford, P., Burke, J. & Farquhar, C. (1988). Young children at s
 
 \examples{
 \dontrun{
+# from demo(UserGuide13)
 
 data(reading1, package = "R2MLwiN")
+summary(reading1)
 
+reading1[reading1 == -10] <- NA
+
+summary(reading1)
+
+reading <- reshape(reading1, idvar = "student", timevar = "id",
+                   varying = c("read1", "age1", "read2", "age2", "read3", "age3",
+                   "read4", "age4", "read5", "age5", "read6", "age6"),
+                   sep = "", direction = "long")
+
+reading <- reading[c("student", "id", "age", "read")]
+reading <- reading[order(reading$student, reading$id), ]
+
+colnames(reading) <- c("student", "occasion", "age", "reading")
+rownames(reading) <- NULL
+
+summary(reading)
+
+head(reading, 5)
+
+tab <- aggregate(reading ~ occasion, reading,
+                 function(x) c(N = length(x), mean = mean(x), sd = sd(x)))
+tab <- rbind(tab, c(NA, NA))
+tab$reading[7, ] <- c(length(na.omit(reading$reading)),
+                      mean(na.omit(reading$reading)),
+                      sd(na.omit(reading$reading)))
+rownames(tab)[7] <- "Total"
+tab
+
+tab <- aggregate(age ~ occasion, reading,
+                 function(x) c(N = length(x), mean = mean(x), sd = sd(x)))
+tab <- rbind(tab, c(NA, NA))
+tab$age[7, ] <- c(length(na.omit(reading$age)),
+                  mean(na.omit(reading$age)),
+                  sd(na.omit(reading$age)))
+rownames(tab)[7] <- "Total"
+tab
+
+(mymodel1 <- runMLwiN(reading ~ 1 + (1 | student) + (1 | occasion),
+                      data = reading))
 }
 }
 \keyword{datasets}

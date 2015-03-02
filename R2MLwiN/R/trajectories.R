@@ -2,7 +2,8 @@
 #'
 #' This function draws trajectories of MCMC chains.
 #'
-#' @param object A data frame of parameter chains from MLwiN.
+#' @param object An \code{\link{mlwinfitMCMC-class}}, \code{\link[coda]{mcmc}} or \code{\link[coda]{mcmc.list}} object,
+#' or other object that can be converted to an \code{\link[coda]{mcmc}} object.
 #' @param Range An integer vector of length two specifying the first and last
 #' iterations of the chains.
 #' @param selected A character vector specifying the selected chains to be
