@@ -2217,8 +2217,10 @@ version:date:md5:filename:x64:trial:platform
     }
     if (D[4] == 1) {
       # Ordered multinomial
-      if (as.integer(D[5]) != which(min(levels(indata[[resp]])) == levels(indata[[resp]])) && as.integer(D[5]) != 
-            which(max(levels(indata[[resp]])) == levels(indata[[resp]]))) {
+      if (is.na(as.integer(D[5]))) {
+        D[5] = which(indata[[resp]] == D[5])[1] # Find corresponding numeric factor code
+      }
+      if (as.integer(D[5]) != min(as.integer(indata[[resp]])) && as.integer(D[5]) != max(as.integer(indata[[resp]]))) {
         stop(paste("Invalid reference category:", D[5]))
       }
     }

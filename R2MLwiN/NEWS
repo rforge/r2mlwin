@@ -1,6 +1,7 @@
 Thu Mar 5 2015
 1. Bug fixing
    * Fixed the transfer to MLwiN of starting values for the fixed part covariance matrix when using MCMC estmation
+   * Fixed reference category check for ordered multinomial models when the response variable has string labels
 
 2. Changes
    * Update default OpenBUGS location in demos
