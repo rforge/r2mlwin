@@ -1466,7 +1466,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
       wrt(paste("JOIN ", paste(startval$FP.b, collapse = " "), " '_FP_b'", sep = ""))
     }
     if (!is.null(startval$FP.v)) {
-      wrt(paste("JOIN ", paste(startval$RP.v[!upper.tri(startval$RP.v)], collapse = " "), " '_FP_v'", sep = ""))
+      wrt(paste("JOIN ", paste(startval$FP.v[!upper.tri(startval$FP.v)], collapse = " "), " '_FP_v'", sep = ""))
     }
     if (!is.null(startval$RP.b)) {
       wrt(paste("JOIN ", paste(startval$RP.b, collapse = " "), " '_RP_b'", sep = ""))
