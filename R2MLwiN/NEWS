@@ -1,3 +1,10 @@
+Thu Mar 5 2015
+1. Bug fixing
+   * Fixed the transfer to MLwiN of starting values for the fixed part covariance matrix when using MCMC estmation
+
+2. Changes
+   * Update default OpenBUGS location in demos
+
 Fri Feb 27 2015
 1. Bug fixing
    * Give error message is logLik or deviance are requested for non-normal models
