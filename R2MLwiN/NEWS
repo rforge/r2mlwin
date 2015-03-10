@@ -1,3 +1,7 @@
+Tue Mar 10 2015
+1. Bug fixing
+   * Display the correct number of observations in the output for mixed response models
+
 Thu Mar 5 2015
 1. Bug fixing
    * Fixed the transfer to MLwiN of starting values for the fixed part covariance matrix when using MCMC estmation

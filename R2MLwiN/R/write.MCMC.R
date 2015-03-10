@@ -1495,7 +1495,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
   
   wrt("LINK 1 G30")
   wrt("NAME   G30[1] '_Stats'")
-  if (D[1] == "Multivariate Normal" || D[1] == "Multinomial") {
+  if (D[1] == "Multinomial" || D[1] == "Multivariate Normal" || D[1] == "Mixed") {
     wrt("NOBS 2 b31 b32")
   } else {
     wrt("NOBS 1 b31 b32")
@@ -1776,7 +1776,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("NOTE    *****************************************************************")
     wrt("NOTE       Export the model results to R")
     wrt("NOTE    *****************************************************************")
-    if (D[1] == "Multivariate Normal" || D[1] == "Multinomial") {
+    if (D[1] == "Multinomial" || D[1] == "Multivariate Normal" || D[1] == "Mixed") {
       wrt("NOBS 2 b31 b32")
     } else {
       wrt("NOBS 1 b31 b32")
