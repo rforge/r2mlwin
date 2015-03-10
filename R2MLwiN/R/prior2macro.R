@@ -293,9 +293,9 @@ prior2macro <- function(prior, formula, levID, D, indata) {
               #move brackets to the end of each term
               tempjju1 <- sapply(regmatches(leftjj[uu], gregexpr("\\[{1}(c\\(|\\)|\\,|\\:|[[:digit:]])*\\]{1}",
                                                                leftjj[uu]), invert = TRUE), function(x) paste(x, collapse = ""))
-              tempjju2 <- regmatches(leftjj[uu], gregexpr("\\[{1}(c\\(|\\)|\\,|\\:|[[:digit:]])*\\]{1}",
-                                                               leftjj[uu]))[1]
-              leftjj[uu] <- paste(tempjju1, tempjju2, collapse="")
+              tempjju2 <- unlist(regmatches(leftjj[uu], gregexpr("\\[{1}(c\\(|\\)|\\,|\\:|[[:digit:]])*\\]{1}",
+                                                               leftjj[uu])))[1]
+              leftjj[uu] <- paste0(tempjju1, tempjju2, collapse="")
             }
           }
           svar <- leftjj[!is_cvar]
