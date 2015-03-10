@@ -1,6 +1,7 @@
 Tue Mar 10 2015
 1. Bug fixing
    * Display the correct number of observations in the output for mixed response models
+   * Correct the check for levels in MCMC options to take into account the added level in multivariate/multinomial models
 
 Thu Mar 5 2015
 1. Bug fixing
