@@ -3,6 +3,7 @@ Tue Mar 10 2015
    * Display the correct number of observations in the output for mixed response models
    * Correct the check for levels in MCMC options to take into account the added level in multivariate/multinomial models
    * Fixed a bug when specifying an interaction term as a common variable
+   * Correct cases with multivariate/multinomial models where the MLwiN level numbering was being used in options, instead of matching the command
 
 Thu Mar 5 2015
 1. Bug fixing

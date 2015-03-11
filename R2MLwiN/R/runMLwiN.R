@@ -1283,7 +1283,7 @@ version:date:md5:filename:x64:trial:platform
   reset <- estoptions$reset
   if (is.null(reset)) {
     if (EstM == 0) {
-      reset <- rep(0, length(levID))
+      reset <- rep(0, length(na.omit(levID)))
       reset[1] <- 2
     }
   }
@@ -1291,6 +1291,9 @@ version:date:md5:filename:x64:trial:platform
     if (EstM == 1) {
       stop("reset is only available for (R)IGLS models")
     } else {
+      if (D[1] == "Multinomial" || D[1] == "Multivariate Normal" || D[1] == "Mixed") {
+        reset = c(0, reset)
+      }
       if (length(reset) != length(levID)) {
         stop("reset vector is wrong length")
       }
@@ -1974,12 +1977,6 @@ version:date:md5:filename:x64:trial:platform
     }
   }
   
-  
-  levID0 <- levID
-  # if (is.na(levID0[length(levID0)])){ tmp.RP.names=gsub('RP','',RP.names) for (i in 1:length(RP.names)){
-  # tmpstrlist=unlist(strsplit(tmp.RP.names[i],'\\_')) tmpno=as.integer(tmpstrlist[1])-1
-  # RP.names[i]=paste0('RP',tmpno,'_',paste(tmpstrlist[-1],collapse='_')) } }
-  
   FP <- rep(0, length(FP.names))
   names(FP) <- FP.names
   
@@ -2133,42 +2130,33 @@ version:date:md5:filename:x64:trial:platform
       }
     }
     if (mcmcOptions$hcen > 0) {
+      if (mcmcOptions$hcen < 2 || mcmcOptions$hcen > length(na.omit(levID))) {
+        stop("Invalid level for hierarchical centring")
+      }
       if (D[1] == "Multivariate Normal" || D[1] == "Mixed" || D[1] == "Multinomial") {
-        if (mcmcOptions$hcen < 3 || mcmcOptions$hcen > 1 + length(na.omit(levID))) {
-          stop("Invalid level for hierarchical centring")
-        }
-      } else {
-        if (mcmcOptions$hcen < 2 || mcmcOptions$hcen > length(na.omit(levID))) {
-          stop("Invalid level for hierarchical centring")
-        }
+        mcmcOptions$hcen = mcmcOptions$hcen + 1
       }
     }
     if (is.matrix(mcmcOptions$paex)) {
       for (i in 1:nrow(mcmcOptions$paex)) {
         if (mcmcOptions$paex[i, 2] == 1) {
           pelev <- mcmcOptions$paex[i, 1]
+          if (pelev < 2 || pelev > length(na.omit(levID))) {
+            stop("Invalid level for parameter expansion")
+          }
           if (D[1] == "Multivariate Normal" || D[1] == "Mixed" || D[1] == "Multinomial") {
-            if (pelev < 3 || pelev > 1 + length(na.omit(levID))) {
-              stop("Invalid level for parameter expansion")
-            }
-          } else {
-            if (pelev < 2 || pelev > length(na.omit(levID))) {
-              stop("Invalid level for parameter expansion")
-            }
+            mcmcOptions$paex[i, 1] = mcmcOptions$paex[i, 1] + 1
           }
         }
       }
     } else {
       if (mcmcOptions$paex[2] == 1) {
         pelev <- mcmcOptions$paex[1]
+        if (pelev < 2 || pelev > length(na.omit(levID))) {
+          stop("Invalid level for parameter expansion")
+        }
         if (D[1] == "Multivariate Normal" || D[1] == "Mixed" || D[1] == "Multinomial") {
-          if (pelev < 3 || pelev > 1 + length(na.omit(levID))) {
-            stop("Invalid level for parameter expansion")
-          }
-        } else {
-          if (pelev < 2 || pelev > length(na.omit(levID))) {
-            stop("Invalid level for parameter expansion")
-          }
+          mcmcOptions$paex[1] = mcmcOptions$paex[1] + 1
         }
       }
     }
@@ -2595,14 +2583,6 @@ version:date:md5:filename:x64:trial:platform
       
       NTotal <- estMCMC[, dim(estMCMC)[2]][1]
       NUsed <- estMCMC[, dim(estMCMC)[2]][2]
-      levID.display <- ""
-      if (is.na(levID0[length(levID0)])) {
-        levID0 <- levID0[-length(levID0)]
-      }
-      for (i in 1:length(levID0)) {
-        levID.display <- paste(levID.display, "Level ", length(levID0) + 1 - i, ": ", levID0[i], "     ", 
-                               sep = "")
-      }
       if (!is.null(fact)) {
         loadings <- na.omit(estMCMC[, 5])
         load.names <- rep(NA, length(loadings))
@@ -2663,14 +2643,6 @@ version:date:md5:filename:x64:trial:platform
       if (sum(grepl("bcons", colnames(chains))) > 0) {
         bcons.pos <- grep("bcons", colnames(chains))
         chains[1, bcons.pos] <- chains[1, bcons.pos] - 0.001
-      }
-      
-      if (is.na(levID[length(levID)])) {
-        mlwinlev <- (nlev - 1):1
-        levID2 <- levID0
-      } else {
-        mlwinlev <- nlev:1
-        levID2 <- levID
       }
     }
   }
@@ -2753,6 +2725,9 @@ version:date:md5:filename:x64:trial:platform
     resiChains <- list()
     for (name in colnames(residata)) {
       lev <- as.integer(gsub("resi_lev", "", name))
+      if (D[1] == "Multinomial" || D[1] == "Multivariate Normal" || D[1] == "Mixed") {
+        lev = lev + 1
+      }
       nunit <- nrow(unique(indata[rev(levID)[lev]]))
       pnames <- NULL
       ucount <- 0

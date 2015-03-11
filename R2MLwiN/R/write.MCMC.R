@@ -1522,7 +1522,11 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
   if (!is.null(resi.store.levs)) {
     wrt(paste0("LINK ", length(resi.store.levs), " G22"))
     for (i in 1:length(resi.store.levs)) {
-      wrt(paste("SMRE ", resi.store.levs[i], " G22[", i, "]", sep = ""))
+      resilev <- resi.store.levs[i]
+      if (D[1] == "Multinomial" || D[1] == "Multivariate Normal" || D[1] == "Mixed") {
+        resilev <- resilev + 1
+      }
+      wrt(paste("SMRE ", resilev, " G22[", i, "]", sep = ""))
       wrt(paste("NAME ", " G22[", i, "] 'resi_lev", resi.store.levs[i], "'", sep = ""))
     }
     
