@@ -10,3 +10,4 @@ Add an option to allow the model to be set up but not run, useful for example if
 Add more error checking
 Add support for multiple MCMC chains when calling MLwiN
 Automate multiple imputation (maybe using mi package)
+Allow display of models results in alternative measures (e.g. correlations, standard deviations, etc)
