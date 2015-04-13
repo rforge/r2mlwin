@@ -11,3 +11,5 @@ Add more error checking
 Add support for multiple MCMC chains when calling MLwiN
 Automate multiple imputation (maybe using mi package)
 Allow display of models results in alternative measures (e.g. correlations, standard deviations, etc)
+Investigate interactions with RStudio, as sometimes graphs can behave strangely
+Add option to omit data from output objects, as well as modify postestimation functions to take this into account
