@@ -13,7 +13,7 @@ runMLwiN(Formula, levID = NULL, D = "Normal", data = NULL,
 \item{Formula}{A \code{\link[stats]{formula}} object specifying the model
 formula. See \code{\link{Formula.translate}} (\code{\link{Formula.translate.compat}}
 details back-compatible functionality for deprecated syntax used in
-versions of \pkg{R2MLwiN} prior to 0.8-0).}
+versions of \pkg{R2MLwiN} prior to 0.8-0) and also `Details' below.}
 
 \item{levID}{A character vector specifying the level ID(s). Deprecated
 syntax: by default this is \code{NULL} and level ID(s) are specified
@@ -131,15 +131,15 @@ are listed in \code{D}.
 
 \tabular{lll}{
 \strong{Distribution} \tab \strong{Format of \code{Formula} object} \tab \strong{Where \code{<link>} can equal...}\cr
-\code{'Normal'} \tab \code{<y1> ~ 1 + <x1> + (<L2>|1) + (<L1>|1) + ...} \tab (identity link assumed)\cr
-\code{'Poisson'} \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + <x1> + (<L2>|1) + ...} \tab \code{log}\cr
-\code{'Negbinom'}* \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + (<L2>|1) + ...} \tab \code{log}\cr
-\code{'Binomial'} \tab \code{<link>(<y1>, <denom>) ~ 1 + <x1> + (<L2>|1) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
-\code{'Unordered Multinomial'} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + (<L2>|1) + ...} \tab \code{logit}\cr
-\code{'Ordered Multinomial'} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
-\code{'Multivariate Normal'} \tab \code{c(<y1>, <y2>, ...) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + (<L1>|1) + ...} \tab (identity link assumed)\cr
-\code{c('Mixed', 'Normal', 'Binomial')} \tab \code{c(<y1>, ..., <link> (<y2>, <denom>), ...) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + (<L1>|1) + ...} \tab \code{logit}*,\code{probit},\code{cloglog}*\cr
-\code{c('Mixed', 'Normal', 'Poisson')}* \tab \code{c(<y1>, ..., <link>(<y2>, <offset>), ...) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + (<L1>|1) + ...} \tab \code{log}\cr
+\code{'Normal'} \tab \code{<y1> ~ 1 + <x1> + (1|<L2>) + (1|<L1>) + ...} \tab (identity link assumed)\cr
+\code{'Poisson'} \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + <x1> + (1|<L2>) + ...} \tab \code{log}\cr
+\code{'Negbinom'}* \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + (1|<L2>) + ...} \tab \code{log}\cr
+\code{'Binomial'} \tab \code{<link>(<y1>, <denom>) ~ 1 + <x1> + (1|<L2>) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
+\code{'Unordered Multinomial'} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + (1|<L2>) + ...} \tab \code{logit}\cr
+\code{'Ordered Multinomial'} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + <x2>[<common>] + (1[<common>]|<L3>) + (1|<L2>) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
+\code{'Multivariate Normal'} \tab \code{c(<y1>, <y2>, ...) ~ 1 + <x1> + <x2>[<common>] + (1[<common>]|<L3>) + (1|<L2>) + (1|<L1>) + ...} \tab (identity link assumed)\cr
+\code{c('Mixed', 'Normal', 'Binomial')} \tab \code{c(<y1>, ..., <link> (<y2>, <denom>), ...) ~ 1 + <x1> + <x2>[<common>] + (1[<common>]|<L3>) + (1|<L2>) + (1|<L1>) + ...} \tab \code{logit}*,\code{probit},\code{cloglog}*\cr
+\code{c('Mixed', 'Normal', 'Poisson')}* \tab \code{c(<y1>, ..., <link>(<y2>, <offset>), ...) ~ 1 + <x1> + <x2>[<common>] + (1[<common>]|<L3>) + (1|<L2>) + (1|<L1>) + ...} \tab \code{log}\cr
 }
 
 The argument \code{estoptions} is a list which can contain the
