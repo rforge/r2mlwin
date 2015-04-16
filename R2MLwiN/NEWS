@@ -1,3 +1,7 @@
+Thu Apr 16 2015
+1. Bug fixing
+   * Correct naming of residual parameter chains
+
 Fri Apr 1 2015
 1. Bug fixing
    * Allow trajectories function to work with a simple unlabelled vector
