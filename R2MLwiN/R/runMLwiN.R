@@ -351,7 +351,7 @@
 #' to specify constraints on the fixed coefficients, and \code{random.ui}
 #' and \code{random.ci} to specify constraints on the random parameters. The
 #' syntax for specifying just fixed parameter constraints is
-#' \code{constraints=list(fixed.ui=<fixed matrix>, fixed.ci=<fixed values>)},
+#' \code{constraints = list(fixed.ui = <fixed matrix>, fixed.ci = <fixed values>)},
 #' where \code{<fixed matrix>} is a matrix where each row represents one fixed part
 #' parameter, in the same order that they appear in the results table, each
 #' column represents one constraint, and the values in the matrix are multipliers
@@ -359,8 +359,8 @@
 #' constraint, to which the parameters multiplied by the multipliers in the
 #' corresponding column of \code{<fixed matrix>} should be equal. For example,
 #' if we have a model with formula \code{y ~ 1 + x1 + x2 + x3 + x4 + (1|lev1ID)},
-#' then \code{constraints=list(fixed.ui=matrix(c(0,1,-1,0,0,0,0,0,1,2),nrow=5),
-#' fixed.ci=c(0,2))} specifies the constraints that the coefficient of \code{x1}
+#' then \code{constraints = list(fixed.ui = matrix(c(0, 1, -1, 0, 0, 0, 0, 0, 1, 2), nrow = 5),
+#' fixed.ci = c(0, 2))} specifies the constraints that the coefficient of \code{x1}
 #' equals the coefficient of \code{x2} and that the coefficient of \code{x3} plus
 #' twice the coefficient of \code{x4} equals \code{2}. Random constraints are
 #' specified similarly, and fixed and random constraints may be applied
