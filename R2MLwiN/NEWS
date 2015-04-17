@@ -1,3 +1,7 @@
+Fri Apr 17 2015
+1. Bug fixing
+   * Reinstate starting residuals for non-cross-classifed models
+
 Thu Apr 16 2015
 1. Bug fixing
    * Correct naming of residual parameter chains
