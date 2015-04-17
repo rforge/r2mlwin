@@ -2739,11 +2739,11 @@ version:date:md5:filename:x64:trial:platform
     resiChains <- list()
     for (name in colnames(residata)) {
       lev <- as.integer(gsub("resi_lev", "", name))
+      ucount <- length(rp[[paste0("rp", lev)]])
       if (D[1] == "Multinomial" || D[1] == "Multivariate Normal" || D[1] == "Mixed") {
         lev = lev + 1
       }
       nunit <- nrow(unique(indata[rev(levID)[lev]]))
-      ucount <- length(rp[[paste0("rp", lev)]])
       pnames <- paste("u", (1:ucount)-1, rep(1:nunit, each=ucount), sep="_")
       resiChains[[name]] <- coda::mcmc(data = matrix(na.omit(residata[, name]), nrow = iterations/thinning, byrow = TRUE,
                                                dimnames = list(1:(iterations/thinning), pnames)), thin = thinning)
