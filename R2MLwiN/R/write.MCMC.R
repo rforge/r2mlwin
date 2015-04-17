@@ -1612,7 +1612,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("POST   0")
   }
   
-  if (is.null(xc)) {
+  if (!isTRUE(xc)) {
     wrt("MISR   0")
     wrt("LINK 2 G30")
     if (D[1] == "Multinomial" && as.numeric(D[4]) == 0) {
@@ -1692,7 +1692,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
   if ((!is.null(BUGO)) && !(D[1] == "Mixed") && nrp > 0) {
     if (D[1] == "Normal" || D[1] == "Multivariate Normal")
       DD2 <- 0
-    if (is.null(xc)) {
+    if (!isTRUE(xc)) {
       wrt(paste("BUGO 6 ", DD, " ", DD2, " G30[1] ", priorcol, " '", modelfile, "' ", "'", initfile, "' ", "'",
                 datafile, "'", sep = ""))
       wrt("ERAS   G30")
@@ -1707,13 +1707,13 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("ECHO 1")
     
     residcols <- ""
-    if (is.null(xc)) {
+    if (!isTRUE(xc)) {
       residcols <- "G30[1] G30[2]"
     }
     wrt(paste("MCMC   0", burnin, adaption, scale, rate, tol, residcols, priorcol, fixM, residM, Lev1VarM, OtherVarM,
               priorcode, DD))
     
-    if (is.null(xc)) {
+    if (!isTRUE(xc)) {
       wrt("ERAS G30")
       wrt("LINK 0 G30")
     }
