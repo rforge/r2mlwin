@@ -1,3 +1,7 @@
+Tue Apr 21 2015
+1. Bug fixing
+   * Mixed Poisson/normal models no longer need to have the Poisson response first when using offsets
+
 Fri Apr 17 2015
 1. Bug fixing
    * Reinstate starting residuals for non-cross-classifed models

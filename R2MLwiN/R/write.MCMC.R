@@ -574,7 +574,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
         DD2 <- 3
         DD2 <- 3
         if (!is.na(D[[jj]][3])) {
-          wrt(paste("DOFFs 1 '", D[[jj]][3], "'", sep = ""))
+          wrt(paste("DOFFs ", jj, " '", D[[jj]][3], "'", sep = ""))
         }
       }
       jj <- jj + 1

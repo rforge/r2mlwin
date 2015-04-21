@@ -425,7 +425,7 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
         DD2 <- 3
         DD2 <- 3
         if (!is.na(D[[ii]][3])) {
-          wrt(paste("DOFFs 1 '", D[[ii]][3], "'", sep = ""))
+          wrt(paste("DOFFs ", jj, " '", D[[ii]][3], "'", sep = ""))
         }
       }
       jj <- jj + 1
