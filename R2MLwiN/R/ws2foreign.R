@@ -37,13 +37,14 @@
 #' # options(MLwiN_path = '/home/USERNAME/.wine/drive_c/Program Files (x86)/MLwiN vX.XX/')
 #'
 #' ## Modify the following path as appropriate:
-#' wsfile = 'C:/Program Files (x86)/MLwiN v2.32/samples/tutorial.ws'
+#' wsfile = normalizePath(file.path(getOption("MLwiN_path"), "samples/tutorial.ws"), winslash = "/")
 #' ## the tutorial.dta file will be saved in the temporary folder
-#' inputfile = paste(tempdir(), '/tutorial.dta', sep = '')
+#' inputfile = normalizePath(file.path(tempdir(), "tutorial.dta"), winslash = "/")
 #' ws2foreign(wsfile, foreignfile = inputfile)
 #' library(foreign)
 #' indata = read.dta(inputfile)
 #' str(indata)
+#' rm(inputfile)
 #' }
 #'
 #' @export
