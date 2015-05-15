@@ -18,6 +18,8 @@ An MLwiN model run via the MCMC estimation method is represented by an "mlwinfit
 
 \item{\code{burnin}}{An integer specifying length of the burn-in.}
 
+\item{\code{nchains}}{An integer specifying number of MCMC chains run.}
+
 \item{\code{iterations}}{An integer specifying the number of iterations after burn-in.}
 
 \item{\code{D}}{A vector specifying the type of distribution to be modelled, which can include \code{'Normal'}, \code{'Binomial'} \code{'Poisson'}, \code{'Multinomial'}, \code{'Multivariate Normal'}, or \code{'Mixed'}.}

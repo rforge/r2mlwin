@@ -8,7 +8,8 @@ Allow user specified design matrix (IGLS) - SETD command
 Multinomial proportions - need manual calculation/reshaping
 Add an option to allow the model to be set up but not run, useful for example if we just want to run a BUGS model or see the MLwiN syntax
 Add more error checking
-Add support for multiple MCMC chains when calling MLwiN
+Allow different starting values for each MCMC chain
+Parallelize MCMC chains running with MLwiN
 Automate multiple imputation (maybe using mi package)
 Allow display of models results in alternative measures (e.g. correlations, standard deviations, etc)
 Investigate interactions with RStudio, as sometimes graphs can behave strangely

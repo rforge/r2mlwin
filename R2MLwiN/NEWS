@@ -1,3 +1,7 @@
+Fri May 15 2015
+1. Changes
+   * Add support for multiple MCMC chains with MLwiN
+
 Tue Apr 21 2015
 1. Bug fixing
    * Mixed Poisson/normal models no longer need to have the Poisson response first when using offsets

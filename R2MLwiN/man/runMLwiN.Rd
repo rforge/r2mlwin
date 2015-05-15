@@ -456,6 +456,7 @@ options, including the following (see \code{\link{write.MCMC}} for further detai
 \itemize{
 \item \code{iterations}: Number of main iterations post-burnin (i.e. monitoring chain length), defaults to 5000.
 \item \code{burnin}: Length of burnin, defaults to 500.
+\item \code{nchains}: Number of MCMC chains to run, defaults to 1.
 \item \code{thinning}: Thinning factor, defaults to 1.
 \item \code{seed}: MCMC random number seed, defaults to 1.
 \item \code{priorParam}: A list specifying informative priors. This includes:

@@ -9,6 +9,7 @@
 #' @slot DataLength Total number of cases.
 #' @slot Hierarchy For each higher level of a multilevel model, returns the number of units at that level, together with the minimum, mean and maximum number of lower-level units nested within units of the current level.
 #' @slot burnin An integer specifying length of the burn-in.
+#' @slot nchains An integer specifying number of MCMC chains run.
 #' @slot iterations An integer specifying the number of iterations after burn-in.
 #' @slot D A vector specifying the type of distribution to be modelled, which can include \code{'Normal'}, \code{'Binomial'} \code{'Poisson'}, \code{'Multinomial'}, \code{'Multivariate Normal'}, or \code{'Mixed'}.
 #' @slot Formula A formula object (or a character string) specifying a multilevel model.
@@ -67,8 +68,8 @@
 #' @name mlwinfitMCMC-class
 #' @rdname mlwinfitMCMC-class
 #' @exportClass mlwinfitMCMC
-setClass(Class = "mlwinfitMCMC", representation = representation(version = "character", Nobs = "numeric", DataLength = "numeric", 
-                                                                 Hierarchy = "ANY", burnin = "numeric", iterations = "numeric", D = "ANY", Formula = "ANY", levID = "character", 
+setClass(Class = "mlwinfitMCMC", representation = representation(version = "character", Nobs = "numeric", DataLength = "numeric", Hierarchy = "ANY",
+                                                                 burnin = "numeric", iterations = "numeric", nchains = "numeric", D = "ANY", Formula = "ANY", levID = "character", 
                                                                  merr = "ANY", fact = "ANY", xc = "ANY", FP = "numeric", RP = "numeric", RP.cov = "matrix", FP.cov = "matrix", 
                                                                  chains = "ANY", elapsed.time = "numeric", call = "ANY", BDIC = "numeric", LIKE = "ANY", fact.loadings = "numeric", 
                                                                  fact.loadings.sd = "numeric", fact.cov = "numeric", fact.cov.sd = "numeric", fact.chains = "ANY", MIdata = "data.frame", 
@@ -98,6 +99,9 @@ setMethod("[", "mlwinfitMCMC", function(x, i, j, drop) {
   }
   if (i == "iterations") {
     return(x@iterations)
+  }
+  if (i == "nchains") {
+    return(x@nchains)
   }
   if (i == "D") {
     return(x@D)
@@ -192,6 +196,9 @@ setReplaceMethod("[", signature(x = "mlwinfitMCMC"), function(x, i, j, value) {
   }
   if (i == "iterations") {
     x@iterations <- value
+  }
+  if (i == "nchains") {
+    x@nchains <- value
   }
   if (i == "D") {
     x@D <- value
@@ -289,6 +296,9 @@ setMethod("[[", "mlwinfitMCMC", function(x, i, j, drop) {
   if (i == "iterations") {
     return(x@iterations)
   }
+  if (i == "nchains") {
+    return(x@nchains)
+  }
   if (i == "D") {
     return(x@D)
   }
@@ -382,6 +392,9 @@ setReplaceMethod("[[", signature(x = "mlwinfitMCMC"), function(x, i, j, value) {
   }
   if (i == "iterations") {
     x@iterations <- value
+  }
+  if (i == "nchains") {
+    x@nchains <- value
   }
   if (i == "D") {
     x@D <- value
@@ -543,7 +556,7 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
         "\n")
   }
   cat("Number of obs: ", object@Nobs, paste0("(from total ", object@DataLength, ")"), "         Number of iter.:", object@iterations, 
-      "         Burn-in:", object@burnin, "\n")
+      " Chains:", object@nchains, " Burn-in:", object@burnin, "\n")
   
   if (!(object@D[1] == "Mixed") && is.null(object@merr) && is.null(object@fact)) {
     cat("Bayesian Deviance Information Criterion (DIC)\n")
@@ -604,13 +617,19 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   }
   
   cat("The fixed part estimates: ", "\n")
-  FP.print <- rbind(object@FP, sqrt(diag(object@FP.cov)))
+
+  chain.stats <- summary(object@chains, quantiles=c(0.025, 0.975))
+  chain.means <- chain.stats$statistics[,"Mean"]
+  chain.sds <- chain.stats$statistics[,"SD"]
+  chain.qt025 <- chain.stats$quantiles[,"2.5%"]
+  chain.qt975 <- chain.stats$quantiles[,"97.5%"]
+
   if (sum(grepl("bcons", colnames(object@chains))) > 0) {
     bcons.pos <- grep("bcons", colnames(object@chains))
     object@chains[1, bcons.pos] <- object@chains[1, bcons.pos] - 0.001
   }
-  
-  t.stats <- apply(object@chains, 2, function(x) mean(x)/sd(x))
+
+  t.stats <- chain.means / chain.sds
   
   p.values <- 2 * pnorm(abs(t.stats), lower.tail = FALSE)
   t.stat <- NULL
@@ -619,7 +638,7 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   for (i in FP.names) p.value <- c(p.value, p.values[[i]])
   onesided.p.value <- NULL
   for (i in FP.names) {
-    x <- object@chains[, i]
+    x <- as.matrix(object@chains[, i])
     if (sign(mean(x)) > 0) {
       onesided.p.values <- sum(x < 0)/length(x)
     } else {
@@ -628,11 +647,7 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
     onesided.p.value <- c(onesided.p.value, onesided.p.values)
   }
   strstar <- as.vector(sapply(p.value, signifstar))
-  qt025 <- NULL
-  for (i in FP.names) qt025 <- c(qt025, quantile(object@chains[, i], 0.025))
-  qt975 <- NULL
-  for (i in FP.names) qt975 <- c(qt975, quantile(object@chains[, i], 0.975))
-  FP.print <- rbind(FP.print, t.stat, p.value, onesided.p.value, qt025, qt975, ESS[FP.names])
+  FP.print <- rbind(chain.means[FP.names], chain.sds[FP.names], t.stat, p.value, onesided.p.value, chain.qt025[FP.names], chain.qt975[FP.names], ESS[FP.names])
   FP.names2 <- gsub("FP+\\_", "", FP.names)
   
   printcol0 <- align2left("        ", FP.names2)
@@ -670,12 +685,7 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
     levID2 <- object@levID
   }
   
-  RP.print <- rbind(object@RP, sqrt(diag(object@RP.cov)))
-  qt025 <- NULL
-  for (i in RP.names) qt025 <- c(qt025, quantile(object@chains[, i], 0.025))
-  qt975 <- NULL
-  for (i in RP.names) qt975 <- c(qt975, quantile(object@chains[, i], 0.975))
-  RP.print <- rbind(RP.print, qt025, qt975, ESS[RP.names])
+  RP.print <- rbind(chain.means[RP.names], chain.sds[RP.names], chain.qt025[RP.names], chain.qt975[RP.names], ESS[RP.names])
   for (i in 1:length(mlwinlev)) {
     RPx.pos <- grep(paste("RP", mlwinlev[i], sep = ""), RP.names)
     if (length(RPx.pos) != 0) {
