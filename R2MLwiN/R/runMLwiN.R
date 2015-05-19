@@ -2021,51 +2021,6 @@ version:date:md5:filename:x64:trial:platform
   colnames(RP.cov) <- RP.names
   rownames(RP.cov) <- RP.names
 
-  sval <- estoptions$startval
-  if (EstM == 1) {
-    if (!is.null(mcmcMeth$startval)) {
-      warning("startval is now specified directly within estoptions")
-      sval <- mcmcMeth$startval
-    }
-  }
-
-  if (!is.null(sval)) {
-    if (!is.null(sval$FP.b) && is.null(names(sval$FP.b))) {
-      names(sval$FP.b) <- FP.names
-    }
-
-    if (!is.null(sval$FP.v) && (is.null(rownames(sval$FP.v)) || is.null(colnames(sval$FP.v)))) {
-      rownames(sval$FP.v) <- FP.names
-      colnames(sval$FP.v) <- FP.names
-    }
-
-    if (!is.null(sval$RP.b) && is.null(names(sval$RP.b))) {
-      names(sval$RP.b) <- RP.names
-    }
-
-    if (!is.null(sval$RP.v) && (is.null(rownames(sval$RP.v)) || is.null(colnames(sval$RP.v)))) {
-      rownames(sval$RP.v) <- RP.names
-      colnames(sval$RP.v) <- RP.names
-    }
-
-    sharedFP <- intersect(FP.names, names(sval$FP.b))
-    if (!is.null(sval$FP.b) && !is.null(sharedFP)) {
-      FP[sharedFP] <- sval$FP.b[sharedFP]
-    }
-    if (!is.null(sval$FP.v) && !is.null(sharedFP)) {
-      FP.cov[sharedFP, sharedFP] <- sval$FP.v[sharedFP, sharedFP]
-    }
-    sharedRP <- intersect(RP.names, names(sval$RP.b))
-    if (!is.null(sval$RP.b) && !is.null(sharedRP)) {
-      RP[sharedRP] <- sval$RP.b[sharedRP]
-    }
-    if (!is.null(sval$RP.v) && !is.null(sharedRP)) {
-      RP.cov[sharedRP, sharedRP] <- sval$RP.v[sharedRP, sharedRP]
-    }
-    startval <- list(FP.b = FP, FP.v = FP.cov, RP.b = RP, RP.v = RP.cov)
-  } else {
-    startval <- NULL
-  }
 
   if (EstM == 1) {
     iterations <- mcmcMeth$iterations
@@ -2195,6 +2150,73 @@ version:date:md5:filename:x64:trial:platform
         }
       }
     }
+  }
+
+  sval <- estoptions$startval
+  if (EstM == 1) {
+    if (!is.null(mcmcMeth$startval)) {
+      warning("startval is now specified directly within estoptions")
+      sval <- mcmcMeth$startval
+    }
+  }
+
+  if (!is.null(sval)) {
+    # Check if we have a single set of starting values, if so expand to a list
+    if (any(c("FP.b", "FP.v", "RP.b", "RP.v") %in% names(sval))) {
+      if (EstM == 0) {
+        svals <- list(sval)
+      }
+      if (EstM == 1) {
+        svals <- list()
+        for (i in 1:nchains) {
+          svals[[i]] <- sval
+        }
+      }
+    } else {
+      if (length(sval) != nchains) {
+        stop("Start values list is wrong size")
+      }
+      svals <- sval
+    }
+
+    #startval <- rep(list(list()), length(svals))
+    startval <- replicate(length(svals), list())
+    for (i in 1:length(svals)) {
+      if (!is.null(svals[[i]]$FP.b) && is.null(names(svals[[i]]$FP.b))) {
+        names(svals[[i]]$FP.b) <- FP.names
+      }
+      if (!is.null(svals[[i]]$FP.v) && (is.null(rownames(svals[[i]]$FP.v)) || is.null(colnames(svals[[i]]$FP.v)))) {
+        rownames(svals[[i]]$FP.v) <- FP.names
+        colnames(svals[[i]]$FP.v) <- FP.names
+      }
+      if (!is.null(svals[[i]]$RP.b) && is.null(names(svals[[i]]$RP.b))) {
+        names(svals[[i]]$RP.b) <- RP.names
+      }
+      if (!is.null(svals[[i]]$RP.v) && (is.null(rownames(svals[[i]]$RP.v)) || is.null(colnames(svals[[i]]$RP.v)))) {
+        rownames(svals[[i]]$RP.v) <- RP.names
+        colnames(svals[[i]]$RP.v) <- RP.names
+      }
+      sharedFP <- intersect(FP.names, names(svals[[i]]$FP.b))
+      if (!is.null(svals[[i]]$FP.b) && !is.null(sharedFP)) {
+        startval[[i]]$FP.b <- FP
+        startval[[i]]$FP.b[sharedFP] <- svals[[i]]$FP.b[sharedFP]
+      }
+      if (!is.null(svals[[i]]$FP.v) && !is.null(sharedFP)) {
+        startval[[i]]$FP.v <- FP.cov
+        startval[[i]]$FP.v[sharedFP, sharedFP] <- svals[[i]]$FP.v[sharedFP, sharedFP]
+      }
+      sharedRP <- intersect(RP.names, names(svals[[i]]$RP.b))
+      if (!is.null(svals[[i]]$RP.b) && !is.null(sharedRP)) {
+        startval[[i]]$RP.b <- RP
+        startval[[i]]$RP.b[sharedRP] <- svals[[i]]$RP.b[sharedRP]
+      }
+      if (!is.null(svals[[i]]$RP.v) && !is.null(sharedRP)) {
+        startval[[i]]$RP.v <- RP.cov
+        startval[[i]]$RP.v[sharedRP, sharedRP] <- svals[[i]]$RP.v[sharedRP, sharedRP]
+      }
+    }
+  } else {
+    startval <- NULL
   }
 
   if (EstM == 0 && !is.null(BUGO)) {
@@ -2423,15 +2445,11 @@ version:date:md5:filename:x64:trial:platform
     }
   }
   if (!is.null(BUGO)) {
-    modelfile <- normalizePath(tempfile("modelfile_", tmpdir = workdir, fileext = ".txt"), winslash = "/", mustWork = FALSE)
-    initfile <- normalizePath(tempfile("initfile_", tmpdir = workdir, fileext = ".txt"), winslash = "/", mustWork = FALSE)
-    datafile <- normalizePath(tempfile("datafile_", tmpdir = workdir, fileext = ".txt"), winslash = "/", mustWork = FALSE)
+    modelfile <- replicate(nchains, gettempfile("modelfile_", ".txt"))
+    initfile <- replicate(nchains, gettempfile("initfile_", ".txt"))
+    datafile <- replicate(nchains, gettempfile("datafile_", ".txt"))
     scriptfile <- normalizePath(tempfile("scriptfile_", tmpdir = workdir, fileext = ".txt"), winslash = "/", mustWork = FALSE)
     bugEst <- normalizePath(tempfile("bugEst_", tmpdir = workdir, fileext = ".txt"), winslash = "/", mustWork = FALSE)
-  } else {
-    modelfile <- NULL
-    initfile <- NULL
-    datafile <- NULL
   }
   if (resi.store) {
     resifile <- NULL
@@ -2488,10 +2506,15 @@ version:date:md5:filename:x64:trial:platform
     }
   }
   if (EstM == 0) {
+      if (length(startval[[1]]) == 0) {
+        svals <- NULL
+      } else {
+        svals <- startval[[1]]
+      }
     long2shortnamemap <- write.IGLS(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre,
                  Meth, extra, reset, rcon, fcon, maxiter, convtol, mem.init, optimat, weighting, fpsandwich, rpsandwich,
                  macrofile = macrofile, IGLSfile = IGLSfile, resifile = resifile, resi.store = resi.store, resioptions = resioptions,
-                 debugmode = debugmode, startval = startval, namemap = long2shortname)
+                 debugmode = debugmode, startval = svals, namemap = long2shortname)
     iterations <- estoptions$mcmcMeth$iterations
     if (is.null(iterations))
       iterations <- 5000
@@ -2573,13 +2596,18 @@ version:date:md5:filename:x64:trial:platform
   # MCMC algorithm (using the starting values obtain from IGLS algorithm)
   if (EstM == 1 && is.null(BUGO)) {
     for (i in 1:nchains) {
+      if (length(startval[[i]]) == 0) {
+        svals <- NULL
+      } else {
+        svals <- startval[[i]]
+      }
       long2shortnamemap <- write.MCMC(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre,
                    Meth, merr, carcentre, maxiter, convtol, seed[i], iterations, burnin, scale, thinning, priorParam, refresh,
                    fixM, residM, Lev1VarM, OtherVarM, adaption, priorcode, rate, tol, lclo, mcmcOptions, fact, xc, mm, car,
-                   BUGO, mem.init, optimat, modelfile = modelfile, initfile = initfile, datafile = datafile, macrofile = macrofile[i],
+                   BUGO, mem.init, optimat, modelfile = NULL, initfile = NULL, datafile = NULL, macrofile = macrofile[i],
                    IGLSfile = IGLSfile[i], MCMCfile = MCMCfile[i], chainfile = chainfile[i], MIfile = MIfile[i], resifile = resifile[,i],
                    resi.store = resi.store, resioptions = resioptions, resichains = resichains[i], FACTchainfile = FACTchainfile[i],
-                   resi.store.levs = resi.store.levs, debugmode = debugmode, startval = startval, dami = dami,
+                   resi.store.levs = resi.store.levs, debugmode = debugmode, startval = svals, dami = dami,
                    namemap = long2shortname)
 
     }
@@ -2886,25 +2914,33 @@ version:date:md5:filename:x64:trial:platform
   }
 
   if (EstM == 1 && !is.null(BUGO)) {
-    long2shortname <- write.MCMC(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre,
-                 Meth, merr, carcentre, maxiter, convtol, seed, iterations, burnin, scale, thinning, priorParam, refresh,
-                 fixM, residM, Lev1VarM, OtherVarM, adaption, priorcode, rate, tol, lclo, mcmcOptions, fact, xc, mm, car,
-                 BUGO, mem.init, optimat, modelfile = modelfile, initfile = initfile, datafile = datafile, macrofile = macrofile[1],
-                 IGLSfile = IGLSfile[1], MCMCfile = MCMCfile[1], chainfile = chainfile[1], MIfile = MIfile[1], resifile = resifile[1],
-                 resi.store = resi.store, resioptions = resioptions, resichains = resichains, FACTchainfile = FACTchainfile[1],
-                 resi.store.levs = resi.store.levs, debugmode = debugmode, startval = startval, dami = dami,
-                 namemap = long2shortname)
+    for (i in 1:nchains) {
+      if (length(startval[[i]]) == 0) {
+        svals <- NULL
+      } else {
+        svals <- startval[[i]]
+      }
+      long2shortname <- write.MCMC(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre,
+                   Meth, merr, carcentre, maxiter, convtol, seed, iterations, burnin, scale, thinning, priorParam, refresh,
+                   fixM, residM, Lev1VarM, OtherVarM, adaption, priorcode, rate, tol, lclo, mcmcOptions, fact, xc, mm, car,
+                   BUGO, mem.init, optimat, modelfile = modelfile[i], initfile = initfile[i], datafile = datafile[i], macrofile = macrofile[i],
+                   IGLSfile = IGLSfile[i], MCMCfile = MCMCfile[i], chainfile = chainfile[i], MIfile = MIfile[i], resifile = resifile[i],
+                   resi.store = resi.store, resioptions = resioptions, resichains = resichains, FACTchainfile = FACTchainfile[i],
+                   resi.store.levs = resi.store.levs, debugmode = debugmode, startval = svals, dami = dami,
+                   namemap = long2shortname)
+    }
 
     cat("MLwiN is running, please wait......\n")
-    args <- paste0("/run ", "\"", macrofile[1], "\"")
-    if (!debugmode) {
-      args <- paste0("/nogui ", args)
-    }
     time1 <- proc.time()
-    system2(cmd, args = args, stdout = stdout, stderr = stderr)
+    for (i in 1:nchains) {
+      args <- paste0("/run ", "\"", macrofile[i], "\"")
+      if (!debugmode) {
+        args <- paste0("/nogui ", args)
+      }
+      system2(cmd, args = args, stdout = stdout, stderr = stderr)
+    }
     cat("\n")
     time2 <- proc.time() - time1
-
     nlev <- length(levID)
   }
 
@@ -2912,7 +2948,7 @@ version:date:md5:filename:x64:trial:platform
     file.show(macrofile)
   if ((!is.null(BUGO)) && !(D[1] == "Mixed")) {
     if (show.file)
-      file.show(modelfile)
+      file.show(modelfile[1])
     n.iter <- iterations + burnin
     addmore <- NULL
     if (EstM == 1) {
@@ -2956,7 +2992,7 @@ version:date:md5:filename:x64:trial:platform
     if (is.na(bugs)) {
       stop("Need to specify path to the BUGS executable.")
     }
-    chains.bugs.mcmc <- mlwin2bugs(D, levID, datafile, initfile, modelfile, bugEst, fact, addmore, n.chains = n.chains,
+    chains.bugs.mcmc <- mlwin2bugs(D, levID, datafile[1], initfile, modelfile[1], bugEst, fact, addmore, n.chains = n.chains,
                                    n.iter = n.iter, n.burnin = burnin, n.thin = thinning, debug = debug, bugs = bugs, bugsWorkingDir = workdir,
                                    OpenBugs = OpenBugs, cleanBugsWorkingDir = clean.files, seed = bugs.seed)
     time2 <- proc.time() - time1
