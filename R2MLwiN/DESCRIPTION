@@ -12,7 +12,9 @@ Depends:
     stats4,
     methods,
     lattice,
-    coda (>= 0.16-1)
+    coda (>= 0.16-1),
+    foreach,
+    doParallel
 Imports:
     Matrix,
     foreign (>= 0.8-46),
