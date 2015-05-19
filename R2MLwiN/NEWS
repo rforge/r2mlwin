@@ -1,3 +1,7 @@
+Tue May 19 2015
+1. Bug fixing
+   * Correct table creation at beginning of MCMCGuide09 that was wrong due to a change in variable name
+
 Fri May 15 2015
 1. Changes
    * Add support for multiple MCMC chains with MLwiN
