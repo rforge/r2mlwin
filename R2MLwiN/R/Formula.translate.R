@@ -1474,7 +1474,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     
     nleft <- length(left)
     
-    if (D[1] == "Poisson" && is.na(D[3])) {
+    if (is.na(D[3])) {
       myoffset <- get.offset(Formula, indata)
       if (length(myoffset$offset.label) > 0) {
         D[3] <- myoffset$offset.label

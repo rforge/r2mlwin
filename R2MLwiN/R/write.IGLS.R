@@ -1141,7 +1141,7 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("RDISt 1 2")
     wrt("LFUN 3")
     DD2 <- 3
-    if (as.logical(D[2])) {
+    if (!is.na(D[3])) {
       wrt(paste("DOFFs 1 '", D[3], "'", sep = ""))
     }
     interpos <- grep("\\:", expl)

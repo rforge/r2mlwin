@@ -967,7 +967,7 @@ version:date:md5:filename:x64:trial:platform
       }
     }
   } else {
-    if (!is.element(D[1], c("Normal", "Binomial", "Poisson", "Multivariate Normal", "Mixed", "Multinomial"))) {
+    if (!is.element(D[1], c("Normal", "Binomial", "Poisson", "Negbinom", "Multivariate Normal", "Mixed", "Multinomial"))) {
       stop(cat("Invalid distribution specified:", D[1], "\n"))
     }
     if (D[1] == "Binomial") {
@@ -1236,6 +1236,11 @@ version:date:md5:filename:x64:trial:platform
   clre <- estoptions$clre
   clre[2, ] <- gsub("^1$", "Intercept", clre[2, ])
   clre[3, ] <- gsub("^1$", "Intercept", clre[3, ])
+
+  # There is no covariance between the negative-binomial bcons terms
+  if (D[1] == "Negbinom") {
+    clre <- cbind(clre, c(1, "bcons.1", "bcons2.1"))
+  }  
 
   smat <- estoptions$smat
 

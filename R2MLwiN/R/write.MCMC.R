@@ -1295,7 +1295,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("RDISt 1 2")
     wrt("LFUN 3")
     DD2 <- 3
-    if (as.logical(D[2])) {
+    if (!is.na(D[3])) {
       wrt(paste("DOFFs 1 '", D[3], "'", sep = ""))
     }
     interpos <- grep("\\:", expl)
@@ -1673,6 +1673,8 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
       DD <- 6 else DD <- 7
     wrt("CLRV 2")
   }
+  if (D[1] == "Negbinom")
+    DD <- 8
   
   wrt(paste("LCLO   ", lclo, sep = ""))
   
