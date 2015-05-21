@@ -12,14 +12,15 @@ Depends:
     stats4,
     methods,
     lattice,
-    coda (>= 0.16-1),
-    foreach,
-    doParallel
+    coda (>= 0.16-1)
 Imports:
     Matrix,
     foreign (>= 0.8-46),
     rbugs (>= 0.5-7),
-    digest (>= 0.6.5)
+    digest (>= 0.6.5),
+    foreach,
+    parallel,
+    doParallel
 Suggests:
     doBy,
     car,
