@@ -27,9 +27,6 @@ while (!file.access(mlwin, mode = 1) == 0) {
 }
 options(MLwiN_path = mlwin)
 
-if (!require(doParallel)) install.packages("doParallel")
-library(doParallel)
-
 # User's input if necessary
 
 # 8.3 Generating simulated datasets based on true values . . . . . . . . 102
@@ -69,7 +66,7 @@ simu <- function(i) {
          IGLSarray=cbind(coef(simModelIGLS), diag(vcov(simModelIGLS))),
          quantiles=cbind(quantile25, quantile975))
 }
-  
+
 RNGkind("L'Ecuyer-CMRG")
 cl <- makeCluster(detectCores(logical = FALSE))
 registerDoParallel(cl)
