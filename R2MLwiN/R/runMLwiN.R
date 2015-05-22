@@ -2618,13 +2618,13 @@ version:date:md5:filename:x64:trial:platform
     }
     cat("MLwiN is running, please wait......\n")
     time1 <- proc.time()
-    cl <- NULL
+    clust <- NULL
     regpar <- FALSE
     # Check whether the user has registered their own backend, if not use "doParallel"
     if (!getDoParRegistered()) {
       if (nchains > 1) {
-        cl <- makeCluster(min(nchains, detectCores(logical = FALSE)), outfile=stdout)
-        registerDoParallel(cl)
+        clust <- makeCluster(min(nchains, detectCores(logical = FALSE)), outfile=stdout)
+        registerDoParallel(clust)
       } else {
         registerDoSEQ()
       }
@@ -2638,8 +2638,8 @@ version:date:md5:filename:x64:trial:platform
       system2(cmd, args = args, stdout = stdout, stderr = stderr)
     }
     if (isTRUE(regpar)) {
-      if (!is.null(cl)) {
-        stopCluster(cl)
+      if (!is.null(clust)) {
+        stopCluster(clust)
       }
       # unregister doParallel as detailed on http://stackoverflow.com/questions/25097729/un-register-a-doparallel-cluster
       env <- foreach:::.foreachGlobals
