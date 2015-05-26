@@ -27,6 +27,9 @@ while (!file.access(mlwin, mode = 1) == 0) {
 }
 options(MLwiN_path = mlwin)
 
+if (!require(doParallel)) install.packages("doParallel")
+library(doParallel)
+
 # User's input if necessary
 
 # 8.3 Generating simulated datasets based on true values . . . . . . . . 102
