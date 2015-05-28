@@ -537,6 +537,7 @@
 #' @seealso
 #' \code{\link[stats]{formula}}, \code{\link{Formula.translate}}, \code{\link{Formula.translate.compat}}, \code{\link{write.IGLS}}, \code{\link{write.MCMC}}
 #'
+#' @import doParallel foreach parallel
 #' @examples
 #'
 #' ## The R2MLwiN package includes scripts to replicate all the analyses in
@@ -1241,7 +1242,7 @@ version:date:md5:filename:x64:trial:platform
   # There is no covariance between the negative-binomial bcons terms
   if (D[1] == "Negbinom") {
     clre <- cbind(clre, c(1, "bcons.1", "bcons2.1"))
-  }  
+  }
 
   smat <- estoptions$smat
 
