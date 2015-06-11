@@ -79,6 +79,11 @@ r <- foreach(i=1:ns, .packages="R2MLwiN") %dopar% {
 }
 
 stopCluster(cl)
+unregister <- function() {
+  env <- foreach:::.foreachGlobals
+  rm(list=ls(name=env), pos=env)
+}
+unregister()
 
 for(i in 1:ns){
   if (Actual[1] > r[[i]]$quantiles[1,1] & Actual[1] < r[[i]]$quantiles[1,2]) {
