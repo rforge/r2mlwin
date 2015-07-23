@@ -149,6 +149,8 @@
 #' \code{RP.v} corresponds to the variance/covariance matrix of the variance
 #' estimates for the random part.
 #' @param namemap A mapping of column names to DTA friendly shorter names
+#' @param saveworksheet A file name used to store the MLwiN worksheet after the
+#' model has been estimated.
 #' 
 #' @return Outputs a modified version of namemap containing newly generated
 #' short names.
@@ -169,7 +171,7 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
                          notation = NULL, nonfp = NA, clre = NULL, Meth = 1, extra = FALSE, reset, rcon = NULL, fcon = NULL, 
                          maxiter = 20, convtol = 2, mem.init = "default", optimat = FALSE, weighting = NULL, fpsandwich = FALSE, rpsandwich = FALSE, 
                          macrofile, IGLSfile, resifile, resi.store = FALSE, resioptions, debugmode = FALSE, startval = NULL,
-                         namemap = sapply(colnames(indata), as.character)) {
+                         namemap = sapply(colnames(indata), as.character), saveworksheet = NULL) {
   
   shortname <- function(...) {
     name <- paste0(...)
@@ -1375,6 +1377,10 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     if (!is.null(startval$RP.v)) {
       wrt(paste("JOIN ", paste(startval$RP.v[!lower.tri(startval$RP.v)], collapse = " "), " '_RP_v'", sep = ""))
     }
+  }
+
+  if (!is.null(saveworksheet)) {
+    wrt(paste0("STOR ", saveworksheet))
   }
   
   if (debugmode) {

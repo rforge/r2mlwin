@@ -52,6 +52,8 @@
 #' @param indata A \code{data.frame} object containing the data to be modelled.
 #' Deprecated syntax: by default this is \code{NULL} and the \code{data.frame}
 #' is instead referenced via \code{data}.
+#' @param saveworksheet A file name (or list of file names if more than one chain
+#' is specified) used to store the MLwiN worksheet after the model has been estimated.
 #'
 #' @details
 #' With regard to \code{runMLwiN}'s \code{Formula} object, see \code{\link[stats]{formula}}
@@ -566,7 +568,7 @@
 #'
 #' @export
 runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoptions = list(EstM = 0), BUGO = NULL, MLwiNPath = NULL,
-                     stdout = "", stderr = "", workdir = tempdir(), checkversion = TRUE, indata = NULL) {
+                     stdout = "", stderr = "", workdir = tempdir(), checkversion = TRUE, indata = NULL, saveworksheet = NULL) {
   if (!is.null(indata) && !is.null(data)) {
     stop("Only one of data and indata can be specified")
   }
@@ -2537,7 +2539,7 @@ version:date:md5:filename:x64:trial:platform
     long2shortnamemap <- write.IGLS(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre,
                  Meth, extra, reset, rcon, fcon, maxiter, convtol, mem.init, optimat, weighting, fpsandwich, rpsandwich,
                  macrofile = macrofile, IGLSfile = IGLSfile, resifile = resifile, resi.store = resi.store, resioptions = resioptions,
-                 debugmode = debugmode, startval = svals, namemap = long2shortname)
+                 debugmode = debugmode, startval = svals, namemap = long2shortname, saveworksheet = saveworksheet)
     iterations <- estoptions$mcmcMeth$iterations
     if (is.null(iterations))
       iterations <- 5000
@@ -2631,7 +2633,7 @@ version:date:md5:filename:x64:trial:platform
                    IGLSfile = IGLSfile[i], MCMCfile = MCMCfile[i], chainfile = chainfile[i], MIfile = MIfile[i], resifile = resifile[,i],
                    resi.store = resi.store, resioptions = resioptions, resichains = resichains[i], FACTchainfile = FACTchainfile[i],
                    resi.store.levs = resi.store.levs, debugmode = debugmode, startval = svals, dami = dami,
-                   namemap = long2shortname)
+                   namemap = long2shortname, saveworksheet = saveworksheet[i])
 
     }
     cat("MLwiN is running, please wait......\n")

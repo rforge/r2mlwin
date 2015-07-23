@@ -17,7 +17,8 @@ write.MCMC(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp,
   datafile, macrofile, IGLSfile, MCMCfile, chainfile, MIfile, resifile,
   resi.store = FALSE, resioptions, resichains, FACTchainfile,
   resi.store.levs = NULL, debugmode = FALSE, startval = NULL,
-  dami = NULL, namemap = sapply(colnames(indata), as.character))
+  dami = NULL, namemap = sapply(colnames(indata), as.character),
+  saveworksheet = NULL)
 }
 \arguments{
 \item{indata}{A data.frame object containing the data to be modelled.}
@@ -294,6 +295,9 @@ estimate from the iterations produced. \code{dami = 2} is as for \code{dami = 1}
 but with the standard errors of the estimate additionally being stored.}
 
 \item{namemap}{A mapping of column names to DTA friendly shorter names}
+
+\item{saveworksheet}{A list of file names (one for each chain) used to store the
+MLwiN worksheet after the model has been estimated.}
 }
 \value{
 Outputs a modified version of namemap containing newly generated

@@ -7,7 +7,7 @@
 runMLwiN(Formula, levID = NULL, D = "Normal", data = NULL,
   estoptions = list(EstM = 0), BUGO = NULL, MLwiNPath = NULL,
   stdout = "", stderr = "", workdir = tempdir(), checkversion = TRUE,
-  indata = NULL)
+  indata = NULL, saveworksheet = NULL)
 }
 \arguments{
 \item{Formula}{A \code{\link[stats]{formula}} object specifying the model
@@ -70,6 +70,9 @@ in a simulation).}
 \item{indata}{A \code{data.frame} object containing the data to be modelled.
 Deprecated syntax: by default this is \code{NULL} and the \code{data.frame}
 is instead referenced via \code{data}.}
+
+\item{saveworksheet}{A file name (or list of file names if more than one chain
+is specified) used to store the MLwiN worksheet after the model has been estimated.}
 }
 \value{
 If \code{BUGO} is non-NULL then the output is an \code{\link{mcmc.list}}
