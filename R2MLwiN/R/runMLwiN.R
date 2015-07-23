@@ -829,7 +829,7 @@ version:date:md5:filename:x64:trial:platform
     # Allow disabling the version check if it is slowing things down (e.g. in a simulation study)
     currentver <- versioninfo[versioninfo$md5 == digest(cmd, algo = "md5", file = TRUE), ]
     if (nrow(currentver) == 0) {
-      versiontext <- "MLwiN (version: unknown or >2.32)"
+      versiontext <- "MLwiN (version: unknown or >2.34)"
     } else {
       if (currentver$version < 2.28) {
         # Block versions >year older than current release
