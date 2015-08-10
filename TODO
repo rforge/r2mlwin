@@ -1,3 +1,13 @@
+Bug when using generic update function:
+Non-standard requirement that the intercept is explicitly specified might cause some confusion:
+> a <- formula(normexam ~ 1 + standlrt + (1|student))
+> a
+normexam ~ 1 + standlrt + (1 | student)
+> a <- update(a, .~. + sex)
+> a
+normexam ~ standlrt + (1 | student) + sex
+...add note to help pages (or possible to resolve via changes to R2MLwiN?) Note on CMM R2MLwiN webpage added.
+
 Model Specification Checks:
 (IGLS) Check lower levels are non-equal standardised weights if standardised weights are specified
 
