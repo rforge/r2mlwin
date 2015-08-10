@@ -1,3 +1,11 @@
+Thu Aug 6 2015
+1. Bug fixing
+   * In matrix2df, handle rows where all values are zero
+
+Thu Jul 23 2015
+1. Changes
+   * Add an option to allow saving the MLwiN worksheet to a file after the model is run
+
 Tue May 19 2015
 1. Bug fixing
    * Correct table creation at beginning of MCMCGuide09 that was wrong due to a change in variable name
