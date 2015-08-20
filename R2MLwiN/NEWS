@@ -1,3 +1,7 @@
+Thu Aug 20 2015
+1. Bug fixing
+   * Fixed a bug preventing the behaviour of ignoring the intercept term when modifying the output object from the runMLwiN call using updateMLwiN
+   
 Thu Aug 6 2015
 1. Bug fixing
    * In matrix2df, handle rows where all values are zero
@@ -73,7 +77,7 @@ Wed Jan 31 2015
    * Correct handling of common coefficients for categorical variables
    * Correct handling categorical predictors that contain missing values
    * No longer automatically print out chain summaries when using BUGS options
-   * Prevent categ and centring options being used when using new formula syntax 
+   * Prevent categ and centring options being used when using new formula syntax
    * Check variable names are not duplicated if case is ignored
    * Allow handling of much longer variable names that was previously possible
 
