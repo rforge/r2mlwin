@@ -830,13 +830,30 @@ version:date:md5:filename:x64:trial:platform
 2.34:Jul 2015:174b02d8bd5c78f23705738d49055984:mlnscript:FALSE:FALSE:lin
 2.34:Jul 2015:30b35a64f45ebeff24bc98bdbdd5b149:mlnscript:TRUE:FALSE:mac
 2.34:Jul 2015:072c3ac63fd07dff5f7396f6f336b995:mlnscript:TRUE:FALSE:bsd
+2.35:Sep 2015:73fefcab85d5be673a6ba343dba5e49c:mlwin.exe:FALSE:FALSE:win
+2.35:Sep 2015:eddefa11f05571290e6ffa247ffa2a8e:mlwin.exe:FALSE:TRUE:win
+2.35:Sep 2015:1210ccb08f1d447109144830abb2b340:mlnscript.exe:FALSE:FALSE:win
+2.35:Sep 2015:e51eb5d08247c12d6beef3c96608f767:mlnscript.exe:TRUE:FALSE:win
+2.35:Sep 2015:6a7a4666f37fd3a707c5dea50aa8ebd0:mlnscript:TRUE:FALSE:lin
+2.35:Sep 2015:b7d7c6fcc43c96d21accf8a86a86ae72:mlnscript:TRUE:FALSE:lin
+2.35:Sep 2015:b095b8f9c205ab958552385f48cb2122:mlnscript:TRUE:FALSE:lin
+2.35:Sep 2015:bc41e864ab1b9663bd6e0531317b0500:mlnscript:TRUE:FALSE:lin
+2.35:Sep 2015:5670b2b3326d3da3d6be2cf84ba64f3c:mlnscript:TRUE:FALSE:lin
+2.35:Sep 2015:2cc7e0dc180dd877706a7621fac1e755:mlnscript:TRUE:FALSE:lin
+2.35:Sep 2015:83394f6ecbaf3842411fb4f29290b3a2:mlnscript:TRUE:FALSE:lin
+2.35:Sep 2015:9c66d8b886b7a1f99a31e90a0eabfc98:mlnscript:TRUE:FALSE:lin
+2.35:Sep 2015:521cd33275927f3dae57bedabf01124f:mlnscript:FALSE:FALSE:lin
+2.35:Sep 2015:f2f1ec1127cc88c583eab87d4f0b862a:mlnscript:FALSE:FALSE:lin
+2.35:Sep 2015:807dccfc85dccb2955c38c953646c8d3:mlnscript:TRUE:FALSE:mac
+2.35:Sep 2015:9b48a5dc3d5cb675a2c253d5009aa184:mlnscript:TRUE:FALSE:bsd
+2.35:Sep 2015:b062e8c9116a001a0b73e541465e27c7:mlnscript:TRUE:FALSE:bsd
 '
   versioninfo <- read.delim(textConnection(versioninfostr), header = TRUE, sep = ":", strip.white = TRUE)
   if (isTRUE(checkversion)) {
     # Allow disabling the version check if it is slowing things down (e.g. in a simulation study)
     currentver <- versioninfo[versioninfo$md5 == digest(cmd, algo = "md5", file = TRUE), ]
     if (nrow(currentver) == 0) {
-      versiontext <- "MLwiN (version: unknown or >2.34)"
+      versiontext <- "MLwiN (version: unknown or >2.35)"
     } else {
       if (currentver$version < 2.28) {
         # Block versions >year older than current release
