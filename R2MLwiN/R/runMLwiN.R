@@ -540,7 +540,7 @@
 #' \code{\link[stats]{formula}}, \code{\link{Formula.translate}}, \code{\link{Formula.translate.compat}}, \code{\link{write.IGLS}}, \code{\link{write.MCMC}}
 #'
 #' @import doParallel foreach parallel
-#' @importFrom stats acf as.formula cov density end getCall get_all_vars model.frame model.matrix model.offset na.omit nobs pacf pnorm qnorm quantile sd start terms terms.formula update.formula var window
+#' @importFrom stats acf as.formula cov density end getCall get_all_vars model.frame model.matrix model.offset na.omit pacf pnorm qnorm quantile sd start terms terms.formula update.formula var window
 #' @importFrom grDevices dev.new
 #' @importFrom graphics close.screen lines par plot points screen split.screen text
 #' @importFrom utils read.delim stack
