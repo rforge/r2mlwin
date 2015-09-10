@@ -1,3 +1,7 @@
+Thu Sep 10 2005
+1. Bug fixing
+   * Fixed running ordered multinomial modelsin MCMC where starting values are provided
+
 Tue Sep 08 2005
 1. Changes
    * Add S3 wrappers to allow functions such as linearHypothesis to work again

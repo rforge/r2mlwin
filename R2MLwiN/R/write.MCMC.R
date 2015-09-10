@@ -1461,6 +1461,8 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
   
   wrt("NOTE   Fit the model")
   wrt("ECHO 1")
+  wrt("BATC 1")
+  wrt("MAXI 2")
   wrt("STAR")
   
   if (!is.null(startval)) {
@@ -1472,9 +1474,15 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     }
     if (!is.null(startval$RP.b)) {
       wrt(paste("JOIN ", paste(startval$RP.b, collapse = " "), " '_RP_b'", sep = ""))
+      if (D[1] == "Multinomial" && D[4] == 0) {
+        wrt("JOIN '_RP_b' 1 '_RP_b'")
+      }
     }
     if (!is.null(startval$RP.v)) {
       wrt(paste("JOIN ", paste(startval$RP.v[!upper.tri(startval$RP.v)], collapse = " "), " '_RP_v'", sep = ""))
+      if (D[1] == "Multinomial" && D[4] == 0) {
+        wrt(paste("JOIN '_RP_v' ", paste(rep(0, length(startval$RP.b)+1), collapse = " "), " '_RP_v'"))
+      }
     }
   } else {
     wrt(paste("TOLE", convtol))
