@@ -759,7 +759,13 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
         } else {
           tt <- unlist(strsplit(fixc[i], "\\{"))
           cidmat[i, 1] <- tt[1]
-          cidmat[i, 2] <- sub("\\}", "", tt[2])
+          if (length(grep( "\\}$",tt[2]))==1) {
+            cidmat[i, 2] <- sub("\\}", "", tt[2])
+          } else{
+            ttt <- unlist(strsplit(tt[2], "\\}"))
+            cidmat[i, 2] <- ttt[1]
+            cidmat[i, 1] <- paste0(cidmat[i, 1], ttt[2])
+          }
         }
       }
       fixc <- cidmat[, 1]
