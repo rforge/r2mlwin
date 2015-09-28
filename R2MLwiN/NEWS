@@ -1,8 +1,12 @@
-Thu Sep 10 2005
+Mon Sep 28 2015
 1. Bug fixing
-   * Fixed running ordered multinomial modelsin MCMC where starting values are provided
+   * Fixed specifying an interaction as a common variable in ordered multinomial models
 
-Tue Sep 08 2005
+Thu Sep 10 2015
+1. Bug fixing
+   * Fixed running ordered multinomial models in MCMC where starting values are provided
+
+Tue Sep 08 2015
 1. Changes
    * Add S3 wrappers to allow functions such as linearHypothesis to work again
 
