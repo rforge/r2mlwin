@@ -3145,8 +3145,8 @@ summary.mlwinfitIGLS <- function(object, ...) {
 }
 
 ##' @S3method print mlwinfitIGLS
-print.mlwinfitIGLS <- function(object, ...) {
-    print(object)
+print.mlwinfitIGLS <- function(x, ...) {
+    print(x)
 }
 
 ##' @S3method show mlwinfitIGLS
@@ -3238,8 +3238,8 @@ summary.mlwinfitMCMC <- function(object, ...) {
 }
 
 ##' @S3method print mlwinfitMCMC
-print.mlwinfitMCMC <- function(object, ...) {
-    print(object)
+print.mlwinfitMCMC <- function(x, ...) {
+    print(x)
 }
 
 ##' @S3method show mlwinfitMCMC
