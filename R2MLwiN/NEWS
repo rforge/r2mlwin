@@ -1,6 +1,7 @@
 Thu Oct 01 2015
 1. Bug fixing
    * Provide option to drop unused factor levels when processing the data (TRUE by default)
+   * Hard code one residual variable at level-1 for MCMC models
 
 Mon Sep 28 2015
 1. Bug fixing

@@ -2328,6 +2328,10 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
       wrt("")
       
       len.rpx <- length(rpx)
+      # For MCMC there is always only one residual column at level 1
+      if (level == 1) {
+        len.rpx = 1
+      }
       
       ii <- 1
       wrt(paste("LINK", len.rpx, "G26"))
