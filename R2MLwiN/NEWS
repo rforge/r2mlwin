@@ -1,3 +1,7 @@
+Thu Oct 01 2015
+1. Bug fixing
+   * Provide option to drop unused factor levels when processing the data (TRUE by default)
+
 Mon Sep 28 2015
 1. Bug fixing
    * Fixed specifying an interaction as a common variable in ordered multinomial models

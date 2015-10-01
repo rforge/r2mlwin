@@ -334,6 +334,9 @@ parameters.\cr }
 \item \code{drop.data}: If \code{TRUE} (default) only the data involved in the model
 is passed to MLwiN, otherwise the entire dataset in \code{data} is passed.
 
+\item \code{drop.levels}: If \code{TRUE} (default) any unused levels are dropped from factors, otherwise the dataset
+is left unchanged.
+
 \item \code{fpsandwich}: specifies standard error type for fixed parameters. If
 \code{fpsandwich = TRUE}, robust or `sandwich' standard errors based on raw
 residuals are used, if \code{fpsandwich = FALSE} (default) then standard,
