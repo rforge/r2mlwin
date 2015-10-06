@@ -1,3 +1,7 @@
+Tue Oct 05 2015
+1. Changes
+   * Check data for Binomial, Poisson and Negative-binomial responses to ensure it is appropriate
+
 Thu Oct 01 2015
 1. Bug fixing
    * Provide option to drop unused factor levels when processing the data (TRUE by default)

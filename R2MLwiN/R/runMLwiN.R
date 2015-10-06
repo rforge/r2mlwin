@@ -930,6 +930,9 @@ version:date:md5:filename:x64:trial:platform
   }
 
   if (D[1] == "Binomial") {
+    if (any(indata[[resp]] < 0) || any(indata[[resp]] > 1)) {
+      stop("Binomial response variable must have values from zero to one")
+    }
     if (is.logical(indata[[resp]])) {
       indata[[resp]] <- as.integer(indata[[resp]])
     }
@@ -941,6 +944,13 @@ version:date:md5:filename:x64:trial:platform
       }
     }
   }
+
+  if (D[1] == "Poisson" || D[1] == "Negbinom") {
+    if (any(indata[[resp]] < 0) || any((indata[[resp]] %% 1) != 0)) {
+      stop("Poisson and Negative-binomial responses must be positive integers")
+    }
+  }
+
   if (D[1] == "Mixed") {
     for (i in 2:length(D)) {
       if (D[[i]][[1]] == "Normal") {
@@ -949,6 +959,11 @@ version:date:md5:filename:x64:trial:platform
         }
       }
       if (D[[i]][[1]] == "Binomial") {
+        if (is.numeric(indata[[resp[i - 1]]])) {
+          if (any(indata[[resp[i - 1]]] < 0) || any(indata[[resp[i - 1]]] > 1)) {
+            stop("Binomial response variable must have values from zero to one")
+          }
+        }
         if (is.logical(indata[[resp[i - 1]]])) {
           indata[[resp[i - 1]]] <- as.integer(indata[[resp[i - 1]]])
         }
@@ -958,6 +973,11 @@ version:date:md5:filename:x64:trial:platform
           } else {
             stop("Binomial responses must have two unique values")
           }
+        }
+      }
+      if (D[[i]][[1]] == "Poisson" || D[[i]][[1]] == "Negbinom") {
+        if (any(indata[[resp[i - 1]]] < 0) || any((indata[[resp[i - 1]]] %% 1) != 0)) {
+          stop("Poisson and Negative-binomial responses must be positive integers")
         }
       }
     }
