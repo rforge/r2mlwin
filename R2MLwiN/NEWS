@@ -1,3 +1,7 @@
+Fri Oct 09 2015
+1. Bug fixing
+   * Add missing data type check
+
 Tue Oct 05 2015
 1. Changes
    * Check data for Binomial, Poisson and Negative-binomial responses to ensure it is appropriate

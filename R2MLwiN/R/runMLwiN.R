@@ -930,8 +930,10 @@ version:date:md5:filename:x64:trial:platform
   }
 
   if (D[1] == "Binomial") {
-    if (any(indata[[resp]] < 0) || any(indata[[resp]] > 1)) {
-      stop("Binomial response variable must have values from zero to one")
+    if (is.numeric(indata[[resp]])) {
+      if (any(indata[[resp]] < 0) || any(indata[[resp]] > 1)) {
+        stop("Binomial response variable must have values from zero to one")
+      }
     }
     if (is.logical(indata[[resp]])) {
       indata[[resp]] <- as.integer(indata[[resp]])
