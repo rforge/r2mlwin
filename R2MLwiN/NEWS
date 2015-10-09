@@ -1,6 +1,7 @@
 Fri Oct 09 2015
 1. Bug fixing
    * Add missing data type check
+   * Only run droplevels() where empty levels exist, also provide a warning when this happens
 
 Tue Oct 05 2015
 1. Changes

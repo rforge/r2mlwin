@@ -640,7 +640,14 @@ runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoption
   }
 
   if (drop.levels) {
-    indata <- droplevels(indata)
+    for (var in colnames(indata)) {
+      if (is.factor(indata[[var]])) {
+        if (length(setdiff(levels(indata[[var]]), levels(factor(indata[[var]])))) > 0) {
+          indata[[var]] <- droplevels(indata[[var]])
+          warning(paste0(var, " has unused factor levels defined. These were dropped from this model run, but we recommend removing them prior to calling runMLwiN."))
+        }
+      }
+    }
   }
 
   EstM <- estoptions$EstM
