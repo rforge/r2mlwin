@@ -2140,6 +2140,8 @@ version:date:md5:filename:x64:trial:platform
     refresh <- mcmcMeth$refresh
     if (is.null(refresh))
       refresh <- 50
+    # Ensure that refresh is not greater than total iterations
+    refresh <- min(refresh, iterations)
     fixM <- mcmcMeth$fixM
     if (is.null(fixM)) {
       if (D[1] == "Poisson" || D[1] == "Multinomial" || D[1] == "Binomial" || D[1] == "Mixed") {
