@@ -66,7 +66,7 @@ sixway(mymodel5@chains[, "FP_standlrt", drop = FALSE], "beta_1")
 # 5.4 Specifying an informative prior for a random parameter . . . . . . .65
 
 ## Specifies an informative prior for sigma2u
-(mymodel6 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcMeth = list(priorParam = list(rp2 = list(estimates = 0.2, 
+(mymodel6 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcMeth = list(priorParam = list(rp2 = list(estimate = 0.2, 
   size = 100)))), data = tutorial))
 
 sixway(mymodel6@chains[, "RP2_var_Intercept", drop = FALSE], "sigma^2_u0")
