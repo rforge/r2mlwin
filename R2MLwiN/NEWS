@@ -1,3 +1,7 @@
+Thu Nov 12 2015
+1. Bug fixing
+   * Corrected the prior covariance matrix in the MCMCGuide06 demo
+
 Fri Oct 16 2015
 1. Bug fixing
    * Prevent MCMC refresh being higher than the total number of iterations
