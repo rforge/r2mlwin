@@ -25,3 +25,4 @@ Add option to omit data from output objects, as well as modify postestimation fu
 Include information about missing data in hierachy slot
 Link to the texreg package to allow prettier table outputs
 Store and display information regarding the Priors in the MCMC output
+Allow changing the default Gamma prior parameters
