@@ -317,7 +317,7 @@
 write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp, D = "Normal", nonlinear = c(0, 1), categ = NULL,
                          notation = NULL, nonfp = NULL, clre = NULL, Meth = 1, merr = NULL, carcentre = FALSE, maxiter = 20,
                          convtol = 2, seed = 1, iterations = 5000, burnin = 500, scale = 5.8, thinning = 1, priorParam = "default", refresh = 50,
-                         fixM = 1, residM = 1, Lev1VarM = 1, OtherVarM = 1, adaption = 1, priorcode = 1, rate = 50, tol = 10, lclo = 0,
+                         fixM = 1, residM = 1, Lev1VarM = 1, OtherVarM = 1, adaption = 1, priorcode = c(gamma=1), rate = 50, tol = 10, lclo = 0,
                          mcmcOptions, fact = NULL, xc = NULL, mm = NULL, car = NULL, BUGO = NULL, mem.init = "default", optimat = FALSE,
                          modelfile, initfile, datafile, macrofile, IGLSfile, MCMCfile, chainfile, MIfile, resifile, resi.store = FALSE,
                          resioptions, resichains, FACTchainfile, resi.store.levs = NULL, debugmode = FALSE, startval = NULL, dami = NULL,
@@ -1687,6 +1687,14 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     DD <- 8
   
   wrt(paste("LCLO   ", lclo, sep = ""))
+
+  if (priorcode["gamma"] == 0) {
+    wrt("UNIP")
+  } else {
+    if (length(priorcode) > 1) {
+      wrt(paste("GAMP", priorcode["shape"], priorcode["scale"]))
+    }
+  }
   
   if (debugmode) {
     wrt("NOTE   Open the equations window")
@@ -1723,7 +1731,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
       residcols <- "G30[1] G30[2]"
     }
     wrt(paste("MCMC   0", burnin, adaption, scale, rate, tol, residcols, priorcol, fixM, residM, Lev1VarM, OtherVarM,
-              priorcode, DD))
+              priorcode[1], DD))
     
     if (nlev > 1 && !isTRUE(xc)) {
       wrt("ERAS G30")

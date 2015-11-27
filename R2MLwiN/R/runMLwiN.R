@@ -2177,7 +2177,27 @@ version:date:md5:filename:x64:trial:platform
       adaption <- 1
     priorcode <- mcmcMeth$priorcode
     if (is.null(priorcode))
-      priorcode <- 1
+      priorcode <- c(gamma=1)
+    if (is.null(names(priorcode))) {
+      if (length(priorcode) == 1) {
+        names(priorcode) <- "gamma"
+      } else if (length(priorcode == 3)) { 
+          names(priorcode) <- c("gamma", "shape", "scale")
+      }
+    }
+    if (names(priorcode)[1] == "uniform") {
+      priorcode[1] <- !priorcode[1]
+      names(priorcode)[1] <- "gamma"
+    }
+    if (names(priorcode)[1] != "gamma") {
+      stop("Invalid prior option")
+    }
+    if (length(priorcode) > 1) {
+      if (length(setdiff(names(priorcode), c("gamma", "shape", "scale"))) != 0) {
+        stop("Invalid prior options")
+      }
+    }
+    priorcode[1] <- as.integer(priorcode[1])
     rate <- mcmcMeth$rate
     if (is.null(rate))
       rate <- 50
