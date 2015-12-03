@@ -11,14 +11,14 @@ write.MCMC(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp,
   maxiter = 20, convtol = 2, seed = 1, iterations = 5000,
   burnin = 500, scale = 5.8, thinning = 1, priorParam = "default",
   refresh = 50, fixM = 1, residM = 1, Lev1VarM = 1, OtherVarM = 1,
-  adaption = 1, priorcode = 1, rate = 50, tol = 10, lclo = 0,
-  mcmcOptions, fact = NULL, xc = NULL, mm = NULL, car = NULL,
-  BUGO = NULL, mem.init = "default", optimat = FALSE, modelfile, initfile,
-  datafile, macrofile, IGLSfile, MCMCfile, chainfile, MIfile, resifile,
-  resi.store = FALSE, resioptions, resichains, FACTchainfile,
-  resi.store.levs = NULL, debugmode = FALSE, startval = NULL,
-  dami = NULL, namemap = sapply(colnames(indata), as.character),
-  saveworksheet = NULL)
+  adaption = 1, priorcode = c(gamma = 1), rate = 50, tol = 10,
+  lclo = 0, mcmcOptions, fact = NULL, xc = NULL, mm = NULL,
+  car = NULL, BUGO = NULL, mem.init = "default", optimat = FALSE,
+  modelfile, initfile, datafile, macrofile, IGLSfile, MCMCfile, chainfile,
+  MIfile, resifile, resi.store = FALSE, resioptions, resichains,
+  FACTchainfile, resi.store.levs = NULL, debugmode = FALSE,
+  startval = NULL, dami = NULL, namemap = sapply(colnames(indata),
+  as.character), saveworksheet = NULL)
 }
 \arguments{
 \item{indata}{A data.frame object containing the data to be modelled.}
