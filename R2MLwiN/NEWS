@@ -1,3 +1,7 @@
+Thu Dev 03 2015
+1. Changes
+   * Turn off reserved column overwrite warning in generated macro
+
 Fri Nov 27 2015
 1. Changes
    * Allow specification of default gamma prior parameters

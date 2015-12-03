@@ -446,6 +446,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
   }
   
   wrt("MONI    0")
+  wrt("MARK    0")
   wrt("NOTE    Import the R data into MLwiN")
   wrt(paste("RSTA    '", dtafile, "'", sep = ""))
   
