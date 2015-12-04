@@ -457,7 +457,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt(paste0("NAME cb50 '", name, "'"))
   }
   
-  if (notation == "class") {
+  if ("class" %in% notation) {
     wrt("INDE 1")
   }
   if (!(D[1] == "Multinomial" || D[1] == "Multivariate Normal" || D[1] == "Mixed")) {
@@ -1454,7 +1454,21 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("PREF   0")
     wrt("POST   0")
   }
-  
+
+  if ("simple" %in% notation) {
+    wrt("EXISt 'cons' b1000")
+    wrt("SWITch b1000")
+    wrt("CASE 0:")
+    wrt("EXISt 'Intercept' b1000")
+    wrt("SWITch b1000")
+    wrt("CASE 1:")
+    wrt("COLN 'Intercept' b1000")
+    wrt("NAME cb1000 'cons'")
+    wrt("ENDSWITch")
+    wrt("ENDSWITch")
+    wrt("NOTA 1")
+  }
+
   wrt("NAME   c1098 '_FP_b'")
   wrt("NAME   c1099 '_FP_v'")
   wrt("NAME   c1096 '_RP_b'")

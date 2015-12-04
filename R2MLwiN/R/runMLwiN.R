@@ -1776,11 +1776,11 @@ version:date:md5:filename:x64:trial:platform
   }
 
   notation <- estoptions$notation
-  if (is.null(notation)) {
+  if (!("level" %in% notation && "class" %in% notation)) {
     if (!isTRUE(xc)) {
-      notation <- "level"
+      notation <- c(notation, "level")
     } else {
-      notation <- "class"
+      notation <- c(notation, "class")
     }
   }
 
