@@ -941,7 +941,7 @@ version:date:md5:filename:x64:trial:platform
 
   if (D[1] == "Binomial") {
     if (is.numeric(indata[[resp]])) {
-      if (any(indata[[resp]] < 0) || any(indata[[resp]] > 1)) {
+      if (!all(is.na(indata[[resp]]) | (indata[[resp]] >= 0 & indata[[resp]] <= 1))) {
         stop("Binomial response variable must have values from zero to one")
       }
     }
@@ -958,7 +958,7 @@ version:date:md5:filename:x64:trial:platform
   }
 
   if (D[1] == "Poisson" || D[1] == "Negbinom") {
-    if (any(indata[[resp]] < 0) || any((indata[[resp]] %% 1) != 0)) {
+    if (!all(is.na(indata[[resp]]) | (indata[[resp]] >= 0 & indata[[resp]] %% 1 == 0))) {
       stop("Poisson and Negative-binomial responses must be positive integers")
     }
   }
@@ -972,7 +972,7 @@ version:date:md5:filename:x64:trial:platform
       }
       if (D[[i]][[1]] == "Binomial") {
         if (is.numeric(indata[[resp[i - 1]]])) {
-          if (any(indata[[resp[i - 1]]] < 0) || any(indata[[resp[i - 1]]] > 1)) {
+          if (!all(is.na(indata[[resp[i - 1]]]) | (indata[[resp[i - 1]]] >= 0 & indata[[resp[i - 1]]] <= 1))) {
             stop("Binomial response variable must have values from zero to one")
           }
         }
@@ -988,7 +988,7 @@ version:date:md5:filename:x64:trial:platform
         }
       }
       if (D[[i]][[1]] == "Poisson" || D[[i]][[1]] == "Negbinom") {
-        if (any(indata[[resp[i - 1]]] < 0) || any((indata[[resp[i - 1]]] %% 1) != 0)) {
+        if (!all(is.na(indata[[resp[i - 1]]]) | (indata[[resp[i - 1]]] >= 0 & indata[[resp[i - 1]]] %% 1 == 0))) {
           stop("Poisson and Negative-binomial responses must be positive integers")
         }
       }
@@ -2346,13 +2346,13 @@ version:date:md5:filename:x64:trial:platform
     sort.ignore <- FALSE
 
   if (D[1] == "Binomial") {
-    if (!all(indata[[resp]] >= 0 && indata[[resp]] <= 1)) {
+    if (!all(is.na(indata[[resp]]) | (indata[[resp]] >= 0 & indata[[resp]] <= 1))) {
       stop("All values for a binomial response must lie between zero and one")
     }
   }
 
   if (D[1] == "Poisson") {
-    if (!all(indata[[resp]] >= 0) && all(as.integer(indata[[resp]]) == indata[[resp]])) {
+    if (!all(is.na(indata[[resp[i - 1]]]) | (indata[[resp[i - 1]]] >= 0 & indata[[resp[i - 1]]] %% 1 == 0))) {
       stop("All values for a Poisson response must be positive integers")
     }
   }
@@ -2362,7 +2362,7 @@ version:date:md5:filename:x64:trial:platform
     discreteresp <- NULL
     for (i in 2:length(D)) {
       if (D[[i]][1] == "Binomial") {
-        if (!all(indata[[resp[i - 1]]] >= 0 && indata[[resp[i - 1]]] <= 1)) {
+        if (!all(is.na(indata[[resp[i - 1]]]) | (indata[[resp[i - 1]]] >= 0 & indata[[resp[i - 1]]] <= 1))) {
           stop("All values for a binomial response must lie between zero and one")
         }
         discreteresp <- union(discreteresp, D[[i]][1])
@@ -2370,7 +2370,7 @@ version:date:md5:filename:x64:trial:platform
       }
 
       if (D[[i]][1] == "Poisson") {
-        if (!all(indata[[resp[i - 1]]] >= 0) && all(as.integer(indata[[resp[i - 1]]]) == indata[[resp]])) {
+        if (!all(is.na(indata[[resp[i - 1]]]) | (indata[[resp[i - 1]]] >= 0 & indata[[resp[i - 1]]] %% 1 == 0))) {
           stop("All values for a Poisson response must be positive integers")
         }
         discreteresp <- union(discreteresp, D[[i]][1])

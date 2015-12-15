@@ -1,8 +1,12 @@
+Tue Dec 15 2015
+1. Bug fixing
+   * Ignore missing values when checking that responses have valid values
+
 Fri Dec 04 2015
 1. Changes
    * Add option to turn on simple notation when in debug mode
 
-Thu Dev 03 2015
+Thu Dec 03 2015
 1. Changes
    * Turn off reserved column overwrite warning in generated macro
 
