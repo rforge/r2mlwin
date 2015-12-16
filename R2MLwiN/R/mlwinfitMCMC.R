@@ -31,7 +31,8 @@
 #' @slot fact.cov If \code{fact} is not empty, then factor covariances are returned.
 #' @slot fact.cov.sd If \code{fact} is not empty, then factor covariance standard deviations are returned.
 #' @slot fact.chains If \code{fact} is not empty, then the factor chains are returned.
-#' @slot MIdata If \code{dami} is not empty, then the complete response variable \code{y} are returned.
+#' @slot MIdata If \code{dami[1]} is one then the mean complete response variable \code{y} is returned for each chain, if \code{dami[1]} is two then the SD is also included.
+#' @slot imputations If \code{dami[1]} is zero, then a list of completed datasets containing complete response variable \code{y} is returned.
 #' @slot residual If \code{resi.store} is \code{TRUE}, then the residual estimates at all levels are returned.
 #' @slot resi.chains If \code{resi.store.levs} is not empty, then the residual chains at these levels are returned.
 #' @slot version The MLwiN version used to fit the model
@@ -73,7 +74,7 @@ setClass(Class = "mlwinfitMCMC", representation = representation(version = "char
                                                                  merr = "ANY", fact = "ANY", xc = "ANY", FP = "numeric", RP = "numeric", RP.cov = "matrix", FP.cov = "matrix", 
                                                                  chains = "ANY", elapsed.time = "numeric", call = "ANY", BDIC = "numeric", LIKE = "ANY", fact.loadings = "numeric", 
                                                                  fact.loadings.sd = "numeric", fact.cov = "numeric", fact.cov.sd = "numeric", fact.chains = "ANY", MIdata = "data.frame", 
-                                                                 residual = "list", resi.chains = "ANY", data = "data.frame"))
+                                                                 imputations = "list", residual = "list", resi.chains = "ANY", data = "data.frame"))
 
 #' Extract or Replace parts of "mlwinfitMCMC" objects
 #' @param x data frame
@@ -165,6 +166,9 @@ setMethod("[", "mlwinfitMCMC", function(x, i, j, drop) {
   }
   if (i == "MIdata") {
     return(x@MIdata)
+  }
+  if (i == "imputations") {
+    return(x@imputations)
   }
   if (i == "residual") {
     return(x@residual)
@@ -262,6 +266,9 @@ setReplaceMethod("[", signature(x = "mlwinfitMCMC"), function(x, i, j, value) {
   }
   if (i == "MIdata") {
     x@MIdata <- value
+  }
+  if (i == "imputations") {
+    x@imputations <- value
   }
   if (i == "residual") {
     x@residual <- value
@@ -362,6 +369,9 @@ setMethod("[[", "mlwinfitMCMC", function(x, i, j, drop) {
   if (i == "MIdata") {
     return(x@MIdata)
   }
+  if (i == "imputations") {
+    return(x@imputations)
+  }
   if (i == "residual") {
     return(x@residual)
   }
@@ -458,6 +468,9 @@ setReplaceMethod("[[", signature(x = "mlwinfitMCMC"), function(x, i, j, value) {
   }
   if (i == "MIdata") {
     x@MIdata <- value
+  }
+  if (i == "imputations") {
+    x@imputations <- value
   }
   if (i == "residual") {
     x@residual <- value

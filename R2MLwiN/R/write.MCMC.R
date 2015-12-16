@@ -1775,11 +1775,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
         wrt("AVER c1091 b99 b100")
         wrt("PAUS 1")
       }
-      wrt("LINK 1 G24")
-      wrt("NAME G24[1] '_MissingInd'")
-      wrt("CALC   '_MissingInd'=abso('_esample'-1)")
-      wrt(paste("PSTA '", MIfile, "' ", paste(mvnames, collapse = " "), " '_MissingInd'", sep = ""))
-      wrt("LINK 0 G24")
+      wrt(paste("PSTA", paste0("'", MIfile, "'"), paste(mvnames, collapse = " "), "'resp_indicator'"))
       wrt(paste("ERAS  ", paste(mvnames, collapse = " "), sep = ""))
     } else {
       if (debugmode) {
@@ -1870,36 +1866,30 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("")
     
     if (!is.null(dami) && length(dami) == 1) {
-      wrt("LINK 3 G26")
-      wrt("NOTE generate example if there a missing values")
+      wrt("NOTE save imputed values if there are missing values")
       wrt("SWIT b1")
       wrt("CASE 0:")
       wrt("LEAVE")
       wrt("CASE:")
+      wrt("LINK 3 G26")
       wrt("NAME G26[1] '_MissingInd'")
       wrt("CALC   '_MissingInd'=abso('_esample'-1)")
-      if (dami == 0) {
-        wrt("DAMI 0 G26[2]")
-        wrt("NAME G26[2] '_est'")
-        wrt(paste("PSTA '", MIfile, "' '_est' '_esample' ", sep = ""))
-        wrt("ERAS  '_est'")
-      }
       if (dami == 1) {
         wrt("DAMI 1 G26[2]")
         wrt("NAME G26[2] '_est'")
-        wrt(paste("PSTA '", MIfile, "' '_est' '_esample' ", sep = ""))
+        wrt(paste("PSTA '", MIfile, "' '_est' '_MissingInd' ", sep = ""))
         wrt("ERAS  '_est'")
       }
       if (dami == 2) {
         wrt("DAMI 2 G26[2] G26[3]")
         wrt("NAME G26[2] '_est'")
         wrt("NAME G26[3] '_SDs'")
-        wrt(paste("PSTA '", MIfile, "' '_est' '_SDs' '_esample' ", sep = ""))
+        wrt(paste("PSTA '", MIfile, "' '_est' '_SDs' '_MissingInd' ", sep = ""))
         wrt("ERAS  '_est' '_SDs'")
       }
+      wrt("LINK 0 G26")
       wrt("ENDS")
       wrt("")
-      wrt("LINK 0 G26")
     }
     
     wrt("NOTE export parameter chain")

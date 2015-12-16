@@ -2208,6 +2208,21 @@ version:date:md5:filename:x64:trial:platform
     if (is.null(lclo))
       lclo <- 0
     dami <- mcmcMeth$dami
+    if (!is.null(dami)) {
+      if (dami[1] %in% c(0, 1, 2)) {
+        if (dami[1] == 0) {
+          if (length(dami) == 1) {
+            stop("No iterations specified for imputation")
+          }
+        } else {
+          if (length(dami) > 1) {
+            stop("Iterations cannot be specified when requesting imputation means")
+          }
+        }
+      } else {
+        stop("Invalid imputation option")
+      }
+    }
   }
 
   mcmcOptions <- estoptions$mcmcOptions
@@ -2906,16 +2921,34 @@ version:date:md5:filename:x64:trial:platform
     }
 
     if (!is.null(dami)) {
-      MIdata <- list()
-      if ("_MissingInd" %in% colnames(MIlist[[1]])) {
-        MIdata[["_MissingInd"]] <- MIlist[[1]][, "_MissingInd"]
+      if (dami[1] == 0) {
+        imputations <- list()
+        for (i in 1:nchains) {
+          for (j in 2:length(dami)) {
+            impdata <- MIlist[[i]][, c("resp_indicator", paste0("_est_", dami[j]))]
+            Nresp <- length(unique(impdata$resp_indicator))
+            Nrecs = nrow(impdata) / Nresp
+            impdata$id <- rep(1:Nrecs, each=Nresp)
+            impdata <- reshape(impdata, timevar="resp_indicator", idvar="id", direction="wide")
+            impdata$id <- NULL
+            colnames(impdata) <- gsub(paste0("_est_", dami[j], "."), "", colnames(impdata))
+            impout <- outdata
+            impout[, colnames(impdata)] <- impdata
+            imputations[[paste0("chain", i, "_iteration_", dami[j])]] <- impout
+          }
+        }
+      } else {
+        MIdata <- list()
+        if ("_MissingInd" %in% colnames(MIlist[[1]])) {
+          MIdata[["_MissingInd"]] <- MIlist[[1]][, "_MissingInd"]
+        }
+        for (i in 1:nchains) {
+          impcols <- c(grep("_est_", colnames(MIlist[[i]])), grep("_SDs_", colnames(MIlist[[i]])))
+          colnames(MIlist[[i]])[impcols] <- paste0("chain", i, colnames(MIlist[[i]])[impcols])
+          MIdata <- c(MIdata, MIlist[[i]][, impcols])
+        }
+        MIdata <- data.frame(MIdata)
       }
-      for (i in 1:nchains) {
-        impcols <- c(grep("_est_", colnames(MIlist[[i]])), grep("_SDs_", colnames(MIlist[[i]])))
-        colnames(MIlist[[i]])[impcols] <- paste0("chain", i, colnames(MIlist[[i]])[impcols])
-        MIdata <- c(MIdata, MIlist[[i]][, impcols])
-      }
-      MIdata <- data.frame(MIdata)
     }
 
     combchains <- as.matrix(chains)
@@ -3191,7 +3224,11 @@ version:date:md5:filename:x64:trial:platform
         outMCMC["resi.chains"] <- resiChains
       }
       if (!is.null(dami)) {
-        outMCMC["MIdata"] <- MIdata
+        if (dami[1] == 0) {
+          outMCMC["imputations"] <- imputations
+        } else {
+          outMCMC["MIdata"] <- MIdata
+        }
       }
 
       if (resi.store) {
