@@ -2367,7 +2367,7 @@ version:date:md5:filename:x64:trial:platform
   }
 
   if (D[1] == "Poisson") {
-    if (!all(is.na(indata[[resp[i - 1]]]) | (indata[[resp[i - 1]]] >= 0 & indata[[resp[i - 1]]] %% 1 == 0))) {
+    if (!all(is.na(indata[[resp]]) | (indata[[resp]] >= 0 & indata[[resp]] %% 1 == 0))) {
       stop("All values for a Poisson response must be positive integers")
     }
   }
