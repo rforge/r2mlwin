@@ -2519,12 +2519,37 @@ version:date:md5:filename:x64:trial:platform
     }
   }
 
+  xcolumns <- NULL
+  if (is.list(expl)) {
+    if (!is.na(expl$sep.coeff[1])) {
+      xcolumns <- c(expl$sep.coeff, expl$common.coeff)
+    } else {
+      xcolumns <- expl$common.coeff
+    }
+  } else {
+    xcolumns <- expl
+  }
+
+  interpos <- grep("\\:", xcolumns)
+  if (length(interpos) != 0) {
+    explx <- xcolumns[-interpos]
+    xcolumns <- union(xcolumns, explx)
+    interx <- intersect(unlist(mapply(strsplit, as.character(expl[interpos]), "\\:"), use.names = FALSE), colnames(indata))
+    xcolumns <- union(xcolumns, interx)
+  }
+
+  # Indicator that at least one response in the row is non-missing
+  ymiss <- as.logical(apply(!is.na(outdata[, resp, drop=FALSE]), 1, max))
+
+  # Exclude rows where any X or all responses are missing
+  completerows <- complete.cases(outdata[, xcolumns]) & ymiss
   hierarchy <- NULL
   shortID <- na.omit(rev(levID))
   if (length(shortID) > 1) {
     for (lev in length(shortID):2) {
       if (!is.null(xc)) {
         groupsize <- by(outdata, outdata[, shortID[lev]], nrow)
+        compgroupsize <- by(outdata[completerows, ], outdata[completerows, shortID[lev]], nrow)
       } else {
         test <- requireNamespace("reshape", quietly = TRUE)
         if (isTRUE(test)) {
@@ -2534,12 +2559,16 @@ version:date:md5:filename:x64:trial:platform
           # still correct a suppressWarnings() call is added below to prevent this being passed onto the user
           groupsize <- as.vector(suppressWarnings(reshape::sparseby(outdata, outdata[, shortID[lev:length(shortID)]],
                                                                     nrow, GROUPNAMES = FALSE)))
+          compgroupsize <- as.vector(suppressWarnings(reshape::sparseby(outdata[completerows, ], outdata[completerows, shortID[lev:length(shortID)]],
+                                                                    nrow, GROUPNAMES = FALSE)))
         } else {
           groupsize <- na.omit(as.vector(by(outdata, outdata[, shortID[lev:length(shortID)]], nrow)))
+          compgroupsize <- na.omit(as.vector(by(outdata[completerows, ], outdata[completerows, shortID[lev:length(shortID)]], nrow)))
+
         }
       }
-      groupinfo <- cbind(length(groupsize), min(groupsize), mean(groupsize), max(groupsize))
-      colnames(groupinfo) <- c("N", "min", "mean", "max")
+      groupinfo <- cbind(length(groupsize), min(groupsize), mean(groupsize), max(groupsize), length(compgroupsize), min(compgroupsize), mean(compgroupsize), max(compgroupsize))
+      colnames(groupinfo) <- c("N", "min", "mean", "max", "N_complete", "min_complete", "mean_complete", "max_complete")
       rownames(groupinfo) <- shortID[lev]
       hierarchy <- rbind(hierarchy, groupinfo)
     }

@@ -1,3 +1,7 @@
+Thu Dec 17 2015
+1. Changes
+   * Add group size summary information for non-missing data to the hierarchy slot
+
 Wed Dec 16 2015
 1. Changes
    * Return imputed datasets as a list of dataframes (in the imputations slot). This matches the input required by the mitools package.

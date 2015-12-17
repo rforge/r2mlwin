@@ -21,6 +21,5 @@ Add more error checking
 Allow display of models results in alternative measures (e.g. correlations, standard deviations, etc)
 Investigate interactions with RStudio, as sometimes graphs can behave strangely
 Add option to omit data from output objects, as well as modify postestimation functions to take this into account
-Include information about missing data in hierachy slot
 Link to the texreg package to allow prettier table outputs
 Store and display information regarding the Priors in the MCMC output
