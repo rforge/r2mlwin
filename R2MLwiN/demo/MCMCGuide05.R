@@ -86,24 +86,13 @@ startval <- list(FP.b = FP.b, RP.b = RP.b)
 rm(list = c("mymodel4", "mymodel5", "mymodel6", "mymodel7"))
 
 ## Use different seeds
-(mymodel8 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcMeth = list(seed = 1)), 
+(mymodel8 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcMeth = list(nchains=4, seed = 1:4)),
   data = tutorial))
 
-(mymodel9 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcMeth = list(seed = 2)), 
-  data = tutorial))
-
-(mymodel10 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcMeth = list(seed = 3)), 
-  data = tutorial))
-
-(mymodel11 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcMeth = list(seed = 4)), 
-  data = tutorial))
-
-aa <- cbind(mymodel8@FP, mymodel9@FP, mymodel10@FP, mymodel11@FP)
-bb <- cbind(mymodel8@RP, mymodel9@RP, mymodel10@RP, mymodel11@RP)
-ctable <- round(rbind(aa, bb), 3)
+ctable <- round(as.data.frame(lapply(mymodel11@chains[, c(names(mymodel8@FP), names(mymodel8@RP))], colMeans)), 3)
 colnames(ctable) <- c("Seed1", "Seed2", "Seed3", "Seed4")
 print(ctable)
-rm(list = c("mymodel8", "mymodel9", "mymodel10", "mymodel11"))
+rm(list = "mymodel8")
 
 # 5.6 Improving the speed of MCMC Estimation . . . . . . . . . . . . . . .69
 

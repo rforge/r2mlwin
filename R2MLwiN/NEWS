@@ -1,3 +1,7 @@
+Tues Jan 05 2015
+1. Changes
+   * Run multiple MCMC seed example as parallel chains
+
 Thu Dec 17 2015
 1. Changes
    * Add group size summary information for non-missing data to the hierarchy slot
