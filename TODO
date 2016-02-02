@@ -15,7 +15,7 @@ Additional Functionality:
 Automatic calculation of VPC?
 Debugging option to extract internal model matrices (IGLS) - XSS/VMAT/ZMAT/YRES/YMAT/XMAT commands
 Allow user specified design matrix (IGLS) - SETD command
-Multinomial proportions - need manual calculation/reshaping
+Multinomial proportions - need manual calculation/reshaping - e.g. <denom> in multinomial is actually not used (or doesn't need to be used as always 1), therefore this could instead be counts per unit e.g. log(resp, counts)... D="Unordered Multinomial"
 Add an option to allow the model to be set up but not run, useful for example if we just want to run a BUGS model or see the MLwiN syntax
 Add more error checking
 Allow display of models results in alternative measures (e.g. correlations, standard deviations, etc)
