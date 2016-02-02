@@ -89,7 +89,7 @@ rm(list = c("mymodel4", "mymodel5", "mymodel6", "mymodel7"))
 (mymodel8 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcMeth = list(nchains=4, seed = 1:4)),
   data = tutorial))
 
-ctable <- round(as.data.frame(lapply(mymodel11@chains[, c(names(mymodel8@FP), names(mymodel8@RP))], colMeans)), 3)
+ctable <- round(as.data.frame(lapply(mymodel8@chains[, c(names(mymodel8@FP), names(mymodel8@RP))], colMeans)), 3)
 colnames(ctable) <- c("Seed1", "Seed2", "Seed3", "Seed4")
 print(ctable)
 rm(list = "mymodel8")
