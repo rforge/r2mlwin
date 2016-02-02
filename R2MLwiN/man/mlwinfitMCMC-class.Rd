@@ -62,7 +62,7 @@ An MLwiN model run via the MCMC estimation method is represented by an "mlwinfit
 
 \item{\code{fact.chains}}{If \code{fact} is not empty, then the factor chains are returned.}
 
-\item{\code{MIdata}}{If \code{dami[1]} is one then the mean complete response variable \code{y} are returned, if \code{dami[1]} is two then the SD is also included.}
+\item{\code{MIdata}}{If \code{dami[1]} is one then the mean complete response variable \code{y} is returned for each chain, if \code{dami[1]} is two then the SD is also included.}
 
 \item{\code{imputations}}{If \code{dami[1]} is zero, then a list of completed datasets containing complete response variable \code{y} is returned.}
 
