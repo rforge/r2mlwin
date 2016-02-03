@@ -609,17 +609,21 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
       names(D)[1] <- "distr"
       D[2] <- link
       names(D)[2] <- "link"
-      D[3] <- resp[2]
+      if (length(resp) > 1) {
+        D[3] <- resp[2]
+      } else {
+        # Create vector of ones for the denominator
+        D[3] <- "_denom"
+        indata[["_denom"]] <- rep(1, nrow(indata))
+      }
       names(D)[3] <- "denominator"
       D[4] <- 0
       names(D)[4] <- "mode"
-      if (length(resp) == 3) {
+      if (length(resp) > 2) {
         D[5] <- as.integer(resp[3])
       } else {
-        if (length(resp) == 2) {
-          # take the first category as base
-          D[5] <- 1
-        }
+        # take the first category as base
+        D[5] <- 1
       }
       names(D)[5] <- "ref.cat"
       resp <- resp[1]
@@ -633,17 +637,21 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
       names(D)[1] <- "distr"
       D[2] <- link
       names(D)[2] <- "link"
-      D[3] <- resp[2]
+      if (length(resp) > 1) {
+        D[3] <- resp[2]
+      } else {
+        # Create vector of ones for the denominator
+        D[3] <- "_denom"
+        indata[["_denom"]] <- rep(1, nrow(indata))
+      }
       names(D)[3] <- "denominator"
       D[4] <- 1
       names(D)[4] <- "mode"
-      if (length(resp) == 3) {
+      if (length(resp) > 2) {
         D[5] <- as.integer(resp[3])
       } else {
-        if (length(resp) == 2) {
-          # take the first category as base
-          D[5] <- 1
-        }
+        # take the first category as base
+        D[5] <- 1
       }
       names(D)[5] <- "ref.cat"
       resp <- resp[1]
@@ -684,7 +692,13 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
           D[[i + 1]][1] <- "Binomial"
           D[[i + 1]][2] <- link
           respx <- strsplit(respx[3], ",")[[1]]
-          D[[i + 1]][3] <- respx[2]
+          if (length(respx) > 1) {
+            D[[i + 1]][3] <- respx[2]
+          } else {
+            # Create vector of ones for the denominator
+            D[[i + 1]][3] <- "_denom"
+            indata[["_denom"]] <- rep(1, nrow(indata))
+          }         
           resp[i] <- respx[1]
         } else if (D[[i + 1]] == "Poisson") {
           respx <- regmatches(respx, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", respx))[[1]]
@@ -1325,7 +1339,13 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     link <- resp[2]
     D[2] <- link
     resp <- strsplit(resp[3], ",")[[1]]
-    D[3] <- resp[2]
+    if (length(resp) > 1) {
+      D[3] <- resp[2]
+    } else {
+      # Create vector of ones for the denominator
+      D[3] <- "_denom"
+      indata[["_denom"]] <- rep(1, nrow(indata))
+    }
     resp <- resp[-2]
     
     nleft <- length(left)

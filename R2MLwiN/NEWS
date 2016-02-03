@@ -1,4 +1,8 @@
-Tues Jan 05 2015
+Wed Feb 03 2016
+1. Changes
+   * If a denominator is not specified generate a column of ones and use that instead
+
+Tue Jan 05 2015
 1. Changes
    * Run multiple MCMC seed example as parallel chains
 
