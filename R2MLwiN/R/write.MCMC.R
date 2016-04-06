@@ -107,11 +107,18 @@
 #' multivariate MH Sampling.
 #' @param adaption \code{adaption = 1} indicates adaptation is to be used;
 #' \code{0} otherwise.
-#' @param priorcode An integer indicating which default priors are to be used
-#' for the variance parameters. This parameter takes the value \code{1} for
-#' Gamma priors or \code{0} for Uniform on the variance scale priors. See the
-#' section on 'Priors' in the MLwiN help system for more details on the meaning
-#' of these default priors.
+#' @param priorcode A vector indicating which default priors are to be used
+#' for the variance parameters. It defaults to \code{c(gamma = 1)} in which case
+#' Gamma priors are used with MLwiN's defaults of Gamma a value (shape) = 0.001
+#' and Gamma b value (scale) = 0.001, although alternative values for shape and
+#' scale can be specified in subsequent elements of the vector,
+#' e.g. \code{c(gamma = 1, shape = 0.5, scale = 0.2)}). Alternatively
+#' \code{c(uniform = 1)} specifies Uniform priors on the variance scale. To allow
+#' for back-compatibility with deprecated syntax used in versions of
+#' \pkg{R2MLwiN} prior to 0.8-2, if \code{priorcode} is instead specified as
+#' an integer, then \code{1} indicates that Gamma priors are used, whereas
+#' \code{0} indicates that Uniform priors are used. See the section on 'Priors' in the
+#' MLwiN help system for more details on the meaning of these priors.
 #' @param rate An integer specifying the acceptance rate (as a percentage);
 #' this command is ignored if \code{adaption = 0}.
 #' @param tol An integer specifying tolerance (as a percentage) for the acceptance rate.
