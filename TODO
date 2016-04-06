@@ -1,5 +1,7 @@
 When writing out documentation (Rd files), roxygen2 issues warnings that @s3method has been deprecated and that @export should be used instead
 
+Note that some objects can instead be specified as TRUE as opposed to 1, e.g. adaption = TRUE instead of adaption = 1, although this isn't indicated in documentation (Rd files).
+
 Bug when using generic update function:
 Non-standard requirement that the intercept is explicitly specified might cause some confusion:
 > a <- formula(normexam ~ 1 + standlrt + (1|student))
