@@ -502,7 +502,8 @@ setMethod("show", signature(object = "mlwinfitIGLS"), function(object) printIGLS
 updateMLwiN <- function(object, Formula., levID., estoptions., ..., keep.order = TRUE, evaluate = TRUE) {
   update.formula2 <- function (old, new, ...) 
   {
-      tmp <- .Call(stats:::C_updateform, as.formula(old), as.formula(new))
+      C_updateform <- get("C_updateform", asNamespace("stats"), inherits=FALSE)
+      tmp <- .Call(C_updateform, as.formula(old), as.formula(new))
       out <- formula(terms.formula(tmp, simplify = FALSE))
       return(out)
   }
