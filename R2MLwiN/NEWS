@@ -1,3 +1,7 @@
+Thu April 21 2016
+1. Changes
+   * Allow variables that contain a "." character to work with formulae
+
 Mon Apr 11 2016
 1. Changes
    * Use "get" function for clearing "foreach" package globals and updating the formula to satisfy CRAN checks

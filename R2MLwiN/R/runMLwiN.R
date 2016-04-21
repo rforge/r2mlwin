@@ -633,7 +633,7 @@ runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoption
       Formula <- as.formula(Formula)
     }
   } else {
-    tmpvarnames <- unique(unlist(strsplit(all.vars(Formula), "\\.")))
+    tmpvarnames <- unique(all.vars(Formula))
     tForm <- as.formula(paste0("~", paste(tmpvarnames, collapse = "+")))
     if (drop.data) {
       indata <- get_all_vars(tForm, indata)
