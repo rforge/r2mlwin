@@ -938,7 +938,13 @@ setMethod("nobs", signature(object = "mlwinfitMCMC"), function(object, ...) {
 #' @export 
 setMethod("extract", signature = className("mlwinfitMCMC", "R2MLwiN"), function(model, include.nobs = TRUE, include.dbar = TRUE, include.dthetabar = TRUE, include.pd = TRUE, include.dic = TRUE, ...) {
   co <- coef(model)
+  coef.names <- names(co)
   se <- sqrt(diag(vcov(model)))
+
+  chain.stats <- summary(model@chains, quantiles=c(0.025, 0.975))
+  chain.qt025 <- chain.stats$quantiles[coef.names, "2.5%"]
+  chain.qt975 <- chain.stats$quantiles[coef.names, "97.5%"]
+
   bdic <- model@BDIC
   gof <- numeric()
   gof.names <- character()
@@ -970,9 +976,11 @@ setMethod("extract", signature = className("mlwinfitMCMC", "R2MLwiN"), function(
   }
 
   tr <- createTexreg(
-    coef.names = names(co),
+    coef.names = coef.names,
     coef = co,
     se = se,
+    ci.low = chain.qt025, 
+    ci.up = chain.qt975,
     gof.names = gof.names,
     gof = gof,
     gof.decimal = gof.decimal
