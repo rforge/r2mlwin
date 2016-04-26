@@ -794,3 +794,41 @@ setMethod("deviance", signature(object = "mlwinfitIGLS"), function(object, ...) 
 setMethod("nobs", signature(object = "mlwinfitIGLS"), function(object, ...) {
   object@Nobs
 })
+
+#' Extract coefficients and GOF measures from a statistical object.
+#' @param model An \code{\link{mlwinfitIGLS-class}} model.
+#' @param ... Other arguments.
+#' @seealso \code{\link[texreg]{extract}}
+#' @export 
+setMethod("extract", signature = className("mlwinfitIGLS", "R2MLwiN"), function(model, include.nobs = TRUE, include.loglik=TRUE, include.deviance=TRUE, ...) {
+  co <- coef(model)
+  se <- sqrt(diag(vcov(model)))
+  gof <- numeric()
+  gof.names <- character()
+  gof.decimal <- logical()
+  if (include.nobs == TRUE) {
+    gof <- c(gof, nobs(model))
+    gof.names <- c(gof.names, "Num.\\ obs.")
+    gof.decimal <- c(gof.decimal, FALSE)
+  }
+  if (include.loglik == TRUE) {
+    gof <- c(gof, as.numeric(logLik(model)))
+    gof.names <- c(gof.names, "Log Likelihood")
+    gof.decimal <- c(gof.decimal, TRUE)
+  }
+  if (include.deviance == TRUE) {
+    gof <- c(gof, deviance(model))
+    gof.names <- c(gof.names, "Deviance")
+    gof.decimal <- c(gof.decimal, TRUE)
+  }
+
+  tr <- createTexreg(
+    coef.names = names(co),
+    coef = co,
+    se = se,
+    gof.names = gof.names,
+    gof = gof,
+    gof.decimal = gof.decimal
+  )
+  return(tr)
+})

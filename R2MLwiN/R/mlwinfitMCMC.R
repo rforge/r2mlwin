@@ -930,3 +930,52 @@ setMethod("predict", signature(object = "mlwinfitMCMC"), function(object, newdat
 setMethod("nobs", signature(object = "mlwinfitMCMC"), function(object, ...) {
   object@Nobs
 }) 
+
+#' Extract coefficients and GOF measures from a statistical object.
+#' @param model An \code{\link{mlwinfitMCMC-class}} model.
+#' @param ... Other arguments.
+#' @seealso \code{\link[texreg]{extract}}
+#' @export 
+setMethod("extract", signature = className("mlwinfitMCMC", "R2MLwiN"), function(model, include.nobs = TRUE, include.dbar = TRUE, include.dthetabar = TRUE, include.pd = TRUE, include.dic = TRUE, ...) {
+  co <- coef(model)
+  se <- sqrt(diag(vcov(model)))
+  bdic <- model@BDIC
+  gof <- numeric()
+  gof.names <- character()
+  gof.decimal <- logical()
+  if (include.nobs == TRUE) {
+    gof <- c(gof, nobs(model))
+    gof.names <- c(gof.names, "Num.\\ obs.")
+    gof.decimal <- c(gof.decimal, FALSE)
+  }
+  if (include.dbar == TRUE) {
+    gof <- c(gof, bdic["Dbar"])
+    gof.names <- c(gof.names, "Dbar")
+    gof.decimal <- c(gof.decimal, TRUE)
+  }
+  if (include.dthetabar == TRUE) {
+    gof <- c(gof, bdic["D(thetabar)"])
+    gof.names <- c(gof.names, "D(thetabar)")
+    gof.decimal <- c(gof.decimal, TRUE)
+  }
+  if (include.pd == TRUE) {
+    gof <- c(gof, bdic["pD"])
+    gof.names <- c(gof.names, "pD")
+    gof.decimal <- c(gof.decimal, TRUE)
+  }
+  if (include.dic == TRUE) {
+    gof <- c(gof, bdic["DIC"])
+    gof.names <- c(gof.names, "DIC")
+    gof.decimal <- c(gof.decimal, TRUE)
+  }
+
+  tr <- createTexreg(
+    coef.names = names(co),
+    coef = co,
+    se = se,
+    gof.names = gof.names,
+    gof = gof,
+    gof.decimal = gof.decimal
+  )
+  return(tr)
+})

@@ -11,6 +11,7 @@ Depends:
     stats,
     stats4,
     methods,
+    texreg,
     lattice,
     coda (>= 0.16-1)
 Imports:
