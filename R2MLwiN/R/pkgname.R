@@ -10,6 +10,7 @@
 #' @importFrom foreign read.dta write.dta
 #' @importFrom digest digest
 #' @importFrom methods show
+#' @importFrom texreg extract
 #' @importFrom stats4 coef logLik summary vcov update
 #' @importFrom stats formula
 #' @importFrom Matrix nnzero sparseMatrix
