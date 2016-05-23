@@ -11,6 +11,8 @@
 #' @slot D A vector specifying the type of distribution to be modelled, which can include \code{'Normal'}, \code{'Binomial'} \code{'Poisson'}, \code{'Multinomial'}, \code{'Multivariate Normal'}, or \code{'Mixed'}.
 #' @slot Formula A formula object (or a character string) specifying a multilevel model.
 #' @slot levID A character string (vector) of the specified level ID(s).
+#' @slot contrasts A list of contrast matrices, one for each factor in the model.
+#' @slot xlevels A list of levels for the factors in the model.
 #' @slot FP Displays the fixed part estimates.
 #' @slot RP Displays the random part estimates.
 #' @slot FP.cov Displays a covariance matrix of the fixed part estimates.
@@ -57,9 +59,10 @@
 #' @rdname mlwinfitIGLS-class
 #' @exportClass mlwinfitIGLS
 setClass(Class = "mlwinfitIGLS", representation = representation(version = "character", Nobs = "numeric", DataLength = "numeric",
-                                                                 Hierarchy = "ANY", D = "ANY", Formula = "ANY", levID = "character", FP = "numeric", RP = "numeric", RP.cov = "matrix",
-                                                                 FP.cov = "matrix", LIKE = "ANY", elapsed.time = "numeric", call = "ANY", residual = "list", Converged = "logical",
-                                                                 Iterations = "numeric", Meth = "numeric", nonlinear = "numeric", data = "data.frame"))
+                                                                 Hierarchy = "ANY", D = "ANY", Formula = "ANY", levID = "character", contrasts = "list", xlevels = "list",
+                                                                 FP = "numeric", RP = "numeric", RP.cov = "matrix", FP.cov = "matrix", LIKE = "ANY", elapsed.time = "numeric", 
+                                                                 call = "ANY", residual = "list", Converged = "logical", Iterations = "numeric", Meth = "numeric",
+                                                                 nonlinear = "numeric", data = "data.frame"))
 
 #' Extract or Replace parts of "mlwinfitIGLS" objects
 #' @param x data frame
@@ -88,6 +91,12 @@ setMethod("[", "mlwinfitIGLS", function(x, i, j, drop) {
   }
   if (i == "levID") {
     return(x@levID)
+  }
+  if (i == "contrasts") {
+    return(x@contrasts)
+  }
+  if (i == "xlevels") {
+    return(x@xlevels)
   }
   if (i == "FP") {
     return(x@FP)
@@ -152,6 +161,12 @@ setReplaceMethod("[", signature(x = "mlwinfitIGLS"), function(x, i, j, value) {
   }
   if (i == "levID") {
     x@levID <- value
+  }
+  if (i == "contrasts") {
+    x@contrasts <- value
+  }
+  if (i == "xlevels") {
+    x@xlevels <- value
   }
   if (i == "FP") {
     x@FP <- value
@@ -219,6 +234,12 @@ setMethod("[[", "mlwinfitIGLS", function(x, i, j, drop) {
   if (i == "levID") {
     return(x@levID)
   }
+  if (i == "contrasts") {
+    return(x@contrasts)
+  }
+  if (i == "xlevels") {
+    return(x@xlevels)
+  }
   if (i == "FP") {
     return(x@FP)
   }
@@ -282,6 +303,12 @@ setReplaceMethod("[[", signature(x = "mlwinfitIGLS"), function(x, i, j, value) {
   }
   if (i == "levID") {
     x@levID <- value
+  }
+  if (i == "contrasts") {
+    x@contrasts <- value
+  }
+  if (i == "xlevels") {
+    x@xlevels <- value
   }
   if (i == "FP") {
     x@FP <- value
@@ -853,7 +880,7 @@ getSummary.mlwinfitIGLS <- function (obj, alpha = 0.05, ...)
               N             = N
           )
   
-          list(coef=co, sumstat=sumstat, contrasts=NA, xlevels=NA, call=obj@call)
+          list(coef=co, sumstat=sumstat, contrasts=obj@contrasts, xlevels=obj@xlevels, call=obj@call)
     }
 
 #' Extract coefficients and GOF measures from a statistical object (memisc package).

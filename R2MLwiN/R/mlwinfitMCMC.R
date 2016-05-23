@@ -14,6 +14,8 @@
 #' @slot D A vector specifying the type of distribution to be modelled, which can include \code{'Normal'}, \code{'Binomial'} \code{'Poisson'}, \code{'Multinomial'}, \code{'Multivariate Normal'}, or \code{'Mixed'}.
 #' @slot Formula A formula object (or a character string) specifying a multilevel model.
 #' @slot levID A character string (vector) of the specified level ID(s).
+#' @slot contrasts A list of contrast matrices, one for each factor in the model.
+#' @slot xlevels A list of levels for the factors in the model.
 #' @slot merr A vector which sets-up measurement errors on predictor variables.
 #' @slot fact A list of objects specified for factor analysis, including \code{nfact}, \code{lev.fact}, \code{nfactor}, \code{factor}, \code{loading} and \code{constr}.
 #' @slot xc A list of objects specified for cross-classified and/or multiple membership models, including \code{class}, \code{N1}, \code{weight}, \code{id} and \code{car}. 
@@ -71,10 +73,10 @@
 #' @exportClass mlwinfitMCMC
 setClass(Class = "mlwinfitMCMC", representation = representation(version = "character", Nobs = "numeric", DataLength = "numeric", Hierarchy = "ANY",
                                                                  burnin = "numeric", iterations = "numeric", nchains = "numeric", D = "ANY", Formula = "ANY", levID = "character", 
-                                                                 merr = "ANY", fact = "ANY", xc = "ANY", FP = "numeric", RP = "numeric", RP.cov = "matrix", FP.cov = "matrix", 
-                                                                 chains = "ANY", elapsed.time = "numeric", call = "ANY", BDIC = "numeric", LIKE = "ANY", fact.loadings = "numeric", 
-                                                                 fact.loadings.sd = "numeric", fact.cov = "numeric", fact.cov.sd = "numeric", fact.chains = "ANY", MIdata = "data.frame", 
-                                                                 imputations = "list", residual = "list", resi.chains = "ANY", data = "data.frame"))
+                                                                 contrasts = "list", xlevels = "list", merr = "ANY", fact = "ANY", xc = "ANY", FP = "numeric", RP = "numeric",
+                                                                 RP.cov = "matrix", FP.cov = "matrix", chains = "ANY", elapsed.time = "numeric", call = "ANY", BDIC = "numeric",
+                                                                 LIKE = "ANY", fact.loadings = "numeric", fact.loadings.sd = "numeric", fact.cov = "numeric", fact.cov.sd = "numeric",
+                                                                 fact.chains = "ANY", MIdata = "data.frame", imputations = "list", residual = "list", resi.chains = "ANY", data = "data.frame"))
 
 #' Extract or Replace parts of "mlwinfitMCMC" objects
 #' @param x data frame
@@ -112,6 +114,12 @@ setMethod("[", "mlwinfitMCMC", function(x, i, j, drop) {
   }
   if (i == "levID") {
     return(x@levID)
+  }
+  if (i == "contrasts") {
+    return(x@contrasts)
+  }
+  if (i == "xlevels") {
+    return(x@xlevels)
   }
   if (i == "merr") {
     return(x@merr)
@@ -212,6 +220,12 @@ setReplaceMethod("[", signature(x = "mlwinfitMCMC"), function(x, i, j, value) {
   }
   if (i == "levID") {
     x@levID <- value
+  }
+  if (i == "contrasts") {
+    x@contrasts <- value
+  }
+  if (i == "xlevels") {
+    x@xlevels <- value
   }
   if (i == "merr") {
     x@merr <- value
@@ -315,6 +329,12 @@ setMethod("[[", "mlwinfitMCMC", function(x, i, j, drop) {
   if (i == "levID") {
     return(x@levID)
   }
+  if (i == "contrasts") {
+    return(x@contrasts)
+  }
+  if (i == "xlevels") {
+    return(x@xlevels)
+  }
   if (i == "merr") {
     return(x@merr)
   }
@@ -414,6 +434,12 @@ setReplaceMethod("[[", signature(x = "mlwinfitMCMC"), function(x, i, j, value) {
   }
   if (i == "levID") {
     x@levID <- value
+  }
+  if (i == "contrasts") {
+    x@contrasts <- value
+  }
+  if (i == "xlevels") {
+    x@xlevels <- value
   }
   if (i == "merr") {
     x@merr <- value
@@ -1019,7 +1045,7 @@ getSummary.mlwinfitMCMC <- function (obj, alpha = 0.05, ...)
               N             = N
           )
   
-          list(coef=co, sumstat=sumstat, contrasts=NA, xlevels=NA, call=obj@call)
+          list(coef=co, sumstat=sumstat, contrasts=obj@contrasts, xlevels=obj@xlevels, call=obj@call)
     }
 
 #' Extract coefficients and GOF measures from a statistical object (memisc package).

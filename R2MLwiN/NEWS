@@ -1,6 +1,7 @@
 Mon May 23 2016
 1. Changes
    * Add initial support for model comparison tables via the memisc package
+   * Model fit objects now contain contrast information for factor variables in the model
 
 Wed Apr 27 2016
 1. Changes

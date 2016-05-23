@@ -28,6 +28,10 @@ An MLwiN model run via the MCMC estimation method is represented by an "mlwinfit
 
 \item{\code{levID}}{A character string (vector) of the specified level ID(s).}
 
+\item{\code{contrasts}}{A list of contrast matrices, one for each factor in the model.}
+
+\item{\code{xlevels}}{A list of levels for the factors in the model.}
+
 \item{\code{merr}}{A vector which sets-up measurement errors on predictor variables.}
 
 \item{\code{fact}}{A list of objects specified for factor analysis, including \code{nfact}, \code{lev.fact}, \code{nfactor}, \code{factor}, \code{loading} and \code{constr}.}

@@ -1005,6 +1005,8 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
       invars$rp <- rp
     if (length(nonfps) != 0)
       invars$nonfp <- nonfps
+    invars$contrasts <- list()
+    invars$xlevels <- list()
     invars$D <- D
     if (!is.null(categ))
       invars$categ <- categ

@@ -313,6 +313,9 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     names(categstr2) <- categstr1
     categstr3 <- vector("list", ncategstr0)
     names(categstr3) <- categstr0
+
+    contrastlist <- list()
+    xlevels <- list()
     
     if (ncategstr0 > 0) {
       # extend data
@@ -331,6 +334,8 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
         colnames(data.ext) <- gsub("\\.", "\\_", colnames(data.ext))
         categstr2[[categstr1[ii]]] <- colnames(data.ext)
         indata <- cbind(indata, as.data.frame(data.ext))
+        contrastlist[[categstr1[ii]]] <- contrasts(indata[[categstr1[ii]]])
+        xlevels[[categstr1[ii]]] <- levels(indata[[categstr1[ii]]])
       }
       for (ii in 1:ncategstr0) {
         ttcategstr <- unlist(strsplit(categstr0[ii], "\\:"))
@@ -351,7 +356,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
         }
       }
     }
-    list(categstr = categstr3, indata = indata)
+    list(categstr = categstr3, contrasts = contrastlist, xlevels = xlevels, indata = indata)
   }
   
   left2leftsc <- function(left, nlev, nresp, D) {
@@ -1308,6 +1313,8 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
       if (length(nonfps) != 0) 
         invars$nonfp <- nonfps
       invars$indata <- categobj$indata
+      invars$contrasts <- categobj$contrasts
+      invars$xlevels <- categobj$xlevels
       invars$D <- D
     } else {
       invars$resp <- resp
@@ -1324,6 +1331,8 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
       if (length(nonfpc) != 0) 
         invars$nonfp$nonfp.common <- nonfpc else invars$nonfp$nonfp.common <- NA
       invars$indata <- categobj$indata
+      invars$contrasts <- categobj$contrasts
+      invars$xlevels <- categobj$xlevels
       invars$D <- D
     }
     invars <- as.list(invars)
@@ -1480,6 +1489,8 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     if (length(nonfps) != 0) 
       invars$nonfp <- nonfps
     invars$D <- D
+    invars$contrasts <- categobj$contrasts
+    invars$xlevels <- categobj$xlevels
     invars$indata <- categobj$indata
     invars <- as.list(invars)
   }
@@ -1641,6 +1652,8 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     if (length(nonfps) != 0) 
       invars$nonfp <- nonfps
     invars$D <- D
+    invars$contrasts <- categobj$contrasts
+    invars$xlevels <- categobj$xlevels
     invars$indata <- categobj$indata
     invars <- as.list(invars)
   }
@@ -1777,6 +1790,8 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     if (length(nonfps) != 0) 
       invars$nonfp <- nonfps
     invars$D <- D
+    invars$contrasts <- categobj$contrasts
+    invars$xlevels <- categobj$xlevels
     invars$indata <- categobj$indata
     invars <- as.list(invars)
   }

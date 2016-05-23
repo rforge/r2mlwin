@@ -3213,6 +3213,8 @@ version:date:md5:filename:x64:trial:platform
       outIGLS["D"] <- D
       outIGLS["Formula"] <- Formula
       outIGLS["levID"] <- levID
+      outIGLS["contrasts"] <- invars$contrasts
+      outIGLS["xlevels"] <- invars$xlevels
       outIGLS["FP"] <- FP
       outIGLS["RP"] <- RP
       outIGLS["FP.cov"] <- FP.cov
@@ -3251,6 +3253,8 @@ version:date:md5:filename:x64:trial:platform
       outMCMC["D"] <- D
       outMCMC["Formula"] <- Formula
       outMCMC["levID"] <- levID
+      outMCMC["contrasts"] <- invars$contrasts
+      outMCMC["xlevels"] <- invars$xlevels
       outMCMC["merr"] <- merr
       outMCMC["fact"] <- fact
       outMCMC["xc"] <- xc

@@ -22,6 +22,10 @@ An MLwiN model run via the IGLS estimation method is represented by an "mlwinfit
 
 \item{\code{levID}}{A character string (vector) of the specified level ID(s).}
 
+\item{\code{contrasts}}{A list of contrast matrices, one for each factor in the model.}
+
+\item{\code{xlevels}}{A list of levels for the factors in the model.}
+
 \item{\code{FP}}{Displays the fixed part estimates.}
 
 \item{\code{RP}}{Displays the random part estimates.}
