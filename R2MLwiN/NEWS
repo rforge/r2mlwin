@@ -1,5 +1,8 @@
 Mon May 23 2016
-1. Changes
+1. Bug fixing
+   * Correct the parameter ordering to match that in the formula
+
+2. Changes
    * Add initial support for model comparison tables via the memisc package
    * Model fit objects now contain contrast information for factor variables in the model
 

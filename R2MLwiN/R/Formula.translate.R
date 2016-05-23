@@ -1176,125 +1176,97 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     # substitute categorical variables
     if (length(categstr3) != 0) {
       if (length(fixs) != 0) {
-        delpos <- numeric(0)
-        addterms <- numeric(0)
+        fixs_new <- numeric(0)
         for (ii in 1:length(fixs)) {
-          replacepos <- fixs[ii] %in% categstr0
-          if (replacepos) {
-            taddterms <- categstr3[[fixs[ii]]]
-            delpos <- c(delpos, ii)
-            addterms <- c(addterms, taddterms)
+          if (fixs[ii] %in% categstr0) {
+            fixs_new <- c(fixs_new, categstr3[[fixs[ii]]])
+          } else {
+            fixs_new <- c(fixs_new, fixs[ii])
           }
         }
-        if (length(delpos) > 0) {
-          fixs <- fixs[-delpos]
-          fixs <- c(fixs, addterms)
-        }
+        fixs <- fixs_new
       }
       if (length(nonfps) != 0) {
-        delpos <- numeric(0)
-        addterms <- numeric(0)
+        nonfps_new <- numeric(0)
         for (ii in 1:length(nonfps)) {
-          replacepos <- nonfps[ii] %in% categstr0
-          if (replacepos) {
-            taddterms <- categstr3[[nonfps[ii]]]
-            delpos <- c(delpos, ii)
-            addterms <- c(addterms, taddterms)
+          if (nonfps[ii] %in% categstr0) {
+            nonfps_new <- c(nonfps_new, categstr3[[nonfps[ii]]])
+          } else {
+            nonfps_new <- c(nonfps_new, nonfps[ii])
           }
         }
-        if (length(delpos) > 0) {
-          nonfps <- nonfps[-delpos]
-          nonfps <- c(nonfps, addterms)
-        }
+        nonfps <- nonfps_new
       }
       
       if (length(fixc) != 0) {
-        delpos <- numeric(0)
-        delpos2 <- numeric(0)
-        addterms <- numeric(0)
-        addccid <- numeric(0)
+        fixc_new <- numeric(0)
+        ccid.mat_new <- NULL
         for (ii in 1:length(fixc)) {
-          replacepos <- fixc[ii] %in% categstr0
           repeated <- sum(fixc[ii] == fixc) > 1
-          if (replacepos) {
-            taddterms <- categstr3[[fixc[ii]]]
+          if (fixc[ii] %in% categstr0) {
+            parnames <- categstr3[[fixc[ii]]]
+            fixc_new <- c(fixc_new, parnames)
             if (!repeated) {
-              len.taddterms <- length(taddterms)
-              taddccid <- matrix(rep(ccid.mat[fixc[ii], ], len.taddterms), nrow = len.taddterms, byrow = TRUE)
-              rownames(taddccid) <- taddterms
-              addccid <- rbind(addccid, taddccid)
-              delpos2 <- c(delpos2, ii)
+              newrows <- matrix(rep(ccid.mat[fixc[ii], ], length(parnames)), nrow = length(parnames), byrow = TRUE)
+              rownames(newrows) <- parnames
+              ccid.mat_new <- rbind(ccid.mat_new, newrows)
+            } else {
+              ccid.mat_new <- rbind(ccid.mat_new, ccid.mat[fixc[ii], ])
             }
-            delpos <- c(delpos, ii)
-            addterms <- c(addterms, taddterms)
+          } else {
+            fixc_new <- c(fixc_new, fixc[ii])
+            ccid.mat_new <- rbind(ccid.mat_new, ccid.mat[fixc[ii], ])
           }
         }
-        if (length(delpos) > 0) {
-          fixc <- fixc[-delpos]
-          fixc <- c(fixc, addterms)
-        }
-        if (length(delpos2) > 0) {
-          ccid.mat <- ccid.mat[-delpos2, ]
-          ccid.mat <- rbind(ccid.mat, addccid)
-        }
+        fixc <- fixc_new
+        ccid.mat <- ccid.mat_new
       }
       if (length(nonfpc) != 0) {
-        delpos <- numeric(0)
-        addterms <- numeric(0)
+        nonfpc_new <- numeric(0)
         for (ii in 1:length(nonfpc)) {
           if (grepl("\\.{1}([[:digit:]]+|[[:alpha:]]{1}[[:graph:]]*)$", nonfpc[ii])) {
             tmprp <- sub("\\.{1}([[:digit:]]+|[[:alpha:]]{1}[[:graph:]]*)$", "", nonfpc[ii])
             tmprp.common <- sapply(regmatches(nonfpc[ii], gregexpr("\\.{1}([[:digit:]]+|[[:alpha:]]{1}[[:graph:]]*)$", 
                                                                    nonfpc[ii])), function(x) paste(x, collapse = ""))
-            replacepos <- tmprp %in% categstr0
-            if (replacepos) {
-              taddterms <- paste0(categstr3[[tmprp]], tmprp.common)
-              delpos <- c(delpos, ii)
-              addterms <- c(addterms, taddterms)
+            
+            if (tmprp %in% categstr0) {
+              nonfpc_new <- c(nonfpc_new, paste0(categstr3[[tmprp]], tmprp.common))
+            } else {
+              nonfpc_new <- c(nonfpc_new, nonfpc[ii])
             }
           } else {
-            replacepos <- nonfpc[ii] %in% categstr0
-            if (replacepos) {
-              taddterms <- categstr3[[nonfpc[ii]]]
-              delpos <- c(delpos, ii)
-              addterms <- c(addterms, taddterms)
+            if (nonfpc[ii] %in% categstr0) {
+              nonfpc_new <- c(nonfpc_new, categstr3[[nonfpc[ii]]])
+            } else {
+              nonfpc_new <- c(nonfpc_new, nonfpc[ii])
             }
           }
         }
-        if (length(delpos) > 0) {
-          nonfpc <- nonfpc[-delpos]
-          nonfpc <- c(nonfpc, addterms)
-        }
+        nonfpc <- nonfpc_new
       }
       
       if (length(rp) != 0) {
         for (ii in 1:length(rp)) {
-          delpos <- numeric(0)
-          addterms <- numeric(0)
+          rp_new <- numeric(0)
           for (jj in 1:length(rp[[ii]])) {
             if (grepl("\\.{1}([[:digit:]]+|[[:alpha:]]{1}[[:graph:]]*)$", rp[[ii]][jj])) {
               tmprp <- sub("\\.{1}([[:digit:]]+|[[:alpha:]]{1}[[:graph:]]*)$", "", rp[[ii]][jj])
               tmprp.common <- sapply(regmatches(rp[[ii]][jj], gregexpr("\\.{1}([[:digit:]]+|[[:alpha:]]{1}[[:graph:]]*)$", 
                                                                        rp[[ii]][jj])), function(x) paste(x, collapse = ""))
-              replacepos <- tmprp %in% categstr0
-              if (replacepos) {
-                delpos <- c(delpos, jj)
-                taddterms <- paste0(categstr3[[tmprp]], tmprp.common)
-                addterms <- c(addterms, taddterms)
+              if (tmprp %in% categstr0) {
+                rp_new <- c(rp_new, paste0(categstr3[[tmprp]], tmprp.common))
+              } else {
+                rp_new <- c(rp_new, rp[[ii]][jj])
               }
             } else {
-              replacepos <- rp[[ii]][jj] %in% categstr0
-              if (replacepos) {
-                delpos <- c(delpos, jj)
-                taddterms <- categstr3[[rp[[ii]][jj]]]
-                addterms <- c(addterms, taddterms)
+              if (rp[[ii]][jj] %in% categstr0) {
+                rp_new <- c(rp_new, categstr3[[rp[[ii]][jj]]])
+              } else {
+                rp_new <- c(rp_new, rp[[ii]][jj])
               }
             }
           }
-          if (length(delpos) > 0) {
-            rp[[ii]] <- rp[[ii]][-delpos]
-            rp[[ii]] <- c(rp[[ii]], addterms)
-          }
+          rp[[ii]] <- rp_new
         }
       }
     }
@@ -1428,52 +1400,37 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     # substitute categorical variables
     
     if (length(categstr3) != 0) {
-      delpos <- numeric(0)
-      addterms <- numeric(0)
+      fixs_new <- numeric(0)
       for (ii in 1:length(fixs)) {
-        replacepos <- fixs[ii] %in% categstr0
-        if (replacepos) {
-          taddterms <- categstr3[[fixs[ii]]]
-          delpos <- c(delpos, ii)
-          addterms <- c(addterms, taddterms)
+        if (fixs[ii] %in% categstr0) {
+          fixs_new <- c(fixs_new, categstr3[[fixs[ii]]])
+        } else {
+          fixs_new <- c(fixs_new, fixs[ii])
         }
       }
-      if (length(delpos) > 0) {
-        fixs <- fixs[-delpos]
-        fixs <- c(fixs, addterms)
-      }
+      fixs <- fixs_new
       if (length(nonfps) != 0) {
-        delpos <- numeric(0)
-        addterms <- numeric(0)
+        nonfps_new <- numeric(0)
         for (ii in 1:length(nonfps)) {
-          replacepos <- nonfps[ii] %in% categstr0
-          if (replacepos) {
-            taddterms <- categstr3[[nonfps[ii]]]
-            delpos <- c(delpos, ii)
-            addterms <- c(addterms, taddterms)
+          if (nonfps[ii] %in% categstr0) {
+            nonfps_new <- c(nonfps_new, categstr3[[nonfps[ii]]])
+          } else {
+            nonfps_new <- c(nonfps_new, nonfps[ii])
           }
         }
-        if (length(delpos) > 0) {
-          nonfps <- nonfps[-delpos]
-          nonfps <- c(nonfps, addterms)
-        }
+        nonfps <- nonfps_new
       }
       if (length(rp) != 0) {
         for (ii in 1:length(rp)) {
-          delpos <- numeric(0)
-          addterms <- numeric(0)
+          rp_new <- numeric(0)
           for (jj in 1:length(rp[[ii]])) {
-            replacepos <- rp[[ii]][jj] %in% categstr0
-            if (replacepos) {
-              delpos <- c(delpos, jj)
-              taddterms <- categstr3[[rp[[ii]][jj]]]
-              addterms <- c(addterms, taddterms)
+            if (rp[[ii]][jj] %in% categstr0) {
+              rp_new <- c(rp_new, categstr3[[rp[[ii]][jj]]])
+            } else {
+              rp_new <- c(rp_new, rp[[ii]][jj])
             }
           }
-          if (length(delpos) > 0) {
-            rp[[ii]] <- rp[[ii]][-delpos]
-            rp[[ii]] <- c(rp[[ii]], addterms)
-          }
+          rp[[ii]] <- rp_new
         }
       }
     }
@@ -1591,52 +1548,37 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     # substitute categorical variables
     
     if (length(categstr3) != 0) {
-      delpos <- numeric(0)
-      addterms <- numeric(0)
+      fixs_new <- numeric(0)
       for (ii in 1:length(fixs)) {
-        replacepos <- fixs[ii] %in% categstr0
-        if (replacepos) {
-          taddterms <- categstr3[[fixs[ii]]]
-          delpos <- c(delpos, ii)
-          addterms <- c(addterms, taddterms)
+        if (fixs[ii] %in% categstr0) {
+          fixs_new <- c(fixs_new, categstr3[[fixs[ii]]])
+        } else {
+          fixs_new <- c(fixs_new, fixs[ii])
         }
       }
-      if (length(delpos) > 0) {
-        fixs <- fixs[-delpos]
-        fixs <- c(fixs, addterms)
-      }
+      fixs <- fixs_new
       if (length(nonfps) != 0) {
-        delpos <- numeric(0)
-        addterms <- numeric(0)
+        nonfps_new <- numeric(0)
         for (ii in 1:length(nonfps)) {
-          replacepos <- nonfps[ii] %in% categstr0
-          if (replacepos) {
-            taddterms <- categstr3[[nonfps[ii]]]
-            delpos <- c(delpos, ii)
-            addterms <- c(addterms, taddterms)
+          if (nonfps[ii] %in% categstr0) {
+            nonfps_new <- c(nonfps_new, categstr3[[nonfps[ii]]])
+          } else {
+            nonfps_new <- c(nonfps_new, nonfps[ii])
           }
         }
-        if (length(delpos) > 0) {
-          nonfps <- nonfps[-delpos]
-          nonfps <- c(nonfps, addterms)
-        }
+        nonfps <- nonfps_new
       }
       if (length(rp) != 0) {
         for (ii in 1:length(rp)) {
-          delpos <- numeric(0)
-          addterms <- numeric(0)
+          rp_new <- numeric(0)
           for (jj in 1:length(rp[[ii]])) {
-            replacepos <- rp[[ii]][jj] %in% categstr0
-            if (replacepos) {
-              delpos <- c(delpos, jj)
-              taddterms <- categstr3[[rp[[ii]][jj]]]
-              addterms <- c(addterms, taddterms)
+            if (rp[[ii]][jj] %in% categstr0) {
+              rp_new <- c(rp_new, categstr3[[rp[[ii]][jj]]])
+            } else {
+              rp_new <- c(rp_new, rp[[ii]][jj])
             }
           }
-          if (length(delpos) > 0) {
-            rp[[ii]] <- rp[[ii]][-delpos]
-            rp[[ii]] <- c(rp[[ii]], addterms)
-          }
+          rp[[ii]] <- rp_new
         }
       }
     }
@@ -1729,52 +1671,37 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     # substitute categorical variables
     
     if (length(categstr3) != 0) {
-      delpos <- numeric(0)
-      addterms <- numeric(0)
+      fixs_new <- numeric(0)
       for (ii in 1:length(fixs)) {
-        replacepos <- fixs[ii] %in% categstr0
-        if (replacepos) {
-          taddterms <- categstr3[[fixs[ii]]]
-          delpos <- c(delpos, ii)
-          addterms <- c(addterms, taddterms)
+        if (fixs[ii] %in% categstr0) {
+          fixs_new <- c(fixs_new, categstr3[[fixs[ii]]])
+        } else {
+          fixs_new <- c(fixs_new, fixs[ii])
         }
       }
-      if (length(delpos) > 0) {
-        fixs <- fixs[-delpos]
-        fixs <- c(fixs, addterms)
-      }
+      fixs <- fixs_new
       if (length(nonfps) != 0) {
-        delpos <- numeric(0)
-        addterms <- numeric(0)
+        nonfps_new <- numeric(0)
         for (ii in 1:length(nonfps)) {
-          replacepos <- nonfps[ii] %in% categstr0
-          if (replacepos) {
-            taddterms <- categstr3[[nonfps[ii]]]
-            delpos <- c(delpos, ii)
-            addterms <- c(addterms, taddterms)
+          if (nonfps[ii] %in% categstr0) {
+            nonfps_new <- c(nonfps_new, categstr3[[nonfps[ii]]])
+          } else {
+            nonfps_new <- c(nonfps_new, nonfps[ii])
           }
         }
-        if (length(delpos) > 0) {
-          nonfps <- nonfps[-delpos]
-          nonfps <- c(nonfps, addterms)
-        }
+        nonfps <- nonfps_new
       }
       if (length(rp) != 0) {
         for (ii in 1:length(rp)) {
-          delpos <- numeric(0)
-          addterms <- numeric(0)
+          rp_new <- numeric(0)
           for (jj in 1:length(rp[[ii]])) {
-            replacepos <- rp[[ii]][jj] %in% categstr0
-            if (replacepos) {
-              delpos <- c(delpos, jj)
-              taddterms <- categstr3[[rp[[ii]][jj]]]
-              addterms <- c(addterms, taddterms)
+            if (rp[[ii]][jj] %in% categstr0) {
+              rp_new <- c(rp_new, categstr3[[rp[[ii]][jj]]])
+            } else {
+              rp_new <- c(rp_new, rp[[ii]][jj])
             }
           }
-          if (length(delpos) > 0) {
-            rp[[ii]] <- rp[[ii]][-delpos]
-            rp[[ii]] <- c(rp[[ii]], addterms)
-          }
+          rp[[ii]] <- rp_new
         }
       }
     }
