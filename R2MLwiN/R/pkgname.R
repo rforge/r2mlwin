@@ -11,6 +11,7 @@
 #' @importFrom digest digest
 #' @importFrom methods show
 #' @importFrom texreg extract
+#' @importFrom memisc getSummary
 #' @importFrom stats4 coef logLik summary vcov update
 #' @importFrom stats formula
 #' @importFrom Matrix nnzero sparseMatrix

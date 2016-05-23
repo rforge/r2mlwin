@@ -795,7 +795,7 @@ setMethod("nobs", signature(object = "mlwinfitIGLS"), function(object, ...) {
   object@Nobs
 })
 
-#' Extract coefficients and GOF measures from a statistical object.
+#' Extract coefficients and GOF measures from a statistical object (texreg package).
 #' @param model An \code{\link{mlwinfitIGLS-class}} model.
 #' @param ... Other arguments.
 #' @seealso \code{\link[texreg]{extract}}
@@ -832,3 +832,35 @@ setMethod("extract", signature = className("mlwinfitIGLS", "R2MLwiN"), function(
   )
   return(tr)
 })
+
+getSummary.mlwinfitIGLS <- function (obj, alpha = 0.05, ...) 
+    {
+          co <- t(rbind(coef(obj), sqrt(diag(vcov(obj)))))
+          z <- co[, 1]/co[,2]
+          p <- 2 * pnorm(abs(z), lower.tail = FALSE)
+          lower <- qnorm(p=alpha/2,mean=co[,1],sd=co[,2])
+          upper <- qnorm(p=1-alpha/2,mean=co[,1],sd=co[,2])
+          co <- cbind(co, z, p, lower, upper)
+          colnames(co) <- c("est", "se", "stat", "p", "lwr", "upr")
+
+          N <- nobs(obj)
+          ll <- logLik(obj)
+          deviance <- deviance(obj)
+  
+          sumstat <- c(
+              logLik        = ll,
+              deviance      = deviance,
+              N             = N
+          )
+  
+          list(coef=co, sumstat=sumstat, contrasts=NA, xlevels=NA, call=obj@call)
+    }
+
+#' Extract coefficients and GOF measures from a statistical object (memisc package).
+#' @param object An \code{\link{mlwinfitIGLS-class}} model.
+#' @param alpha level of the confidence intervals; their coverage should be 1-alpha/2
+#' @param ... Other arguments.
+#' @seealso \code{\link[memisc]{getSummary}}
+#' @export 
+setMethod("getSummary", "mlwinfitIGLS", getSummary.mlwinfitIGLS)
+

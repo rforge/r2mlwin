@@ -12,6 +12,7 @@ Depends:
     stats4,
     methods,
     lattice,
+    memisc,
     coda (>= 0.16-1)
 Imports:
     Matrix,

@@ -987,3 +987,46 @@ setMethod("extract", signature = className("mlwinfitMCMC", "R2MLwiN"), function(
   )
   return(tr)
 })
+
+getSummary.mlwinfitMCMC <- function (obj, alpha = 0.05, ...) 
+    {
+          chainnames <- coda::varnames(obj@chains)
+          FP.names <- grep("^FP_", chainnames, value = TRUE)
+          RP.names <- grep("^RP[0-9]+_", chainnames, value = TRUE)  
+
+          ESS <- effectiveSize(obj@chains)
+          chain.stats <- summary(obj@chains, quantiles=c(alpha/2, 1-alpha/2))
+          chain.means <- chain.stats$statistics[,"Mean"]
+          chain.sds <- chain.stats$statistics[,"SD"]
+          chain.qtlow <- chain.stats$quantiles[,1]
+          chain.qtupp <- chain.stats$quantiles[,2]
+
+          z <- chain.means / chain.sds
+          p <- 2 * pnorm(abs(z), lower.tail = FALSE)
+
+          parnames <- c(FP.names, RP.names)
+          co <- cbind(chain.means[parnames], chain.sds[parnames], z[parnames], p[parnames], chain.qtlow[parnames], chain.qtupp[parnames], ESS[parnames])
+          colnames(co) <- c("est", "se", "stat", "p", "lwr", "upr", "ess")
+
+          bdic <- obj@BDIC
+          N <- nobs(obj)
+  
+          sumstat <- c(
+              Dbar          = bdic["Dbar"],
+              Dthetabar     = bdic["D(thetabar)"],
+              pD            = bdic["pD"],
+              DIC           = bdic["DIC"],
+              N             = N
+          )
+  
+          list(coef=co, sumstat=sumstat, contrasts=NA, xlevels=NA, call=obj@call)
+    }
+
+#' Extract coefficients and GOF measures from a statistical object (memisc package).
+#' @param object An \code{\link{mlwinfitIGLS-class}} model.
+#' @param alpha level of the confidence intervals; their coverage should be 1-alpha/2
+#' @param ... Other arguments.
+#' @seealso \code{\link[memisc]{getSummary}}
+#' @export 
+setMethod("getSummary", "mlwinfitMCMC", getSummary.mlwinfitMCMC)
+
