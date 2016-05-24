@@ -1207,15 +1207,15 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
             parnames <- categstr3[[fixc[ii]]]
             fixc_new <- c(fixc_new, parnames)
             if (!repeated) {
-              newrows <- matrix(rep(ccid.mat[fixc[ii], ], length(parnames)), nrow = length(parnames), byrow = TRUE)
+              newrows <- matrix(rep(ccid.mat[ii, ], length(parnames)), nrow = length(parnames), byrow = TRUE)
               rownames(newrows) <- parnames
               ccid.mat_new <- rbind(ccid.mat_new, newrows)
             } else {
-              ccid.mat_new <- rbind(ccid.mat_new, ccid.mat[fixc[ii], ])
+              ccid.mat_new <- rbind(ccid.mat_new, ccid.mat[ii, ])
             }
           } else {
             fixc_new <- c(fixc_new, fixc[ii])
-            ccid.mat_new <- rbind(ccid.mat_new, ccid.mat[fixc[ii], ])
+            ccid.mat_new <- rbind(ccid.mat_new, ccid.mat[ii, ])
           }
         }
         fixc <- fixc_new

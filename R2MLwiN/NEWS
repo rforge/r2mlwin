@@ -1,3 +1,7 @@
+Tue May 24 2016
+1. Bug fixing
+   * Fix incorrect common coefficients with categorical variables
+
 Mon May 23 2016
 1. Bug fixing
    * Correct the parameter ordering to match that in the formula
