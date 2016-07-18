@@ -1,3 +1,8 @@
+Mon Jul 18 2016
+1. Bug fixing
+   * Correctly check whether the model is cross-classified when calculating the model hierarchy
+   * Drop unused factors when calculating the complete-case group information
+
 Tue May 24 2016
 1. Bug fixing
    * Fix incorrect common coefficients with categorical variables

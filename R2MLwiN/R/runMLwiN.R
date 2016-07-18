@@ -2574,9 +2574,9 @@ version:date:md5:filename:x64:trial:platform
   shortID <- na.omit(rev(levID))
   if (length(shortID) > 1) {
     for (lev in length(shortID):2) {
-      if (!is.null(xc)) {
+      if (!is.null(xc) || !isTRUE(xc)) {
         groupsize <- by(outdata, outdata[, shortID[lev]], nrow)
-        compgroupsize <- by(outdata[completerows, ], outdata[completerows, shortID[lev]], nrow)
+        compgroupsize <- by(outdata[completerows, ], droplevels(outdata[completerows, shortID[lev]]), nrow)
       } else {
         test <- requireNamespace("reshape", quietly = TRUE)
         if (isTRUE(test)) {
@@ -2586,11 +2586,11 @@ version:date:md5:filename:x64:trial:platform
           # still correct a suppressWarnings() call is added below to prevent this being passed onto the user
           groupsize <- as.vector(suppressWarnings(reshape::sparseby(outdata, outdata[, shortID[lev:length(shortID)]],
                                                                     nrow, GROUPNAMES = FALSE)))
-          compgroupsize <- as.vector(suppressWarnings(reshape::sparseby(outdata[completerows, ], outdata[completerows, shortID[lev:length(shortID)]],
+          compgroupsize <- as.vector(suppressWarnings(reshape::sparseby(outdata[completerows, ], droplevels(outdata[completerows, shortID[lev:length(shortID)]]),
                                                                     nrow, GROUPNAMES = FALSE)))
         } else {
           groupsize <- na.omit(as.vector(by(outdata, outdata[, shortID[lev:length(shortID)]], nrow)))
-          compgroupsize <- na.omit(as.vector(by(outdata[completerows, ], outdata[completerows, shortID[lev:length(shortID)]], nrow)))
+          compgroupsize <- na.omit(as.vector(by(outdata[completerows, ], droplevels(outdata[completerows, shortID[lev:length(shortID)]]), nrow)))
 
         }
       }
