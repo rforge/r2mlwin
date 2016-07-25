@@ -1,3 +1,7 @@
+Mon Jul 25 2016
+1. Bug fixing
+   * Correctly use the new data passed into "newdata" parameter of predict function
+
 Mon Jul 18 2016
 1. Bug fixing
    * Correctly check whether the model is cross-classified when calculating the model hierarchy

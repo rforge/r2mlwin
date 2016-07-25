@@ -869,7 +869,10 @@ setMethod("predict", signature(object = "mlwinfitMCMC"), function(object, newdat
   if (is.null(newdata)) {
     indata <- object@data
   } else {
-    indata <- Formula.translate(object@Formula, object@D, object@data)$indata
+    indata <- Formula.translate(object@Formula, object@D, newdata)$indata
+    if (!isTRUE("Intercept" %in% indata)) {
+        indata[["Intercept"]] <- rep(1, nrow(indata))
+    }
   }
   if (is.null(params)) {
     fp.names <- names(FP <- object@FP)
