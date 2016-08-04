@@ -1,3 +1,7 @@
+Thu Aug 04 2016
+1. Bug fixing
+   * Fix error when attempting to drop unused factors from level ID that isn't of factor type by using droplevels on the data frame instead of individual variables
+
 Mon Jul 25 2016
 1. Bug fixing
    * Correctly use the new data passed into "newdata" parameter of predict function
