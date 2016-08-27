@@ -334,7 +334,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
         colnames(data.ext) <- gsub("\\.", "\\_", colnames(data.ext))
         categstr2[[categstr1[ii]]] <- colnames(data.ext)
         indata <- cbind(indata, as.data.frame(data.ext))
-        contrastlist[[categstr1[ii]]] <- contrasts(indata[[categstr1[ii]]])
+        contrastlist[[categstr1[ii]]] <- stats::contrasts(indata[[categstr1[ii]]])
         xlevels[[categstr1[ii]]] <- levels(indata[[categstr1[ii]]])
       }
       for (ii in 1:ncategstr0) {

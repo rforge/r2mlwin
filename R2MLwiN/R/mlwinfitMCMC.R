@@ -962,6 +962,11 @@ setMethod("nobs", signature(object = "mlwinfitMCMC"), function(object, ...) {
 
 #' Extract coefficients and GOF measures from a statistical object.
 #' @param model An \code{\link{mlwinfitMCMC-class}} model.
+#' @param include.nobs should the number of observations be reported?
+#' @param include.dbar should the Dbar be reported?
+#' @param include.dthetabar should the D(thetabar) be reported?
+#' @param include.pd should the pD be reported?
+#' @param include.dic should the DIC be reported?
 #' @param ... Other arguments.
 #' @seealso \code{\link[texreg]{extract}}
 #' @export 
@@ -1004,7 +1009,7 @@ setMethod("extract", signature = className("mlwinfitMCMC", "R2MLwiN"), function(
     gof.decimal <- c(gof.decimal, TRUE)
   }
 
-  tr <- createTexreg(
+  tr <- createTexreg::createTexreg(
     coef.names = coef.names,
     coef = co,
     se = se,
@@ -1052,7 +1057,7 @@ getSummary.mlwinfitMCMC <- function (obj, alpha = 0.05, ...)
     }
 
 #' Extract coefficients and GOF measures from a statistical object (memisc package).
-#' @param object An \code{\link{mlwinfitIGLS-class}} model.
+#' @param obj An \code{\link{mlwinfitIGLS-class}} model.
 #' @param alpha level of the confidence intervals; their coverage should be 1-alpha/2
 #' @param ... Other arguments.
 #' @seealso \code{\link[memisc]{getSummary}}

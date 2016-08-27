@@ -827,6 +827,9 @@ setMethod("nobs", signature(object = "mlwinfitIGLS"), function(object, ...) {
 
 #' Extract coefficients and GOF measures from a statistical object (texreg package).
 #' @param model An \code{\link{mlwinfitIGLS-class}} model.
+#' @param include.nobs should the number of observations be reported?  
+#' @param include.loglik should the log-likelihood be reported?
+#' @param include.deviance should the deviance be reported?
 #' @param ... Other arguments.
 #' @seealso \code{\link[texreg]{extract}}
 #' @export 
@@ -852,7 +855,7 @@ setMethod("extract", signature = className("mlwinfitIGLS", "R2MLwiN"), function(
     gof.decimal <- c(gof.decimal, TRUE)
   }
 
-  tr <- createTexreg(
+  tr <- createTexreg::createTexreg(
     coef.names = names(co),
     coef = co,
     se = se,
@@ -887,7 +890,7 @@ getSummary.mlwinfitIGLS <- function (obj, alpha = 0.05, ...)
     }
 
 #' Extract coefficients and GOF measures from a statistical object (memisc package).
-#' @param object An \code{\link{mlwinfitIGLS-class}} model.
+#' @param obj An \code{\link{mlwinfitIGLS-class}} model.
 #' @param alpha level of the confidence intervals; their coverage should be 1-alpha/2
 #' @param ... Other arguments.
 #' @seealso \code{\link[memisc]{getSummary}}
