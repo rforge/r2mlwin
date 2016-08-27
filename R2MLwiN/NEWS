@@ -1,3 +1,9 @@
+Sat Aug 27 2016
+1. Bug fixing
+   * Fix an RStudio issue when calling dev.new()
+2. Changes
+   * Complete the citation information for the JSS paper
+   
 Thu Aug 04 2016
 1. Bug fixing
    * Fix error when attempting to drop unused factors from level ID that isn't of factor type by using droplevels on the data frame instead of individual variables
@@ -109,7 +115,7 @@ Tue Sep 08 2015
 Thu Aug 20 2015
 1. Bug fixing
    * Fixed a bug preventing the behaviour of ignoring the intercept term when modifying the output object from the runMLwiN call using updateMLwiN
-   
+
 Thu Aug 6 2015
 1. Bug fixing
    * In matrix2df, handle rows where all values are zero

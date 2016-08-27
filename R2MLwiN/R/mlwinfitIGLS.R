@@ -855,7 +855,7 @@ setMethod("extract", signature = className("mlwinfitIGLS", "R2MLwiN"), function(
     gof.decimal <- c(gof.decimal, TRUE)
   }
 
-  tr <- createTexreg::createTexreg(
+  tr <- texreg::createTexreg(
     coef.names = names(co),
     coef = co,
     se = se,
