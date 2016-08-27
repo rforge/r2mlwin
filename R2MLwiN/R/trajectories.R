@@ -52,6 +52,15 @@ trajectories <- function(object, Range = c(1, 5000), selected = NULL) {
   
   chains <- window(chains, Range[1], Range[2])
   
+  if (.Platform$GUI == "RStudio") {
+    o = tolower(Sys.info()["sysname"])
+    a = switch(o,
+               "darwin"  = "quartz",
+               "linux"   = "x11",
+               "windows" = "windows")
+    options("device" = a)
+  }  
+  
   if (coda::nvar(chains) == 1)
     opar <- par(mfrow = c(1, 1))
   if (coda::nvar(chains) == 2)

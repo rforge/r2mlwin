@@ -108,6 +108,14 @@ sixway <- function(chain, name = NULL, acf.maxlag = 100, pacf.maxlag = 10, ...) 
     }
   }
   
+  if (.Platform$GUI == "RStudio") {
+    o = tolower(Sys.info()["sysname"])
+    a = switch(o,
+               "darwin"  = "quartz",
+               "linux"   = "x11",
+               "windows" = "windows")
+    options("device" = a)
+  }
   dev.new()
   mypar <- par(mar = mar, mgp = mgp, ...)
   on.exit(par(mypar))
