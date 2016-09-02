@@ -42,7 +42,8 @@ divided into blocks, each containing some rows. Default,
 }
 \description{
 This function draws predicted lines against an explanatory variable for
-selected groups at a higher (>=2) level.
+selected groups at a higher (>=2) level. Note that it uses a lot of contiguous memory, and so
+we recommend running via 64-bit version R to mititage against any potential problems.
 }
 \examples{
 
