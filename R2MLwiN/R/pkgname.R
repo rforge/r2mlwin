@@ -16,6 +16,10 @@
 #' @importFrom stats formula
 #' @importFrom Matrix nnzero sparseMatrix
 #' 
+#' @section New features in version 0.8-3:
+#' Support for model comparison tables via \code{\link[texreg]{texreg-package}} and \code{\link[memisc]{memisc-package}} have been
+#' added to \pkg{R2MLwiN} version 0.8-3. For an example of using \code{\link[texreg]{texreg-package}} see e.g. \code{demo(MCMCGuide04)}.
+#' 
 #' @section Important differences between version 0.8-0 and earlier versions:
 #' A number of wide-ranging changes, including a new model-fitting syntax more
 #' in keeping with that conventionally used in R, were introduced in
@@ -102,6 +106,12 @@
 #' }
 #'
 #' @section References:
+#' 
+#' \subsection{R2MLwiN}{
+#' Zhang, Z., Parker, R.M.A., Charlton, C.M.J., Leckie, G. and Browne, W.J.
+#' (in press) R2MLwiN: A Package to Run MLwiN from within R.
+#' Journal of Statistical Software.
+#' }
 #' 
 #' \subsection{MLwiN software and manuals}{
 #' Browne, W.J. (2012) MCMC Estimation in MLwiN, v2.26.
