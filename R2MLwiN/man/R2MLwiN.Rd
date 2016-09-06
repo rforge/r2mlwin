@@ -78,8 +78,9 @@ type e.g. \code{demo(UserGuide03)} or view a demo's script via
 
 \subsection{R2MLwiN}{
 Zhang, Z., Parker, R.M.A., Charlton, C.M.J., Leckie, G. and Browne, W.J.
-(in press) R2MLwiN: A Package to Run MLwiN from within R.
-Journal of Statistical Software.
+(2016) R2MLwiN: A Package to Run MLwiN from within R.
+Journal of Statistical Software, 72(10), 1-43.
+doi:10.18637/jss.v072.i10
 }
 
 \subsection{MLwiN software and manuals}{
@@ -145,6 +146,6 @@ demo(MCMCGuide03)
 }
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
+W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 }
 

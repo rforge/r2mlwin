@@ -21,7 +21,7 @@
 #' \code{\link{write.IGLS}} or \code{\link{write.MCMC}}.
 #'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-#' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
+#' W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 #' @seealso
 #' \code{\link{runMLwiN}}, \code{\link{write.IGLS}}, \code{\link{write.MCMC}}; for
 #' function allowing back-compatibility with Formula syntax used in older

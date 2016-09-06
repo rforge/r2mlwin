@@ -396,7 +396,7 @@ of parameters and all models.
 }
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
+W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 }
 \references{
 Goldstein, H. (2011) Multilevel Statistical Models. 4th Edition. London: John Wiley and Sons.

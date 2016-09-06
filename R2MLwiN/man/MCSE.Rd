@@ -27,7 +27,7 @@ iterations, and is measured by the MCSE. See Browne (2012) for further details.
 }
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
+W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 }
 \references{
 Browne, W.J. (2012) MCMC Estimation in MLwiN, v2.26.

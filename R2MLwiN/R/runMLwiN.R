@@ -107,7 +107,7 @@
 #' \strong{Distribution} \tab \strong{Format of \code{Formula} object} \tab \strong{Where \code{<link>} can equal...}\cr
 #' \code{'Normal'} \tab \code{<y1> ~ 1 + <x1> + (1|<L2>) + (1|<L1>) + ...} \tab (identity link assumed)\cr
 #' \code{'Poisson'} \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + <x1> + (1|<L2>) + ...} \tab \code{log}\cr
-#' \code{'Negbinom'}* \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + (1|<L2>) + ...} \tab \code{log}\cr
+#' \code{'Negbinom'} \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + (1|<L2>) + ...} \tab \code{log}\cr
 #' \code{'Binomial'} \tab \code{<link>(<y1>, <denom>) ~ 1 + <x1> + (1|<L2>) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
 #' \code{'Unordered Multinomial'} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + (1|<L2>) + ...} \tab \code{logit}\cr
 #' \code{'Ordered Multinomial'} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + <x2>[<common>] + (1[<common>]|<L3>) + (1|<L2>) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
@@ -413,6 +413,7 @@
 #' \item \code{carcentre}: if CAR model (i.e. if \code{car} is non-\code{NULL}),
 #' \code{carcentre = TRUE} mean-centres all random effects at that level.
 #' \item \code{startval}: a list of numeric vectors specifying the starting values.
+#' If multiple chains requested (via \code{nchains}), then can be a list of such lists.
 #' \code{FP.b} corresponds to the estimates for the fixed
 #' part; \code{FP.v} specifies the variance/covariance estimates for the fixed
 #' part; \code{RP.b} specifies the variance estimates for the random part;
@@ -435,7 +436,8 @@
 #' \item \code{burnin}: Length of burnin, defaults to 500.
 #' \item \code{nchains}: Number of MCMC chains to run, defaults to 1.
 #' \item \code{thinning}: Thinning factor, defaults to 1.
-#' \item \code{seed}: MCMC random number seed, defaults to 1.
+#' \item \code{seed}: MCMC random number seed, defaults to \code{1} when \code{nchains = 1},
+#' and to \code{1:nchains} when multiple chains requested.
 #' \item \code{priorParam}: A list specifying informative priors. This includes:
 #' \code{fixe} -- for the fixed
 #' parameters, if proper normal priors are used for some parameters, a list of
@@ -544,7 +546,7 @@
 #' University of Bristol.
 #'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-#' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
+#' W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 #'
 #' @seealso
 #' \code{\link[stats]{formula}}, \code{\link{Formula.translate}}, \code{\link{Formula.translate.compat}}, \code{\link{write.IGLS}}, \code{\link{write.MCMC}}
