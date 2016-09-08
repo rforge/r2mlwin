@@ -1,5 +1,5 @@
 Package: R2MLwiN
-Version: 0.8-3
+Version: 0.8-4
 Date: 2016-09-06
 Title: Running 'MLwiN' from Within R
 Authors@R: c(person("Zhengzheng", "Zhang", role = c("aut", "cre"),email =
