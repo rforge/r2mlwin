@@ -895,10 +895,12 @@ version:date:md5:filename:x64:trial:platform
 2.36:Mar 2016:7983bd105f45456f99cea2b0428bc2c2:mlnscript:TRUE:FALSE:lin
 2.36:Mar 2016:ca4e077b0db8cddb84182465673b9d1f:mlnscript:TRUE:FALSE:lin
 2.36:Mar 2016:276b6594c05ecfc92a7e848e64ebe94e:mlnscript:TRUE:FALSE:lin
+2.36:Mar 2016:213bb45b1c1b7f00b005b479774bfc2c:mlnscript:TRUE:FALSE:lin
 2.36:Mar 2016:df7f78276f22ee722ffa371c2fdf4321:mlnscript:FALSE:FALSE:lin
 2.36:Mar 2016:8c33adfb5add5402a2df4c80c2d64183:mlnscript:TRUE:FALSE:mac
 2.36:Mar 2016:88c5113d82d7013506c949c761689b65:mlnscript:TRUE:FALSE:bsd
 2.36:Mar 2016:4b401e7a333ca3500959b72a6ed23afb:mlnscript:TRUE:FALSE:bsd
+2.36:Mar 2016:c9e7a880ed7efc4b886fe9fef90ba3c8:mlnscript:TRUE:FALSE:bsd
 '
   versioninfo <- read.delim(textConnection(versioninfostr), header = TRUE, sep = ":", strip.white = TRUE)
   if (isTRUE(checkversion)) {
