@@ -592,6 +592,9 @@ runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoption
   if (!is.null(data)) {
     indata <- data
   }
+  if (is.null(indata)) {
+    indata <- parent.frame()
+  }
 
   if (is.null(levID)) {
     oldsyntax <- FALSE
