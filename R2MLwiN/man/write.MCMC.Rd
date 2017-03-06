@@ -394,10 +394,6 @@ Note that for \code{FixM}, \code{residM}, \code{Lev1VarM} and
 \code{OtherVarM}, not all combinations of methods are available for all sets
 of parameters and all models.
 }
-\author{
-Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
-}
 \references{
 Goldstein, H. (2011) Multilevel Statistical Models. 4th Edition. London: John Wiley and Sons.
 
@@ -408,4 +404,7 @@ University of Bristol.
 \seealso{
 \code{\link{write.IGLS}}
 }
-
+\author{
+Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
+W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
+}

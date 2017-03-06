@@ -204,10 +204,6 @@ short names.
 write.IGLS is an internal function which creates an MLwiN macro file to
 fit a multilevel model using IGLS.
 }
-\author{
-Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
-}
 \references{
 Goldstein, H. (2011) Multilevel Statistical Models. 4th Edition. London: John Wiley and Sons.
 
@@ -218,4 +214,7 @@ University of Bristol.
 \seealso{
 \code{\link{write.MCMC}}
 }
-
+\author{
+Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
+W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
+}
