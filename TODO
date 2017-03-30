@@ -17,6 +17,7 @@ Model Specification Checks:
 
 Additional Functionality:
 Automatic calculation of VPC?
+Automatic posterior predictive checks
 Debugging option to extract internal model matrices (IGLS) - XSS/VMAT/ZMAT/YRES/YMAT/XMAT commands
 Allow user specified design matrix (IGLS) - SETD command
 Multinomial proportions - need manual calculation/reshaping - e.g. <denom> in multinomial is actually not used (or doesn't need to be used as always 1), therefore this could instead be counts per unit e.g. log(resp, counts)... D="Unordered Multinomial"
@@ -27,3 +28,5 @@ Investigate interactions with RStudio, as sometimes graphs can behave strangely
 Add option to omit data from output objects, as well as modify postestimation functions to take this into account
 Add option to omit chains, or allow their removal, to save on storage space needed for model objects
 Store and display information regarding the Priors in the MCMC output
+Provide citation, etc details on package load
+Add option to set RNG version
