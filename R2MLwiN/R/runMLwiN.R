@@ -429,6 +429,10 @@
 #' keeping with the hierarchy implied by the model formula, and will return a warning
 #' if that is not the case.
 #'
+#' \item \code{rng.version}: An integer value specifing the random number generator
+#' version to be used by MLwiN. If 10 (the default) this will be the Mersenne Twister; 
+#' If 0 this will be the 3-Seed Wichmann-Hill (default in MLwiN prior to version 3).
+#'
 #' \item \code{mcmcMeth}: list of objects specifying MCMC methodology and prior
 #' options, including the following (see \code{\link{write.MCMC}} for further details):
 #' \itemize{
@@ -2425,6 +2429,10 @@ version:date:md5:filename:x64:trial:platform
   if (is.null(sort.ignore))
     sort.ignore <- FALSE
 
+  rng.version <- estoptions$rng.version
+  if (is.null(rng.version))
+    rng.version <- 10
+
   if (D[1] == "Binomial") {
     if (!all(is.na(indata[[resp]]) | (indata[[resp]] >= 0 & indata[[resp]] <= 1))) {
       stop("All values for a binomial response must lie between zero and one")
@@ -2737,7 +2745,7 @@ version:date:md5:filename:x64:trial:platform
     long2shortnamemap <- write.IGLS(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre,
                  Meth, extra, reset, rcon, fcon, maxiter, convtol, mem.init, optimat, weighting, fpsandwich, rpsandwich,
                  macrofile = macrofile, IGLSfile = IGLSfile, resifile = resifile, resi.store = resi.store, resioptions = resioptions,
-                 debugmode = debugmode, startval = svals, namemap = long2shortname, saveworksheet = saveworksheet)
+                 debugmode = debugmode, startval = svals, namemap = long2shortname, saveworksheet = saveworksheet, rng.version = rng.version)
     iterations <- estoptions$mcmcMeth$iterations
     if (is.null(iterations))
       iterations <- 5000
@@ -2831,7 +2839,7 @@ version:date:md5:filename:x64:trial:platform
                    IGLSfile = IGLSfile[i], MCMCfile = MCMCfile[i], chainfile = chainfile[i], MIfile = MIfile[i], resifile = resifile[,i],
                    resi.store = resi.store, resioptions = resioptions, resichains = resichains[i], FACTchainfile = FACTchainfile[i],
                    resi.store.levs = resi.store.levs, debugmode = debugmode, startval = svals, dami = dami,
-                   namemap = long2shortname, saveworksheet = saveworksheet[i])
+                   namemap = long2shortname, saveworksheet = saveworksheet[i], rng.version = rng.version)
 
     }
     cat("MLwiN is running, please wait......\n")
