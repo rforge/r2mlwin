@@ -10,7 +10,7 @@
       options(MLwiN_path = "/usr/local/bin/mlnscript")
     }
     if (Sys.info()["sysname"] == "Windows") {
-      options(MLwiN_path = "C:/Program Files/MLwiN v3.00/")
+      options(MLwiN_path = "C:/Program Files/MLwiN v3.01/")
     }
   }
   packageStartupMessage(paste0("The MLwiN_path option is currently set to ", getOption("MLwiN_path"), "\n", "To change this use: options(MLwiN_path=\"<path to MLwiN>\")\n"))
