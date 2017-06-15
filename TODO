@@ -29,4 +29,3 @@ Add option to omit data from output objects, as well as modify postestimation fu
 Add option to omit chains, or allow their removal, to save on storage space needed for model objects
 Store and display information regarding the Priors in the MCMC output
 Provide citation, etc details on package load
-Add option to set RNG version

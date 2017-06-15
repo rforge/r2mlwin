@@ -1,4 +1,8 @@
-Fri Nov 04 2017
+Mon Apr 24 2017
+1. Changes
+   * Add opion for setting the random number generator used by MLwiN
+
+Fri Nov 04 2016
 1. Bug fixing
    * Allow runMLwiN function to work with "with" function
 
