@@ -458,6 +458,10 @@ determined by model formula; defaults to \code{FALSE}.
 keeping with the hierarchy implied by the model formula, and will return a warning
 if that is not the case.
 
+\item \code{rng.version}: An integer value specifing the random number generator
+version to be used by MLwiN. If 10 (the default) this will be the Mersenne Twister; 
+If 0 this will be the 3-Seed Wichmann-Hill (default in MLwiN prior to version 3).
+
 \item \code{mcmcMeth}: list of objects specifying MCMC methodology and prior
 options, including the following (see \code{\link{write.MCMC}} for further details):
 \itemize{

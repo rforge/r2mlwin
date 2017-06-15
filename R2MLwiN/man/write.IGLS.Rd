@@ -12,7 +12,8 @@ write.IGLS(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp,
   mem.init = "default", optimat = FALSE, weighting = NULL,
   fpsandwich = FALSE, rpsandwich = FALSE, macrofile, IGLSfile, resifile,
   resi.store = FALSE, resioptions, debugmode = FALSE, startval = NULL,
-  namemap = sapply(colnames(indata), as.character), saveworksheet = NULL)
+  namemap = sapply(colnames(indata), as.character), saveworksheet = NULL,
+  rng.version = 10)
 }
 \arguments{
 \item{indata}{A data.frame object containing the data to be modelled.}
@@ -195,6 +196,9 @@ estimates for the random part.}
 
 \item{saveworksheet}{A file name used to store the MLwiN worksheet after the
 model has been estimated.}
+
+\item{rng.version}{An integer indicating which random number generator should
+be used by MLwiN.}
 }
 \value{
 Outputs a modified version of namemap containing newly generated
