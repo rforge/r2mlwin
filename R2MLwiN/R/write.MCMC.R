@@ -1603,11 +1603,12 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
   if (!is.null(mm)) {
     for (i in 1:length(mm)) {
       if (!any(is.na(mm[[i]]))) {
-        mmlev <- (length(mm) - i) + 1
         if (D[1] != "Multivariate Normal") {
+          mmlev <- (length(mm) - i) + 1
           wrt(paste0("MULM ", mmlev, " ", length(mm[[i]]$mmvar), " '", mm[[i]]$weights[[1]], "'"))
         } else {
-          wrt(paste0("MULM ", mmlev, " ", length(mm[[i]]$mmvar), " '", mm[[i]]$weights[[1]], "' '", mm[[i]]$mmvars[[1]],
+          mmlev <- (length(mm) - i) + 2
+          wrt(paste0("MULM ", mmlev, " ", length(mm[[i]]$mmvar), " '", mm[[i]]$weights[[1]], "' '", mm[[i]]$mmvar[[1]],
                      "'"))
         }
       }
