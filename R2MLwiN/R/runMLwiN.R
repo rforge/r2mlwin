@@ -3092,7 +3092,7 @@ version:date:md5:filename:x64:trial:platform
       resinames <- names(resilist[[1]])
       resiraw <- list()
       resi.means <- resinames[grep("_resi_est", resinames)]
-      resi.std <- resinames[grep("_resi_est", resinames)]
+      resi.std <- resinames[grep("_std_resi_est", resinames)]
       resi.var <- resinames[grep("_resi_variance", resinames)]
       resi.se <- resinames[grep("_resi_se", resinames)]
       for (name in resi.means) {
