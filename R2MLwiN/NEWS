@@ -1,3 +1,8 @@
+Wed Jul 12 2017
+1. Bug fixing
+   * Fixed bug that caused residual estimates from MCMC to be doubled and requests for standardised residuals to be ignored
+   * Fixed bug preventing multiple membership models with multivariate responses from being correctly set up
+
 Mon Apr 24 2017
 1. Changes
    * Add option for setting the random number generator used by MLwiN
