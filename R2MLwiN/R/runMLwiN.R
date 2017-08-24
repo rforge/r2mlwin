@@ -2183,7 +2183,7 @@ version:date:md5:filename:x64:trial:platform
       # Identify variables not encountered yet
       uniqrp <- rpname[!(rpname %in% nameord)]
       # Reorder based on matching previously added parameters
-      rpname <- nameord[na.omit(match(rpname, nameord))]
+      rpname <- rpname[na.omit(match(nameord, rpname))]
       # Add parameter names to list
       rpname <- c(rpname, uniqrp)
       # Add new parameters to order list
