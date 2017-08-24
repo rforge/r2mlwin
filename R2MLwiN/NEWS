@@ -1,3 +1,7 @@
+Thu Aug 24 2017
+1. Bug fixing
+   * Fixed bug where parameters could be incorrectly labelled in the random part if the order the variables are entered varies between levels or variables not included at lower levels are specified before those that are
+
 Wed Jul 12 2017
 1. Bug fixing
    * Fixed bug that caused residual estimates from MCMC to be doubled and requests for standardised residuals to be ignored

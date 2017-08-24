@@ -2139,32 +2139,33 @@ version:date:md5:filename:x64:trial:platform
     }
   }
 
-  resid.names <- function(rpx, resid.lev, RP) {
+  resid.names <- function(rpx, resid.lev) {
     nrpx <- length(rpx)
+    RP <- NULL
     for (j in 1:nrpx) {
       for (i in 1:j) {
         if (i == j) {
-          RP <- c(RP, paste("RP", resid.lev, "_var_", chartr(".", "_", rpx[i]), sep = ""))
+          RP <- c(RP, paste("RP", resid.lev, "_var_", rpx[i], sep = ""))
         } else {
-          RP <- c(RP, paste("RP", resid.lev, "_cov_", chartr(".", "_", rpx[i]), "_", chartr(".", "_", rpx[j]), sep = ""))
+          RP <- c(RP, paste("RP", resid.lev, "_cov_", rpx[i], "_", rpx[j], sep = ""))
         }
       }
     }
     RP
   }
 
-  resid2.names <- function(rpx, resid.lev, clre, RP) {
+  resid2.names <- function(rpx, resid.lev, clre) {
     nrpx <- length(rpx)
     nclre <- ncol(clre)
     k <- 1
+    RP <- NULL
     for (j in 1:nrpx) {
       for (i in 1:j) {
         if (!any(as.numeric(clre[1, ]) == resid.lev & ((clre[2, ] == rpx[i] & clre[3, ] == rpx[j]) | (clre[2, ] == rpx[j] & clre[3, ] == rpx[i])))) {
           if (i == j) {
-            RP <- c(RP, paste("RP", resid.lev, "_var_", chartr(".", "_", rpx[i]), sep = ""))
+            RP <- c(RP, paste("RP", resid.lev, "_var_", rpx[i], sep = ""))
           } else {
-            RP <- c(RP, paste("RP", resid.lev, "_cov_", chartr(".", "_", rpx[i]), "_", chartr(".", "_", rpx[j]),
-                              sep = ""))
+            RP <- c(RP, paste("RP", resid.lev, "_cov_", rpx[i], "_", rpx[j], sep = ""))
           }
         }
       }
@@ -2172,13 +2173,26 @@ version:date:md5:filename:x64:trial:platform
     RP
   }
 
+  nameord <- sub("FP_", "", FP.names)
+  
   RP.names <- NULL
   if (length(rp) > 0) {
     for (ii in 1:length(rp)) {
+      # Replace "." with "_"
+      rpname <- chartr(".", "_", rp[[ii]])
+      # Identify variables not encountered yet
+      uniqrp <- rpname[!(rpname %in% nameord)]
+      # Reorder based on matching previously added parameters
+      rpname <- nameord[na.omit(match(rpname, nameord))]
+      # Add parameter names to list
+      rpname <- c(rpname, uniqrp)
+      # Add new parameters to order list
+      nameord <- c(nameord, uniqrp)      
+      
       if (is.null(clre)) {
-        RP.names <- resid.names(rp[[ii]], as.numeric(sub("rp", "", names(rp)[ii])), RP.names)
+        RP.names <- c(RP.names, resid.names(rpname, as.numeric(sub("rp", "", names(rp)[ii]))))
       } else {
-        RP.names <- resid2.names(rp[[ii]], as.numeric(sub("rp", "", names(rp)[ii])), clre, RP.names)
+        RP.names <- c(RP.names, resid2.names(rpname, as.numeric(sub("rp", "", names(rp)[ii])), clre))
       }
     }
   }
