@@ -2157,7 +2157,11 @@ version:date:md5:filename:x64:trial:platform
     RP <- NULL
     for (j in 1:nrpx) {
       for (i in 1:j) {
-        if (!any(as.numeric(clre[1, ]) == resid.lev & ((clre[2, ] == rpx[i] & clre[3, ] == rpx[j]) | (clre[2, ] == rpx[j] & clre[3, ] == rpx[i])))) {
+        # Create version where "." is replaced with "_"
+        clvar1 = chartr(".", "_", clre[2, ])
+        clvar2 = chartr(".", "_", clre[3, ])
+
+        if (!any(as.numeric(clre[1, ]) == resid.lev & ((clvar1 == rpx[i] & clvar2 == rpx[j]) | (clvar1 == rpx[j] & clvar2 == rpx[i])))) {
           if (i == j) {
             RP <- c(RP, paste("RP", resid.lev, "_var_", rpx[i], sep = ""))
           } else {
