@@ -1400,7 +1400,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     }
   } else {
     if (!is.na(nonfp[1])) {
-      wrt("NOTE Turn off the fixed part of the explotary varible(s)")
+      wrt("NOTE Turn off the fixed part of the explanatory varible(s)")
       for (p in nonfp) {
         if(oldsyntax){
           p <- gsub("\\:", "\\.", p)
