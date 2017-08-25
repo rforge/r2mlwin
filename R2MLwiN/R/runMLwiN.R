@@ -2184,18 +2184,17 @@ version:date:md5:filename:x64:trial:platform
       # Replace "." with "_"
       rpname <- chartr(".", "_", rp[[ii]])
       rpnameorig <- rp[[ii]]
+
       # Identify variables not encountered yet
       uniqrp <- rpname[!(rpname %in% nameord)]
       uniqrporig <- rpnameorig[!(rpnameorig %in% nameordorig)]
-      # Reorder based on matching previously added parameters
-      rpname <- rpname[na.omit(match(nameord, rpname))]
-      rpnameorig <- rpnameorig[na.omit(match(nameordorig, rpnameorig))]
-      # Add parameter names to list
-      rpname <- c(rpname, uniqrp)
-      rpnameorig <- c(rpnameorig, uniqrporig)
+
       # Add new parameters to order list
       nameord <- c(nameord, uniqrp)      
-      nameordorig <- c(nameordorig, uniqrporig)      
+      nameordorig <- c(nameordorig, uniqrporig)
+
+      # Order rpname according to variables encountered so far
+      rpname <- nameord[sort(match(rpname, nameord))]
       
       if (is.null(clre)) {
         RP.names <- c(RP.names, resid.names(rpname, as.numeric(sub("rp", "", names(rp)[ii]))))
@@ -2204,7 +2203,7 @@ version:date:md5:filename:x64:trial:platform
       }
 
       # Reorder rp list based on name order calculated above
-      rp[[ii]] <- nameordorig[match(rp[[ii]], nameordorig)]
+      rp[[ii]] <- nameordorig[sort(match(rp[[ii]], nameordorig))]
     }
   }
 
