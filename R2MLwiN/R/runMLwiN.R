@@ -939,10 +939,10 @@ version:date:md5:filename:x64:trial:platform
 3.00:Mar 2017:5cf6e495dd2a24539d449f3de99fd53c:mlnscript:TRUE:FALSE:mac
 3.00:Mar 2017:f0c089a29e9971c229e96ef943abf0f2:mlnscript:TRUE:FALSE:bsd
 3.00:Mar 2017:5cf6e495dd2a24539d449f3de99fd53c:mlnscript:TRUE:FALSE:bsd
-3.01:May 2017:46651c378882426b6fa170ea422cef79:mlnscript:TRUE:FALSE:win
-3.01:May 2017:8276bb0844ba90017504fa4adeadf3fb:mlnscript:TRUE:FALSE:win
-3.01:May 2017:03ac1886150bd105d5564564a89b10ed:mlnscript:FALSE:FALSE:win
-3.01:May 2017:ae865c425357b0054c7f77c501ceb8c6:mlnscript:FALSE:FALSE:win
+3.01:May 2017:46651c378882426b6fa170ea422cef79:mlwin.exe:TRUE:FALSE:win
+3.01:May 2017:fe2488ce17d62b8497c2f89b764d6d2a:mlnscript.exe:TRUE:FALSE:win
+3.01:May 2017:f935ae2440aa34d087d104c7ef5d36b1:mlwin.exe:FALSE:FALSE:win
+3.01:May 2017:b0e178dd24e8b52820afa17ee6220087:mlnscript.exe:FALSE:FALSE:win
 3.01:May 2017:bd6d816fa6565c8b68ccacde8f553785:mlnscript:TRUE:FALSE:lin
 3.01:May 2017:5c032755aab95f3e7341c04c6bbfd1e9:mlnscript:TRUE:FALSE:lin
 3.01:May 2017:9f8474097dd168024096524eb0071ed3:mlnscript:TRUE:FALSE:lin
