@@ -2220,6 +2220,10 @@ version:date:md5:filename:x64:trial:platform
   colnames(RP.cov) <- RP.names
   rownames(RP.cov) <- RP.names
 
+  # Reorder rp list based on name order calculated above
+  for (i in 1:length(rp)) {
+    rp[[i]] <- rp[[i]][match(rp[[i]], nameord)]
+  }
 
   if (EstM == 1) {
     iterations <- mcmcMeth$iterations
