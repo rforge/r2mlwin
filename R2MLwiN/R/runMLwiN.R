@@ -1912,14 +1912,14 @@ version:date:md5:filename:x64:trial:platform
           if (is.na(nonfp.sep[1]) || sum(p == nonfp.s) == 0) {
             if (is.null(categ) || sum(p == categ["var", ]) == 0) {
               for (j in 1:nresp) {
-                FP.names <- c(FP.names, paste("FP_", chartr(".", "_", p), "_", resp.names[j], sep = ""))
+                FP.names <- c(FP.names, paste("FP_", p, "_", resp.names[j], sep = ""))
               }
             } else {
               if (is.na(categ["ref", which(p == categ["var", ])])) {
                 categ.names <- levels(indata[[p]])
                 for (j in 1:nresp) {
                   for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
-                    FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], sep = ""))
+                    FP.names <- c(FP.names, paste("FP_", categ.names[i], "_", resp.names[j], sep = ""))
                   }
                 }
               } else {
@@ -1928,7 +1928,7 @@ version:date:md5:filename:x64:trial:platform
                 categ.names <- categ.names[-which(refx == categ.names)]
                 for (j in 1:nresp) {
                   for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
-                    FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], sep = ""))
+                    FP.names <- c(FP.names, paste("FP_", categ.names[i], "_", resp.names[j], sep = ""))
                   }
                 }
               }
@@ -1946,19 +1946,19 @@ version:date:md5:filename:x64:trial:platform
         nonfp.c <- nonfp.common
         if (is.na(nonfp.common[1]) || sum(newp == nonfp.c) == 0) {
           if (is.null(categ) || sum(p == categ["var", ]) == 0) {
-            FP.names <- c(FP.names, paste("FP_", chartr(".", "_", newp), sep = ""))
+            FP.names <- c(FP.names, paste("FP_", newp, sep = ""))
           } else {
             if (is.na(categ["ref", which(p == categ["var", ])])) {
               categ.names <- levels(indata[[p]])
               for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
-                FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), sep = ""))
+                FP.names <- c(FP.names, paste("FP_", categ.names[i], sep = ""))
               }
             } else {
               categ.names <- levels(indata[[p]])
               refx <- categ["ref", which(p == categ["var", ])]
               categ.names <- categ.names[-which(refx == categ.names)]
               for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
-                FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), sep = ""))
+                FP.names <- c(FP.names, paste("FP_", categ.names[i], sep = ""))
               }
             }
           }
@@ -1980,14 +1980,14 @@ version:date:md5:filename:x64:trial:platform
         if (is.na(nonfp[1]) || sum(p == nonfp.s) == 0) {
           if (is.null(categ) || sum(p == categ["var", ]) == 0) {
             for (j in 1:nresp) {
-              FP.names <- c(FP.names, paste("FP_", chartr(".", "_", p), "_", resp.names[j], sep = ""))
+              FP.names <- c(FP.names, paste("FP_", p, "_", resp.names[j], sep = ""))
             }
           } else {
             if (is.na(categ["ref", which(p == categ["var", ])])) {
               categ.names <- levels(indata[[p]])
               for (j in 1:nresp) {
                 for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
-                  FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], sep = ""))
+                  FP.names <- c(FP.names, paste("FP_", categ.names[i], "_", resp.names[j], sep = ""))
                 }
               }
             } else {
@@ -1996,8 +1996,7 @@ version:date:md5:filename:x64:trial:platform
               categ.names <- categ.names[-which(refx == categ.names)]
               for (j in 1:nresp) {
                 for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
-                  FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j],
-                                                sep = ""))
+                  FP.names <- c(FP.names, paste("FP_", categ.names[i], "_", resp.names[j], sep = ""))
                 }
               }
             }
@@ -2021,15 +2020,14 @@ version:date:md5:filename:x64:trial:platform
             if (is.na(nonfp.sep[1]) || sum(p == nonfp.s) == 0) {
               if (is.null(categ) || sum(p == categ["var", ]) == 0) {
                 for (j in 1:nresp) {
-                  FP.names <- c(FP.names, paste("FP_", chartr(".", "_", p), "_", resp[j], sep = ""))
+                  FP.names <- c(FP.names, paste("FP_", p, "_", resp[j], sep = ""))
                 }
               } else {
                 if (is.na(categ["ref", which(p == categ["var", ])])) {
                   categ.names <- levels(indata[[p]])
                   for (j in 1:nresp) {
                     for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
-                      FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j],
-                                                    sep = ""))
+                      FP.names <- c(FP.names, paste("FP_", categ.names[i], "_", resp.names[j], sep = ""))
                     }
                   }
 
@@ -2039,8 +2037,7 @@ version:date:md5:filename:x64:trial:platform
                   categ.names <- categ.names[-which(refx == categ.names)]
                   for (j in 1:nresp) {
                     for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
-                      FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j],
-                                                    sep = ""))
+                      FP.names <- c(FP.names, paste("FP_", categ.names[i], "_", resp.names[j], sep = ""))
                     }
                   }
                 }
@@ -2057,19 +2054,19 @@ version:date:md5:filename:x64:trial:platform
           # for (i in 1:length(nonfp.c)){ nonfp.c[i]=gsub('\\.[[:digit:]]+$','',nonfp.c[i]) }
           if (is.na(nonfp.common[1]) || sum(newp == nonfp.c) == 0) {
             if (is.null(categ) || sum(p == categ["var", ]) == 0) {
-              FP.names <- c(FP.names, paste("FP_", chartr(".", "_", newp), sep = ""))
+              FP.names <- c(FP.names, paste("FP_", newp, sep = ""))
             } else {
               if (is.na(categ["ref", which(p == categ["var", ])])) {
                 categ.names <- levels(indata[[p]])
                 for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
-                  FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), sep = ""))
+                  FP.names <- c(FP.names, paste("FP_", categ.names[i], sep = ""))
                 }
               } else {
                 categ.names <- levels(indata[[p]])
                 refx <- categ["ref", which(p == categ["var", ])]
                 categ.names <- categ.names[-which(refx == categ.names)]
                 for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
-                  FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), sep = ""))
+                  FP.names <- c(FP.names, paste("FP_", categ.names[i], sep = ""))
                 }
               }
             }
@@ -2087,7 +2084,7 @@ version:date:md5:filename:x64:trial:platform
           if (is.na(nonfp[1]) || sum(p == nonfp.s) == 0) {
             if (is.null(categ) || sum(p == categ["var", ]) == 0) {
               for (j in 1:nresp) {
-                FP.names <- c(FP.names, paste("FP_", chartr(".", "_", p), "_", resp[j], sep = ""))
+                FP.names <- c(FP.names, paste("FP_", p, "_", resp[j], sep = ""))
               }
 
             } else {
@@ -2095,8 +2092,7 @@ version:date:md5:filename:x64:trial:platform
                 categ.names <- levels(indata[[p]])
                 for (j in 1:nresp) {
                   for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
-                    FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j],
-                                                  sep = ""))
+                    FP.names <- c(FP.names, paste("FP_", categ.names[i], "_", resp.names[j], sep = ""))
                   }
                 }
               } else {
@@ -2105,8 +2101,7 @@ version:date:md5:filename:x64:trial:platform
                 categ.names <- categ.names[-which(refx == categ.names)]
                 for (j in 1:nresp) {
                   for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
-                    FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j],
-                                                  sep = ""))
+                    FP.names <- c(FP.names, paste("FP_", categ.names[i], "_", resp.names[j], sep = ""))
                   }
                 }
               }
@@ -2119,19 +2114,19 @@ version:date:md5:filename:x64:trial:platform
       for (p in expla) {
         if (is.na(nonfp[1]) || sum(p == nonfp) == 0) {
           if (is.null(categ) || sum(p == categ["var", ]) == 0) {
-            FP.names <- c(FP.names, paste("FP_", chartr(".", "_", p), sep = ""))
+            FP.names <- c(FP.names, paste("FP_", p, sep = ""))
           } else {
             if (is.na(categ["ref", which(p == categ["var", ])])) {
               categ.names <- levels(indata[[p]])
               for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
-                FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), sep = ""))
+                FP.names <- c(FP.names, paste("FP_", categ.names[i], sep = ""))
               }
             } else {
               categ.names <- levels(indata[[p]])
               refx <- categ["ref", which(p == categ["var", ])]
               categ.names <- categ.names[-which(refx == categ.names)]
               for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
-                FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), sep = ""))
+                FP.names <- c(FP.names, paste("FP_", categ.names[i], sep = ""))
               }
             }
           }
@@ -2174,9 +2169,11 @@ version:date:md5:filename:x64:trial:platform
     RP
   }
 
-  nameord <- sub("FP_", "", FP.names)
-  # names where "." have not been replaced with "."
+  # names where "." have not been replaced with "_"
   nameordorig <- sub("FP_", "", FP.names)
+
+  FP.names <- chartr(".", "_", FP.names)
+  nameord <- sub("FP_", "", FP.names)
   
   RP.names <- NULL
   if (length(rp) > 0) {
