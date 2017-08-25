@@ -2169,11 +2169,23 @@ version:date:md5:filename:x64:trial:platform
     RP
   }
 
+  nameordorig <- NULL
+  nameord <- NULL
+
+  # bcons parameters for mixed models need to be first in the list.
+  # We don't need to handle other bcons variants here as they will be the only parameter at the level and therefore won't need to be reordered
+  if (D[[1]] == "Mixed") {
+    for (i in 1:length(resp)) {
+      nameordorig <- c(nameordorig, paste0("bcons.", i))
+      nameord <- c(nameord, paste0("bcons_", i))
+    }
+  }
+
   # names where "." have not been replaced with "_"
-  nameordorig <- sub("FP_", "", FP.names)
+  nameordorig <- c(nameordorig, sub("FP_", "", FP.names))
 
   FP.names <- chartr(".", "_", FP.names)
-  nameord <- sub("FP_", "", FP.names)
+  nameord <- c(nameord, sub("FP_", "", FP.names))
   
   RP.names <- NULL
   if (length(rp) > 0) {
