@@ -2175,26 +2175,36 @@ version:date:md5:filename:x64:trial:platform
   }
 
   nameord <- sub("FP_", "", FP.names)
+  # names where "." have not been replaced with "."
+  nameordorig <- sub("FP_", "", FP.names)
   
   RP.names <- NULL
   if (length(rp) > 0) {
     for (ii in 1:length(rp)) {
       # Replace "." with "_"
       rpname <- chartr(".", "_", rp[[ii]])
+      rpnameorig <- rp[[ii]]
       # Identify variables not encountered yet
       uniqrp <- rpname[!(rpname %in% nameord)]
+      uniqrporig <- rpnameorig[!(rpnameorig %in% nameordorig)]
       # Reorder based on matching previously added parameters
       rpname <- rpname[na.omit(match(nameord, rpname))]
+      rpnameorig <- rpnameorig[na.omit(match(nameordorig, rpnameorig))]
       # Add parameter names to list
       rpname <- c(rpname, uniqrp)
+      rpnameorig <- c(rpnameorig, uniqrporig)
       # Add new parameters to order list
       nameord <- c(nameord, uniqrp)      
+      nameordorig <- c(nameordorig, uniqrporig)      
       
       if (is.null(clre)) {
         RP.names <- c(RP.names, resid.names(rpname, as.numeric(sub("rp", "", names(rp)[ii]))))
       } else {
         RP.names <- c(RP.names, resid2.names(rpname, as.numeric(sub("rp", "", names(rp)[ii])), clre))
       }
+
+      # Reorder rp list based on name order calculated above
+      rp[[ii]] <- nameordorig[match(rp[[ii]], nameordorig)]
     }
   }
 
@@ -2219,11 +2229,6 @@ version:date:md5:filename:x64:trial:platform
   RP.cov <- matrix(0, length(RP.names), length(RP.names))
   colnames(RP.cov) <- RP.names
   rownames(RP.cov) <- RP.names
-
-  # Reorder rp list based on name order calculated above
-  for (i in 1:length(rp)) {
-    rp[[i]] <- rp[[i]][match(rp[[i]], nameord)]
-  }
 
   if (EstM == 1) {
     iterations <- mcmcMeth$iterations
