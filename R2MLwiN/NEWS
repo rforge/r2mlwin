@@ -1,3 +1,7 @@
+Wed Feb 14 2017
+1. Bug fixing
+   * Correct final model in User Guide chapter 11 example to match manual
+
 Thu Sep 21 2017
 1. Bug fixing
    * Fixed bug where some models with interactions would not run due to generated variables having different names to those expected by the formula
