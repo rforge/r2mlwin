@@ -966,6 +966,25 @@ version:date:md5:filename:x64:trial:platform
 3.01:May 2017:b87173f7cdd4bec699a940ebd5f1cf4d:mlnscript:TRUE:FALSE:bsd
 3.01:May 2017:7eb4eee726311267c75135296a975996:mlnscript:TRUE:FALSE:bsd
 3.01:May 2017:de7600d7a04a415d1030a3d5aeb61cc2:mlnscript:TRUE:FALSE:bsd
+3.02:May 2017:768ac5741e83560b6ec747dde2baec92:mlwin.exe:TRUE:FALSE:win
+3.02:May 2017:85edfb9504d073747c40833f11bc9c32:mlnscript.exe:TRUE:FALSE:win
+3.02:May 2017:3b193067975759d2e364360db34342a2:mlwin.exe:FALSE:FALSE:win
+3.02:May 2017:a1a4f45981752a56d57f17bcbc7fb1a1:mlnscript.exe:FALSE:FALSE:win
+3.02:Mar 2018:f40a544fce682e87729f5b3f5f6f575f:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:4123ffef26f169549893bebda46cbae8:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:062208c8247d252fe253f18496819cc5:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:7b61ee52bd97103bf8a75f4ada435ecd:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:64263933c3c6a38d578de33e13a23ba4:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:28e7f7537ea806852bdca102cb219e82:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:ba91ab776f6d9e633b0f5cf7bd277f0f:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:de69c8e27d3226eb8ad90ce17169c80a:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:601de28a14d23a4fe858735ff7a8213e:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:fc052d85048ef31684c5cac2f49f97f9:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:33ee31da3b675aec58e0d32070f4d0ad:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:55a2afa9ac6106b3427368446b0c7ef5:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:7b5933610804cf89abf3b73b3c540a91:mlnscript:FALSE:FALSE:lin
+3.02:Mar 2018:0197012ba6de825501d3a65e37eec6a6:mlnscript:TRUE:FALSE:mac
+3.02:Mar 2018:b3c36f4181e447b02f16b19f5e1e5841:mlnscript:TRUE:FALSE:bsd
 '
   versioninfo <- read.delim(textConnection(versioninfostr), header = TRUE, sep = ":", strip.white = TRUE)
   if (isTRUE(checkversion)) {
