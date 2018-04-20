@@ -1,3 +1,7 @@
+Fri Apr 20 2018
+1. Bug fixing
+   * Correct stored hierarchy information when units IDs do not have unique values across higher levels
+
 Wed Feb 14 2017
 1. Bug fixing
    * Correct final model in User Guide chapter 11 example to match manual

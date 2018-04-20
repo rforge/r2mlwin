@@ -2661,7 +2661,7 @@ version:date:md5:filename:x64:trial:platform
     if (isTRUE(sort.force)) {
       outdata <- outdata[do.call(order, outdata[na.omit(levID)]), ]
     } else {
-      if (is.null(xc) && !isTRUE(all(do.call(order, outdata[na.omit(levID)]) == seq(1, nrow(outdata))))) {
+      if (!isTRUE(xc) && !isTRUE(all(do.call(order, outdata[na.omit(levID)]) == seq(1, nrow(outdata))))) {
         stop("The input data are not sorted according to the model hierarchy")
       }
     }
@@ -2702,11 +2702,15 @@ version:date:md5:filename:x64:trial:platform
   shortID <- na.omit(rev(levID))
   if (length(shortID) > 1) {
     for (lev in length(shortID):2) {
-      if (!is.null(xc) || !isTRUE(xc)) {
+      if (isTRUE(xc)) {
         groupsize <- by(outdata, outdata[, shortID[lev]], nrow)
         compgroupsize <- by(shortdata, shortdata[, shortID[lev]], nrow)
       } else {
         test <- requireNamespace("reshape", quietly = TRUE)
+        compIDs <- shortdata[, shortID[lev:length(shortID)]]
+        if (is.factor(compIDs)) {
+            compIDs <- droplevels(compIDs)
+        }
         if (isTRUE(test)) {
           # If the level identifiers are factors with string labels then the following can produce the warning 'coercing
           # argument of type 'list' to logical' from within cbind2 in the reshape package.  This is due to the call:
@@ -2714,11 +2718,11 @@ version:date:md5:filename:x64:trial:platform
           # still correct a suppressWarnings() call is added below to prevent this being passed onto the user
           groupsize <- as.vector(suppressWarnings(reshape::sparseby(outdata, outdata[, shortID[lev:length(shortID)]],
                                                                     nrow, GROUPNAMES = FALSE)))
-          compgroupsize <- as.vector(suppressWarnings(reshape::sparseby(shortdata, droplevels(shortdata[, shortID[lev:length(shortID)]]),
+          compgroupsize <- as.vector(suppressWarnings(reshape::sparseby(shortdata, compIDs,
                                                                     nrow, GROUPNAMES = FALSE)))
         } else {
           groupsize <- na.omit(as.vector(by(outdata, outdata[, shortID[lev:length(shortID)]], nrow)))
-          compgroupsize <- na.omit(as.vector(by(shortdata, droplevels(shortdata[, shortID[lev:length(shortID)]]), nrow)))
+          compgroupsize <- na.omit(as.vector(by(shortdata, compIDs, nrow)))
         }
       }
       groupinfo <- cbind(length(groupsize), min(groupsize), mean(groupsize), max(groupsize), length(compgroupsize), min(compgroupsize), mean(compgroupsize), max(compgroupsize))
