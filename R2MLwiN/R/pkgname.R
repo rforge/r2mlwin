@@ -15,6 +15,7 @@
 #' @importFrom stats4 coef logLik summary vcov update
 #' @importFrom stats formula
 #' @importFrom Matrix nnzero sparseMatrix
+#' @importFrom utils citation
 #' 
 #' @section New features in version 0.8-3:
 #' Support for model comparison tables via \code{\link[texreg]{texreg-package}} and \code{\link[memisc]{memisc-package}} have been
