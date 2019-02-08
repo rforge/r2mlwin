@@ -2651,6 +2651,10 @@ version:date:md5:filename:x64:trial:platform
       }
     }
 
+    unmatchedvars <- setdiff(outvars, colnames(indata))
+    if (length(unmatchedvars) != 0) {
+      stop(paste("variables", paste(unmatchedvars, collapse=", "), "are referenced by the model but are not present in the data"))
+    }
     outdata <- indata[, outvars]
   } else {
     outdata <- indata
