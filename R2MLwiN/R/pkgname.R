@@ -4,7 +4,6 @@
 #' software package, allowing users to fit multilevel models using
 #' MLwiN (and also WinBUGS / OpenBUGS) from within the R environment.
 #'
-#' @importFrom rbugs runBugs rbugs2coda genBugsScript getBugsOutput rbugs
 #' @importFrom coda mcmc mcmc.list as.mcmc.list read.coda effectiveSize raftery.diag thin is.mcmc
 #' @importFrom lattice histogram densityplot xyplot qqmath Rows trellis.par.get trellis.par.set panel.xyplot panel.grid panel.abline panel.segments
 #' @importFrom foreign read.dta write.dta

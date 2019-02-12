@@ -1,3 +1,7 @@
+Tue Feb 12 2019
+1. Changes
+   * Make the rbugs package dependency optional
+
 Mon Feb 11 2019
 1. Changes
    * Increase minimum suggested version of MLwiN to 2.36

@@ -71,6 +71,10 @@
 #' @export
 mlwin2bugs <- function(D,levID, datafile, initfiles, modelfile, bugEst, fact, addmore, n.chains, n.iter, n.burnin, n.thin, debug=FALSE, bugs,
                        bugsWorkingDir=tempdir(), OpenBugs = FALSE, cleanBugsWorkingDir = FALSE, seed = NULL){
+
+  if (requireNamespace("rbugs", quietly=TRUE) == FALSE) {
+    stop("package rbugs is required to run BUGS code")
+  }
   
   rbugs2 <- function (data.file, inits.files, paramSet, model, bugEst, fact, n.chains = 1, n.iter = 2000,
                       n.burnin = floor(n.iter/2), n.thin = max(1, floor(n.chains * (n.iter - n.burnin)/1000)), dic = FALSE, debug = FALSE,
@@ -153,7 +157,7 @@ mlwin2bugs <- function(D,levID, datafile, initfiles, modelfile, bugEst, fact, ad
     
     all
   }
-  environment(rbugs2)<-environment(rbugs)
+  environment(rbugs2)<-environment(rbugs::rbugs)
   
   nlev= length(levID)
   if(nlev==1){
