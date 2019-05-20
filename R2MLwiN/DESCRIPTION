@@ -17,13 +17,13 @@ Depends:
 Imports:
     Matrix,
     foreign (>= 0.8-46),
+    R2WinBUGS,
     digest (>= 0.6.5),
     texreg,
     foreach,
     parallel,
     doParallel
 Suggests:
-    rbugs (>= 0.5-7),
     doBy,
     car,
     lmtest,

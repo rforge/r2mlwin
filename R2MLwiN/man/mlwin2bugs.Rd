@@ -63,7 +63,7 @@ Returns an \code{\link[coda]{mcmc}} object.
 }
 \description{
 This function allows R to call WinBUGS using the output files from MLwiN.
-This function uses functionalities in the \code{\link[rbugs]{rbugs}}
+This function uses functionalities in the \code{\link[R2WinBUGS]{R2WinBUGS}}
 package.
 }
 \details{
