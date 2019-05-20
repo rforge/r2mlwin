@@ -1,6 +1,7 @@
 Mon May 20 2019
 1. Changes
    * Replace calls to rbugs with R2WinBUGS
+   * Give warning if a necessary package is not installed for a demo, instead of automatically installing it
 
 Tue Feb 12 2019
 1. Changes
