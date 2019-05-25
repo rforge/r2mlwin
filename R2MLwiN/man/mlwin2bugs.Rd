@@ -90,12 +90,8 @@ specifying indicators of whether the factor loadings and the factor variance
 are constrained (\code{1}) or not (\code{0}).
 }
 }
-\note{
-This function is derived from \code{\link[rbugs]{rbugs}} (written by
-Jun Yan and Marcos Prates).
-}
 \seealso{
-\code{\link{runMLwiN}},\code{\link[rbugs]{rbugs}}
+\code{\link{runMLwiN}},\code{\link[R2WinBUGS]{bugs}}
 }
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,

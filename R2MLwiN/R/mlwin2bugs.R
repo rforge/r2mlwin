@@ -61,13 +61,10 @@
 #'
 #' @return Returns an \code{\link[coda]{mcmc}} object.
 #'
-#' @note This function is derived from \code{\link[rbugs]{rbugs}} (written by
-#' Jun Yan and Marcos Prates).
-#'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 #'
-#' @seealso \code{\link{runMLwiN}},\code{\link[rbugs]{rbugs}}
+#' @seealso \code{\link{runMLwiN}},\code{\link[R2WinBUGS]{bugs}}
 #' @export
 mlwin2bugs <- function(D,levID, datafile, initfiles, modelfile, bugEst, fact, addmore, n.chains, n.iter, n.burnin, n.thin, debug=FALSE, bugs,
                        bugsWorkingDir=tempdir(), OpenBugs = FALSE, cleanBugsWorkingDir = FALSE, seed = NULL){
