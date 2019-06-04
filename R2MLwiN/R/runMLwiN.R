@@ -1016,13 +1016,36 @@ version:date:md5:filename:x64:trial:platform
 3.03:Feb 2019:d25888d3fb0bf20a13b482174abce080:mlnscript:TRUE:FALSE:mac
 3.03:Feb 2019:6b092743e4496cd4a2db1a554a76e5ab:mlnscript:TRUE:FALSE:bsd
 3.03:Feb 2019:6e4eaace2e76088de6ecbdc9a50f1996:mlnscript:TRUE:FALSE:bsd
+3.04:Jun 2019:0d6f22ff491dbbdc9a04c76357b44bd2:mlwin.exe:TRUE:FALSE:win
+3.04:Jun 2019:b5a0541499a2bca5d5b3902f320827ce:mlnscript.exe:TRUE:FALSE:win
+3.04:Jun 2019:cc75a1baf03f285cd19b1190f92a368d:mlwin.exe:FALSE:FALSE:win
+3.04:Jun 2019:f01800d443a30f51014e6bc52e8561ca:mlnscript.exe:FALSE:FALSE:win
+3.04:Jun 2019:240ccaf0ae4093057393448bf9d564bf:mlnscript:TRUE:FALSE:lin
+3.04:Jun 2019:342acb323a2cd23f28bb9a5309786726:mlnscript:TRUE:FALSE:lin
+3.04:Jun 2019:492d0e4d89275fb0503dffc8948636a3:mlnscript:TRUE:FALSE:lin
+3.04:Jun 2019:dc217b155794b48659a2430ee6000e95:mlnscript:TRUE:FALSE:lin
+3.04:Jun 2019:9a524544fa4e60a9b30099015fe06e32:mlnscript:TRUE:FALSE:lin
+3.04:Jun 2019:089c4865062c162fad119e5c8532af42:mlnscript:TRUE:FALSE:lin
+3.04:Jun 2019:9326d2e6470e5a47b636ee30e3746997:mlnscript:TRUE:FALSE:lin
+3.04:Jun 2019:133838e764c44bdbf0d339b859a8a417:mlnscript:TRUE:FALSE:lin
+3.04:Jun 2019:5f89fda49ea4ea3e07ecb5fc97a0c399:mlnscript:TRUE:FALSE:lin
+3.04:Jun 2019:a39e9ba272d896e30e88400f889bc46d:mlnscript:TRUE:FALSE:lin
+3.04:Jun 2019:7903504422f7e8a9f2cd2d44a1a7eae3:mlnscript:TRUE:FALSE:lin
+3.04:Jun 2019:38f518c509f6c18e9d49e20165aaa49c:mlnscript:TRUE:FALSE:lin
+3.04:Jun 2019:9326d2e6470e5a47b636ee30e3746997:mlnscript:TRUE:FALSE:lin
+3.04:Jun 2019:8cd167428879c7cd8fe2e76dd9f8838a:mlnscript:TRUE:FALSE:lin
+3.04:Jun 2019:009dc3d20263e219172d521182810893:mlnscript:TRUE:FALSE:lin
+3.04:Jun 2019:79d6a1100aae453fd2a1bd8c87c2a621:mlnscript:TRUE:FALSE:lin
+3.04:Jun 2019:64ea7da78bd94da1890f0ea1570e2402:mlnscript:TRUE:FALSE:mac
+3.04:Jun 2019:3f36bb6cd0008fd37c8ff96d5b1e1fc3:mlnscript:TRUE:FALSE:bsd
+3.04:Jun 2019:b2258c495213e0bb99550e1e91171bfb:mlnscript:TRUE:FALSE:bsd
 '
   versioninfo <- read.delim(textConnection(versioninfostr), header = TRUE, sep = ":", strip.white = TRUE)
   if (isTRUE(checkversion)) {
     # Allow disabling the version check if it is slowing things down (e.g. in a simulation study)
     currentver <- versioninfo[versioninfo$md5 == digest(cmd, algo = "md5", file = TRUE), ]
     if (nrow(currentver) == 0) {
-      versiontext <- "MLwiN (version: unknown or >3.03)"
+      versiontext <- "MLwiN (version: unknown or >3.04)"
     } else {
       if (currentver$version < 2.36) {
         # Block releases older than a year or so (allow 2.36 as this corresponds to the trial version)
