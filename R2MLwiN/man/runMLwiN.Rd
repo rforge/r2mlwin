@@ -558,8 +558,8 @@ whether BUGS stays open following completion of the model run;
 \code{debug = FALSE} by default.
 \item \code{seed}: sets the random number
 generator in BUGS.
-\item \code{bugs}: specifies the path of the BUGS
-executable.
+\item \code{bugs.directory}: specifies the path where WinBUGS
+has been installed (not required if \code{OpenBugs = TRUE}).
 \item \code{OpenBugs}: if \code{OpenBugs = TRUE}, OpenBUGS is used.
 Otherwise (i.e. \code{OpenBugs = FALSE}, the default) WinBUGS is used.
 }

@@ -6,9 +6,9 @@
 WinBUGS/OpenBUGS.}
 \usage{
 mlwin2bugs(D, levID, datafile, initfiles, modelfile, bugEst, fact, addmore,
-  n.chains, n.iter, n.burnin, n.thin, debug = FALSE, bugs,
-  bugsWorkingDir = tempdir(), OpenBugs = FALSE,
-  cleanBugsWorkingDir = FALSE, seed = NULL)
+  n.chains, n.iter, n.burnin, n.thin, debug = FALSE,
+  bugs.directory = bugs.directory, bugsWorkingDir = tempdir(),
+  OpenBugs = FALSE, cleanBugsWorkingDir = FALSE, seed = NULL)
 }
 \arguments{
 \item{D}{A vector specifying the type of distribution used in the model.}
@@ -45,7 +45,8 @@ monitored.}
 (\code{FALSE}; the default) to close the BUGS window after completion of the
 model run}
 
-\item{bugs}{The full name (including the path) of the BUGS executable}
+\item{bugs.directory}{The full path of location where WinBUGS is installed 
+(ignored if OpenBugs is \code{TRUE}).}
 
 \item{bugsWorkingDir}{A directory where all the intermediate files are to be
 stored; defaults to \code{tempdir()}.}

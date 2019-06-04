@@ -529,8 +529,8 @@
 #' \code{debug = FALSE} by default.
 #' \item \code{seed}: sets the random number
 #' generator in BUGS.
-#' \item \code{bugs}: specifies the path of the BUGS
-#' executable.
+#' \item \code{bugs.directory}: specifies the path where WinBUGS
+#' has been installed (not required if \code{OpenBugs = TRUE}).
 #' \item \code{OpenBugs}: if \code{OpenBugs = TRUE}, OpenBUGS is used.
 #' Otherwise (i.e. \code{OpenBugs = FALSE}, the default) WinBUGS is used.
 #' }
@@ -3377,15 +3377,16 @@ version:date:md5:filename:x64:trial:platform
       n.chains <- 1
     }
     bugs.seed <- BUGO["seed"]
-    bugs <- BUGO["bugs"]
+    bugs.directory <- BUGO["bugs.directory"]
     if (is.na(bugs.seed)) {
       bugs.seed <- NULL
     }
-    if (!OpenBugs && is.na(bugs)) {
+    if (!OpenBugs && is.na(bugs.directory)) {
       stop("Need to specify path to the WinBUGS executable.")
     }
     chains.bugs.mcmc <- mlwin2bugs(D, levID, datafile[1], initfile, modelfile[1], bugEst, fact, addmore, n.chains = n.chains,
-                                   n.iter = n.iter, n.burnin = burnin, n.thin = thinning, debug = debug, bugs = bugs, bugsWorkingDir = workdir,
+                                   n.iter = n.iter, n.burnin = burnin, n.thin = thinning, debug = debug, 
+                                   bugs.directory = bugs.directory, bugsWorkingDir = workdir,
                                    OpenBugs = OpenBugs, cleanBugsWorkingDir = clean.files, seed = bugs.seed)
     time2 <- proc.time() - time1
   } else {

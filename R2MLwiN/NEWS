@@ -1,3 +1,8 @@
+Tue Jun 04 2019
+1. Bug fixing
+   * Correct options for running via WinBUGS (as an alternative to OpenBUGS)
+   * BRugs does not provide a way to specify the OpenBUGS path, so update options to reflect this
+
 Mon May 20 2019
 1. Changes
    * Replace calls to rbugs with R2WinBUGS
