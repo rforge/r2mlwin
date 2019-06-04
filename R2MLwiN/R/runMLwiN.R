@@ -3381,8 +3381,8 @@ version:date:md5:filename:x64:trial:platform
     if (is.na(bugs.seed)) {
       bugs.seed <- NULL
     }
-    if (is.na(bugs)) {
-      stop("Need to specify path to the BUGS executable.")
+    if (!OpenBugs && is.na(bugs)) {
+      stop("Need to specify path to the WinBUGS executable.")
     }
     chains.bugs.mcmc <- mlwin2bugs(D, levID, datafile[1], initfile, modelfile[1], bugEst, fact, addmore, n.chains = n.chains,
                                    n.iter = n.iter, n.burnin = burnin, n.thin = thinning, debug = debug, bugs = bugs, bugsWorkingDir = workdir,
