@@ -2018,12 +2018,13 @@ version:date:md5:filename:x64:trial:platform
       tempid <- tempid[-as.numeric(D["ref.cat"])]
       for (p in expl$common.coeff) {
         newp <- paste(p, paste(tempid[as.logical(expl$common.coeff.id[kk, ])], collapse = ""), sep = ".")
+        newpdisp <- paste(p, paste(tempid[as.logical(expl$common.coeff.id[kk, ])], collapse = ""), sep = "_")
         kk <- kk + 1
         nonfp.common <- nonfp$nonfp.common
         nonfp.c <- nonfp.common
         if (is.na(nonfp.common[1]) || sum(newp == nonfp.c) == 0) {
           if (is.null(categ) || sum(p == categ["var", ]) == 0) {
-            FP.names <- c(FP.names, paste("FP_", newp, sep = ""))
+            FP.names <- c(FP.names, paste("FP_", newpdisp, sep = ""))
           } else {
             if (is.na(categ["ref", which(p == categ["var", ])])) {
               categ.names <- levels(indata[[p]])
@@ -2084,6 +2085,7 @@ version:date:md5:filename:x64:trial:platform
   } else {
     if (D[1] == "Multivariate Normal" || D[1] == "Mixed") {
       nresp <- length(resp)
+      resp.names <- resp
 
       if (is.list(expl)) {
         nonfp.sep <- nonfp$nonfp.sep
@@ -2125,13 +2127,14 @@ version:date:md5:filename:x64:trial:platform
         kk <- 1
         for (p in expl$common.coeff) {
           newp <- paste(p, paste(which(as.logical(expl$common.coeff.id[kk, ])), collapse = ""), sep = ".")
+          newpdisp <- paste(p, paste(which(as.logical(expl$common.coeff.id[kk, ])), collapse = ""), sep = "_")
           kk <- kk + 1
           nonfp.common <- nonfp$nonfp.common
           nonfp.c <- nonfp.common
           # for (i in 1:length(nonfp.c)){ nonfp.c[i]=gsub('\\.[[:digit:]]+$','',nonfp.c[i]) }
           if (is.na(nonfp.common[1]) || sum(newp == nonfp.c) == 0) {
             if (is.null(categ) || sum(p == categ["var", ]) == 0) {
-              FP.names <- c(FP.names, paste("FP_", newp, sep = ""))
+              FP.names <- c(FP.names, paste("FP_", newpdisp, sep = ""))
             } else {
               if (is.na(categ["ref", which(p == categ["var", ])])) {
                 categ.names <- levels(indata[[p]])
@@ -2234,9 +2237,8 @@ version:date:md5:filename:x64:trial:platform
     RP <- NULL
     for (j in 1:nrpx) {
       for (i in 1:j) {
-        # Create version where "." is replaced with "_"
-        clvar1 = chartr(".", "_", clre[2, ])
-        clvar2 = chartr(".", "_", clre[3, ])
+        clvar1 = clre[2, ]
+        clvar2 = clre[3, ]
 
         if (!any(as.numeric(clre[1, ]) == resid.lev & ((clvar1 == rpx[i] & clvar2 == rpx[j]) | (clvar1 == rpx[j] & clvar2 == rpx[i])))) {
           if (i == j) {
@@ -2265,14 +2267,56 @@ version:date:md5:filename:x64:trial:platform
   # names where "." have not been replaced with "_"
   nameordorig <- c(nameordorig, sub("FP_", "", FP.names))
 
-  FP.names <- chartr(".", "_", FP.names)
   nameord <- c(nameord, sub("FP_", "", FP.names))
   
   RP.names <- NULL
   if (length(rp) > 0) {
     for (ii in 1:length(rp)) {
       # Replace "." with "_"
-      rpname <- chartr(".", "_", rp[[ii]])
+      rpname <- rp[[ii]]
+      clrename <- clre
+      if (D[1] == "Multinomial" || D[1] == "Multivariate Normal" || D[1] == "Mixed") {
+        if (is.list(expl)) {
+          for (name1 in resp.names) {
+            for (name2 in expl$sep.coeff) {
+              rpname <- gsub(paste0("\\<", name2, ".", name1, "\\>"), paste0(name2, "_", name1), rpname)
+              clrename <- gsub(paste0("\\<", name2, ".", name1, "\\>"), paste0(name2, "_", name1), clrename)
+            }
+          }
+          if (D[1] == "Multinomial") {
+            tempid <- 1:(nresp + 1)
+            tempid <- tempid[-as.numeric(D["ref.cat"])]
+          } else {
+            tempid <- 1:nresp
+          }
+          kk <- 1
+          for (name2 in expl$common.coeff) {
+            respnums <- paste(tempid[as.logical(expl$common.coeff.id[kk, ])], collapse = "")
+            rpname <- gsub(paste0("\\<", name2, ".", respnums, "\\>"), paste0(name2, "_", respnums), rpname)
+            clrename <- gsub(paste0("\\<", name2, ".", respnums, "\\>"), paste0(name2, "_", respnums), clrename)
+            kk <- kk + 1
+          }
+        } else {
+          for (name1 in resp.names) {
+            for (name2 in expl) {
+              rpname <- gsub(paste0("\\<", name2, ".", name1, "\\>"), paste0(name2, "_", name1), rpname)
+              clrename <- gsub(paste0("\\<", name2, ".", name1, "\\>"), paste0(name2, "_", name1), clrename)
+            }
+          }
+        }
+        for (r in 1:nresp) {
+          rpname <- gsub(paste0("\\<bcons.", r, "\\>"), paste0("bcons_", r), rpname)
+          clrename <- gsub(paste0("\\<bcons.", r, "\\>"), paste0("bcons_", r), clrename)
+        }
+      }
+      if (D[1] == "Binomial" || D[1] == "Poisson" || D[1] == "Negbinom") {
+        rpname <- gsub("\\<bcons.1\\>", "bcons_1", rpname)
+        clrename <- gsub("\\<bcons.1\\>", "bcons_1", clrename)
+      }
+      if (D[1] == "Negbinom") {
+        rpname <- gsub("\\<bcons2.1\\>", "bcons2_1", rpname)
+        clrename <- gsub("\\<bcons2.1\\>", "bcons2_1", clrename)
+      }
       rpnameorig <- rp[[ii]]
 
       # Identify variables not encountered yet
@@ -2289,7 +2333,7 @@ version:date:md5:filename:x64:trial:platform
       if (is.null(clre)) {
         RP.names <- c(RP.names, resid.names(rpname, as.numeric(sub("rp", "", names(rp)[ii]))))
       } else {
-        RP.names <- c(RP.names, resid2.names(rpname, as.numeric(sub("rp", "", names(rp)[ii])), clre))
+        RP.names <- c(RP.names, resid2.names(rpname, as.numeric(sub("rp", "", names(rp)[ii])), clrename))
       }
 
       # Reorder rp list based on name order calculated above
