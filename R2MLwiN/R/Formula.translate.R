@@ -612,7 +612,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     }
     if (D[1] == "Unordered Multinomial") {
       D <- rep(NA, 5)
-      resp <- regmatches(resp, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", resp))[[1]]
+      resp <- regmatches(resp, regexec("([[:alnum:]]+)\\((.*?)\\)", resp))[[1]]
       link <- resp[2]
       resp <- strsplit(resp[3], ",")[[1]]
       D[1] <- "Unordered Multinomial"
@@ -640,7 +640,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     }
     if (D[1] == "Ordered Multinomial") {
       D <- rep(NA, 5)
-      resp <- regmatches(resp, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", resp))[[1]]
+      resp <- regmatches(resp, regexec("([[:alnum:]]+)\\((.*?)\\)", resp))[[1]]
       link <- resp[2]
       resp <- strsplit(resp[3], ",")[[1]]
       D[1] <- "Ordered Multinomial"
@@ -697,7 +697,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
           resp[i] <- respx
         } else if (D[[i + 1]] == "Binomial") {
           D[[i + 1]] <- rep(NA, 3)
-          respx <- regmatches(respx, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", respx))[[1]]
+          respx <- regmatches(respx, regexec("([[:alnum:]]+)\\((.*?)\\)", respx))[[1]]
           link <- respx[2]
           D[[i + 1]][1] <- "Binomial"
           D[[i + 1]][2] <- link
@@ -711,7 +711,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
           }         
           resp[i] <- respx[1]
         } else if (D[[i + 1]] == "Poisson") {
-          respx <- regmatches(respx, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", respx))[[1]]
+          respx <- regmatches(respx, regexec("([[:alnum:]]+)\\((.*?)\\)", respx))[[1]]
           link <- respx[2]
           respx <- strsplit(respx[3], ",")[[1]]
           D[[i + 1]] <- rep(NA, 3)
@@ -1337,7 +1337,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     D[1] <- "Binomial"
     nlev <- length(levID)
     
-    resp <- regmatches(resp, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", resp))[[1]]
+    resp <- regmatches(resp, regexec("([[:alnum:]]+)\\((.*?)\\)", resp))[[1]]
     link <- resp[2]
     D[2] <- link
     resp <- strsplit(resp[3], ",")[[1]]
@@ -1475,7 +1475,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
   
   if (D[1] == "Poisson" || D[1] == "Negbinom") {
     nlev <- length(levID)
-    resp <- regmatches(resp, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", resp))[[1]]
+    resp <- regmatches(resp, regexec("([[:alnum:]]+)\\((.*?)\\)", resp))[[1]]
     link <- resp[2]
     resp <- strsplit(resp[3], ",")[[1]]
     DD <- D[1]

@@ -1,3 +1,7 @@
+Tue Jun 11 2019
+1. Bug fixing
+   * Allow non-alphanumeric characters (such as ".") in response variable names for non-normal models
+
 Tue Jun 04 2019
 1. Bug fixing
    * Correct options for running via WinBUGS (as an alternative to OpenBUGS)
