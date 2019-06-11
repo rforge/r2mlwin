@@ -2,6 +2,7 @@ Tue Jun 11 2019
 1. Bug fixing
    * Allow non-alphanumeric characters (such as ".") in response variable names for non-normal models
    * Do not replace "." with "_" within variable names used to generate parameter labels
+   * Update documentation for MCMC information prior specification
 
 Tue Jun 04 2019
 1. Bug fixing

@@ -45,9 +45,9 @@ coefficients are added, use \code{fixe.sep} for the separate coefficients.
 \item \code{rp<level number>}: A list object specifying the Wishart or gamma prior for the
 covariance matrix or scalar variance at the levels specified, e.g. \code{rp1} for
 level 1, \code{rp2} for level 2, etc. Consists of: (1)
-\code{estimate} -- an estimate for the true value of the inverse of the
-covariance matrix; (2) \code{size} -- the number of rows in the covariance
-matrix. Note that this is a weakly-informative prior and the default prior
+\code{estimate} -- a prior guess for the true value of the covariance matrix;
+(2) \code{size} -- sample size for guess.
+Note that this is a weakly-informative prior and the default prior
 is used if missing.
 }
 }

@@ -482,9 +482,9 @@ multinomial and mixed response models, if common coefficients are added, use
 coefficients are added, use \code{fixe.sep} for the separate coefficients;
 \code{rp1} -- a list object specifying the Wishart or gamma prior for the
 covariance matrix or scalar variance at level 1 (this consists of: (1)
-\code{estimate} -- an estimate for the true value of the inverse of the
-covariance matrix; (2) \code{size} -- the number of rows in the covariance
-matrix. Note that this is a weakly-informative prior and the default prior
+\code{estimate} -- a prior guess for the true value of the covariance matrix;
+(2) \code{size} -- sample size for guess.
+Note that this is a weakly-informative prior and the default prior
 is used if missing); \code{rp2} -- a list object specifying the Wishart or
 gamma prior for the covariance matrix or scalar variance at level 2 (this
 consists of: (1) \code{estimate} -- an estimate for the true value of the
