@@ -74,7 +74,7 @@ data(alevchem, package = "R2MLwiN")
 # combination. Thus, here we generated a unique school ID.
 alevchem$school <- as.numeric(factor(paste0(alevchem$lea, alevchem$estab)))
 
-alevchem$gcseav <- double2singlePrecision(alevchem$gcse_tot/alevchem$gcse_no - 6)
+alevchem$gcseav <- alevchem$gcse_tot/alevchem$gcse_no - 6
 
 ## MCMC
 (mymodel <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseav[1:5] + I(gcseav^2)[1:5] + gender[1:5] + (1[1:5] | school),

@@ -1,3 +1,7 @@
+Wed Jun 12 2019
+1. Changes
+   * Recent versions of MLwiN work in double precision, so remove precision reduction in examples
+
 Tue Jun 11 2019
 1. Bug fixing
    * Allow non-alphanumeric characters (such as ".") in response variable names for non-normal models
