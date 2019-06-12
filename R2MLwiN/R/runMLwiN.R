@@ -2382,8 +2382,13 @@ version:date:md5:filename:x64:trial:platform
     if (length(seed) != nchains)
       seed <- rep(seed, nchains)
     priorParam <- mcmcMeth$priorParam
-    if (is.list(priorParam))
-      priorParam <- prior2macro(priorParam, Formula, levID, D, indata)
+    if (is.list(priorParam)) {
+      nrand <- list()
+      for (rlev in names(invars$rp)) {
+        nrand[[rlev]] <- length(invars$rp[[rlev]])
+      }
+      priorParam <- prior2macro(priorParam, D, gsub("FP_", "", FP.names), nrand)
+    }
     if (is.null(priorParam))
       priorParam <- "default"
     scale <- mcmcMeth$scale

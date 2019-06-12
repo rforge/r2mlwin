@@ -1,6 +1,13 @@
 Wed Jun 12 2019
-1. Changes
+1. Bug fixing
+   * Allow "Intercept" to be used in prior specification if the formula contains "1"
+   * Corrected level number in rp<level> part of informative prior specification for multivariate/multinomial models
+   * Added further checks when interpreting the user-supplied informative prior specification
+   * Fix some cases where informative priors could not be applied to multinomial and mixed response models
+
+2. Changes
    * Recent versions of MLwiN work in double precision, so remove precision reduction in examples
+   * Avoid parsing the formula a second time when applying priors to a model
 
 Tue Jun 11 2019
 1. Bug fixing
