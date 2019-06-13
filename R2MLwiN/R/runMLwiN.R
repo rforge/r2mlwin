@@ -2270,6 +2270,7 @@ version:date:md5:filename:x64:trial:platform
   nameord <- c(nameord, sub("FP_", "", FP.names))
   
   RP.names <- NULL
+  RP.dimnames <- list()
   if (length(rp) > 0) {
     for (ii in 1:length(rp)) {
       # Replace "." with "_"
@@ -2335,6 +2336,7 @@ version:date:md5:filename:x64:trial:platform
       } else {
         RP.names <- c(RP.names, resid2.names(rpname, as.numeric(sub("rp", "", names(rp)[ii])), clrename))
       }
+      RP.dimnames[[names(rp)[ii]]] <- c(RP.dimnames[[names(rp)[ii]]], rpname)
 
       # Reorder rp list based on name order calculated above
       rp[[ii]] <- nameordorig[sort(match(rp[[ii]], nameordorig))]
@@ -2596,6 +2598,35 @@ version:date:md5:filename:x64:trial:platform
       if (!is.null(svals[[i]]$RP.v) && !is.null(sharedRP)) {
         startval[[i]]$RP.v <- RP.cov
         startval[[i]]$RP.v[sharedRP, sharedRP] <- svals[[i]]$RP.v[sharedRP, sharedRP]
+      }
+    }
+    if (EstM == 1) {
+      for (dname in names(RP.dimnames)) {
+        startlev <- as.numeric(sub("rp", "", dname))
+        startdim <- length(RP.dimnames[[dname]])
+        startmat <- matrix(0, startdim, startdim)
+        colnames(startmat) <- RP.dimnames[[dname]]
+        rownames(startmat) <- RP.dimnames[[dname]]
+        for (k in 1:length(svals)) {
+          for (row in rownames(startmat)) {
+            for (col in colnames(startmat)) {
+              elename <- ""
+              if (row == col) {
+                elename <- paste0("RP", startlev, "_var_", row)
+              } else {
+                elename <- paste0("RP", startlev, "_cov_", col, "_", row)
+              }
+              if (elename %in% names(startval[[k]]$RP.b)) {
+                startmat[row, col] <- startval[[k]]$RP.b[elename]
+                startmat[col, row] <- startval[[k]]$RP.b[elename]
+              }
+            }
+          }
+          testpd <- try(chol(startmat), silent=TRUE)
+          if (class(testpd) == "try-error") {
+            stop(paste0("Starting value matrix at level ", startlev, " must be positive-definite"))
+          }
+        }
       }
     }
   } else {

@@ -1,3 +1,7 @@
+Thu Jun 13 2019
+1. Changes
+   * Add checks that user supplied MCMC starting value and informative prior matrices are positive-definite
+
 Wed Jun 12 2019
 1. Bug fixing
    * Allow "Intercept" to be used in prior specification if the formula contains "1"

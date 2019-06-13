@@ -76,9 +76,13 @@ prior2macro <- function(prior, D, fpart, nrand) {
       }
       mat <- as.matrix(prior[[rlev]]$estimate)
       if (nrow(mat) != nrand[[rlev]] || ncol(mat) != nrand[[rlev]]) {
-        stop(paste0("Prior matrix for ", rlev, " incorrect size"))
+        stop(paste0("Prior matrix at level ", rlev, " incorrect size"))
       }
       mat[upper.tri(mat)] <- mat[lower.tri(mat)]
+      testpd <- try(chol(mat), silent=TRUE)
+      if (class(testpd) == "try-error") {
+        stop(paste0("Prior matrix at level ", rlev, " must be positive-definite"))
+      }
       if (prior[[rlev]]$size < 0) {
         stop(paste0("Sample size for ", rlev, " must be a positive integer"))
       }
