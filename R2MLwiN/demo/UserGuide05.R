@@ -34,10 +34,11 @@ data(tutorial, package = "R2MLwiN")
 
 u0 <- mymodel1@residual$lev_2_resi_est_Intercept
 u0se <- sqrt(mymodel1@residual$lev_2_resi_var_Intercept)
+u0CI95 <- 1.96 * u0se
 
 u0rank <- rank(u0)
-u0rankhi <- u0 + u0se
-u0ranklo <- u0 - u0se
+u0rankhi <- u0 + u0CI95
+u0ranklo <- u0 - u0CI95
 u0rankno <- order(u0rank)
 
 plot(1:65, u0[u0rankno], ylim = c(-1, 1), pch = 15, xlab = "Rank", ylab = "u0 residual estimate")

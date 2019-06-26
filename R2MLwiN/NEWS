@@ -1,3 +1,7 @@
+Wed Jun 26 2019
+1. Bug fixing
+   * Correct the confidence intervals used in caterpillar plots for some of the examples
+
 Thu Jun 13 2019
 1. Changes
    * Add checks that user supplied MCMC starting value and informative prior matrices are positive-definite
