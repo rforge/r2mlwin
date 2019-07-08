@@ -1036,6 +1036,7 @@ version:date:md5:filename:x64:trial:platform
 3.04:Jun 2019:8cd167428879c7cd8fe2e76dd9f8838a:mlnscript:TRUE:FALSE:lin
 3.04:Jun 2019:009dc3d20263e219172d521182810893:mlnscript:TRUE:FALSE:lin
 3.04:Jun 2019:79d6a1100aae453fd2a1bd8c87c2a621:mlnscript:TRUE:FALSE:lin
+3.04:Jun 2019:732d1fe9b0e2b16c6b5ee04e9e2010dd:mlnscript:TRUE:FALSE:lin
 3.04:Jun 2019:6535de1f09f7e548dd78b58627d65a08:mlnscript:FALSE:FALSE:lin
 3.04:Jun 2019:d4ca11bf78b199a516f3622638474ac2:mlnscript:FALSE:FALSE:lin
 3.04:Jun 2019:64ea7da78bd94da1890f0ea1570e2402:mlnscript:TRUE:FALSE:mac
