@@ -465,10 +465,10 @@ printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   cat("The fixed part estimates: ", "\n")
   FP.print <- rbind(object@FP, sqrt(diag(object@FP.cov)))
   z.score <- FP.print[1, ]/FP.print[2, ]
-  p.value <- 2 * pnorm(abs(z.score), lower.tail = FALSE)
+  p.value <- 2 * stats::pnorm(abs(z.score), lower.tail = FALSE)
   strstar <- as.vector(sapply(p.value, signifstar))
-  qt025 <- FP.print[1, ] - qnorm(0.975) * FP.print[2, ]
-  qt975 <- FP.print[1, ] + qnorm(0.975) * FP.print[2, ]
+  qt025 <- FP.print[1, ] - stats::qnorm(0.975) * FP.print[2, ]
+  qt975 <- FP.print[1, ] + stats::qnorm(0.975) * FP.print[2, ]
   FP.print <- rbind(FP.print, z.score, p.value, qt025, qt975)
   FP.names2 <- gsub("FP+\\_", "", FP.names)
   
@@ -497,8 +497,8 @@ printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   }
   
   RP.print <- rbind(object@RP, sqrt(diag(object@RP.cov)))
-  qt025 <- RP.print[1, ] - qnorm(0.975) * RP.print[2, ]
-  qt975 <- RP.print[1, ] + qnorm(0.975) * RP.print[2, ]
+  qt025 <- RP.print[1, ] - stats::qnorm(0.975) * RP.print[2, ]
+  qt975 <- RP.print[1, ] + stats::qnorm(0.975) * RP.print[2, ]
   RP.print <- rbind(RP.print, qt025, qt975)
   for (i in 1:length(mlwinlev)) {
     RPx.pos <- grep(paste("RP", mlwinlev[i], sep = ""), RP.names)
@@ -530,36 +530,36 @@ updateMLwiN <- function(object, Formula., levID., estoptions., ..., keep.order =
   update.formula2 <- function (old, new, ...) 
   {
       C_updateform <- get("C_updateform", asNamespace("stats"), inherits=FALSE)
-      tmp <- .Call(C_updateform, as.formula(old), as.formula(new))
-      out <- formula(terms.formula(tmp, simplify = FALSE))
+      tmp <- .Call(C_updateform, stats::as.formula(old), stats::as.formula(new))
+      out <- stats::formula(terms.formula(tmp, simplify = FALSE))
       return(out)
   }
   environment(update.formula2) <- environment(update.formula)
   my.update.formula <- function(old, new, keep.order = TRUE, ...) {
-    env <- environment(as.formula(old))
-    tmp <- update.formula2(as.formula(old), as.formula(new))
-    out <- formula(terms.formula(tmp, simplify = FALSE, keep.order = keep.order))
+    env <- environment(stats::as.formula(old))
+    tmp <- update.formula2(stats::as.formula(old), stats::as.formula(new))
+    out <- formula(stats::terms.formula(tmp, simplify = FALSE, keep.order = keep.order))
     environment(out) <- env
     return(out)
   }
-  if (is.null(newcall <- getCall(object)))
+  if (is.null(newcall <- stats::getCall(object)))
     stop("need an object with call component")
   extras <- match.call(expand.dots = FALSE)$...
   if (length(newcall$Formula))
     newcall$Formula <- eval(newcall$Formula)
   if (!missing(Formula.)) {
-    newcall$Formula <- my.update.formula(as.formula(newcall$Formula), Formula., keep.order = keep.order)
+    newcall$Formula <- my.update.formula(stats::as.formula(newcall$Formula), Formula., keep.order = keep.order)
   }
   if (!missing(levID.)) {
     newcall$levID <- {
       if (length(newcall$levID))
-        my.update.formula(as.formula(newcall$levID), levID., keep.order = keep.order) else levID.
+        my.update.formula(stats::as.formula(newcall$levID), levID., keep.order = keep.order) else levID.
     }
   }
   if (!missing(estoptions.)) {
     newcall$estoptions <- {
       if (length(newcall$estoptions))
-        my.update.formula(as.formula(newcall$estoptions), estoptions., keep.order = keep.order) else estoptions.
+        my.update.formula(stats::as.formula(newcall$estoptions), estoptions., keep.order = keep.order) else estoptions.
     }
   }
   if (length(extras)) {
@@ -750,7 +750,7 @@ setMethod("predict", signature(object = "mlwinfitIGLS"), function(object, newdat
         return(antilogit(tval) * indata[, D[3]])
       }
       if (D[2] == "probit") {
-        return(pnorm(tval) * indata[, D[3]])
+        return(stats::pnorm(tval) * indata[, D[3]])
       }
       if (D[2] == "cloglog") {
         anticloglog <- function(x) {

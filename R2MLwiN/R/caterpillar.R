@@ -55,10 +55,10 @@ caterpillar <- function(y, x, qtlow, qtup, xlab = "", ylab = "", xlim = NULL, yl
   if (is.null(ylim)){
     ylim = c(min(qtlow), max(qtup))
   }
-  plot(x, y, xlim = xlim, ylim = ylim, pch = 15, xlab = xlab, ylab = ylab, main = main)
-  points(x, qtlow, pch = 24, bg = "grey")
-  points(x, qtup, pch = 25, bg = "grey")
+  graphics::plot(x, y, xlim = xlim, ylim = ylim, pch = 15, xlab = xlab, ylab = ylab, main = main)
+  graphics::points(x, qtlow, pch = 24, bg = "grey")
+  graphics::points(x, qtup, pch = 25, bg = "grey")
   for (i in 1:length(x)) {
-    lines(rep(x[i], 2), c(qtlow[i], qtup[i]))
+    graphics::lines(rep(x[i], 2), c(qtlow[i], qtup[i]))
   }
 }

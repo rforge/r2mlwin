@@ -580,7 +580,7 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   chainnames <- coda::varnames(object@chains)
   FP.names <- grep("^FP_", chainnames, value = TRUE)
   RP.names <- grep("^RP[0-9]+_", chainnames, value = TRUE)
-  ESS <- effectiveSize(object@chains)
+  ESS <- coda::effectiveSize(object@chains)
   levID0 <- object@levID
   cat("\n")
   cat(paste(rep("-", 50), collapse = "*"), "\n")
@@ -620,8 +620,8 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   cat(paste(rep("-", 50), collapse = "-"), "\n")
   
   if (!is.null(object@fact) && object@D[1] == "Multivariate Normal") {
-    qt025 <- object@fact.loadings - qnorm(0.975) * object@fact.loadings.sd
-    qt975 <- object@fact.loadings + qnorm(0.975) * object@fact.loadings.sd
+    qt025 <- object@fact.loadings - stats::qnorm(0.975) * object@fact.loadings.sd
+    qt975 <- object@fact.loadings + stats::qnorm(0.975) * object@fact.loadings.sd
     loads <- rbind(object@fact.loadings, object@fact.loadings.sd, qt025, qt975)
     
     for (j in 1:object@fact$nfact) {
@@ -639,8 +639,8 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
       cat(paste(rep("-", 50), collapse = "-"), "\n")
     }
     
-    qt025 <- object@fact.cov - qnorm(0.975) * object@fact.cov.sd
-    qt975 <- object@fact.cov + qnorm(0.975) * object@fact.cov.sd
+    qt025 <- object@fact.cov - stats::qnorm(0.975) * object@fact.cov.sd
+    qt975 <- object@fact.cov + stats::qnorm(0.975) * object@fact.cov.sd
     fcov <- rbind(object@fact.cov, object@fact.cov.sd, qt025, qt975)
     
     cat("The estimates of factor covariances:\n")
@@ -670,7 +670,7 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
 
   t.stats <- chain.means / chain.sds
   
-  p.values <- 2 * pnorm(abs(t.stats), lower.tail = FALSE)
+  p.values <- 2 * stats::pnorm(abs(t.stats), lower.tail = FALSE)
   t.stat <- NULL
   for (i in FP.names) t.stat <- c(t.stat, t.stats[[i]])
   p.value <- NULL
@@ -919,7 +919,7 @@ setMethod("predict", signature(object = "mlwinfitMCMC"), function(object, newdat
         return(antilogit(tval) * indata[, D[3]])
       }
       if (D[2] == "probit") {
-        return(pnorm(tval) * indata[, D[3]])
+        return(stats::pnorm(tval) * indata[, D[3]])
       }
       if (D[2] == "cloglog") {
         anticloglog <- function(x) {

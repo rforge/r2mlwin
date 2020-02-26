@@ -109,7 +109,7 @@ mlwin2bugs <- function(D,levID, datafile, initfiles, modelfile, bugEst, fact, ad
                              debug = debug, DIC = TRUE, codaPkg = FALSE,
                              program = program, working.directory = bugsWorkingDir, clearWD = cleanBugsWorkingDir,
                              bugs.directory = bugs.directory, bugs.seed = seed)
-  chains.bugs.mcmc <- as.mcmc.list(chain.bugs)
+  chains.bugs.mcmc <- coda::as.mcmc.list(chain.bugs)
 
   chains.bugs.mcmc
 }

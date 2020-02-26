@@ -639,15 +639,15 @@ runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoption
           Formula <- sub(paste(i, "c\\|", sep = ""), paste("\\`", i, "c`\\|", sep = ""), Formula)
         }
       }
-      Formula <- as.formula(Formula)
+      Formula <- stats::as.formula(Formula)
     }
   } else {
     tmpvarnames <- unique(all.vars(Formula))
-    tForm <- as.formula(paste0("~", paste(tmpvarnames, collapse = "+")))
+    tForm <- stats::as.formula(paste0("~", paste(tmpvarnames, collapse = "+")))
     if (drop.data) {
-      indata <- get_all_vars(tForm, indata)
+      indata <- stats::get_all_vars(tForm, indata)
     } else {
-      newdata <- get_all_vars(tForm, indata)
+      newdata <- stats::get_all_vars(tForm, indata)
       newvars <- setdiff(colnames(newdata), colnames(indata))
       for (var in newvars) {
         indata[[var]] <- newdata[[var]]
@@ -1047,10 +1047,10 @@ version:date:md5:filename:x64:trial:platform
 3.04:Jun 2019:94e7f9ab30cddda10a260a935e9c9088:mlnscript:TRUE:FALSE:bsd
 3.04:Jun 2019:2588e4687880bb54f0882afff75876c5:mlnscript:TRUE:FALSE:bsd
 '
-  versioninfo <- read.delim(textConnection(versioninfostr), header = TRUE, sep = ":", strip.white = TRUE)
+  versioninfo <- utils::read.delim(textConnection(versioninfostr), header = TRUE, sep = ":", strip.white = TRUE)
   if (isTRUE(checkversion)) {
     # Allow disabling the version check if it is slowing things down (e.g. in a simulation study)
-    currentver <- versioninfo[versioninfo$md5 == digest(cmd, algo = "md5", file = TRUE), ]
+    currentver <- versioninfo[versioninfo$md5 == digest::digest(cmd, algo = "md5", file = TRUE), ]
     if (nrow(currentver) == 0) {
       versiontext <- "MLwiN (version: unknown or >3.04)"
     } else {
@@ -1463,7 +1463,7 @@ version:date:md5:filename:x64:trial:platform
     for (i in 1:length(weighting$weightvar)) {
       if (!is.na(weighting$weightvar[i])) {
         if (is.character(weighting$weightvar[[i]])) {
-          wtvar <- model.frame(as.formula(paste0("~", weighting$weightvar[[i]])), data = data, na.action = NULL)
+          wtvar <- stats::model.frame(stats::as.formula(paste0("~", weighting$weightvar[[i]])), data = data, na.action = NULL)
           indata <- cbind(indata, wtvar)
         } else {
           if (is.vector(weighting$weightvar[[i]])) {
@@ -1562,7 +1562,7 @@ version:date:md5:filename:x64:trial:platform
   }
   if (is.null(nonlinear))
     nonlinear <- c(0, 1)
-  if (length(na.omit(levID)) == 1 && any(nonlinear != c(0, 1))) {
+  if (length(stats::na.omit(levID)) == 1 && any(nonlinear != c(0, 1))) {
     stop("Only MQL1 is valid for one-level discrete models")
   }
 
@@ -1581,7 +1581,7 @@ version:date:md5:filename:x64:trial:platform
   reset <- estoptions$reset
   if (is.null(reset)) {
     if (EstM == 0) {
-      reset <- rep(0, length(na.omit(levID)))
+      reset <- rep(0, length(stats::na.omit(levID)))
       reset[1] <- 2
     }
   }
@@ -1720,7 +1720,7 @@ version:date:md5:filename:x64:trial:platform
             if (is.character(var)) {
               if (var %in% colnames(indata))
                 indata[[var]] <- NULL
-              mmvar <- model.frame(as.formula(paste0("~", var)), data = data, na.action = NULL)
+              mmvar <- stats::model.frame(stats::as.formula(paste0("~", var)), data = data, na.action = NULL)
               indata <- cbind(indata, mmvar)
             } else {
               if (is.vector(var)) {
@@ -1740,7 +1740,7 @@ version:date:md5:filename:x64:trial:platform
             if (is.character(var)) {
               if (var %in% colnames(indata))
                 indata[[var]] <- NULL
-              mmweight <- model.frame(as.formula(paste0("~", var)), data = data, na.action = NULL)
+              mmweight <- stats::model.frame(stats::as.formula(paste0("~", var)), data = data, na.action = NULL)
               indata <- cbind(indata, mmweight)
             } else {
               if (is.vector(var)) {
@@ -1784,7 +1784,7 @@ version:date:md5:filename:x64:trial:platform
               if (var %in% colnames(indata)) {
                 indata[[var]] <- NULL
               }
-              carvar <- model.frame(as.formula(paste0("~", var)), data = data, na.action = NULL)
+              carvar <- stats::model.frame(stats::as.formula(paste0("~", var)), data = data, na.action = NULL)
               indata <- cbind(indata, carvar)
             } else {
               if (is.vector(var)) {
@@ -1804,7 +1804,7 @@ version:date:md5:filename:x64:trial:platform
             if (is.character(var)) {
               if (var %in% colnames(indata))
                 indata[[var]] <- NULL
-              carweight <- model.frame(as.formula(paste0("~", var)), data = data, na.action = NULL)
+              carweight <- stats::model.frame(stats::as.formula(paste0("~", var)), data = data, na.action = NULL)
               indata <- cbind(indata, carweight)
             } else {
               if (is.vector(var)) {
@@ -1840,7 +1840,7 @@ version:date:md5:filename:x64:trial:platform
         weightcol <- xclass$weight[i]
         idcol <- xclass$id[i]
         if (is.null(idcol) || is.na(idcol)) {
-          idcol <- rev(na.omit(levID))[lev]
+          idcol <- rev(stats::na.omit(levID))[lev]
         }
         idstart <- which(colnames(indata) == idcol)
         idend <- idstart + (num - 1)
@@ -2511,7 +2511,7 @@ version:date:md5:filename:x64:trial:platform
       }
     }
     if (mcmcOptions$hcen > 0) {
-      if (mcmcOptions$hcen < 2 || mcmcOptions$hcen > length(na.omit(levID))) {
+      if (mcmcOptions$hcen < 2 || mcmcOptions$hcen > length(stats::na.omit(levID))) {
         stop("Invalid level for hierarchical centring")
       }
       if (D[1] == "Multivariate Normal" || D[1] == "Mixed" || D[1] == "Multinomial") {
@@ -2522,7 +2522,7 @@ version:date:md5:filename:x64:trial:platform
       for (i in 1:nrow(mcmcOptions$paex)) {
         if (mcmcOptions$paex[i, 2] == 1) {
           pelev <- mcmcOptions$paex[i, 1]
-          if (pelev < 2 || pelev > length(na.omit(levID))) {
+          if (pelev < 2 || pelev > length(stats::na.omit(levID))) {
             stop("Invalid level for parameter expansion")
           }
           if (D[1] == "Multivariate Normal" || D[1] == "Mixed" || D[1] == "Multinomial") {
@@ -2533,7 +2533,7 @@ version:date:md5:filename:x64:trial:platform
     } else {
       if (mcmcOptions$paex[2] == 1) {
         pelev <- mcmcOptions$paex[1]
-        if (pelev < 2 || pelev > length(na.omit(levID))) {
+        if (pelev < 2 || pelev > length(stats::na.omit(levID))) {
           stop("Invalid level for parameter expansion")
         }
         if (D[1] == "Multivariate Normal" || D[1] == "Mixed" || D[1] == "Multinomial") {
@@ -2740,7 +2740,7 @@ version:date:md5:filename:x64:trial:platform
       }
     }
 
-    outvars <- union(outvars, na.omit(levID))
+    outvars <- union(outvars, stats::na.omit(levID))
     if (is.list(expl)) {
       if (!is.na(expl$sep.coeff[1])) {
         tsep.coeff <- expl$sep.coeff
@@ -2804,9 +2804,9 @@ version:date:md5:filename:x64:trial:platform
 
     # Check/sort data as approriate
     if (isTRUE(sort.force)) {
-      outdata <- outdata[do.call(order, outdata[na.omit(levID)]), ]
+      outdata <- outdata[do.call(order, outdata[stats::na.omit(levID)]), ]
     } else {
-      if (!isTRUE(xc) && !isTRUE(all(do.call(order, outdata[na.omit(levID)]) == seq(1, nrow(outdata))))) {
+      if (!isTRUE(xc) && !isTRUE(all(do.call(order, outdata[stats::na.omit(levID)]) == seq(1, nrow(outdata))))) {
         stop("The input data are not sorted according to the model hierarchy")
       }
     }
@@ -2841,10 +2841,10 @@ version:date:md5:filename:x64:trial:platform
   ymiss <- as.logical(apply(!is.na(outdata[, resp, drop=FALSE]), 1, max))
 
   # Exclude rows where any X or all responses are missing
-  completerows <- complete.cases(outdata[, xcolumns]) & ymiss
+  completerows <- stats::complete.cases(outdata[, xcolumns]) & ymiss
   shortdata <- droplevels(outdata[completerows, ])
   hierarchy <- NULL
-  shortID <- na.omit(rev(levID))
+  shortID <- stats::na.omit(rev(levID))
   if (length(shortID) > 1) {
     for (lev in length(shortID):2) {
       if (isTRUE(xc)) {
@@ -2866,8 +2866,8 @@ version:date:md5:filename:x64:trial:platform
           compgroupsize <- as.vector(suppressWarnings(reshape::sparseby(shortdata, compIDs,
                                                                     nrow, GROUPNAMES = FALSE)))
         } else {
-          groupsize <- na.omit(as.vector(by(outdata, outdata[, shortID[lev:length(shortID)]], nrow)))
-          compgroupsize <- na.omit(as.vector(by(shortdata, compIDs, nrow)))
+          groupsize <- stats::na.omit(as.vector(by(outdata, outdata[, shortID[lev:length(shortID)]], nrow)))
+          compgroupsize <- stats::na.omit(as.vector(by(shortdata, compIDs, nrow)))
         }
       }
       groupinfo <- cbind(length(groupsize), min(groupsize), mean(groupsize), max(groupsize), length(compgroupsize), min(compgroupsize), mean(compgroupsize), max(compgroupsize))
@@ -2936,10 +2936,10 @@ version:date:md5:filename:x64:trial:platform
     stop(paste("variables name(s)", paste(colnames(outdata)[dups], collapse=","), "are duplicates when ignoring case"))
   }
 
-  long2shortname <- sapply(colnames(outdata), digest, algo="xxhash64", serialize = FALSE)
+  long2shortname <- sapply(colnames(outdata), digest::digest, algo="xxhash64", serialize = FALSE)
   long2shortname[] <- paste0("v", long2shortname)
   colnames(outdata) <- long2shortname
-  write.dta(outdata, dtafile, version = 10)
+  foreign::write.dta(outdata, dtafile, version = 10)
   colnames(outdata) <- names(long2shortname)
 
   finalClean <- function(clean.files) {
@@ -2996,11 +2996,11 @@ version:date:md5:filename:x64:trial:platform
     cat("\n")
     time2 <- proc.time() - time1
 
-    estIGLS <- read.dta(IGLSfile)
+    estIGLS <- foreign::read.dta(IGLSfile)
 
-    FP[] <- na.omit(estIGLS[, 1])
+    FP[] <- stats::na.omit(estIGLS[, 1])
 
-    estIGLS2 <- na.omit(estIGLS[, 2])
+    estIGLS2 <- stats::na.omit(estIGLS[, 2])
     k <- 1
     for (i in 1:length(FP)) {
       for (j in 1:i) {
@@ -3010,9 +3010,9 @@ version:date:md5:filename:x64:trial:platform
       }
     }
 
-    RP[] <- na.omit(estIGLS[, 3])
+    RP[] <- stats::na.omit(estIGLS[, 3])
 
-    estIGLS4 <- na.omit(estIGLS[, 4])
+    estIGLS4 <- stats::na.omit(estIGLS[, 4])
     k <- 1
     for (i in 1:length(RP)) {
       for (j in 1:i) {
@@ -3042,7 +3042,7 @@ version:date:md5:filename:x64:trial:platform
     if (resi.store) {
       resiraw <- list()
       for (i in 1:length(rp)) {
-        tmp <- as.list(read.dta(resifile[i]))
+        tmp <- as.list(foreign::read.dta(resifile[i]))
         for (name in names(long2shortnamemap)) {
           names(tmp) <- gsub(long2shortnamemap[[name]], name, names(tmp))
         }
@@ -3121,7 +3121,7 @@ version:date:md5:filename:x64:trial:platform
 
     for (i in 1:nchains) {
       nlev <- length(levID)
-      chains <- read.dta(chainfile[i])
+      chains <- foreign::read.dta(chainfile[i])
       for (name in names(long2shortnamemap)) {
         colnames(chains) <- gsub(long2shortnamemap[[name]], name, colnames(chains))
       }
@@ -3138,7 +3138,7 @@ version:date:md5:filename:x64:trial:platform
 
       chainslist[[i]] <- chains
 
-      estMCMC <- read.dta(MCMCfile[i])
+      estMCMC <- foreign::read.dta(MCMCfile[i])
 
       if (!(D[1] == "Mixed") && is.null(merr) && is.null(fact)) {
         BDIC <- BDIC + estMCMC[, dim(estMCMC)[2]][c(5, 6, 4, 3)]
@@ -3171,18 +3171,18 @@ version:date:md5:filename:x64:trial:platform
           }
         }
 
-        factchains <- read.dta(FACTchainfile[i])
-        factscores <- matrix(na.omit(factchains[, "_FACT_value_b"]), ncol = fact$nfact, byrow = FALSE)
-        factscores_v <- matrix(na.omit(factchains[, "_FACT_value_v"]), ncol = fact$nfact, byrow = FALSE)
-        factloads <- matrix(na.omit(factchains[, "_FACT_load_b_chain"]), nrow = iterations/thinning, byrow = TRUE)
-        factcovs <- matrix(na.omit(factchains[, "_FACT_load_v_chain"]), nrow = iterations/thinning, byrow = TRUE)
+        factchains <- foreign::read.dta(FACTchainfile[i])
+        factscores <- matrix(stats::na.omit(factchains[, "_FACT_value_b"]), ncol = fact$nfact, byrow = FALSE)
+        factscores_v <- matrix(stats::na.omit(factchains[, "_FACT_value_v"]), ncol = fact$nfact, byrow = FALSE)
+        factloads <- matrix(stats::na.omit(factchains[, "_FACT_load_b_chain"]), nrow = iterations/thinning, byrow = TRUE)
+        factcovs <- matrix(stats::na.omit(factchains[, "_FACT_load_v_chain"]), nrow = iterations/thinning, byrow = TRUE)
         nameloads <- NULL
         namefacts <- NULL
         namefacts_v <- NULL
         namecovs <- NULL
         for (j in 1:fact$nfact) {
           if (fact$lev.fact[j] > 1) {
-            nunit <- nrow(unique(indata[rev(na.omit(levID))[fact$lev.fact[j]]]))
+            nunit <- nrow(unique(indata[rev(stats::na.omit(levID))[fact$lev.fact[j]]]))
             if (length(factscores) > nunit) {
               factscores[(nunit + 1):nrow(factscores), j] <- NA
             }
@@ -3203,12 +3203,12 @@ version:date:md5:filename:x64:trial:platform
       }
 
       if (!is.null(dami)) {
-        MIdata <- read.dta(MIfile[i])
+        MIdata <- foreign::read.dta(MIfile[i])
         MIlist[[i]] <- MIdata
       }
 
       if (!is.null(resi.store.levs)) {
-        residata <- read.dta(resichains[i])
+        residata <- foreign::read.dta(resichains[i])
         for (name in names(long2shortnamemap)) {
           colnames(residata) <- gsub(long2shortnamemap[[name]], name, colnames(residata))
         }
@@ -3221,7 +3221,7 @@ version:date:md5:filename:x64:trial:platform
           }
           nunit <- nrow(unique(indata[rev(levID)[lev]]))
           pnames <- paste("u", (1:ucount)-1, rep(1:nunit, each=ucount), sep="_")
-          resiChains[[name]] <- coda::mcmc(data = matrix(na.omit(residata[, name]), nrow = iterations/thinning, byrow = TRUE,
+          resiChains[[name]] <- coda::mcmc(data = matrix(stats::na.omit(residata[, name]), nrow = iterations/thinning, byrow = TRUE,
                                            dimnames = list(1:(iterations/thinning), pnames)), thin = thinning)
         }
         resichainslist[[i]] <- resiChains
@@ -3229,7 +3229,7 @@ version:date:md5:filename:x64:trial:platform
       if (resi.store) {
         resiraw <- list()
         for (j in 1:length(rp)) {
-          tmp <- as.list(read.dta(resifile[j, i]))
+          tmp <- as.list(foreign::read.dta(resifile[j, i]))
           for (name in names(long2shortnamemap)) {
             names(tmp) <- gsub(long2shortnamemap[[name]], name, names(tmp))
           }
@@ -3242,13 +3242,13 @@ version:date:md5:filename:x64:trial:platform
     }
 
     if (nchains != 1) {
-      chains <- mcmc.list(chainslist)
+      chains <- coda::mcmc.list(chainslist)
       if (!is.null(resi.store.levs)) {
-        resiChains <- mcmc.list(resichainslist)
+        resiChains <- coda::mcmc.list(resichainslist)
       }
       if (!is.null(fact)) {
-        factChains$loadings <- mcmc.list(factloadchainslist)
-        factChains$cov <- mcmc.list(factcovchainslist)
+        factChains$loadings <- coda::mcmc.list(factloadchainslist)
+        factChains$cov <- coda::mcmc.list(factcovchainslist)
       }
     }
 
@@ -3261,7 +3261,7 @@ version:date:md5:filename:x64:trial:platform
             Nresp <- length(unique(impdata$resp_indicator))
             Nrecs = nrow(impdata) / Nresp
             impdata$id <- rep(1:Nrecs, each=Nresp)
-            impdata <- reshape(impdata, timevar="resp_indicator", idvar="id", direction="wide")
+            impdata <- stats::reshape(impdata, timevar="resp_indicator", idvar="id", direction="wide")
             impdata$id <- NULL
             colnames(impdata) <- gsub(paste0("_est_", dami[j], "."), "", colnames(impdata))
             impout <- outdata
@@ -3285,10 +3285,10 @@ version:date:md5:filename:x64:trial:platform
 
     combchains <- as.matrix(chains)
     FP[FP.names] <- colMeans(combchains[, FP.names, drop=FALSE])
-    FP.cov[FP.names, FP.names] <- cov(combchains[, FP.names, drop=FALSE])
+    FP.cov[FP.names, FP.names] <- stats::cov(combchains[, FP.names, drop=FALSE])
     RP[RP.names] <- colMeans(combchains[, RP.names, drop=FALSE])
-    RP.cov[RP.names, RP.names] <- cov(combchains[, RP.names, drop=FALSE])
-    ESS <- effectiveSize(chains)
+    RP.cov[RP.names, RP.names] <- stats::cov(combchains[, RP.names, drop=FALSE])
+    ESS <- coda::effectiveSize(chains)
     BDIC <- BDIC / nchains
     LIKE <- LIKE / nchains
     if (!is.na(LIKE)) {
@@ -3386,9 +3386,9 @@ version:date:md5:filename:x64:trial:platform
         }
       }
       loadings <- colMeans(as.matrix(factChains$loadings))
-      loadings.sd <- sqrt(diag(cov(as.matrix(factChains$loadings))))
+      loadings.sd <- sqrt(diag(stats::cov(as.matrix(factChains$loadings))))
       fact.cov <- colMeans(as.matrix(factChains$cov))
-      fact.cov.sd <- sqrt(diag(cov(as.matrix(factChains$cov))))
+      fact.cov.sd <- sqrt(diag(stats::cov(as.matrix(factChains$cov))))
     }
   }
 
