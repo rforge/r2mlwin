@@ -7,14 +7,11 @@ Authors@R: c(person("Zhengzheng", "Zhang", role = c("aut", "cre"),email =
     person("Richard", "Parker", role = "aut"), person("George", "Leckie", role
     = "aut"), person("William", "Browne", role = "aut"))
 Depends:
-    R (>= 2.15.0),
+    R (>= 3.2.0),
+Imports:
+    methods,
     stats,
     stats4,
-    methods,
-    lattice,
-    memisc,
-    coda (>= 0.16-1)
-Imports:
     Matrix,
     foreign (>= 0.8-46),
     R2WinBUGS,
@@ -22,13 +19,16 @@ Imports:
     texreg,
     foreach,
     parallel,
-    doParallel
+    doParallel,
+    coda (>= 0.16-1),
+    lattice,
+    memisc
 Suggests:
     doBy,
     car,
     lmtest,
-    mitools
-Enhances: reshape
+    mitools,
+    reshape
 Description: An R command interface to the 'MLwiN' multilevel
     modelling software package.
 License: GPL (>= 2)
