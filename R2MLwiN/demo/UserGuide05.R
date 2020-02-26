@@ -61,12 +61,16 @@ pred <- as.data.frame(cbind(mymodel1@data$school, mymodel1@data$standlrt, xb, xb
 
 colnames(pred) <- c("school", "standlrt", "xb", "xbu")
 
-xyplot(xbu ~ standlrt, type = "l", group = school, data = pred)
+if (!require(lattice)) {
+  warning("package lattice required to run this example")
+} else {
+  xyplot(xbu ~ standlrt, type = "l", group = school, data = pred)
 
-xyplot(xbu ~ standlrt, panel = function(x, y, subscripts) {
-  panel.xyplot(x, y, type = "l", groups = pred$school, subscripts = subscripts)
-  panel.xyplot(pred$standlrt, pred$xb, type = "l", lwd = 3, color = "black")
-}, data = pred)
+  xyplot(xbu ~ standlrt, panel = function(x, y, subscripts) {
+    panel.xyplot(x, y, type = "l", groups = pred$school, subscripts = subscripts)
+    panel.xyplot(pred$standlrt, pred$xb, type = "l", lwd = 3, color = "black")
+  }, data = pred)
+}
 
 c(unique(mymodel1@data$school)[u0rank == 65], u0rank[u0rank == 65])
 

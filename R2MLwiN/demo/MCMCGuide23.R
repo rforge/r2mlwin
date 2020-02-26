@@ -100,7 +100,11 @@ mymodel <- runMLwiN(logit(use) ~ 1 + age + lc + urban + (1 + urban | district), 
   OpenBugs = TRUE), data = bang1)
 
 summary(mymodel)
-effectiveSize(mymodel)
+if (!require(coda)) {
+  warning("package coda required to run this example")
+} else {
+  effectiveSize(mymodel)
+}
 sixway(mymodel[, "beta[1]", drop = FALSE])
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .379

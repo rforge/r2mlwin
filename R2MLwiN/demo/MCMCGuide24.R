@@ -80,7 +80,11 @@ mymodel <- runMLwiN(logit(votecons) ~ 1 + defence + unemp + taxes + privat + (1 
   debug = FALSE, seed = 1, OpenBugs = TRUE), data = bes83)
 
 summary(mymodel)
-effectiveSize(mymodel)
+if (!require(coda)) {
+  warning("package coda required to run this example")
+} else {
+  effectiveSize(mymodel)
+}
 sixway(mymodel[, "sigma2.u2", drop = FALSE], acf.maxlag = 250)
 sixway(mymodel[, "sigma2.v2", drop = FALSE], acf.maxlag = 100)
 

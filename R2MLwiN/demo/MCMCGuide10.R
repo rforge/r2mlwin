@@ -76,12 +76,16 @@ if (!require(texreg)) {
    stars = numeric(0), include.nobs=FALSE, include.loglik=FALSE, include.deviance=FALSE, include.dbar=FALSE, include.dthetabar=FALSE, include.pd=FALSE, include.dic=FALSE)
 }
 
-cat("The effective sample sizes\n")
-ESS.aa <- effectiveSize(mymodel7@chains[, 2:11])
-ESS.bb <- effectiveSize(mymodel8@chains[, 2:11])
-ctable <- cbind(round(ESS.aa), round(ESS.bb))
-colnames(ctable) <- c("ESS(Gibbs)", "ESS(Metropolis)")
-print(ctable)
+if (!require(coda)) {
+  warning("package coda required to run this example")
+} else {
+  cat("The effective sample sizes\n")
+  ESS.aa <- effectiveSize(mymodel7@chains[, 2:11])
+  ESS.bb <- effectiveSize(mymodel8@chains[, 2:11])
+  ctable <- cbind(round(ESS.aa), round(ESS.bb))
+  colnames(ctable) <- c("ESS(Gibbs)", "ESS(Metropolis)")
+  print(ctable)
+}
 
 # 10.6 Comparison with WinBUGS . . . . . . . . . . . . . . . . . . . . . 144
 
