@@ -3,7 +3,6 @@
 \docType{package}
 \name{R2MLwiN}
 \alias{R2MLwiN}
-\alias{R2MLwiN-package}
 \title{Running MLwiN from within R}
 \description{
 \pkg{R2MLwiN} is an R command interface to the MLwiN multilevel modelling

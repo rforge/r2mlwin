@@ -4,10 +4,21 @@
 \alias{runMLwiN}
 \title{Calls MLwiN from R.}
 \usage{
-runMLwiN(Formula, levID = NULL, D = "Normal", data = NULL,
-  estoptions = list(EstM = 0), BUGO = NULL, MLwiNPath = NULL,
-  stdout = "", stderr = "", workdir = tempdir(),
-  checkversion = TRUE, indata = NULL, saveworksheet = NULL)
+runMLwiN(
+  Formula,
+  levID = NULL,
+  D = "Normal",
+  data = NULL,
+  estoptions = list(EstM = 0),
+  BUGO = NULL,
+  MLwiNPath = NULL,
+  stdout = "",
+  stderr = "",
+  workdir = tempdir(),
+  checkversion = TRUE,
+  indata = NULL,
+  saveworksheet = NULL
+)
 }
 \arguments{
 \item{Formula}{A \code{\link[stats]{formula}} object specifying the model

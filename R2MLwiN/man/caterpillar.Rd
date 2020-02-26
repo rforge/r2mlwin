@@ -4,8 +4,17 @@
 \alias{caterpillar}
 \title{Draws a caterpillar plot (in MLwiN style).}
 \usage{
-caterpillar(y, x, qtlow, qtup, xlab = "", ylab = "", xlim = NULL,
-  ylim = NULL, main = "")
+caterpillar(
+  y,
+  x,
+  qtlow,
+  qtup,
+  xlab = "",
+  ylab = "",
+  xlim = NULL,
+  ylim = NULL,
+  main = ""
+)
 }
 \arguments{
 \item{y}{A numerical vector specifying the \code{y} coordinates

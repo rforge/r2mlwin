@@ -5,10 +5,26 @@
 \title{This function captures output files from MLwiN for estimation in
 WinBUGS/OpenBUGS.}
 \usage{
-mlwin2bugs(D, levID, datafile, initfiles, modelfile, bugEst, fact, addmore,
-  n.chains, n.iter, n.burnin, n.thin, debug = FALSE,
-  bugs.directory = bugs.directory, bugsWorkingDir = tempdir(),
-  OpenBugs = FALSE, cleanBugsWorkingDir = FALSE, seed = NULL)
+mlwin2bugs(
+  D,
+  levID,
+  datafile,
+  initfiles,
+  modelfile,
+  bugEst,
+  fact,
+  addmore,
+  n.chains,
+  n.iter,
+  n.burnin,
+  n.thin,
+  debug = FALSE,
+  bugs.directory = bugs.directory,
+  bugsWorkingDir = tempdir(),
+  OpenBugs = FALSE,
+  cleanBugsWorkingDir = FALSE,
+  seed = NULL
+)
 }
 \arguments{
 \item{D}{A vector specifying the type of distribution used in the model.}

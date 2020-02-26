@@ -5,8 +5,16 @@
 \title{Draws predicted curves (lines) using estimates from the fixed part of a
 fitted model.}
 \usage{
-predCurves(object, indata = NULL, xname, group = NULL, legend = TRUE,
-  legend.space = "top", legend.ncol = 2, ...)
+predCurves(
+  object,
+  indata = NULL,
+  xname,
+  group = NULL,
+  legend = TRUE,
+  legend.space = "top",
+  legend.ncol = 2,
+  ...
+)
 }
 \arguments{
 \item{object}{Either an \code{\link{mlwinfitIGLS-class}} or \code{\link{mlwinfitMCMC-class}} object.}
