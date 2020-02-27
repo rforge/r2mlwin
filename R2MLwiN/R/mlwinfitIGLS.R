@@ -396,25 +396,9 @@ printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   }
   
   signifstar <- function(pval) {
-    starstr <- "N/A"
-    if (!is.na(pval) && pval >= 0 && pval <= 1) {
-      if (pval < 0.001) {
-        starstr <- "***"
-      }
-      if (pval >= 0.001 && pval < 0.01) {
-        starstr <- "** "
-      }
-      if (pval >= 0.01 && pval < 0.05) {
-        starstr <- "*  "
-      }
-      if (pval >= 0.05 && pval < 0.1) {
-        starstr <- ".  "
-      }
-      if (pval >= 0.1) {
-        starstr <- "   "
-      }
-    }
-    starstr
+    symnum(pval, corr = FALSE, na = "N/A", 
+           cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1), 
+           symbols = c("***", "** ", "*  ", ".  ", "   "))
   }
   cat("\n")
   cat(paste(rep("-", 50), collapse = "*"), "\n")
@@ -447,7 +431,7 @@ printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   cat(paste("Deviance statistic: ", round(object@LIKE, 1)), "\n")
   cat(paste(rep("-", 50), collapse = "-"), "\n")
   cat("The model formula:\n")
-  print(object@Formula)  #cat(gsub('[[:space:]]','',object@Formula),'\n')
+  print(formula(object))
   levID0 <- object@levID
   levID.display <- ""
   if (is.na(levID0[length(levID0)])) {
@@ -462,25 +446,25 @@ printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   FP.names <- names(object@FP)
   RP.names <- names(object@RP)
   
+  est.all <- coef(object)
+  sd.all <- sqrt(diag(vcov(object)))
+  zscore.all <- est.all / sd.all
+  pvalue.all <- 2 * stats::pnorm(abs(zscore.all), lower.tail = FALSE)
+  confint.all <- confint(object)
+  stars.all <- signifstar(pvalue.all)
+  
   cat("The fixed part estimates: ", "\n")
-  FP.print <- rbind(object@FP, sqrt(diag(object@FP.cov)))
-  z.score <- FP.print[1, ]/FP.print[2, ]
-  p.value <- 2 * stats::pnorm(abs(z.score), lower.tail = FALSE)
-  strstar <- as.vector(sapply(p.value, signifstar))
-  qt025 <- FP.print[1, ] - stats::qnorm(0.975) * FP.print[2, ]
-  qt975 <- FP.print[1, ] + stats::qnorm(0.975) * FP.print[2, ]
-  FP.print <- rbind(FP.print, z.score, p.value, qt025, qt975)
   FP.names2 <- gsub("FP+\\_", "", FP.names)
   
   printcol0 <- align2left("        ", FP.names2)
-  printcol1 <- align2right("Coef.", format(round(FP.print[1, ], digits), nsmall = digits))
-  printcol2 <- align2right("Std. Err.", format(round(FP.print[2, ], digits), nsmall = digits))
-  printcol3 <- align2right("z", format(round(FP.print[3, ], 2), nsmall = 2))
-  printcol4 <- align2right("Pr(>|z|)", formatC(FP.print[4, ]))
-  printcol4b <- align2right("   ", strstar)
-  printcol5 <- align2right("[95% Conf.", format(round(FP.print[5, ], digits), nsmall = digits))
-  printcol6 <- align2right("Interval]", format(round(FP.print[6, ], digits), nsmall = digits))
-  for (i in 1:(ncol(FP.print) + 1)) {
+  printcol1 <- align2right("Coef.", format(round(est.all[FP.names], digits), nsmall = digits))
+  printcol2 <- align2right("Std. Err.", format(round(sd.all[FP.names], digits), nsmall = digits))
+  printcol3 <- align2right("z", format(round(zscore.all[FP.names], 2), nsmall = 2))
+  printcol4 <- align2right("Pr(>|z|)", formatC(pvalue.all[FP.names]))
+  printcol4b <- align2right("   ", stars.all[FP.names])
+  printcol5 <- align2right("[95% Conf.", format(round(confint.all[FP.names, 1], digits), nsmall = digits))
+  printcol6 <- align2right("Interval]", format(round(confint.all[FP.names, 2], digits), nsmall = digits))
+  for (i in 1:(1+length(FP.names2))) {
     cat(printcol0[i], " ", printcol1[i], " ", printcol2[i], " ", printcol3[i], " ", printcol4[i], " ", printcol4b[i],
         " ", printcol5[i], " ", printcol6[i], "\n")
   }
@@ -496,21 +480,16 @@ printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
     levID2 <- object@levID
   }
   
-  RP.print <- rbind(object@RP, sqrt(diag(object@RP.cov)))
-  qt025 <- RP.print[1, ] - stats::qnorm(0.975) * RP.print[2, ]
-  qt975 <- RP.print[1, ] + stats::qnorm(0.975) * RP.print[2, ]
-  RP.print <- rbind(RP.print, qt025, qt975)
   for (i in 1:length(mlwinlev)) {
     RPx.pos <- grep(paste("RP", mlwinlev[i], sep = ""), RP.names)
     if (length(RPx.pos) != 0) {
       cat(paste(rep("-", 50), collapse = "-"), "\n")
       RPx.names <- gsub(paste("RP+", mlwinlev[i], "+\\_", sep = ""), "", RP.names[RPx.pos])
-      RPx <- as.matrix(RP.print[, RPx.pos], nrow = 4)
       printcol0 <- align2left("        ", RPx.names)
-      printcol1 <- align2right("Coef.", format(round(RPx[1, ], digits), nsmall = digits))
-      printcol2 <- align2right("Std. Err.", format(round(RPx[2, ], digits), nsmall = digits))
+      printcol1 <- align2right("Coef.", format(round(est.all[RP.names[RPx.pos]], digits), nsmall = digits))
+      printcol2 <- align2right("Std. Err.", format(round(sd.all[RP.names[RPx.pos]], digits), nsmall = digits))
       cat("The random part estimates at the", levID2[i], "level:", "\n")
-      for (i in 1:(ncol(RPx) + 1)) {
+      for (i in 1:(1+length(RPx.names))) {
         cat(printcol0[i], " ", printcol1[i], " ", printcol2[i], "\n")
       }
     }
@@ -927,9 +906,8 @@ getSummary.mlwinfitIGLS <- function (obj, alpha = 0.05, ...) {
   co <- t(rbind(coef(obj), sqrt(diag(vcov(obj)))))
   z <- co[, 1]/co[,2]
   p <- 2 * stats::pnorm(abs(z), lower.tail = FALSE)
-  lower <- stats::qnorm(p=alpha/2,mean=co[,1],sd=co[,2])
-  upper <- stats::qnorm(p=1-alpha/2,mean=co[,1],sd=co[,2])
-  co <- cbind(co, z, p, lower, upper)
+  ci <- confint(obj, level = 1-alpha)
+  co <- cbind(co, z, p, ci[, 1], ci[, 2])
   colnames(co) <- c("est", "se", "stat", "p", "lwr", "upr")
 
   N <- nobs(obj)

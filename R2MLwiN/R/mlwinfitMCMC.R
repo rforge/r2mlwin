@@ -556,25 +556,9 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   }
   
   signifstar <- function(pval) {
-    starstr <- "N/A"
-    if (!is.na(pval) && pval >= 0 && pval <= 1) {
-      if (pval < 0.001) {
-        starstr <- "***"
-      }
-      if (pval >= 0.001 && pval < 0.01) {
-        starstr <- "** "
-      }
-      if (pval >= 0.01 && pval < 0.05) {
-        starstr <- "*  "
-      }
-      if (pval >= 0.05 && pval < 0.1) {
-        starstr <- ".  "
-      }
-      if (pval >= 0.1) {
-        starstr <- "   "
-      }
-    }
-    starstr
+    symnum(pval, corr = FALSE, na = "N/A", 
+           cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1), 
+           symbols = c("***", "** ", "*  ", ".  ", "   "))
   }
   
   chainnames <- coda::varnames(object@chains)
@@ -608,7 +592,7 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   
   cat(paste(rep("-", 50), collapse = "-"), "\n")
   cat("The model formula:\n")
-  print(object@Formula)
+  print(formula(object))
   levID.display <- ""
   if (is.na(levID0[length(levID0)])) {
     levID0 <- levID0[-length(levID0)]
@@ -622,18 +606,16 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   if (!is.null(object@fact) && object@D[1] == "Multivariate Normal") {
     qt025 <- object@fact.loadings - stats::qnorm(0.975) * object@fact.loadings.sd
     qt975 <- object@fact.loadings + stats::qnorm(0.975) * object@fact.loadings.sd
-    loads <- rbind(object@fact.loadings, object@fact.loadings.sd, qt025, qt975)
     
     for (j in 1:object@fact$nfact) {
       cat("The estimates of factor", j, "loadings:\n")
-      loadx.names <- colnames(loads)[grep(paste0("load+", j, "+\\_"), colnames(loads))]
-      loadx <- loads[, loadx.names]
+      loadx.names <- names(object@fact.loadings)[grep(paste0("load+", j, "+\\_"), names(object@fact.loadings))]
       printcol0 <- align2left("        ", loadx.names)
-      printcol1 <- align2right("Coef.", format(round(loadx[1, ], digits), nsmall = digits))
-      printcol2 <- align2right("Std. Err.", format(round(loadx[2, ], digits), nsmall = digits))
-      printcol3 <- align2right("[95% Conf.", format(round(loadx[3, ], digits), nsmall = digits))
-      printcol4 <- align2right("Interval]", format(round(loadx[4, ], digits), nsmall = digits))
-      for (i in 1:(ncol(loadx) + 1)) {
+      printcol1 <- align2right("Coef.", format(round(object@fact.loadings[loadx.names], digits), nsmall = digits))
+      printcol2 <- align2right("Std. Err.", format(round(object@fact.loadings.sd[loadx.names], digits), nsmall = digits))
+      printcol3 <- align2right("[95% Conf.", format(round(qt025[loadx.names], digits), nsmall = digits))
+      printcol4 <- align2right("Interval]", format(round(qt975[loadx.names], digits), nsmall = digits))
+      for (i in 1:(1 + length(loadx.names))) {
         cat(printcol0[i], " ", printcol1[i], " ", printcol2[i], " ", printcol3[i], " ", printcol4[i], "\n")
       }
       cat(paste(rep("-", 50), collapse = "-"), "\n")
@@ -641,15 +623,15 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
     
     qt025 <- object@fact.cov - stats::qnorm(0.975) * object@fact.cov.sd
     qt975 <- object@fact.cov + stats::qnorm(0.975) * object@fact.cov.sd
-    fcov <- rbind(object@fact.cov, object@fact.cov.sd, qt025, qt975)
     
     cat("The estimates of factor covariances:\n")
-    printcol0 <- align2left("        ", colnames(fcov))
-    printcol1 <- align2right("Coef.", format(round(fcov[1, ], digits), nsmall = digits))
-    printcol2 <- align2right("Std. Err.", format(round(fcov[2, ], digits), nsmall = digits))
-    printcol3 <- align2right("[95% Conf.", format(round(fcov[3, ], digits), nsmall = digits))
-    printcol4 <- align2right("Interval]", format(round(fcov[4, ], digits), nsmall = digits))
-    for (i in 1:(ncol(fcov) + 1)) {
+    fcov.names <- names(object@fact.cov)
+    printcol0 <- align2left("        ", fcov.names)
+    printcol1 <- align2right("Coef.", format(round(object@fact.cov, digits), nsmall = digits))
+    printcol2 <- align2right("Std. Err.", format(round(object@fact.cov.sd, digits), nsmall = digits))
+    printcol3 <- align2right("[95% Conf.", format(round(qt025, digits), nsmall = digits))
+    printcol4 <- align2right("Interval]", format(round(qt975, digits), nsmall = digits))
+    for (i in 1:(1 + length(fcov.names))) {
       cat(printcol0[i], " ", printcol1[i], " ", printcol2[i], " ", printcol3[i], " ", printcol4[i], "\n")
     }
     cat(paste(rep("-", 50), collapse = "-"), "\n")
@@ -685,21 +667,20 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
     }
     onesided.p.value <- c(onesided.p.value, onesided.p.values)
   }
-  strstar <- as.vector(sapply(p.value, signifstar))
-  FP.print <- rbind(chain.means[FP.names], chain.sds[FP.names], t.stat, p.value, onesided.p.value, chain.qt025[FP.names], chain.qt975[FP.names], ESS[FP.names])
+  strstar <- signifstar(p.value)
   FP.names2 <- gsub("FP+\\_", "", FP.names)
   
   printcol0 <- align2left("        ", FP.names2)
-  printcol1 <- align2right("Coef.", format(round(FP.print[1, ], digits), nsmall = digits))
-  printcol2 <- align2right("Std. Err.", format(round(FP.print[2, ], digits), nsmall = digits))
-  printcol3 <- align2right("z", format(round(FP.print[3, ], 2), nsmall = 2))
-  printcol4 <- align2right("Pr(>|z|)", formatC(FP.print[4, ]))
+  printcol1 <- align2right("Coef.", format(round(chain.means[FP.names], digits), nsmall = digits))
+  printcol2 <- align2right("Std. Err.", format(round(chain.sds[FP.names], digits), nsmall = digits))
+  printcol3 <- align2right("z", format(round(t.stat, 2), nsmall = 2))
+  printcol4 <- align2right("Pr(>|z|)", formatC(p.value))
   printcol4b <- align2right("   ", strstar)
-  printcol5 <- align2right("pMCMC(1-sided)", formatC(FP.print[5, ]))
-  printcol6 <- align2right("[95% Cred.", format(round(FP.print[6, ], digits), nsmall = digits))
-  printcol7 <- align2right("Interval]", format(round(FP.print[7, ], digits), nsmall = digits))
-  printcol8 <- align2right("ESS", format(round(FP.print[8, ]), nsmall = 0))
-  for (i in 1:(ncol(FP.print) + 1)) {
+  printcol5 <- align2right("pMCMC(1-sided)", formatC(onesided.p.value))
+  printcol6 <- align2right("[95% Cred.", format(round(chain.qt025[FP.names], digits), nsmall = digits))
+  printcol7 <- align2right("Interval]", format(round(chain.qt975[FP.names], digits), nsmall = digits))
+  printcol8 <- align2right("ESS", format(round(ESS[FP.names]), nsmall = 0))
+  for (i in 1:(1 + length(FP.names2))) {
     cat(printcol0[i], " ", printcol1[i], " ", printcol2[i], " ")
     if (z.ratio) {
       cat(printcol3[i], " ", printcol4[i], " ")
@@ -724,21 +705,19 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
     levID2 <- object@levID
   }
   
-  RP.print <- rbind(chain.means[RP.names], chain.sds[RP.names], chain.qt025[RP.names], chain.qt975[RP.names], ESS[RP.names])
   for (i in 1:length(mlwinlev)) {
     RPx.pos <- grep(paste("RP", mlwinlev[i], sep = ""), RP.names)
     if (length(RPx.pos) != 0) {
       cat(paste(rep("-", 50), collapse = "-"), "\n")
       RPx.names <- gsub(paste("RP+", mlwinlev[i], "+\\_", sep = ""), "", RP.names[RPx.pos])
-      RPx <- as.matrix(RP.print[, RPx.pos], nrow = 4)
       printcol0 <- align2left("        ", RPx.names)
-      printcol1 <- align2right("Coef.", format(round(RPx[1, ], digits), nsmall = digits))
-      printcol2 <- align2right("Std. Err.", format(round(RPx[2, ], digits), nsmall = digits))
-      printcol5 <- align2right("[95% Cred.", format(round(RPx[3, ], digits), nsmall = digits))
-      printcol6 <- align2right("Interval]", format(round(RPx[4, ], digits), nsmall = digits))
-      printcol7 <- align2right("ESS", format(round(RPx[5, ]), nsmall = 0))
+      printcol1 <- align2right("Coef.", format(round(chain.means[RP.names[RPx.pos]], digits), nsmall = digits))
+      printcol2 <- align2right("Std. Err.", format(round(chain.sds[RP.names[RPx.pos]], digits), nsmall = digits))
+      printcol5 <- align2right("[95% Cred.", format(round(chain.qt025[RP.names[RPx.pos]], digits), nsmall = digits))
+      printcol6 <- align2right("Interval]", format(round(chain.qt975[RP.names[RPx.pos]], digits), nsmall = digits))
+      printcol7 <- align2right("ESS", format(round(ESS[RP.names[RPx.pos]]), nsmall = 0))
       cat("The random part estimates at the", levID2[i], "level:", "\n")
-      for (i in 1:(ncol(RPx) + 1)) {
+      for (i in 1:(1 + length(RPx.names))) {
         cat(printcol0[i], " ", printcol1[i], " ", printcol2[i], " ", printcol5[i], " ", printcol6[i], " ", 
             printcol7[i], "\n")
       }

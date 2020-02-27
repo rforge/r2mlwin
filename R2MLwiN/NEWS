@@ -1,6 +1,7 @@
 Thu Feb 27 2020
 1. Changes
    * Ensure that exported generic methods match the type in their base package
+   * Simplify model output code
 
 Wed Feb 26 2020
 1. Changes
