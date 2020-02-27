@@ -1,3 +1,7 @@
+Thu Feb 27 2020
+1. Changes
+   * Ensure that exported generic methods match the type in their base package
+
 Wed Feb 26 2020
 1. Changes
    * Update @S3method to @exportS3Method to reflect changes in roxygen2 version 7.

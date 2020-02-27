@@ -11,7 +11,7 @@
 #' @param acf.maxlag Maximum lag at which to calculate the auto-correlation
 #' function. \code{acf.maxlag = 100} by default. See \code{\link[stats]{acf}}.
 #' @param pacf.maxlag Maximum lag at which to calculate the partial
-#' auto-correlation function. \code{pacf.maxlag = 10} by default. See \code{\link[stats]{pacf}}.
+#' auto-correlation function. \code{pacf.maxlag = 10} by default. See \code{\link[stats:acf]{pacf}}.
 #' @param ...  Other graphical parameters (see \code{\link[graphics]{par}} for
 #' details).
 #'
@@ -23,7 +23,7 @@
 #' \item a kernel density plot; kernel density estimates are computed
 #' using \code{\link[stats]{density}};
 #' \item a plotted autocorrelation function (uses \code{\link[stats]{acf}});
-#' \item a plotted partial autocorrelation function (uses \code{\link[stats]{pacf}});
+#' \item a plotted partial autocorrelation function (uses \code{\link[stats:acf]{pacf}});
 #' \item a plot of the estimated
 #' Monte Carlo standard error (\code{\link{MCSE}}) of the posterior estimate of the
 #' mean against the number of iterations. As MCMC is a

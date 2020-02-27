@@ -2,20 +2,9 @@
 % Please edit documentation in R/mlwinfitIGLS.R
 \name{summary,mlwinfitIGLS-method}
 \alias{summary,mlwinfitIGLS-method}
-\alias{print,mlwinfitIGLS-method}
-\alias{show,mlwinfitIGLS-method}
 \title{Summarize "mlwinfitIGLS" objects}
 \usage{
 \S4method{summary}{mlwinfitIGLS}(object, ...)
-
-\S4method{print}{mlwinfitIGLS}(
-  x,
-  digits = max(3, getOption("digits") - 2),
-  signif.stars = getOption("show.signif.stars"),
-  ...
-)
-
-\S4method{show}{mlwinfitIGLS}(object)
 }
 \arguments{
 \item{object, x}{an \code{\link{mlwinfitIGLS-class}} object}
@@ -28,4 +17,7 @@
 }
 \description{
 Summarize "mlwinfitIGLS" objects
+}
+\seealso{
+\code{\link[stats4]{summary-methods}}
 }

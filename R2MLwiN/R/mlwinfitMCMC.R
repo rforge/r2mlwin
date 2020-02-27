@@ -517,7 +517,7 @@ setReplaceMethod("[[", signature(x = "mlwinfitMCMC"), function(x, i, j, value) {
 #' @param digits the number of significant digits to use when printing.
 #' @param signif.stars logical. If TRUE, 'significance stars' are printed for each coefficient.
 #' @param z.ratio logical. If TRUE, z-ratio values are displayed for each coefficient.
-#' @rdname summary-methods-mcmc
+#' @seealso \code{\link[stats4]{summary-methods}}
 #' @export 
 setMethod("summary", signature(object = "mlwinfitMCMC"), function(object, ...) {
   object
@@ -747,11 +747,8 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   cat(paste(rep("-", 50), collapse = "*"), "\n")
 }
 
-#' @rdname summary-methods-mcmc
-#' @export 
-setMethod("print", "mlwinfitMCMC", printMCMC)
-
-#' @rdname summary-methods-mcmc
+#' Show objects of class "mlwinfitMCMC"
+#' @seealso \code{\link[stats4]{show-methods}}
 #' @export 
 setMethod("show", signature(object = "mlwinfitMCMC"), function(object) printMCMC(object))
 
@@ -765,37 +762,23 @@ setMethod("show", signature(object = "mlwinfitMCMC"), function(object) printMCMC
 #' @param evaluate  if \code{TRUE} (the default) the new call is evaluated;
 #' otherwise the call is returned as an unevaluated expression.
 #' @return either a new updated \code{mlwinfitMCMC} class object, or else an unevaluated expression for creating such an object.
+#' @seealso \code{\link[stats4]{update-methods}}
 #' @export 
 setMethod("update", signature(object = "mlwinfitMCMC"), updateMLwiN)
-
-#' "mlwinfitMCMC" model formula
-#' @param x See \code{\link[stats]{formula}}
-#' @param env See \code{\link[stats]{formula}}
-#' @param ... Other arguments; see \code{\link[stats]{formula}}
-#' @export 
-setMethod("formula", "mlwinfitMCMC", function(x, env = parent.frame(), ...) {
-  as.formula(x@Formula)
-})
 
 #' Extract the coefficient vector from "mlwinfitMCMC" objects
 #' @param object An \code{\link{mlwinfitMCMC-class}} object
 #' @param ... Other arguments
-#' @seealso \code{\link[stats]{coef}}
+#' @seealso \code{\link[stats4]{coef-methods}}
 #' @export 
 setMethod("coef", signature(object = "mlwinfitMCMC"), function(object, ...) {
   c(object@FP, object@RP)
 })
 
-#' @rdname coef-mlwinfitMCMC-method
-#' @export 
-setMethod("coefficients", signature(object = "mlwinfitMCMC"), function(object, ...) {
-  coef(object)
-})
-
 #' Extract the approximate variance-covariance matrix from "mlwinfitMCMC" objects
 #' @param object An \code{\link{mlwinfitMCMC-class}} object
 #' @param ... Other arguments
-#' @seealso \code{\link[stats]{vcov}}
+#' @seealso \code{\link[stats4]{vcov-methods}}
 #' @export 
 setMethod("vcov", signature(object = "mlwinfitMCMC"), function(object, ...) {
   m <- matrix(0, nrow(object@FP.cov) + nrow(object@RP.cov), ncol(object@FP.cov) + ncol(object@RP.cov))
@@ -809,24 +792,18 @@ setMethod("vcov", signature(object = "mlwinfitMCMC"), function(object, ...) {
 #' Returns the fitted values from "mlwinfitMCMC" objects.
 #' @param object An \code{\link{mlwinfitMCMC-class}} object.
 #' @param ... Other arguments
-#' @seealso \code{\link[stats]{fitted}}
+#' @seealso \code{\link[stats]{fitted.values}}
 #' @export 
-setMethod("fitted", signature(object = "mlwinfitMCMC"), function(object, ...) {
+fitted.mlwinfitMCMC <- function(object, ...) {
   predict(object, type = "response")
-})
-
-#' @rdname fitted-mlwinfitMCMC-method
-#' @export 
-setMethod("fitted.values", signature(object = "mlwinfitMCMC"), function(object, ...) {
-  fitted(object)
-})
+}
 
 #' Returns the residual data from "mlwinfitMCMC" objects.
 #' @param object An \code{\link{mlwinfitMCMC-class}} object
 #' @param ... Other arguments.
 #' @seealso \code{\link[stats]{residuals}}
 #' @export 
-setMethod("residuals", signature(object = "mlwinfitMCMC"), function(object, ...) {
+residuals.mlwinfitMCMC <- function(object, ...) {
   form <- Formula.translate(object@Formula, object@D, object@data)
   if (!is.list(form$resp)) {
     D <- object@D
@@ -845,13 +822,7 @@ setMethod("residuals", signature(object = "mlwinfitMCMC"), function(object, ...)
     warning("residuals only implemented for univariate models")
     NULL
   }
-})
-
-#' @rdname residuals-mlwinfitMCMC-method
-#' @export 
-setMethod("resid", signature(object = "mlwinfitMCMC"), function(object, ...) {
-  residuals(object)
-})
+}
 
 #' Returns the predicted data from "mlwinfitMCMC" objects.
 #' @param object An \code{\link{mlwinfitMCMC-class}} object.
@@ -864,7 +835,7 @@ setMethod("resid", signature(object = "mlwinfitMCMC"), function(object, ...) {
 #' @param ... Other arguments
 #' @seealso \code{\link[stats]{predict}}
 #' @export 
-setMethod("predict", signature(object = "mlwinfitMCMC"), function(object, newdata = NULL, params = NULL, type = "link", se.fit = FALSE, 
+predict.mlwinfitMCMC <- function(object, newdata = NULL, params = NULL, type = "link", se.fit = FALSE, 
                                               terms = NULL, ...) {
   if (is.null(newdata)) {
     indata <- object@data
@@ -949,16 +920,94 @@ setMethod("predict", signature(object = "mlwinfitMCMC"), function(object, newdat
     warning("link function transformation not yet implemented")
     return(NULL)
   }
-})
+}
 
 #' Returns the number of used observations from "mlwinfitMCMC" objects.
 #' @param object An \code{\link{mlwinfitMCMC-class}} object.
 #' @param ... Other arguments.
 #' @seealso \code{\link[stats]{nobs}}
 #' @export 
-setMethod("nobs", signature(object = "mlwinfitMCMC"), function(object, ...) {
+nobs.mlwinfitMCMC <- function(object, ...) {
   object@Nobs
-}) 
+}
+
+#' Summarize "mlwinfitMCMC" objects
+#' @param object,x an \code{\link{mlwinfitMCMC-class}} object
+#' @param ... other parameters
+#' @param digits the number of significant digits to use when printing.
+#' @param signif.stars logical. If TRUE, 'significance stars' are printed for each coefficient.
+#' @param z.ratio logical. If TRUE, z-ratio values are displayed for each coefficient.
+#' @exportS3Method summary mlwinfitMCMC
+summary.mlwinfitMCMC <- function(object, ...) {
+  summary(object)
+}
+
+#' Summarize "mlwinfitMCMC" objects
+#' @param object,x an \code{\link{mlwinfitMCMC-class}} object
+#' @param ... other parameters
+#' @param digits the number of significant digits to use when printing.
+#' @param signif.stars logical. If TRUE, 'significance stars' are printed for each coefficient.
+#' @param z.ratio logical. If TRUE, z-ratio values are displayed for each coefficient.
+#' @seealso \code{\link[base]{print}}
+#' @export 
+print.mlwinfitMCMC <- function(x, ...) {
+  printMCMC(x)
+}
+
+#' Summarize "mlwinfitMCMC" objects
+#' @param object,x an \code{\link{mlwinfitMCMC-class}} object
+#' @param ... other parameters
+#' @param digits the number of significant digits to use when printing.
+#' @param signif.stars logical. If TRUE, 'significance stars' are printed for each coefficient.
+#' @param z.ratio logical. If TRUE, z-ratio values are displayed for each coefficient.
+#' @seealso \code{\link[methods]{show}}
+#' @exportS3Method show mlwinfitMCMC
+show.mlwinfitMCMC <- function(object, ...) {
+  show(object)
+}
+
+#' Update "mlwinfitMCMC" objects
+#' @param object a valid \code{mlwinfitMCMC} class object with an R function call component named \code{call}, the expression used to create itself.
+#' @param Formula. changes to the formula. This is a two sided formula where "." is substituted for existing components in the \code{Formula} component of \code{object$call}.
+#' @param levID. changes to the specifications of level ID(s).
+#' @param estoptions. changes to the specifications of a list of options used for estimating the model.
+#' @param ...  additional arguments to the call, or arguments with changed values.
+#' @param keep.order a logical value indicating whether the terms should keep their positions.
+#' @param evaluate  if \code{TRUE} (the default) the new call is evaluated;
+#' otherwise the call is returned as an unevaluated expression.
+#' @return either a new updated \code{mlwinfitMCMC} class object, or else an unevaluated expression for creating such an object.
+#' @seealso \code{\link[stats]{update}}
+#' @exportS3Method update mlwinfitMCMC
+update.mlwinfitMCMC <- function(object, ...) {
+  update(object)
+}
+
+#' Extract the coefficient vector from "mlwinfitMCMC" objects
+#' @param object An \code{\link{mlwinfitMCMC-class}} object
+#' @param ... Other arguments
+#' @seealso \code{\link[stats]{coef}}
+#' @exportS3Method coef mlwinfitMCMC
+coef.mlwinfitMCMC <- function(object, ...) {
+  coef(object)
+}
+
+#' Extract the approximate variance-covariance matrix from "mlwinfitMCMC" objects
+#' @param object An \code{\link{mlwinfitMCMC-class}} object
+#' @param ... Other arguments
+#' @seealso \code{\link[stats]{vcov}}
+#' @exportS3Method vcov mlwinfitMCMC
+vcov.mlwinfitMCMC <- function(object, ...) {
+  vcov(object)
+}
+
+#' "mlwinfitMCMC" model formula
+#' @param x See \code{\link[stats]{formula}}
+#' @param env See \code{\link[stats]{formula}}
+#' @param ... Other arguments; see \code{\link[stats]{formula}}
+#' @export
+formula.mlwinfitMCMC <- function(x, env = parent.frame(), ...) {
+  stats::as.formula(x@Formula)
+}
 
 #' Extract coefficients and GOF measures from a statistical object.
 #' @param model An \code{\link{mlwinfitMCMC-class}} model.
@@ -1022,45 +1071,41 @@ setMethod("extract", signature = className("mlwinfitMCMC", "R2MLwiN"), function(
   return(tr)
 })
 
-getSummary.mlwinfitMCMC <- function (obj, alpha = 0.05, ...) 
-    {
-          chainnames <- coda::varnames(obj@chains)
-          FP.names <- grep("^FP_", chainnames, value = TRUE)
-          RP.names <- grep("^RP[0-9]+_", chainnames, value = TRUE)  
-
-          ESS <- effectiveSize(obj@chains)
-          chain.stats <- summary(obj@chains, quantiles=c(alpha/2, 1-alpha/2))
-          chain.means <- chain.stats$statistics[,"Mean"]
-          chain.sds <- chain.stats$statistics[,"SD"]
-          chain.qtlow <- chain.stats$quantiles[,1]
-          chain.qtupp <- chain.stats$quantiles[,2]
-
-          z <- chain.means / chain.sds
-          p <- 2 * pnorm(abs(z), lower.tail = FALSE)
-
-          parnames <- c(FP.names, RP.names)
-          co <- cbind(chain.means[parnames], chain.sds[parnames], z[parnames], p[parnames], chain.qtlow[parnames], chain.qtupp[parnames], ESS[parnames])
-          colnames(co) <- c("est", "se", "stat", "p", "lwr", "upr", "ess")
-
-          bdic <- obj@BDIC
-          N <- nobs(obj)
-  
-          sumstat <- c(
-              Dbar          = bdic["Dbar"],
-              Dthetabar     = bdic["D(thetabar)"],
-              pD            = bdic["pD"],
-              DIC           = bdic["DIC"],
-              N             = N
-          )
-  
-          list(coef=co, sumstat=sumstat, contrasts=obj@contrasts, xlevels=obj@xlevels, call=obj@call)
-    }
-
 #' Extract coefficients and GOF measures from a statistical object (memisc package).
 #' @param obj An \code{\link{mlwinfitIGLS-class}} model.
 #' @param alpha level of the confidence intervals; their coverage should be 1-alpha/2
 #' @param ... Other arguments.
 #' @seealso \code{\link[memisc]{getSummary}}
 #' @export 
-setMethod("getSummary", "mlwinfitMCMC", getSummary.mlwinfitMCMC)
+getSummary.mlwinfitMCMC <- function (obj, alpha = 0.05, ...) {
+  chainnames <- coda::varnames(obj@chains)
+  FP.names <- grep("^FP_", chainnames, value = TRUE)
+  RP.names <- grep("^RP[0-9]+_", chainnames, value = TRUE)  
 
+  ESS <- coda::effectiveSize(obj@chains)
+  chain.stats <- summary(obj@chains, quantiles=c(alpha/2, 1-alpha/2))
+  chain.means <- chain.stats$statistics[,"Mean"]
+  chain.sds <- chain.stats$statistics[,"SD"]
+  chain.qtlow <- chain.stats$quantiles[,1]
+  chain.qtupp <- chain.stats$quantiles[,2]
+
+  z <- chain.means / chain.sds
+  p <- 2 * stats::pnorm(abs(z), lower.tail = FALSE)
+
+  parnames <- c(FP.names, RP.names)
+  co <- cbind(chain.means[parnames], chain.sds[parnames], z[parnames], p[parnames], chain.qtlow[parnames], chain.qtupp[parnames], ESS[parnames])
+  colnames(co) <- c("est", "se", "stat", "p", "lwr", "upr", "ess")
+
+  bdic <- obj@BDIC
+  N <- nobs(obj)
+  
+  sumstat <- c(
+    Dbar          = bdic["Dbar"],
+    Dthetabar     = bdic["D(thetabar)"],
+    pD            = bdic["pD"],
+    DIC           = bdic["DIC"],
+    N             = N
+  )
+  
+  list(coef=co, sumstat=sumstat, contrasts=obj@contrasts, xlevels=obj@xlevels, call=obj@call)
+}

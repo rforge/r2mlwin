@@ -2,7 +2,7 @@
 #' WinBUGS/OpenBUGS.
 #' 
 #' This function allows R to call WinBUGS using the output files from MLwiN.
-#' This function uses functionalities in the \code{\link[R2WinBUGS]{R2WinBUGS}}
+#' This function uses functionalities in the \code{\link[R2WinBUGS]{R2WinBUGS-package}}
 #' package.
 #' 
 #' @param D A vector specifying the type of distribution used in the model.

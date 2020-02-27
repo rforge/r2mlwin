@@ -15,5 +15,5 @@
 Returns the log-likelihood from "mlwinfitIGLS" objects.
 }
 \seealso{
-\code{\link[stats]{logLik}}
+\code{\link[stats4]{logLik-methods}}
 }
