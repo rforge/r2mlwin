@@ -1040,6 +1040,27 @@ version:date:md5:filename:x64:trial:platform
 3.04:Jun 2019:b2258c495213e0bb99550e1e91171bfb:mlnscript:TRUE:FALSE:bsd
 3.04:Jun 2019:94e7f9ab30cddda10a260a935e9c9088:mlnscript:TRUE:FALSE:bsd
 3.04:Jun 2019:2588e4687880bb54f0882afff75876c5:mlnscript:TRUE:FALSE:bsd
+3.05:Mar 2020:3b968a2ba71b773fe860f1ee49ad8958:mlwin.exe:TRUE:FALSE:win
+3.05:Mar 2020:8ecc193d8958294d7e2d475fb330dd7c:mlnscript.exe:TRUE:FALSE:win
+3.05:Mar 2020:839db322c6fd31537151a1644979402f:mlwin.exe:FALSE:FALSE:win
+3.05:Mar 2020:80478b4b7315c39ca0bc0374b0212506:mlnscript.exe:FALSE:FALSE:win
+3.05:Mar 2020:fcd5fc9c5acca18d51ffce78a115a61e:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:57fa0b05cc4f11d70b1d83b3d222c323:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:853547f759289dc0297e48c01c376d62:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:9d5fddbe4e71f6264926712e486db597:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:805fac045d9044eaaa7139e5ecf9fd35:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:be6857f6fe5a47e696355d9a7a491e3b:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:89c57c461d28ed7c96b1c7041920a3f3:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:56da882ee6b3cf3426b368c8f82da018:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:8f0c3568027f85856a2590458e4d3b20:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:85a5e7237f06b42149d27288b6f05210:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:9d7136195efc0d06c36de03ead481266:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:56da882ee6b3cf3426b368c8f82da018:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:8d1f10fc10889d14b109dd12b73cca5c:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:fa0bf732ca9b3b1c6e350b239e6cc0f1:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:3ab89e99ef98912084a9404c65ca233b:mlnscript:TRUE:FALSE:mac
+3.05:Mar 2020:714a19157648de1e59903ea491dcc6b7:mlnscript:TRUE:FALSE:bsd
+3.05:Mar 2020:7b19bb2ad6dbac4d3604438927bb35d3:mlnscript:TRUE:FALSE:bsd
 '
   versioninfo <- utils::read.delim(textConnection(versioninfostr), header = TRUE, sep = ":", strip.white = TRUE)
   if (isTRUE(checkversion)) {
