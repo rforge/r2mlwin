@@ -1,3 +1,7 @@
+Thu Apr 02 2020
+1. Changes
+   * Add initial support for the broom package
+
 Fri Mar 27 2020
 1. Bug fixing
    * Set graph layout back after plotting in MCMC chapter 4 replication example

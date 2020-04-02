@@ -923,3 +923,68 @@ getSummary.mlwinfitIGLS <- function (obj, alpha = 0.05, ...) {
   list(coef=co, sumstat=sumstat, contrasts=obj@contrasts, xlevels=obj@xlevels, call=obj@call)
 }
 
+#' Summarises information about the components of a model from a statistical object (broom package).
+#' @param x An \code{\link{mlwinfitIGLS-class}} model.
+#' @param conf.int should the confidence interval be included?
+#' @param conf.level confidence interval level
+#' @param ... Other arguments.
+#' @seealso \code{\link[generics]{tidy}}
+#' @export 
+tidy.mlwinfitIGLS <- function(x, conf.int = FALSE, conf.level = .95, ...) {
+  est <- coef(x)
+  term <- names(est)
+  sd <- sqrt(diag(vcov(x)))
+  zscore <- est / sd
+  pval <- 2 * stats::pnorm(abs(zscore), lower.tail = FALSE)
+  group <- rep("", length(term))
+  group[grep("FP", term)] <- "fixed"
+  nlev <- length(x@levID)
+  if (is.na(x@levID[nlev])) {
+    mlwinlev <- (nlev - 1):1
+  } else {
+    mlwinlev <- nlev:1
+  }
+  for (i in 1:length(mlwinlev)) {
+    group[grep(paste0("RP", i), term)] <- x@levID[mlwinlev[i]]
+  }
+
+  ret <- tibble::tibble(term=term, estimate=est, std.error=sd, statistic=zscore, p.value=pval, group=group)
+
+  if (conf.int) {
+      conf <- confint(x, level = conf.level)
+      rownames(conf) <- NULL
+      colnames(conf) <- c("conf.low", "conf.high")
+      ret <- cbind(ret, conf)
+  }
+  ret
+}
+
+#' Augment data frame with information derived from the model fit (broom package).
+#' @param x An \code{\link{mlwinfitIGLS-class}} model.
+#' @param data original data onto which columns should be added
+#' @param newdata new data to predict on, optional 
+#' @param type.predict Type of prediction to compute
+#' @param type.residuals Type of residuals to compute
+#' @param ... Other arguments.
+#' @seealso \code{\link[generics]{augment}}
+#' @export 
+augment.mlwinfitIGLS <- function(x, data = x@frame, newdata = NULL, ...) {
+    warning("augment method not yet implemented for mlwinfitIGLS objects")
+    NULL
+}
+
+#' Extract GOF measures from a statistical object (broom package).
+#' @param x An \code{\link{mlwinfitIGLS-class}} model.
+#' @param ... Other arguments.
+#' @seealso \code{\link[generics]{glance}}
+#' @export 
+glance.mlwinfitIGLS <- function(x, ...) {
+  tibble::tibble(
+    logLik = stats::logLik(x),
+    AIC = stats::AIC(x),
+    BIC = stats::BIC(x),
+    df.residual = stats::df.residual(x), 
+    nobs = stats::nobs(x)
+  )
+}
+

@@ -22,6 +22,8 @@
 #' @importFrom graphics close.screen lines par plot points screen split.screen text
 #' @importMethodsFrom texreg extract
 #' @importFrom memisc getSummary
+#' @importFrom tibble tibble
+#' @importFrom broom tidy augment glance
 #' 
 #' @section New features in version 0.8-3:
 #' Support for model comparison tables via \code{\link[texreg]{texreg-package}} and \code{\link[memisc]{memisc-package}} have been

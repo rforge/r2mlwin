@@ -1088,3 +1088,82 @@ getSummary.mlwinfitMCMC <- function (obj, alpha = 0.05, ...) {
   
   list(coef=co, sumstat=sumstat, contrasts=obj@contrasts, xlevels=obj@xlevels, call=obj@call)
 }
+
+#' Summarises information about the components of a model from a statistical object (broom package).
+#' @param x An \code{\link{mlwinfitMCMC-class}} model.
+#' @param conf.int should the confidence interval be included?
+#' @param conf.level confidence interval level
+#' @param ... Other arguments.
+#' @seealso \code{\link[generics]{tidy}}
+#' @export 
+tidy.mlwinfitMCMC <- function(x, conf.int = FALSE, conf.level = .95, ...) {
+  alpha = 1 - conf.level
+  chain.stats <- summary(x@chains, quantiles=c(alpha/2, 1-alpha/2))
+  est <- chain.stats$statistics[,"Mean"]
+  term <- names(est)
+  sd <- chain.stats$statistics[,"SD"]
+  zscore <- est / sd
+  ESS <- coda::effectiveSize(x@chains)
+  pval <- 2 * stats::pnorm(abs(zscore), lower.tail = FALSE)
+  onesided.p.value <- NULL
+  for (i in term) {
+    param <- as.matrix(x@chains[, i])
+    if (sign(mean(param)) > 0) {
+      onesided.p.values <- sum(param < 0)/length(param)
+    } else {
+      onesided.p.values <- sum(param > 0)/length(param)
+    }
+    onesided.p.value <- c(onesided.p.value, onesided.p.values)
+  }
+  group <- rep("", length(term))
+  group[grep("FP", term)] <- "fixed"
+  nlev <- length(x@levID)
+  if (is.na(x@levID[nlev])) {
+    mlwinlev <- (nlev - 1):1
+  } else {
+    mlwinlev <- nlev:1
+  }
+  for (i in 1:length(mlwinlev)) {
+    group[grep(paste0("RP", i), term)] <- x@levID[mlwinlev[i]]
+  }
+
+  ret <- tibble::tibble(term=term, estimate=est, std.deviation=sd, statistic=zscore, p.value=pval, p.bayesian=onesided.p.value, ESS=ESS, group=group)
+
+  if (conf.int) {
+      conf <- chain.stats$quantiles
+      rownames(conf) <- NULL
+      colnames(conf) <- c("conf.low", "conf.high")
+      ret <- cbind(ret, conf)
+  }
+  ret
+}
+
+#' Augment data frame with information derived from the model fit (broom package).
+#' @param x An \code{\link{mlwinfitMCMC-class}} model.
+#' @param data original data onto which columns should be added
+#' @param newdata new data to predict on, optional 
+#' @param type.predict Type of prediction to compute
+#' @param type.residuals Type of residuals to compute
+#' @param ... Other arguments.
+#' @seealso \code{\link[generics]{augment}}
+#' @export 
+augment.mlwinfitMCMC <- function(x, data = x@data, newdata = NULL, ...) {
+    warning("augment method not yet implemented for mlwinfitMCMC objects")
+    NULL
+}
+
+#' Extract GOF measures from a statistical object (broom package).
+#' @param x An \code{\link{mlwinfitMCMC-class}} model.
+#' @param ... Other arguments.
+#' @seealso \code{\link[generics]{glance}}
+#' @export 
+glance.mlwinfitMCMC <- function(x, ...) {
+  bdic <- x@BDIC
+  tibble::tibble(
+    Dbar = bdic["Dbar"],
+    Dthetabar = bdic["D(thetabar)"],
+    pD = bdic["pD"],
+    DIC = bdic["DIC"],
+    nobs = stats::nobs(x)
+  )
+}
