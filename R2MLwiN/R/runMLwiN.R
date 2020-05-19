@@ -1058,6 +1058,8 @@ version:date:md5:filename:x64:trial:platform
 3.05:Mar 2020:56da882ee6b3cf3426b368c8f82da018:mlnscript:TRUE:FALSE:lin
 3.05:Mar 2020:8d1f10fc10889d14b109dd12b73cca5c:mlnscript:TRUE:FALSE:lin
 3.05:Mar 2020:fa0bf732ca9b3b1c6e350b239e6cc0f1:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:eb46354774077891b78d2caa4d3c5249:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:ee626d9f149450de8ea29973214860fc:mlnscript:TRUE:FALSE:lin
 3.05:Mar 2020:242fa9c879cc51df5a1fd613a739d4c3:mlnscript:FALSE:FALSE:lin
 3.05:Mar 2020:3ab89e99ef98912084a9404c65ca233b:mlnscript:TRUE:FALSE:mac
 3.05:Mar 2020:714a19157648de1e59903ea491dcc6b7:mlnscript:TRUE:FALSE:bsd
