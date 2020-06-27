@@ -27,7 +27,7 @@
 #' @importFrom broom tidy augment glance
 #' 
 #' @section New features in version 0.8-3:
-#' Support for model comparison tables via \code{\link[texreg]{texreg-package}} and \code{\link[memisc]{memisc-package}} have been
+#' Support for model comparison tables via \code{\link[texreg]{texreg-package}} and \code{memisc-package} have been
 #' added to \pkg{R2MLwiN} version 0.8-3. For an example of using \code{\link[texreg]{texreg-package}} see e.g. \code{demo(MCMCGuide04)}.
 #' 
 #' @section Important differences between version 0.8-0 and earlier versions:

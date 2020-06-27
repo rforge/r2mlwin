@@ -1,6 +1,6 @@
 #' Draws a caterpillar plot (in MLwiN style).
 #'
-#' A convenient wrapper for the \code{\link[graphics]{plot}} function with the addition
+#' A convenient wrapper for the \code{plot} function with the addition
 #' of error bars, e.g. to create caterpillar plots.
 #'
 #' @param y A numerical vector specifying the \code{y} coordinates

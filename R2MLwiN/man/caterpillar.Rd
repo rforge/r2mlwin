@@ -42,7 +42,7 @@ should be used; see \code{\link[graphics]{plot.default}}.}
 \item{main}{A main title for the plot; see \code{\link[graphics]{plot.default}}.}
 }
 \description{
-A convenient wrapper for the \code{\link[graphics]{plot}} function with the addition
+A convenient wrapper for the \code{plot} function with the addition
 of error bars, e.g. to create caterpillar plots.
 }
 \examples{
