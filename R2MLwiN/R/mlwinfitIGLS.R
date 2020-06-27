@@ -354,10 +354,8 @@ setReplaceMethod("[[", signature(x = "mlwinfitIGLS"), function(x, i, j, value) {
 })
 
 #' Summarize "mlwinfitIGLS" objects
-#' @param object,x an \code{\link{mlwinfitIGLS-class}} object
+#' @param object an \code{\link{mlwinfitIGLS-class}} object
 #' @param ... other parameters
-#' @param digits the number of significant digits to use when printing.
-#' @param signif.stars logical. If TRUE, 'significance stars' are printed for each coefficient.
 #' @seealso \code{\link[stats4]{summary-methods}}
 #' @export
 setMethod("summary", signature(object = "mlwinfitIGLS"), function(object, ...) {
@@ -498,6 +496,7 @@ printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
 }
 
 #' Show objects of class "mlwinfitIGLS"
+#' @param object an \code{\link{mlwinfitIGLS-class}} object
 #' @seealso \code{\link[stats4]{show-methods}}
 #' @export
 setMethod("show", signature(object = "mlwinfitIGLS"), function(object) printIGLS(object))
@@ -775,10 +774,9 @@ nobs.mlwinfitIGLS <- function(object, ...) {
 }
 
 #' Summarize "mlwinfitIGLS" objects
-#' @param object,x an \code{\link{mlwinfitIGLS-class}} object
+#' @param object an \code{\link{mlwinfitIGLS-class}} object
 #' @param ... other parameters
-#' @param digits the number of significant digits to use when printing.
-#' @param signif.stars logical. If TRUE, 'significance stars' are printed for each coefficient.
+#' @method summary mlwinfitIGLS
 #' @exportS3Method summary mlwinfitIGLS
 summary.mlwinfitIGLS <- function(object, ...) {
   summary(object)
@@ -786,22 +784,21 @@ summary.mlwinfitIGLS <- function(object, ...) {
 
 
 #' Summarize "mlwinfitIGLS" objects
-#' @param object,x an \code{\link{mlwinfitIGLS-class}} object
-#' @param ... other parameters
+#' @param x an \code{\link{mlwinfitIGLS-class}} object
 #' @param digits the number of significant digits to use when printing.
 #' @param signif.stars logical. If TRUE, 'significance stars' are printed for each coefficient.
+#' @param ... other parameters
 #' @seealso \code{\link[base]{print}}
 #' @export 
-print.mlwinfitIGLS <- function(x, ...) {
-  printIGLS(x)
+print.mlwinfitIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars = getOption("show.signif.stars"), ...) {
+  printIGLS(x, digits = digits, signif.stars = signif.stars)
 }
 
 #' Summarize "mlwinfitIGLS" objects
-#' @param object,x an \code{\link{mlwinfitIGLS-class}} object
+#' @param object an \code{\link{mlwinfitIGLS-class}} object
 #' @param ... other parameters
-#' @param digits the number of significant digits to use when printing.
-#' @param signif.stars logical. If TRUE, 'significance stars' are printed for each coefficient.
 #' @seealso \code{\link[methods]{show}}
+#' @method show mlwinfitIGLS
 #' @exportS3Method show mlwinfitIGLS
 show.mlwinfitIGLS <- function(object, ...) {
   show(object)
@@ -809,15 +806,10 @@ show.mlwinfitIGLS <- function(object, ...) {
 
 #' Update "mlwinfitIGLS" objects
 #' @param object a valid \code{mlwinfitIGLS} class object with an R function call component named \code{call}, the expression used to create itself.
-#' @param Formula. changes to the formula. This is a two sided formula where "." is substituted for existing components in the \code{Formula} component of \code{object$call}.
-#' @param levID. changes to the specifications of level ID(s).
-#' @param estoptions. changes to the specifications of a list of options used for estimating the model.
 #' @param ...  additional arguments to the call, or arguments with changed values.
-#' @param keep.order a logical value indicating whether the terms should keep their positions.
-#' @param evaluate  if \code{TRUE} (the default) the new call is evaluated;
-#' otherwise the call is returned as an unevaluated expression.
 #' @return either a new updated \code{mlwinfitIGLS} class object, or else an unevaluated expression for creating such an object.
 #' @seealso \code{\link[stats]{update}}
+#' @method update mlwinfitIGLS
 #' @exportS3Method update mlwinfitIGLS
 update.mlwinfitIGLS <- function(object, ...) {
   update(object)
@@ -827,6 +819,7 @@ update.mlwinfitIGLS <- function(object, ...) {
 #' @param object An \code{\link{mlwinfitIGLS-class}} object
 #' @param ... Other arguments
 #' @seealso \code{\link[stats]{coef}}
+#' @method coef mlwinfitIGLS
 #' @exportS3Method coef mlwinfitIGLS
 coef.mlwinfitIGLS <- function(object, ...) {
   coef(object)
@@ -836,6 +829,7 @@ coef.mlwinfitIGLS <- function(object, ...) {
 #' @param object An \code{\link{mlwinfitIGLS-class}} object
 #' @param ... Other arguments
 #' @seealso \code{\link[stats]{vcov}}
+#' @method vcov mlwinfitIGLS
 #' @exportS3Method vcov mlwinfitIGLS
 vcov.mlwinfitIGLS <- function(object, ...) {
   vcov(object)
@@ -850,6 +844,7 @@ formula.mlwinfitIGLS <- function(x, env = parent.frame(), ...) {
   stats::as.formula(x@Formula)
 }
 
+#' @method logLik mlwinfitIGLS
 #' @exportS3Method logLik mlwinfitIGLS
 logLik.mlwinfitIGLS <- function(object, ...) {
   logLik(object)
@@ -968,7 +963,7 @@ tidy.mlwinfitIGLS <- function(x, conf.int = FALSE, conf.level = .95, ...) {
 #' @param ... Other arguments.
 #' @seealso \code{\link[generics]{augment}}
 #' @export 
-augment.mlwinfitIGLS <- function(x, data = x@frame, newdata = NULL, ...) {
+augment.mlwinfitIGLS <- function(x, data = x@frame, newdata = NULL, type.predict, type.residuals, ...) {
     warning("augment method not yet implemented for mlwinfitIGLS objects")
     NULL
 }

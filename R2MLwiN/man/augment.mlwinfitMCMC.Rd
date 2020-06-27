@@ -4,7 +4,7 @@
 \alias{augment.mlwinfitMCMC}
 \title{Augment data frame with information derived from the model fit (broom package).}
 \usage{
-\method{augment}{mlwinfitMCMC}(x, data = x@data, newdata = NULL, ...)
+\method{augment}{mlwinfitMCMC}(x, data = x@data, newdata = NULL, type.predict, type.residuals, ...)
 }
 \arguments{
 \item{x}{An \code{\link{mlwinfitMCMC-class}} model.}
@@ -13,11 +13,11 @@
 
 \item{newdata}{new data to predict on, optional}
 
-\item{...}{Other arguments.}
-
 \item{type.predict}{Type of prediction to compute}
 
 \item{type.residuals}{Type of residuals to compute}
+
+\item{...}{Other arguments.}
 }
 \description{
 Augment data frame with information derived from the model fit (broom package).

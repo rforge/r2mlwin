@@ -4,23 +4,12 @@
 \alias{update.mlwinfitIGLS}
 \title{Update "mlwinfitIGLS" objects}
 \usage{
-update.mlwinfitIGLS(object, ...)
+\method{update}{mlwinfitIGLS}(object, ...)
 }
 \arguments{
 \item{object}{a valid \code{mlwinfitIGLS} class object with an R function call component named \code{call}, the expression used to create itself.}
 
 \item{...}{additional arguments to the call, or arguments with changed values.}
-
-\item{Formula.}{changes to the formula. This is a two sided formula where "." is substituted for existing components in the \code{Formula} component of \code{object$call}.}
-
-\item{levID.}{changes to the specifications of level ID(s).}
-
-\item{estoptions.}{changes to the specifications of a list of options used for estimating the model.}
-
-\item{keep.order}{a logical value indicating whether the terms should keep their positions.}
-
-\item{evaluate}{if \code{TRUE} (the default) the new call is evaluated;
-otherwise the call is returned as an unevaluated expression.}
 }
 \value{
 either a new updated \code{mlwinfitIGLS} class object, or else an unevaluated expression for creating such an object.

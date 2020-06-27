@@ -4,7 +4,7 @@
 \alias{coef.mlwinfitIGLS}
 \title{Extract the coefficient vector from "mlwinfitIGLS" objects}
 \usage{
-coef.mlwinfitIGLS(object, ...)
+\method{coef}{mlwinfitIGLS}(object, ...)
 }
 \arguments{
 \item{object}{An \code{\link{mlwinfitIGLS-class}} object}

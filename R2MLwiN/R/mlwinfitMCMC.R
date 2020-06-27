@@ -512,11 +512,8 @@ setReplaceMethod("[[", signature(x = "mlwinfitMCMC"), function(x, i, j, value) {
 })
 
 #' Summarize "mlwinfitMCMC" objects
-#' @param object,x an \code{\link{mlwinfitMCMC-class}} object
+#' @param object an \code{\link{mlwinfitMCMC-class}} object
 #' @param ... other parameters
-#' @param digits the number of significant digits to use when printing.
-#' @param signif.stars logical. If TRUE, 'significance stars' are printed for each coefficient.
-#' @param z.ratio logical. If TRUE, z-ratio values are displayed for each coefficient.
 #' @seealso \code{\link[stats4]{summary-methods}}
 #' @export 
 setMethod("summary", signature(object = "mlwinfitMCMC"), function(object, ...) {
@@ -727,6 +724,7 @@ printMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
 }
 
 #' Show objects of class "mlwinfitMCMC"
+#' @param object an \code{\link{mlwinfitIGLS-class}} object
 #' @seealso \code{\link[stats4]{show-methods}}
 #' @export 
 setMethod("show", signature(object = "mlwinfitMCMC"), function(object) printMCMC(object))
@@ -911,51 +909,44 @@ nobs.mlwinfitMCMC <- function(object, ...) {
 }
 
 #' Summarize "mlwinfitMCMC" objects
-#' @param object,x an \code{\link{mlwinfitMCMC-class}} object
+#' @param object an \code{\link{mlwinfitMCMC-class}} object
 #' @param ... other parameters
-#' @param digits the number of significant digits to use when printing.
-#' @param signif.stars logical. If TRUE, 'significance stars' are printed for each coefficient.
-#' @param z.ratio logical. If TRUE, z-ratio values are displayed for each coefficient.
+#' @method summary mlwinfitMCMC
 #' @exportS3Method summary mlwinfitMCMC
 summary.mlwinfitMCMC <- function(object, ...) {
   summary(object)
 }
 
 #' Summarize "mlwinfitMCMC" objects
-#' @param object,x an \code{\link{mlwinfitMCMC-class}} object
-#' @param ... other parameters
+#' @param x an \code{\link{mlwinfitMCMC-class}} object
 #' @param digits the number of significant digits to use when printing.
 #' @param signif.stars logical. If TRUE, 'significance stars' are printed for each coefficient.
 #' @param z.ratio logical. If TRUE, z-ratio values are displayed for each coefficient.
+#' @param ... other parameters
 #' @seealso \code{\link[base]{print}}
 #' @export 
-print.mlwinfitMCMC <- function(x, ...) {
-  printMCMC(x)
+print.mlwinfitMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars = getOption("show.signif.stars"), 
+                      z.ratio = TRUE, ...) {
+  printMCMC(x, digits = digits, signif.stars = signif.stars, 
+                      z.ratio = z.ratio)
 }
 
 #' Summarize "mlwinfitMCMC" objects
-#' @param object,x an \code{\link{mlwinfitMCMC-class}} object
+#' @param object an \code{\link{mlwinfitMCMC-class}} object
 #' @param ... other parameters
-#' @param digits the number of significant digits to use when printing.
-#' @param signif.stars logical. If TRUE, 'significance stars' are printed for each coefficient.
-#' @param z.ratio logical. If TRUE, z-ratio values are displayed for each coefficient.
 #' @seealso \code{\link[methods]{show}}
+#' @method show mlwinfitMCMC
 #' @exportS3Method show mlwinfitMCMC
-show.mlwinfitMCMC <- function(object, ...) {
+show.mlwinfitMCMC <- function(object,...) {
   show(object)
 }
 
 #' Update "mlwinfitMCMC" objects
 #' @param object a valid \code{mlwinfitMCMC} class object with an R function call component named \code{call}, the expression used to create itself.
-#' @param Formula. changes to the formula. This is a two sided formula where "." is substituted for existing components in the \code{Formula} component of \code{object$call}.
-#' @param levID. changes to the specifications of level ID(s).
-#' @param estoptions. changes to the specifications of a list of options used for estimating the model.
 #' @param ...  additional arguments to the call, or arguments with changed values.
-#' @param keep.order a logical value indicating whether the terms should keep their positions.
-#' @param evaluate  if \code{TRUE} (the default) the new call is evaluated;
-#' otherwise the call is returned as an unevaluated expression.
 #' @return either a new updated \code{mlwinfitMCMC} class object, or else an unevaluated expression for creating such an object.
 #' @seealso \code{\link[stats]{update}}
+#' @method update mlwinfitMCMC
 #' @exportS3Method update mlwinfitMCMC
 update.mlwinfitMCMC <- function(object, ...) {
   update(object)
@@ -965,6 +956,7 @@ update.mlwinfitMCMC <- function(object, ...) {
 #' @param object An \code{\link{mlwinfitMCMC-class}} object
 #' @param ... Other arguments
 #' @seealso \code{\link[stats]{coef}}
+#' @method coef mlwinfitMCMC
 #' @exportS3Method coef mlwinfitMCMC
 coef.mlwinfitMCMC <- function(object, ...) {
   coef(object)
@@ -974,6 +966,7 @@ coef.mlwinfitMCMC <- function(object, ...) {
 #' @param object An \code{\link{mlwinfitMCMC-class}} object
 #' @param ... Other arguments
 #' @seealso \code{\link[stats]{vcov}}
+#' @method vcov mlwinfitMCMC
 #' @exportS3Method vcov mlwinfitMCMC
 vcov.mlwinfitMCMC <- function(object, ...) {
   vcov(object)
@@ -1147,7 +1140,7 @@ tidy.mlwinfitMCMC <- function(x, conf.int = FALSE, conf.level = .95, ...) {
 #' @param ... Other arguments.
 #' @seealso \code{\link[generics]{augment}}
 #' @export 
-augment.mlwinfitMCMC <- function(x, data = x@data, newdata = NULL, ...) {
+augment.mlwinfitMCMC <- function(x, data = x@data, newdata = NULL, type.predict, type.residuals, ...) {
     warning("augment method not yet implemented for mlwinfitMCMC objects")
     NULL
 }

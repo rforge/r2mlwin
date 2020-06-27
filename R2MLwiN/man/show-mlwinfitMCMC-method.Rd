@@ -6,6 +6,9 @@
 \usage{
 \S4method{show}{mlwinfitMCMC}(object)
 }
+\arguments{
+\item{object}{an \code{\link{mlwinfitIGLS-class}} object}
+}
 \description{
 Show objects of class "mlwinfitMCMC"
 }

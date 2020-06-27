@@ -4,18 +4,12 @@
 \alias{show.mlwinfitMCMC}
 \title{Summarize "mlwinfitMCMC" objects}
 \usage{
-show.mlwinfitMCMC(object, ...)
+\method{show}{mlwinfitMCMC}(object, ...)
 }
 \arguments{
-\item{object, x}{an \code{\link{mlwinfitMCMC-class}} object}
+\item{object}{an \code{\link{mlwinfitMCMC-class}} object}
 
 \item{...}{other parameters}
-
-\item{digits}{the number of significant digits to use when printing.}
-
-\item{signif.stars}{logical. If TRUE, 'significance stars' are printed for each coefficient.}
-
-\item{z.ratio}{logical. If TRUE, z-ratio values are displayed for each coefficient.}
 }
 \description{
 Summarize "mlwinfitMCMC" objects

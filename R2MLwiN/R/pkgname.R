@@ -14,6 +14,7 @@
 #' @importMethodsFrom stats4 coef logLik summary vcov update show
 #' @importFrom stats coef coefficients logLik vcov update df.residual fitted fitted.values residuals resid predict deviance nobs
 #' @importFrom stats acf pacf
+#' @importFrom stats confint symnum update.formula
 #' @importFrom stats formula as.formula get_all_vars model.frame model.matrix model.offset terms terms.formula
 #' @importFrom stats cov density end getCall na.omit pnorm qnorm quantile sd start var window complete.cases reshape
 #' @importFrom Matrix nnzero sparseMatrix
@@ -79,7 +80,7 @@
 #'  \item{A number of generic s4 methods have been added to improve compatibility with statistical functions
 #'  which use them (e.g. see \code{\link[stats4]{stats4-package}}). So, for example, the addition of 
 #'  a \code{\link{logLik}} means a likelihood ratio test can now be conducted
-#'  on two \code{\link{mlwinfitIGLS-class}} objects using the \code{\link[lmtest]{lrtest}} function,
+#'  on two \code{\link{mlwinfitIGLS-class}} objects using the \code{lrtest} function,
 #'  e.g. \code{lrtest(mymodel1, mymodel2)}. See \code{help(package = "R2MLwiN")} for
 #'  the index listing these various methods.}
 #'  }

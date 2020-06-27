@@ -4,7 +4,7 @@
 \alias{vcov.mlwinfitMCMC}
 \title{Extract the approximate variance-covariance matrix from "mlwinfitMCMC" objects}
 \usage{
-vcov.mlwinfitMCMC(object, ...)
+\method{vcov}{mlwinfitMCMC}(object, ...)
 }
 \arguments{
 \item{object}{An \code{\link{mlwinfitMCMC-class}} object}

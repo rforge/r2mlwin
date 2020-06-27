@@ -4,7 +4,7 @@
 \alias{coef.mlwinfitMCMC}
 \title{Extract the coefficient vector from "mlwinfitMCMC" objects}
 \usage{
-coef.mlwinfitMCMC(object, ...)
+\method{coef}{mlwinfitMCMC}(object, ...)
 }
 \arguments{
 \item{object}{An \code{\link{mlwinfitMCMC-class}} object}

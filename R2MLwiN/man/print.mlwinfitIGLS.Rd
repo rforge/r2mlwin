@@ -4,16 +4,21 @@
 \alias{print.mlwinfitIGLS}
 \title{Summarize "mlwinfitIGLS" objects}
 \usage{
-\method{print}{mlwinfitIGLS}(x, ...)
+\method{print}{mlwinfitIGLS}(
+  x,
+  digits = max(3, getOption("digits") - 2),
+  signif.stars = getOption("show.signif.stars"),
+  ...
+)
 }
 \arguments{
-\item{...}{other parameters}
-
-\item{object, x}{an \code{\link{mlwinfitIGLS-class}} object}
+\item{x}{an \code{\link{mlwinfitIGLS-class}} object}
 
 \item{digits}{the number of significant digits to use when printing.}
 
 \item{signif.stars}{logical. If TRUE, 'significance stars' are printed for each coefficient.}
+
+\item{...}{other parameters}
 }
 \description{
 Summarize "mlwinfitIGLS" objects

@@ -149,5 +149,5 @@ caterpillarR <- function(resi, lev = 2) {
   rr$Subject <- data.frame(est)
   attr(rr$Subject, "postVar") <- tt
   class(rr) <- "ranef.mer"
-  lattice::qqmath.ranef.mer(rr)
+  qqmath.ranef.mer(rr)
 } 

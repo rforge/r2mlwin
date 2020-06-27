@@ -4,18 +4,24 @@
 \alias{print.mlwinfitMCMC}
 \title{Summarize "mlwinfitMCMC" objects}
 \usage{
-\method{print}{mlwinfitMCMC}(x, ...)
+\method{print}{mlwinfitMCMC}(
+  x,
+  digits = max(3, getOption("digits") - 2),
+  signif.stars = getOption("show.signif.stars"),
+  z.ratio = TRUE,
+  ...
+)
 }
 \arguments{
-\item{...}{other parameters}
-
-\item{object, x}{an \code{\link{mlwinfitMCMC-class}} object}
+\item{x}{an \code{\link{mlwinfitMCMC-class}} object}
 
 \item{digits}{the number of significant digits to use when printing.}
 
 \item{signif.stars}{logical. If TRUE, 'significance stars' are printed for each coefficient.}
 
 \item{z.ratio}{logical. If TRUE, z-ratio values are displayed for each coefficient.}
+
+\item{...}{other parameters}
 }
 \description{
 Summarize "mlwinfitMCMC" objects

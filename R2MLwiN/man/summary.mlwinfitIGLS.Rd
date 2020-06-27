@@ -4,16 +4,12 @@
 \alias{summary.mlwinfitIGLS}
 \title{Summarize "mlwinfitIGLS" objects}
 \usage{
-summary.mlwinfitIGLS(object, ...)
+\method{summary}{mlwinfitIGLS}(object, ...)
 }
 \arguments{
-\item{object, x}{an \code{\link{mlwinfitIGLS-class}} object}
+\item{object}{an \code{\link{mlwinfitIGLS-class}} object}
 
 \item{...}{other parameters}
-
-\item{digits}{the number of significant digits to use when printing.}
-
-\item{signif.stars}{logical. If TRUE, 'significance stars' are printed for each coefficient.}
 }
 \description{
 Summarize "mlwinfitIGLS" objects
