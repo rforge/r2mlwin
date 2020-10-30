@@ -1060,10 +1060,14 @@ version:date:md5:filename:x64:trial:platform
 3.05:Mar 2020:fa0bf732ca9b3b1c6e350b239e6cc0f1:mlnscript:TRUE:FALSE:lin
 3.05:Mar 2020:eb46354774077891b78d2caa4d3c5249:mlnscript:TRUE:FALSE:lin
 3.05:Mar 2020:ee626d9f149450de8ea29973214860fc:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:131da804275e8f7fb4b752c6ed355944:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:d54cf6d16aebe7f542e93fec4b010fa9:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:510f01a981c70fe0b4936cdef1013570:mlnscript:TRUE:FALSE:lin
 3.05:Mar 2020:242fa9c879cc51df5a1fd613a739d4c3:mlnscript:FALSE:FALSE:lin
 3.05:Mar 2020:3ab89e99ef98912084a9404c65ca233b:mlnscript:TRUE:FALSE:mac
 3.05:Mar 2020:714a19157648de1e59903ea491dcc6b7:mlnscript:TRUE:FALSE:bsd
 3.05:Mar 2020:7b19bb2ad6dbac4d3604438927bb35d3:mlnscript:TRUE:FALSE:bsd
+3.05:Mar 2020:89ad7d8d544ef52cad30827f00032fd3:mlnscript:TRUE:FALSE:bsd
 '
   versioninfo <- utils::read.delim(textConnection(versioninfostr), header = TRUE, sep = ":", strip.white = TRUE)
   if (isTRUE(checkversion)) {
