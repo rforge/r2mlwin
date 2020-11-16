@@ -1068,6 +1068,7 @@ version:date:md5:filename:x64:trial:platform
 3.05:Mar 2020:714a19157648de1e59903ea491dcc6b7:mlnscript:TRUE:FALSE:bsd
 3.05:Mar 2020:7b19bb2ad6dbac4d3604438927bb35d3:mlnscript:TRUE:FALSE:bsd
 3.05:Mar 2020:89ad7d8d544ef52cad30827f00032fd3:mlnscript:TRUE:FALSE:bsd
+3.05:Mar 2020:94fbe79fba472f00cd834e66b6f06319:mlnscript:TRUE:FALSE:bsd
 '
   versioninfo <- utils::read.delim(textConnection(versioninfostr), header = TRUE, sep = ":", strip.white = TRUE)
   if (isTRUE(checkversion)) {
