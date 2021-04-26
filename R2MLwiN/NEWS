@@ -1,3 +1,7 @@
+Mon Apr 26 2021
+1. Bug fixing
+   * Correct expected number of random variables when calculating level-1 IGLS residuals for mixed response models
+
 Thu Apr 02 2020
 1. Changes
    * Add initial support for the broom package

@@ -1466,13 +1466,6 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     }
     
     len.rpx <- length(rpx)
-    if (level == 2 & D[[1]][1] == "Mixed") {
-      for (i in 2:length(D)) {
-        if (D[[i]][1] == "Binomial" | D[[i]][1] == "Poisson") {
-          len.rpx <- len.rpx + 1
-        }
-      }
-    }
     
     wrt(paste("LINK", len.rpx, "G21"))
     for (k in 1:len.rpx) {
