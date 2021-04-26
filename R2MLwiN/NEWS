@@ -1,6 +1,7 @@
 Mon Apr 26 2021
 1. Bug fixing
-   * Correct expected number of random variables when calculating level-1 IGLS residuals for mixed response models
+   * Correct expected number of random variables when calculating level-1 (R)IGLS residuals for mixed response models
+   * Correct level number in "residual ID" column for multivariate/multinomial models for (R)IGLS models
 
 Thu Apr 02 2020
 1. Changes

@@ -1643,7 +1643,7 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt(paste0("NOBS ", level, " b30 b31"))
     wrt("LINK 1 G29")
     wrt("GENE 1 b30 1 G29[1]")
-    wrt(paste0("NAME G29[1] 'lev_", level, "_residualid'"))
+    wrt(paste0("NAME G29[1] 'lev_", displevel, "_residualid'"))
     outgroups <- c(outgroups, "G29")
     if (!("norecode" %in% resioptions)) {
       wrt("MISR 1")
