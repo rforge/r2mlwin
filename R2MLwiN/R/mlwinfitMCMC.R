@@ -1044,7 +1044,7 @@ setMethod("extract", signature = className("mlwinfitMCMC", "R2MLwiN"), function(
 })
 
 #' Extract coefficients and GOF measures from a statistical object (memisc package).
-#' @param obj An \code{\link{mlwinfitIGLS-class}} model.
+#' @param obj An \code{\link{mlwinfitMCMC-class}} model.
 #' @param alpha level of the confidence intervals; their coverage should be 1-alpha/2
 #' @param ... Other arguments.
 #' @seealso \code{\link[memisc]{getSummary}}
