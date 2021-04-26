@@ -28,4 +28,6 @@ Investigate interactions with RStudio, as sometimes graphs can behave strangely
 Add option to omit data from output objects, as well as modify postestimation functions to take this into account
 Add option to omit chains, or allow their removal, to save on storage space needed for model objects
 Store and display information regarding the Priors in the MCMC output
-Model output can be too wide when using it in a doucment, investigate whether this can be reduced
+Model output can be too wide when using it in a document, investigate whether this can be reduced
+
+Correctly handle predictor variables contrasts, especially for "ordered" factor variables
