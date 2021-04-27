@@ -2653,8 +2653,8 @@ version:date:md5:filename:x64:trial:platform
               }
             }
           }
-          testpd <- try(chol(startmat), silent=TRUE)
-          if (class(testpd) == "try-error") {
+          testpd <- try(chol(startmat), silent = TRUE)
+          if (is(testpd, "try-error") == TRUE) {
             stop(paste0("Starting value matrix at level ", startlev, " must be positive-definite"))
           }
         }

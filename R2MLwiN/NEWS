@@ -1,3 +1,7 @@
+Tue Apr 27 2021
+1. Bug fixing
+   * Since R version 4.0.0 matrix objects inherit from class "array". Update check for positive-definite starting value matrix to take this into account.
+
 Mon Apr 26 2021
 1. Bug fixing
    * Correct expected number of random variables when calculating level-1 (R)IGLS residuals for mixed response models
